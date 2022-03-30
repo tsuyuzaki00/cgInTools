@@ -1,5 +1,5 @@
 {
-    "menu_title":"scriptsInTools",
+    "menu_title":"cgInTools",
     "order_menu":
     [
         ["single","modeling"],
@@ -20,69 +20,69 @@
         "window":[],
         "modeling":
         [
-            ["autoRename","scriptsInTools.maya.execute","autoRename","main()",""],
-            ["GeometryReset","scriptsInTools.maya.execute","freezeResetHisDel","main()",""],
-            ["CornerEdge","scriptsInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
+            ["autoRename","cgInTools.maya.execute","autoRename","main()",""],
+            ["GeometryReset","cgInTools.maya.execute","freezeResetHisDel","main()",""],
+            ["CornerEdge","cgInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
         ],
         "rigging":
         [
-            ["targetPosition","scriptsInTools.maya.manager","targetPosition","main()",""]
+            ["targetPosition","cgInTools.maya.manager","targetPosition","main()",""]
         ],
         "create_object":
         [
-            ["Cube","scriptsInTools.maya.execute","createNodes_polyCube","main()","polyCube.png"],
-            ["Ball","scriptsInTools.maya.execute","createNodes_polyBall","main()","polySphere.png"],
-            ["Cylinder","scriptsInTools.maya.execute","createNodes_polyCylinder","main()","polyCylinder.png"],
-            ["Plean","scriptsInTools.maya.execute","createNodes_polyPlane","main()","polyMesh.png"],
-            ["ImagePlean","scriptsInTools.maya.execute","createNodes_imagePlane","main()","ImagePlane.png"],
-            ["Camera","scriptsInTools.maya.execute","createNodes_camera","main()" ,"view.png"],
-            ["AmbientLight","scriptsInTools.maya.execute","createNodes_ambientLight","main()","ambientlight.png"],
-            ["DirectionalLight","scriptsInTools.maya.execute","createNodes_directionalLight","main()","directionallight.png"],
-            ["PointLight","scriptsInTools.maya.execute","createNodes_pointLight","main()","pointlight.png"],
-            ["SpotLight","scriptsInTools.maya.execute","createNodes_spotLight","main()","spotlight.png"]
+            ["Cube","cgInTools.maya.execute","createNodes_polyCube","main()","polyCube.png"],
+            ["Ball","cgInTools.maya.execute","createNodes_polyBall","main()","polySphere.png"],
+            ["Cylinder","cgInTools.maya.execute","createNodes_polyCylinder","main()","polyCylinder.png"],
+            ["Plean","cgInTools.maya.execute","createNodes_polyPlane","main()","polyMesh.png"],
+            ["ImagePlean","cgInTools.maya.execute","createNodes_imagePlane","main()","ImagePlane.png"],
+            ["Camera","cgInTools.maya.execute","createNodes_camera","main()" ,"view.png"],
+            ["AmbientLight","cgInTools.maya.execute","createNodes_ambientLight","main()","ambientlight.png"],
+            ["DirectionalLight","cgInTools.maya.execute","createNodes_directionalLight","main()","directionallight.png"],
+            ["PointLight","cgInTools.maya.execute","createNodes_pointLight","main()","pointlight.png"],
+            ["SpotLight","cgInTools.maya.execute","createNodes_spotLight","main()","spotlight.png"]
         ],
         "set_curves": 
         [
         ],
         "color_chenge":
         [
-            ["CtrlColorChange","scriptsInTools.maya.execute","ctrlColorChenge","main()",""],
-            ["CtrlColorFreeChange","scriptsInTools.maya.execute","ctrlColorFreeChenge","main()",""]
+            ["CtrlColorChange","cgInTools.maya.execute","ctrlColorChenge","main()",""],
+            ["CtrlColorFreeChange","cgInTools.maya.execute","ctrlColorFreeChenge","main()",""]
         ],
         "skin":
         [
-            ["WeightPaintValue","scriptsInTools.maya.manager","weightPaintValue","main()","skinPaintValue.png"],
-            ["MultiCopySkinWeight","scriptsInTools.maya.execute","multiCopySkinWeight","main()",""],
-            ["InfJointRemove","scriptsInTools.maya.execute","infJntRemoveEdit","main()",""],
-            ["RenameSkc","scriptsInTools.maya.execute","geoRenameSkc","main()",""]
+            ["WeightPaintValue","cgInTools.maya.manager","weightPaintValue","main()","skinPaintValue.png"],
+            ["MultiCopySkinWeight","cgInTools.maya.execute","multiCopySkinWeight","main()",""],
+            ["InfJointRemove","cgInTools.maya.execute","infJntRemoveEdit","main()",""],
+            ["RenameSkc","cgInTools.maya.execute","geoRenameSkc","main()",""]
         ],
         "selects_edit":
         [
-            ["JointRadiusEdit","scriptsInTools.maya.execute","jointRadius","main()",""],
-            [1,"scriptsInTools.maya.execute","jointRadius","option()",""]
+            ["JointRadiusEdit","cgInTools.maya.execute","jointRadius","main()",""],
+            [1,"cgInTools.maya.execute","jointRadius","option()",""]
         ],
         "select_view":
         [
-            ["Selections","scriptsInTools.maya.manager","selectListView","main()",""]
+            ["Selections","cgInTools.maya.manager","selectListView","main()",""]
         ],
         "inquiry":
         [
-            ["SelectList","scriptsInTools.maya.manager","selectListView","main()",""],
-            ["LookNodeType","scriptsInTools.maya.manager","lookNodeType","main()",""],
-            ["LookShapeColor","scriptsInTools.maya.manager","lookShapeColor","main()",""],
-            ["LookSelectKeyAttr","scriptsInTools.maya.manager","lookSelectKeyAttr","main()",""],
-            ["LookMatrix","scriptsInTools.maya.manager","lookMatrix","main()",""]
+            ["SelectList","cgInTools.maya.manager","selectListView","main()",""],
+            ["LookNodeType","cgInTools.maya.manager","lookNodeType","main()",""],
+            ["LookShapeColor","cgInTools.maya.manager","lookShapeColor","main()",""],
+            ["LookSelectKeyAttr","cgInTools.maya.manager","lookSelectKeyAttr","main()",""],
+            ["LookMatrix","cgInTools.maya.manager","lookMatrix","main()",""]
         ],
         "scripts":
         [
-            ["SelectBindJoints","scriptsInTools.maya.manager","selectTransferSkinWeight","main()",""]
+            ["SelectBindJoints","cgInTools.maya.manager","selectTransferSkinWeight","main()",""]
         ],
         "mgear":[],
         "export":
         [
-            ["LipCtrls","scriptsInTools.mgear.execute","lipCtrlsExport","main()",""],
-            ["EyeCtrls","scriptsInTools.mgear.execute","eyeCtrlsExport","main()",""],
-            ["EyebrowCtrls","scriptsInTools.mgear.execute","eyebrowCtrlsExport","main()",""]
+            ["LipCtrls","cgInTools.mgear.execute","lipCtrlsExport","main()",""],
+            ["EyeCtrls","cgInTools.mgear.execute","eyeCtrlsExport","main()",""],
+            ["EyebrowCtrls","cgInTools.mgear.execute","eyebrowCtrlsExport","main()",""]
         ]
     }
 }

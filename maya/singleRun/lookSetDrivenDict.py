@@ -1,4 +1,4 @@
-from ..MayaLibrary import qt
+from ..library import qt
 from PySide2 import QtWidgets, QtCore, QtGui
 import pymel.core as pm
 

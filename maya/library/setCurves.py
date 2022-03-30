@@ -9,7 +9,7 @@ class SetCurve():
         self.name = name
 
     def renameTemplate(self, sel):
-        getNameSplit = gns.GetNameSplit()
+        getNameSplit = ngs.GetNameSplit()
         scene = getNameSplit.scene()
         num = '1'.zfill(2)
         node = getNameSplit.node(sel)

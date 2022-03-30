@@ -8,7 +8,7 @@ import os
 import maya.cmds as cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
-import scriptsInTools as SF
+import cgInTools as SF
 from ...ui import skinWeightUI as UI
 from ..library import simpleJson as SJ
 

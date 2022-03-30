@@ -1,7 +1,7 @@
 import maya.cmds as cmds
 import pymel.core as pm
 
-import scriptsInTools as sf
+import cgInTools as sf
 import simpleJson as sj
 
 class NamingSplits():

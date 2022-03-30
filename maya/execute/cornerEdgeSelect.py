@@ -1,4 +1,3 @@
-import pymel.core as pm
 import maya.cmds as cmds
 
 def cornerEdge_select_func(lowAngle=30,highAngle=150):

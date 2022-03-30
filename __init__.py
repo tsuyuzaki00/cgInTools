@@ -1,6 +1,6 @@
 import os
 
-root_path = os.path.dirname(__file__) #.../scriptsInTools/
+root_path = os.path.dirname(__file__) #.../cgInTools/
 ui_folder = os.path.join(root_path,"ui")
 
 maya_folder = os.path.join(root_path,"maya")
