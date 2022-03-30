@@ -1,0 +1,9 @@
+import os
+
+this_path = os.path.dirname(__file__) #.../scriptsInTools/maya
+maya_json_folder = os.path.join(this_path,"_settings")
+
+root_path = os.path.abspath("..")
+ui_folder = os.path.join(root_path,"UI")
+maya_json_folder = os.path.join(root_path,"json")
+

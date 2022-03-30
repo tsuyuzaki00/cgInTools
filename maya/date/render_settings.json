@@ -1,0 +1,14 @@
+{
+    "shotImage":
+    [
+        {"file":"imagePersp","camera":"persp"},
+        {"file":"imageSide","camera":"side"},
+        {"file":"imageTop","camera":"top"}
+    ],
+    "secenece":
+    [
+        {"file":"secenece03","camera":"persp","start":0,"end":3},
+        {"file":"secenece12","camera":"persp","start":1,"end":2},
+        {"file":"seceneceFront","camera":"front","start":3,"end":5}
+    ]
+}

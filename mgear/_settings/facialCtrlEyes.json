@@ -1,0 +1,25 @@
+{
+    "path":"data/eyes",
+    "file":"curve_shapes",
+    "export_ctrls":
+    [
+        "eye_L_upInMid_ctl",
+        "eye_L_upMid_ctl",
+        "eye_L_upOutMid_ctl",
+        "eye_L_outCorner_ctl",
+        "eye_L_lowOutMid_ctl",
+        "eye_L_lowMid_ctl",
+        "eye_L_lowInMid_ctl",
+        "eye_L_inCorner_ctl",
+        "eye_L_over_ctl",
+        "eye_R_upMid_ctl",
+        "eye_R_upInMid_ctl",
+        "eye_R_inCorner_ctl",
+        "eye_R_lowInMid_ctl",
+        "eye_R_lowMid_ctl",
+        "eye_R_lowOutMid_ctl",
+        "eye_R_outCorner_ctl",
+        "eye_R_upOutMid_ctl",
+        "eye_R_over_ctl"
+    ]
+}

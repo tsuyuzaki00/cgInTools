@@ -1,0 +1,17 @@
+{
+    "path":"data/lips",
+    "file":"curve_shapes",
+    "export_ctrls":
+    [
+        "lips_C_upper_ctl",
+        "lips_L_upInner_ctl",
+        "lips_L_upOuter_ctl",
+        "lips_L_lowOuter_ctl",
+        "lips_L_lowInner_ctl",
+        "lips_C_lower_ctl",
+        "lips_R_lowInner_ctl",
+        "lips_R_lowOuter_ctl",
+        "lips_R_upOuter_ctl",
+        "lips_R_upInner_ctl"
+    ]
+}

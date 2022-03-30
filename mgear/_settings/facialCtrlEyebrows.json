@@ -1,0 +1,37 @@
+{
+    "path":"data/eyebrows",
+    "file":"curve_shapes",
+    "export_ctrls":
+    [
+        "eyebrow_L_in_ctl",
+        "eyebrow_L_in_tangent_ctl",
+        "eyebrow_L_out_tangent_ctl",
+        "eyebrow_L_out_ctl",
+        "eyebrow_R_sec_00_ctl",
+        "eyebrow_R_in_tangent_ctl",
+        "eyebrow_R_in_ctl",
+        "eyebrow_R_out_tangent_ctl",
+        "eyebrow_R_out_ctl",
+        "eyebrow_L_sec_00_ctl",
+        "eyebrow_L_sec_01_ctl",
+        "eyebrow_L_mid_01_ctl",
+        "eyebrow_L_sec_02_ctl",
+        "eyebrow_L_sec_03_ctl",
+        "eyebrow_L_sec_04_ctl",
+        "eyebrow_L_sec_05_ctl",
+        "eyebrow_L_sec_06_ctl",
+        "eyebrow_L_sec_07_ctl",
+        "eyebrow_L_sec_08_ctl",
+        "eyebrow_L_sec_09_ctl",
+        "eyebrow_R_sec_01_ctl",
+        "eyebrow_R_sec_02_ctl",
+        "eyebrow_R_mid_01_ctl",
+        "eyebrow_R_sec_03_ctl",
+        "eyebrow_R_sec_04_ctl",
+        "eyebrow_R_sec_05_ctl",
+        "eyebrow_R_sec_06_ctl",
+        "eyebrow_R_sec_07_ctl",
+        "eyebrow_R_sec_08_ctl",
+        "eyebrow_R_sec_09_ctl"
+    ]
+}

@@ -1,0 +1,63 @@
+辞書
+最初に選択したジョイントの名前リスト[root_jnt_C,COG_jnt_C,…]
+最初に選択したものの{名前:位置}
+胴体のみジョイント辞書{body:[,]}
+複製した胴体のみジョイント辞書{bodyPrx:[,]}
+FK辞書{armPrxFK_R:[,],armPrxFK_L:[,],legPrxFK_R:[,],legPrxFK_L:[,]}
+IK辞書{armPrxIK_R:[,],armPrxIK_L:[,],legPrxIK_R:[,],legPrxIK_L:[,]}
+
+jnts = 選択したジョイントの名前を習得
+パーツごとに分別
+検索してjntをjntPrxに変更
+for文で置き換え
+duplicate()
+selPos = 選択したジョイントの位置を習得
+jntPos = 選択したジョイントの位置を辞書にする
+jntIK = IKでむずびたいジョイントを習得
+jntBody jntArm_L jntLeg_L jntArm_R jntLeg_R
+選択したジョイントを胴体、足、腕で分別する
+ジョイントの胴体を1回複製
+複製したジョイントの名前変更
+jntPrxBody = 複製したジョイントの習得(jntPrx)
+jntBody→jntPrxBody = 元のジョイントと複製したジョイントをコネクト
+
+足と腕を複製
+名前を変更(jntPrxFK)
+jntPrxFKArm_L jntPrxFKLeg_L jntPrxFKArm_R jntPrxFKLeg_R
+複製したジョイントの習得
+さらに足と腕を複製
+名前を変更(jntPrxIK)
+jntPrxIKArm_L jntPrxIKLeg_L jntPrxIKArm_R jntPrxIKLeg_R
+複製したジョイントの習得
+jntArm_L jntLeg_L jntArm_R jntLeg_Rの数を取得
+blendColorをリストの数だけ作成
+blendColorの名前を変更
+jntArm_L jntLeg_L jntArm_R jntLeg_R
+jntPrxFKArm_L jntPrxFKLeg_L jntPrxFKArm_R jntPrxFKLeg_R
+jntPrxIKArm_L jntPrxIKLeg_L jntPrxIKArm_R jntPrxIKLeg_R
+元のジョイント足腕とFKとIKをblendColorでコネクト
+IKFKスイッチを読み込み
+IKFKスイッチを4つ複製
+IKFKスイッチの名前変更
+スイッチの_ctrlを習得
+
+IKFKスイッチのコントローラをblendColor全てにコネクト
+
+空のノードをジョイントの位置に作成
+trs = createNode(p=jntPos)
+カーブのコントローラもジョイントの位置に作成
+ctrl = curve(p=jntPos)
+空のノード親とカーブ子をペアレント
+parent(ctrl, trs)
+カーブのtransformとrotateを全て0にする
+ctrl(t=(0,0,0),r=(0,0,0))
+カーブ親と空のノード子をペアレント
+parent(trs[+2], ctrl[+1])
+コントローラとFKジョイントのコンストレイント
+
+jntIK = IKでむずびたいジョイントを習得
+空のノードをジョイントの位置に作成
+カーブのコントローラもジョイントの位置に作成
+空のノード親とカーブ子をペアレント
+カーブのtransformとrotateを全て0にする
+カーブ親と空のノード子をペアレント
