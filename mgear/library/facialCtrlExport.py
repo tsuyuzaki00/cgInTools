@@ -6,7 +6,7 @@ from mgear.core import curve
 
 from ..library import simpleJson as SJ
 from ..library import pyNodeEdit as PNE
-import scriptsInTools as SF
+import cgInTools as SF
 
 class FacialCtrl():
     def set_cstp_path(wrk_dir='',folder_name=''):
