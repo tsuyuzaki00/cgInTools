@@ -3,7 +3,7 @@ import pymel.core as pm
 import maya.cmds as cmds
 from maya import utils
 
-from scriptsInTools._Menu import mayaMenu
+from cgInTools._menu import mayaMenu
 utils.executeDeferred(mayaMenu.main)
 
 """
