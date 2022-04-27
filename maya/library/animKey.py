@@ -48,7 +48,7 @@ def sample():
         for param in anim[1]:
             print(anim[0],param)
 
-def moveCheck_create_func(objs,params,count=0):
+def repeatChecks_create_func(objs,params,count=0):
     objs=objs or [
         "nurbsCircle1"
         "nurbsCircle2"
