@@ -1,0 +1,20 @@
+{
+    "global_C0_ctl":[
+        {"attr":"translateX","value":0,"time":0,"intt":"linear","outt":"linear"},
+        {"attr":"translateX","value":100,"time":8,"intt":"linear","outt":"linear"},
+        {"attr":"translateX","value":100,"time":16,"intt":"linear","outt":"linear"},
+        {"attr":"translateX","value":0,"time":24,"intt":"linear","outt":"linear"}
+    ],
+    "leg_L0_fk0_ctl":[
+        {"attr":"rotateZ","value":0,"time":24,"intt":"linear","outt":"linear"},
+        {"attr":"rotateZ","value":90,"time":32,"intt":"linear","outt":"linear"},
+        {"attr":"rotateZ","value":90,"time":40,"intt":"linear","outt":"linear"},
+        {"attr":"rotateZ","value":0,"time":48,"intt":"linear","outt":"linear"},
+        {"attr":"rotateZ","value":-45,"time":56,"intt":"linear","outt":"linear"},
+        {"attr":"rotateZ","value":-45,"time":64,"intt":"linear","outt":"linear"},
+        {"attr":"rotateZ","value":0,"time":72,"intt":"linear","outt":"linear"},
+        {"attr":"rotateY","value":60,"time":80,"intt":"linear","outt":"linear"},
+        {"attr":"rotateY","value":60,"time":88,"intt":"linear","outt":"linear"},
+        {"attr":"rotateZ","value":0,"time":96,"intt":"linear","outt":"linear"}
+    ]
+}

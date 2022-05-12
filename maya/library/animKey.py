@@ -20,8 +20,8 @@ def countKey(interval = 10, keyNum = 4, grpKey = 1, sels = ''):
             pm.setKeyframe()
             nowKey += interval
 
-def simpleKey_create_func(obj,attr,value,time):
-    cmds.setKeyframe(obj,at=attr,v=value,t=[time])
+def simpleKey_create_func(obj,attr,value,time,intt="linear",outt="linear"):
+    cmds.setKeyframe(obj,at=attr,v=value,t=[time],itt=intt,ott=outt)
 
 
 def main():
