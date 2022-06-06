@@ -1,6 +1,27 @@
 import pymel.core as pm
 import maya.cmds as cmds
 
+class CAnimKey():
+    def run(self,obj,attr,value,time,intt="linear",outt="linear"):
+        cmds.setKeyframe(obj,at=attr,v=value,t=[time],itt=intt,ott=outt)
+        return obj,attr,value,time,intt,outt
+
+    def exAnim(self):
+        pass
+    
+    def inAnim(self):
+        pass
+
+    def repeatChecks_create_func(self,objs,params,count=0):
+        for obj in objs:
+            for param in params:
+                attr=param["attr"]
+                value=param["value"]
+                time=param["time"]+count
+                self.run(obj,attr,value,time)
+            count=count+params[-1]["time"]
+
+
 def multiCountKey(interval = 10, keyNum = 4, grpKey = 1, sels = ''):
     cmds.select(sels)
     num = keyNum * grpKey
@@ -20,8 +41,6 @@ def countKey(interval = 10, keyNum = 4, grpKey = 1, sels = ''):
             pm.setKeyframe()
             nowKey += interval
 
-def simpleKey_create_func(obj,attr,value,time,intt="linear",outt="linear"):
-    cmds.setKeyframe(obj,at=attr,v=value,t=[time],itt=intt,ott=outt)
 
 
 def main():
@@ -48,23 +67,13 @@ def sample():
         for param in anim[1]:
             print(anim[0],param)
 
-def repeatChecks_create_func(objs,params,count=0):
-    objs=objs or [
-        "nurbsCircle1"
-        "nurbsCircle2"
-    ]
-    params=params or [
-        {"attr":"rotateZ","value":0,"time":0},
-        {"attr":"rotateZ","value":-60,"time":6},
-        {"attr":"rotateZ","value":-60,"time":12},
-        {"attr":"rotateZ","value":0,"time":24},
-    ]
-
-    for obj in objs:
-        for param in params:
-            attr=param["attr"]
-            value=param["value"]
-            time=param["time"]+count
-            #print(obj,attr,value,time)
-            simpleKey_create_func(obj,attr,value,time)
-        count=count+params[-1]["time"]
+objs=[
+    "nurbsCircle1"
+    "nurbsCircle2"
+],
+params=[
+{"attr":"rotateZ","value":0,"time":0},
+{"attr":"rotateZ","value":-60,"time":6},
+{"attr":"rotateZ","value":-60,"time":12},
+{"attr":"rotateZ","value":0,"time":24},
+]
