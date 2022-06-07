@@ -12,41 +12,25 @@ class CAnimKey():
     def inAnim(self):
         pass
 
-    def repeatChecks_create_func(self,objs,params,count=0):
+    def sameSetKey_create_func(self,objs,params,start=0):
         for obj in objs:
             for param in params:
                 attr=param["attr"]
                 value=param["value"]
-                time=param["time"]+count
+                time=param["time"]+start
                 self.run(obj,attr,value,time)
-            count=count+params[-1]["time"]
+
+    def repeatSetKey_create_func(self,objs,params,start=0):
+        count=0
+        for obj in objs:
+            for param in params:
+                attr=param["attr"]
+                value=param["value"]
+                time=param["time"]+count+start
+                self.run(obj,attr,value,time)
+            count=count+(params[-1]["time"]-params[0]["time"])
 
 
-def multiCountKey(interval = 10, keyNum = 4, grpKey = 1, sels = ''):
-    cmds.select(sels)
-    num = keyNum * grpKey
-    nowKey = cmds.currentTime( query=True )
-    for loopNum in range(num):
-        cmds.currentTime( nowKey )
-        cmds.setKeyframe()
-        nowKey += interval
-
-def countKey(interval = 10, keyNum = 4, grpKey = 1, sels = ''):
-    for sel in sels:
-        pm.select(sel)
-        num = keyNum * grpKey
-        nowKey = pm.currentTime( query=True )
-        for loopNum in range(num):
-            pm.currentTime( nowKey )
-            pm.setKeyframe()
-            nowKey += interval
-
-
-
-def main():
-    sels = pm.selected()
-    multiCountKey(interval = 5, keyNum = 4, grpKey = 1, sels = sels)
-    #countKey(interval = 5, keyNum = 4, grpKey = 1, sels = sels)
 
 def sample():
     anim_dict={
@@ -67,13 +51,13 @@ def sample():
         for param in anim[1]:
             print(anim[0],param)
 
-objs=[
-    "nurbsCircle1"
-    "nurbsCircle2"
-],
-params=[
-{"attr":"rotateZ","value":0,"time":0},
-{"attr":"rotateZ","value":-60,"time":6},
-{"attr":"rotateZ","value":-60,"time":12},
-{"attr":"rotateZ","value":0,"time":24},
-]
+    objs=[
+        "nurbsCircle1"
+        "nurbsCircle2"
+    ],
+    params=[
+        {"attr":"rotateZ","value":0,"time":0},
+        {"attr":"rotateZ","value":-60,"time":6},
+        {"attr":"rotateZ","value":-60,"time":12},
+        {"attr":"rotateZ","value":0,"time":24},
+    ]
