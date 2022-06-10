@@ -32,7 +32,6 @@ class CProximityPin():
                 [str(parentInverseMatrix_node)+".matrixSum",str(decomposeMatirix_node)+".inputMatrix"],
                 [str(decomposeMatirix_node)+".outputTranslate",str(ctrl_npo[0])+".translate"],
                 [str(decomposeMatirix_node)+".outputRotate",str(ctrl_npo[0])+".rotate"],
-                [str(decomposeMatirix_node)+".outputScale",str(ctrl_npo[0])+".scale"],
                 [str(decomposeMatirix_node)+".outputShear",str(ctrl_npo[0])+".shear"],
             ]
             self.connectAttr_for_func(matrixConnects)
@@ -50,11 +49,14 @@ class CProximityPin():
             
     def proximityPin_create_node(self,node_name):
         proxPin_node = cmds.createNode("proximityPin", n=node_name+"_pxmp")
-        cmds.setAttr(str(proxPin_node)+".coordMode", 1)# Uses UV for coordinate mode
-        cmds.setAttr(str(proxPin_node)+".normalAxis", 0)# Uses X for Normal Axis
-        cmds.setAttr(str(proxPin_node)+".tangentAxis", 1)# Uses Y for Tanget Axis
-        cmds.setAttr(str(proxPin_node)+".offsetTranslation", 1)
-        cmds.setAttr(str(proxPin_node)+".offsetOrientation", 1)
+        proxPinSetAttrs = [
+            [str(proxPin_node)+".coordMode", 1], # Uses UV for coordinate mode
+            [str(proxPin_node)+".normalAxis", 0], # Uses X for Normal Axis
+            [str(proxPin_node)+".tangentAxis", 1], # Uses Y for Tanget Axis
+            [str(proxPin_node)+".offsetTranslation", 1],
+            [str(proxPin_node)+".offsetOrientation", 1],
+        ]
+        self.setAttr_for_func(proxPinSetAttrs)
         return proxPin_node
 
     def multMatrix_create_node(self,node,matrix_name,rename,set_index=0):
@@ -66,8 +68,12 @@ class CProximityPin():
     def connectAttr_for_func(self,twoConnects):
         for sourcs,target in twoConnects:
             cmds.connectAttr(sourcs,target)
+    
+    def setAttr_for_func(self,twoSetNode):
+        for nodeAttr,value in twoSetNode:
+            cmds.setAttr(nodeAttr,value)
 
-def main():
+def sample():
     twoConnects = [
         ["test00_geo",["test01_ctrl","test02_ctrl"]],
         ["test01_geo",["test11_ctrl","test12_ctrl"]],

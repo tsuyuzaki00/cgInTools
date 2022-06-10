@@ -13,9 +13,9 @@ class CTargetMove():
         target_pos = self.conpornent_pos(target_name,position_id)
         cmds.move(target_pos[0],target_pos[1],target_pos[2],source_name,a=True)
     
-    def conpornent_pos(self,source_name,position_id):
+    def conpornent_pos(self,target_name,position_id):
         #bbox = cmds.xform(source_name, query=True, boundingBox=True, ws=True)
-        bbox = cmds.exactWorldBoundingBox(source_name,ignoreInvisible=False)
+        bbox = cmds.exactWorldBoundingBox(target_name,ignoreInvisible=False)
         if position_id == 1:
             up = [(bbox[0]+bbox[3])/2,bbox[4],(bbox[2]+bbox[5])/2]
             return up

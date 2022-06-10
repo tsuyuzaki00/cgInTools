@@ -27,7 +27,7 @@ class TargetPosWindow(UI.TargetPosWindowBase):
         position_id = self.position_group.checkedId()
         source_name = eval(source_line)
         target_name = eval(target_line)
-        _CTgmv = TM.CTargetMove(source_name,target_name,position_id)
+        _CTgmv = TM.CTargetMove(target_name,source_name,position_id)
         _CTgmv.run()
 
     def center_button_onClicked(self):
