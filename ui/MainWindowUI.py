@@ -12,20 +12,24 @@ class MainWindowBase(QMainWindow):
         file_menu = menuBar.addMenu("File")
         self.centerWidget = QWidget()
 
+        reset_action = QAction("Reset Settings", self)
+        restore_action = QAction("Restore Settings", self)
+        save_action = QAction("Save Settings", self)
         import_action = QAction("Import Settings", self)
         export_action = QAction("Export Settings", self)
-        reset_action = QAction("Reset Settings", self)
 
+        file_menu.addAction(reset_action)
+        file_menu.addAction(restore_action)
+        file_menu.addAction(save_action)
         file_menu.addAction(import_action)
         file_menu.addAction(export_action)
-        file_menu.addAction(reset_action)
 
         #centralWidget.setLayout(layout) Widgetizing a layout
         self.setCentralWidget(self.centerWidget)
 
         statusBar.showMessage("")
         
-"""
-window_instance = MainWindowBase()
-window_instance.show()
-"""
+
+#window_instance = MainWindowBase()
+#window_instance.show()
+
