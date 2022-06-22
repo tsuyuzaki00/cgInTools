@@ -8,7 +8,6 @@ import os
 from maya import cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
-import scriptsInTools as SF
 from ...ui import scriptsRunUI as UI
 from ..library import simpleJson as SJ
 

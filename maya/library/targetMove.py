@@ -1,10 +1,10 @@
 import maya.cmds as cmds
 
 class CTargetMove():
-    def __init__(self,source,target,posNum):
+    def __init__(self,source,target,posNum=4):
         self.source = source
         self.target = target
-        self.posNum = 1 or posNum
+        self.posNum = posNum
 
     def run(self):
         self.moving_obj(self.source,self.target,self.posNum)

@@ -11,7 +11,7 @@ from shiboken2 import wrapInstance
 import cgInTools as SF
 from ..library import simpleJson as SJ
 from ...ui import scriptsRunUI as UI
-from ...ui import MainWindowUI as mainUI
+from ...ui import mainWindowUI as mainUI
 
 class MainMenu(mainUI.MainWindowBase):
     def __init__(self, parent):
