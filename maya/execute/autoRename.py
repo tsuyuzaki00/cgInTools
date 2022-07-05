@@ -2,7 +2,7 @@ import pymel.core as pm
 import maya.cmds as cmds
 
 from ..library import namingSplits as ngs
-import scriptsInTools as sf
+from .... import cgInTools as sf
 from ..library import simpleJson as sj
 
 def main():

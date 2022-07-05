@@ -9,5 +9,8 @@ def main():
     sels = cmds.ls(sl = True)
     for sel in sels:
         cluster_node = _GeoRenameCluster.geoSkinCluster_query_node(sel)
-        fix_str = _GeoRenameCluster.clusterRename_edit_obj(sel)
-        cmds.rename(cluster_node,fix_str)
+        if cluster_node == None:
+            pass
+        else :
+            fix_str = _GeoRenameCluster.clusterRename_edit_obj(sel)
+            cmds.rename(cluster_node,fix_str)

@@ -32,6 +32,8 @@ class ClickSelectWindow(UI.ClickSelectWindowBase):
         self.itemContainer = ""
 
     def listClick_onClicked(self):
+        test=self.select_lisWig.currentRow()
+        print(test)
         for obj in self.itemContainer:
             cmds.select(obj,add=True)
 

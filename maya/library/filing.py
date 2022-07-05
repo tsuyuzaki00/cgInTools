@@ -1,6 +1,20 @@
 import maya.cmds as cmds
 import os
 
+class CFile():
+    def __init__(self,wrkDir=""):
+        self.wrkDir=wrkDir or cmds.workspace(q=True,rd=True)
+        cmds.workspace(wrkDir,openWorkspace=True)
+
+def file_save_str(name):
+    currentScenePath=cmds.file(q=True,sn=True)
+    root=os.path.dirname(os.path.dirname(currentScenePath))
+    if root == "":
+        cmds.file(rename=name)
+        cmds.file(save=True,op="v=0",type='mayaAscii')
+    else:
+        cmds.file(save=True,op="v=0",type='mayaAscii')
+
 def grpsExport_edit_func(grps,path,name,ex="ma"):
     originalGrps=[]
     exportGrps=[]
@@ -17,7 +31,6 @@ def grpsExport_edit_func(grps,path,name,ex="ma"):
         for grp in grps:
             cmds.rename(grp+"_original",grp)
 
-
 def exportMA_export_func(selGrps,path,name):
     cmds.select(selGrps)
     fullPath=os.path.join(path,name+".ma")
@@ -26,8 +39,8 @@ def exportMA_export_func(selGrps,path,name):
 def main():
     grps_obj=cmds.ls(sl=True)
     setPath=cmds.workspace(q=True,rd=True)
-    path=os.path.join(setPath,"polite","cage","model")
-    name="model"
+    path=os.path.join(setPath,"polite","middle","base","cage")
+    name="cage"
     grpsExport_edit_func(grps=grps_obj,path=path,name=name,ex="ma")
 
 main()
