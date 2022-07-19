@@ -29,26 +29,36 @@ class ClickSelectWindow(UI.ClickSelectWindowBase):
         self.setObjectName("click_selections")
         self.select_lisWig.itemClicked.connect(self.listClick_onClicked)
         self.select_lisWig.itemDoubleClicked.connect(self.doubleClick_onClicked)
-        self.itemContainer = ""
+        self.container={}
 
     def listClick_onClicked(self):
-        test=self.select_lisWig.currentRow()
-        print(test)
-        for obj in self.itemContainer:
+        itemNum=self.select_lisWig.currentRow()
+        itemObjs=self.container[str(itemNum)]
+        for obj in itemObjs:
             cmds.select(obj,add=True)
 
     def doubleClick_onClicked(self):
         item=self.select_lisWig.currentItem()
-        item.setFlags(item.flags() | Qt.ItemIsEditable)
+        item.setFlags(item.flags()|Qt.ItemIsEditable)
         self.select_lisWig.editItem(item)
 
     def create_button_onClicked(self):
-        item=self.select_lisWig.addItem("item")
-        self.select_lisWig.editItem(item)
+        item=QListWidgetItem()
+        item.setText("item_"+self.type_combo.currentText())
+        self.select_lisWig.insertItem(10000,item)
+        row_int=self.select_lisWig.row(item)
+        self.container[str(row_int)]=[]
 
     def delete_button_onClicked(self):
-        test=self.select_lisWig.currentRow()
-        self.select_lisWig.takeItem(test)
+        itemNum=self.select_lisWig.currentRow()
+        max=len(self.container)
+        max=max-1
+        self.select_lisWig.takeItem(itemNum)
+        for j in range(itemNum,max):
+            if j == max:
+                del self.container[str(max)]
+            else:
+                self.container[str(j)]=self.container[str(j+1)]
 
     def comboType_query_str(self):
         objs=cmds.ls(sl=True)
@@ -74,21 +84,51 @@ class ClickSelectWindow(UI.ClickSelectWindowBase):
 
     def set_button_onClicked(self):
         selObjs=self.comboType_query_str()
-        self.itemContainer = selObjs
-        print(self.itemContainer)
+        itemNum=self.select_lisWig.currentRow()
+        self.container[str(itemNum)]=selObjs
 
     def add_button_onClicked(self):
         selObjs=self.comboType_query_str()
+        itemNum=self.select_lisWig.currentRow()
         for selObj in selObjs:
-            self.itemContainer.append(selObj)
-        print(self.itemContainer)
+            self.container[str(itemNum)].append(selObj)
 
     def edit_button_onClicked(self):
-        print("base")
+        itemNum=self.select_lisWig.currentRow()
+        print(itemNum)
+        itemContainer=self.container[str(itemNum)]
+        print(itemContainer)
 
     def clean_button_onClicked(self):
-        self.itemContainer = ""
-        print(self.itemContainer)
+        itemNum=self.select_lisWig.currentRow()
+        self.container[str(itemNum)]=[]
+
+"""
+class CListWidgetItem(QListWidgetItem):
+    def __init__(self,*args, **kwargs):
+        super(CListWidgetItem,self).__init__(**kwargs)
+        self.container=
+
+    # 番号を格納する
+    def setRow(self,row):
+        self.container[str(row)]=[]
+
+    # コンテナにオブジェクトを格納する
+    def setObjs(self,row,objs):
+        self.container[str(row)]=objs
+
+    # 番号を取得してコンテナを返す
+    def getContainer(self,row):
+        container=self.container[str(row)]
+        return container
+
+    
+    def delContainer(self,row):
+        max=len(self.container)
+        for j in range(row,max):
+
+            self.container[str(j)]=self.container[str(j+1)]
+"""
 
 # mayaのメインウインドウを取得する
 def get_maya_main_window():
