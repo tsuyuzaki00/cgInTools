@@ -34,8 +34,7 @@ class ClickSelectWindow(UI.ClickSelectWindowBase):
     def listClick_onClicked(self):
         itemNum=self.select_lisWig.currentRow()
         itemObjs=self.container[str(itemNum)]
-        for obj in itemObjs:
-            cmds.select(obj,add=True)
+        print(itemObjs),
 
     def doubleClick_onClicked(self):
         item=self.select_lisWig.currentItem()
@@ -48,6 +47,10 @@ class ClickSelectWindow(UI.ClickSelectWindowBase):
         self.select_lisWig.insertItem(10000,item)
         row_int=self.select_lisWig.row(item)
         self.container[str(row_int)]=[]
+        item.setSelected(True)
+        item=self.select_lisWig.currentItem()
+        item.setFlags(item.flags()|Qt.ItemIsEditable)
+        self.select_lisWig.editItem(item)
 
     def delete_button_onClicked(self):
         itemNum=self.select_lisWig.currentRow()
@@ -59,6 +62,19 @@ class ClickSelectWindow(UI.ClickSelectWindowBase):
                 del self.container[str(max)]
             else:
                 self.container[str(j)]=self.container[str(j+1)]
+
+    def single_button_onClicked(self):
+        cmds.select(cl=True)
+        self.containerSelect_quary_list()
+    
+    def multi_button_onClicked(self):
+        self.containerSelect_quary_list()
+
+    def containerSelect_quary_list(self):
+        itemNum=self.select_lisWig.currentRow()
+        itemObjs=self.container[str(itemNum)]
+        for obj in itemObjs:
+            cmds.select(obj,add=True)
 
     def comboType_query_str(self):
         objs=cmds.ls(sl=True)
