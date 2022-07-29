@@ -106,8 +106,21 @@ class SetCurve():
         point = [a00,a01,a02,a00]
         curve = self.degress_linear(point,name)
         return curve
+
+    def feather_plane(self,name="curveName",scale=1,pas=(0,0,0),axis=(1,0,0)):
+        a00 = (1*scale,0,0)
+        a01 = (0.5*scale,0,0.5*scale)
+        a02 = (0,0,0.78*scale)
+        a03 = (-1*scale,0,1*scale)
+        a04 = (-0.5*scale,0,0)
+        a05 = (-1*scale,0,-1*scale)
+        a06 = (0,0,-0.78*scale)
+        a07 = (0.5*scale,0,-0.5*scale)
+        point = [a00,a01,a02,a03,a04,a05,a06,a07,a00]
+        curve = self.degress_linear(point,name)
+        return curve
     
-    def triangle_smooth(self,name="curveName",scale=1,pas=(0,0,0),axis=(1,0,0)):
+    def feather_smooth(self,name="curveName",scale=1,pas=(0,0,0),axis=(1,0,0)):
         a00 = (1.05*scale,0,0)
         a01 = (0.8*scale,0,0.2*scale)
         a02 = (0,0,0.75*scale)
@@ -403,19 +416,40 @@ class SetCurve():
         return curve
 
     def hexagon_solid(self,name="curveName",scale=1,pas=(0,0,0),axis=(1,0,0),height=1):
-        a01 = (-1*scale*height,-1*scale,0*scale)
-        a02 = (-1*scale*height,-0.5*scale,0.87*scale)
-        a03 = (-1*scale*height,0.5*scale,0.87*scale)
-        a04 = (-1*scale*height,1*scale,0*scale)
-        a05 = (-1*scale*height,0.5*scale,-0.87*scale)
-        a06 = (-1*scale*height,-0.5*scale,-0.87*scale)
-        b01 = (1*scale*height,-1*scale,0*scale)
-        b02 = (1*scale*height,-0.5*scale,0.87*scale)
-        b03 = (1*scale*height,0.5*scale,0.87*scale)
-        b04 = (1*scale*height,1*scale,0*scale)
-        b05 = (1*scale*height,0.5*scale,-0.87*scale)
-        b06 = (1*scale*height,-0.5*scale,-0.87*scale)
+        a01 = (0*scale*height,-1*scale,0*scale)
+        a02 = (0*scale*height,-0.5*scale,0.87*scale)
+        a03 = (0*scale*height,0.5*scale,0.87*scale)
+        a04 = (0*scale*height,1*scale,0*scale)
+        a05 = (0*scale*height,0.5*scale,-0.87*scale)
+        a06 = (0*scale*height,-0.5*scale,-0.87*scale)
+        b01 = (2*scale*height,-1*scale,0*scale)
+        b02 = (2*scale*height,-0.5*scale,0.87*scale)
+        b03 = (2*scale*height,0.5*scale,0.87*scale)
+        b04 = (2*scale*height,1*scale,0*scale)
+        b05 = (2*scale*height,0.5*scale,-0.87*scale)
+        b06 = (2*scale*height,-0.5*scale,-0.87*scale)
         point = [a01,a02,a03,a04,a05,a06,a01,b01,b02,a02,b02,b03,a03,b03,b04,a04,b04,b05,a05,b05,b06,a06,b06,b01,a01]
+        curve = self.degress_linear(point,name)
+        return curve
+
+    def octagon_solid(self,name="curveName",scale=1,pas=(0,0,0),axis=(1,0,0),height=1):
+        a01 = (0*scale*height,-1*scale,0*scale)
+        a02 = (0*scale*height,-0.71*scale,0.71*scale)
+        a03 = (0*scale*height,0*scale,1*scale)
+        a04 = (0*scale*height,0.71*scale,0.71*scale)
+        a05 = (0*scale*height,1*scale,0*scale)
+        a06 = (0*scale*height,0.71*scale,-0.71*scale)
+        a07 = (0*scale*height,0*scale,-1*scale)
+        a08 = (0*scale*height,-0.71*scale,-0.71*scale)
+        b01 = (2*scale*height,-1*scale,0*scale)
+        b02 = (2*scale*height,-0.71*scale,0.71*scale)
+        b03 = (2*scale*height,0*scale,1*scale)
+        b04 = (2*scale*height,0.71*scale,0.71*scale)
+        b05 = (2*scale*height,1*scale,0*scale)
+        b06 = (2*scale*height,0.71*scale,-0.71*scale)
+        b07 = (2*scale*height,0*scale,-1*scale)
+        b08 = (2*scale*height,-0.71*scale,-0.71*scale)
+        point = [a01,a02,a03,a04,a05,a06,a07,a08,a01,b01,b02,a02,b02,b03,a03,b03,b04,a04,b04,b05,a05,b05,b06,a06,b06,b07,a07,b07,b08,a08,b08,b01,a01]
         curve = self.degress_linear(point,name)
         return curve
 
@@ -591,19 +625,6 @@ class SetCurve():
         a22 = (0.6*scale,0,-0.2*scale)
         a23 = (0.6*scale,0,-0.4*scale)
         point = [a00,a01,a02,a03,a04,a05,a06,a07,a08,a09,a10,a11,a12,a13,a14,a15,a16,a17,a18,a19,a20,a21,a22,a23,a00]
-        curve = self.degress_linear(point,name)
-        return curve
-
-    def minimum_arrow(self,name="curveName",scale=1,pas=(0,0,0),axis=(1,0,0)):
-        a00 = (1*scale,0,0)
-        a01 = (0.5*scale,0,0.5*scale)
-        a02 = (0,0,0.78*scale)
-        a03 = (-1*scale,0,1*scale)
-        a04 = (-0.5*scale,0,0)
-        a05 = (-1*scale,0,-1*scale)
-        a06 = (0,0,-0.78*scale)
-        a07 = (0.5*scale,0,-0.5*scale)
-        point = [a00,a01,a02,a03,a04,a05,a06,a07,a00]
         curve = self.degress_linear(point,name)
         return curve
 
