@@ -12,15 +12,16 @@ class MainWindowBase(QMainWindow):
         file_menu = menuBar.addMenu("File")
         self.centerWidget = QWidget()
 
-        reset_action = QAction("Reset Settings", self)
+        refresh_action = QAction("Refresh Settings", self)
         restore_action = QAction("Restore Settings", self)
         save_action = QAction("Save Settings", self)
         import_action = QAction("Import Settings", self)
         export_action = QAction("Export Settings", self)
 
-        file_menu.addAction(reset_action)
+        file_menu.addAction(refresh_action)
         file_menu.addAction(restore_action)
         file_menu.addAction(save_action)
+        file_menu.addSeparator()
         file_menu.addAction(import_action)
         file_menu.addAction(export_action)
 

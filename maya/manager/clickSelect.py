@@ -48,9 +48,6 @@ class ClickSelectWindow(UI.ClickSelectWindowBase):
         row_int=self.select_lisWig.row(item)
         self.container[str(row_int)]=[]
         item.setSelected(True)
-        item=self.select_lisWig.currentItem()
-        item.setFlags(item.flags()|Qt.ItemIsEditable)
-        self.select_lisWig.editItem(item)
 
     def delete_button_onClicked(self):
         itemNum=self.select_lisWig.currentRow()
