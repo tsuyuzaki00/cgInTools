@@ -1,10 +1,14 @@
+# -*- coding: iso-8859-15 -*-
+
 import maya.cmds as cmds
 import os
 
-class CFile():
-    def __init__(self,wrkDir=""):
-        self.wrkDir=wrkDir or cmds.workspace(q=True,rd=True)
+class CFiling():        
+    def wrkDir_create_path(self,wrkDir="",addFolder=""):
+        wrkDir=wrkDir or cmds.workspace(q=True,rd=True)
         cmds.workspace(wrkDir,openWorkspace=True)
+        newPath=os.path.join(wrkDir,addFolder)
+        return newPath
 
 def file_save_str(name):
     currentScenePath=cmds.file(q=True,sn=True)
@@ -42,5 +46,3 @@ def main():
     path=os.path.join(setPath,"polite","middle","base","cage")
     name="cage"
     grpsExport_edit_func(grps=grps_obj,path=path,name=name,ex="ma")
-
-main()

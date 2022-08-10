@@ -11,7 +11,6 @@ from shiboken2 import wrapInstance
 
 from ...ui import mainWindowUI as mainUI
 from ...ui import clickSelectUI as UI
-from ..library import simpleJson as SJ
 
 class MainMenu(mainUI.MainWindowBase):
     def __init__(self, parent):

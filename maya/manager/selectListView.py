@@ -9,7 +9,7 @@ from maya import cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import cgInTools as SF
-from ..library import simpleJson as SJ
+from ..library import cjson as SJ
 from ...ui import scriptsRunUI as UI
 from ...ui import mainWindowUI as mainUI
 
