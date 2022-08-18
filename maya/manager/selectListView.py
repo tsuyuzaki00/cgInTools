@@ -30,7 +30,6 @@ class ScriptsRunWindow(UI.ScriptsRunWindowBase):
         self.left_button.setText("Selection")
         self.center_button.setText("Select Replace")
         self.right_button.setText("Select Add")
-        self.simple_json = SJ.SimpleJson()
 
     def view_scripts(self,sels):
         for sel in sels:

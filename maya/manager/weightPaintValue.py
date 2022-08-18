@@ -15,7 +15,6 @@ from ..library import cjson as SJ
 class SkinValueWindow(UI.SkinValueWindowBase):
     def __init__(self, parent):
         super(SkinValueWindow, self).__init__(parent)
-        self.simple_json = SJ.SimpleJson()
         
     def button_0_onClicked(self):
         value = 0
