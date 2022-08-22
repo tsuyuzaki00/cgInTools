@@ -4,15 +4,21 @@ from cgInTools.maya.library import cjson as cj; reload(cj);
 from cgInTools.maya.library import cfiling as cf; reload(cf);
 import maya.cmds as cmds
 
-json_name="skin"
-ex="CSkinPack"
-
 _cj=cj.CJson()
 _cf=cf.CFiling()
 
-objs=cmds.ls(sl=True)
-packFiles={"packFiles":objs}
-
+json_name="skin"
+ex="CSkin"
 path=_cf.wrkDir_create_path(wrkDir=r"D:\_test",addFolder="jsonTest")
-json_file=_cj.pathSetting_create_str(path=path,json_name=json_name,extension=ex)
-_cj.writeJson_create_func(json_file,dict=packFiles)
+
+objs=cmds.ls(sl=True)
+writePack_list=[]
+for obj in objs:
+    attrs=cmds.listAttr(obj,r=True,k=True,u=True)
+    write_dict={"obj":obj,"attr":attrs}
+    element_dict=_cj.packDict_create_list(obj,ex,write_dict)
+    writePack_list.append(element_dict)
+
+_cj.writePack_create_func(writePack_list,path,pack_file=json_name)
+#_cj.writeJson_create_func(json_file,dict=packFiles)
+#_cj.writePack_create_func(json_file,write_dict)
