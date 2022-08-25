@@ -2,7 +2,7 @@
 # -*- coding: iso-8859-15 -*-
 
 import maya.cmds as cmds
-from ..library import selectBindJoints as SBJ;
+from ..library import cBindJoint as SBJ;
 
 def main():
     _GeoRenameCluster = SBJ.ListBindJoints()

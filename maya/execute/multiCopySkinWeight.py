@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
-from ..library import selectBindJoints as SBJ
+from ..library import cBindJoint as cbj; reload(cbj);
 def main():
     objs = cmds.ls(sl=True,l=True)
     if len(objs) < 2:
@@ -10,9 +10,8 @@ def main():
     else:
         source = objs[0]
         targets = objs[1:]
-    _Weights = SBJ.ListBindJoints()
-    normal_targets,cluster_targets = _Weights.geoBindSplit_edit_tuple_list2(targets)
-    _Weights.copyJointWeights_edit_func(source,normal_targets)
-    _Weights.copySkinWeights_edit_func(source,normal_targets)
-    #_Weights.addJointWeights_edit_func(source,cluster_targets)
-    _Weights.copySkinWeights_edit_func(source,cluster_targets)
+    normal_targets,cluster_targets = cbj.geoBindSplit_edit_tuple_list2(targets)
+    cbj.copyJointWeights_edit_func(source,normal_targets)
+    cbj.copySkinWeights_edit_func(source,normal_targets)
+    #cbj.addJointWeights_edit_func(source,cluster_targets)
+    cbj.copySkinWeights_edit_func(source,cluster_targets)

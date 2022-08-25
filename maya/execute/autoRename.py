@@ -3,7 +3,7 @@ import maya.cmds as cmds
 
 from ..library import namingSplits as ngs
 from .... import cgInTools as sf
-from ..library import cjson as sj
+from ..library import cJson as sj
 
 def main():
     simple_json = sj.SimpleJson()

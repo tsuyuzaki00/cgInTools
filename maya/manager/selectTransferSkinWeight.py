@@ -8,7 +8,7 @@ from maya import cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 from ...ui import scriptsRunUI as UI;
-from ..library import selectBindJoints as SBJ
+from ..library import cBindJoint as SBJ
 
 class ScriptsRunWindow(UI.ScriptsRunWindowBase):
     def __init__(self, parent):

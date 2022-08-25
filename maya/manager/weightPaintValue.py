@@ -10,7 +10,7 @@ from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import cgInTools as SF
 from ...ui import skinWeightUI as UI
-from ..library import cjson as SJ
+from ..library import cJson as SJ
 
 class SkinValueWindow(UI.SkinValueWindowBase):
     def __init__(self, parent):

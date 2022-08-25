@@ -10,7 +10,7 @@ from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import cgInTools as sf
 from ...ui import scriptsRunUI as UI
-from ..library import cjson as SJ
+from ..library import cJson as SJ
 
 class LookNodeTypeWindow(UI.ScriptsRunWindowBase):
     def __init__(self, parent):
