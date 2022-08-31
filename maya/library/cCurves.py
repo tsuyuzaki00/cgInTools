@@ -353,7 +353,7 @@ class SetCurve():
             vartex = (math.cos(math.pi*(pizza*i))*scale,0,math.sin(math.pi*(pizza*i))*scale)
             point.append(vartex)
         for i in range(stroke*3):
-            vartex = (math.sin(math.pi*((pizza*i)+pizza*4))*scale,math.cos(math.pi*((pizza*i)+pizza*4))*scale,0)
+            vartex = (math.sin(math.pi*((pizza*i)+pizza*stroke))*scale,math.cos(math.pi*((pizza*i)+pizza*stroke))*scale,0)
             point.append(vartex)
         point.append((0,1*scale,0))
         curve = self.degress_linear(point,name)

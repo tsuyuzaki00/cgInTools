@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
-def main():
+def delThree_edit_func():
     sels = cmds.ls(sl=True,dag=True,tr=True)
     for sel in sels:
         unlocks(sel)#Prevention of unlock errors
@@ -15,3 +15,6 @@ def unlocks(sel):
     attrs = ["tx","ty","tz","rx","ry","rz","sx","sy","sz","visibility"]
     for attr in attrs:
         cmds.setAttr(sel+"."+attr,l=False)
+
+def main():
+    delThree_edit_func()
