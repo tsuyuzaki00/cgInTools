@@ -10,7 +10,6 @@ from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import cgInTools as sf
 from ...ui import scriptsRunUI as UI
-from ..library import cJson as SJ
 class LookNodeTypeWindow(UI.ScriptsRunWindowBase):
     def __init__(self, parent):
         super(LookNodeTypeWindow, self).__init__(parent)
@@ -19,7 +18,6 @@ class LookNodeTypeWindow(UI.ScriptsRunWindowBase):
         self.left_button.setText("print")
         self.center_button.setText("Select Replace")
         self.right_button.setText("Select Add")
-        self.simple_json = SJ.SimpleJson()
 
     def view_scripts(self,sels):
         for sel in sels:

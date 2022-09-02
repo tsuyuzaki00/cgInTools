@@ -2,6 +2,7 @@
     "menu_title":"cgInTools",
     "order_menu":
     [
+        ["multi","cleaning"],
         ["single","modeling"],
         ["multi","create_object"],
         ["single","rigging"],
@@ -17,11 +18,14 @@
     ],
     "menus":
     {
+        "cleaning":[
+            ["Geometry Reset","cgInTools.maya.execute","freezeResetHisDel","main()",""],
+            ["UnKnown Delete","cgInTools.maya.execute","unknownDel","main()",""]
+        ],
         "window":[],
         "modeling":
         [
             ["autoRename","cgInTools.maya.execute","autoRename","main()",""],
-            ["GeometryReset","cgInTools.maya.execute","freezeResetHisDel","main()",""],
             ["CornerEdge","cgInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
         ],
         "rigging":

@@ -2,13 +2,12 @@ import maya.cmds as cmds
 import pymel.core as pm
 
 import cgInTools as sf
-import simpleJson as sj
+import cJson as sj
 
 class NamingSplits():
     def __init__(self):
-        simple_json = sj.SimpleJson()
-        setting = simple_json.path_setting(sf.maya_settings_folder,"autoRename")
-        self.read_setting = simple_json.read_json(setting)
+        setting = sj.pathSetting_create_str(sf.maya_settings_folder,"autoRename")
+        self.read_setting = sj.readJson_quary_dict(setting)
 
     def scene(self):
         sceneName = pm.sceneName().basename()

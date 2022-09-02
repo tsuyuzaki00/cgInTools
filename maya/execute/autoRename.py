@@ -1,7 +1,7 @@
 import pymel.core as pm
 import maya.cmds as cmds
 
-from ..library import namingSplits as ngs
+from ..library import cNaming as ngs
 from .... import cgInTools as sf
 from ..library import cJson as sj
 
