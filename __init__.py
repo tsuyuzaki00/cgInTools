@@ -1,18 +1,20 @@
 import os
 
 root_path = os.path.dirname(__file__) #.../cgInTools/
-ui_folder = os.path.join(root_path,"ui")
+ui_path = os.path.join(root_path,"ui")
 
-maya_folder = os.path.join(root_path,"maya")
-maya_settings_folder = os.path.join(maya_folder,"_settings")
-maya_data_folder = os.path.join(maya_folder,"data")
-maya_execute_folder = os.path.join(maya_folder,"execute")
-maya_library_folder = os.path.join(maya_folder,"library")
-maya_manager_folder = os.path.join(maya_folder,"manager")
+maya_path = os.path.join(root_path,"maya")
+maya_settings_path = os.path.join(maya_path,"_settings")
+maya_defSetProject_path = os.path.join(maya_path,"_defSetProject")
+maya_data_path = os.path.join(maya_path,"data")
+maya_execute_path = os.path.join(maya_path,"execute")
+maya_library_path = os.path.join(maya_path,"library")
+maya_manager_path = os.path.join(maya_path,"manager")
+maya_setup_path = os.path.join(maya_path,"setup")
 
-mgear_folder = os.path.join(root_path,"mgear")
-mgear_settings_folder = os.path.join(mgear_folder,"_settings")
-mgear_data_folder = os.path.join(mgear_folder,"data")
-mgear_execute_folder = os.path.join(mgear_folder,"execute")
-mgear_library_folder = os.path.join(mgear_folder,"library")
-mgear_manager_folder = os.path.join(mgear_folder,"manager")
+mgear_path = os.path.join(root_path,"mgear")
+mgear_settings_path = os.path.join(mgear_path,"_settings")
+mgear_data_path = os.path.join(mgear_path,"data")
+mgear_execute_path = os.path.join(mgear_path,"execute")
+mgear_library_path = os.path.join(mgear_path,"library")
+mgear_manager_path = os.path.join(mgear_path,"manager")

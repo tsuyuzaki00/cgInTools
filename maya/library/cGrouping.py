@@ -1,3 +1,4 @@
+# -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
 def grpNodeChoise_query_list(grpName,choisList,type="transform"):

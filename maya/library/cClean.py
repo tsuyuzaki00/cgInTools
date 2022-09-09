@@ -1,20 +1,18 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
-def delThree_edit_func():
-    sels = cmds.ls(sl=True,dag=True,tr=True)
-    for sel in sels:
-        unlocks_edit_func(sel)#Prevention of unlock errors
-    for sel in sels:
-        cmds.makeIdentity(sel,apply=True,t=True,r=True,s=True,pn=True)#Freeze Transformations
-        cmds.makeIdentity(sel,apply=False,t=True,r=True,s=True)#Reset Transformations
-        cmds.delete(sel,ch = True)#Delete by Type History
+def delThree_edit_func(objs):
+    for obj in objs:
+        unlocks_edit_func(obj)#Prevention of unlock errors
+        cmds.makeIdentity(obj,apply=True,t=True,r=True,s=True,pn=True)#Freeze Transformations
+        cmds.makeIdentity(obj,apply=False,t=True,r=True,s=True)#Reset Transformations
+        cmds.delete(obj,ch = True)#Delete by Type History
         cmds.select(cl=True)
 
-def unlocks_edit_func(sel):
+def unlocks_edit_func(node):
     attrs = ["tx","ty","tz","rx","ry","rz","sx","sy","sz","visibility"]
     for attr in attrs:
-        cmds.setAttr(sel+"."+attr,l=False)
+        cmds.setAttr(node+"."+attr,l=False)
 
 def delUnknownNode_edit_func():
     unknown_nodes = cmds.ls(type = 'unknown')
