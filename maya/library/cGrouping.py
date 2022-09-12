@@ -1,6 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
+
 def grpNodeChoise_query_list(grpName,choisList,type="transform"):
     choiseNodes=[]
     grpName=objSence_check_string(objName=grpName)
@@ -11,9 +12,6 @@ def grpNodeChoise_query_list(grpName,choisList,type="transform"):
             if choisName in node:
                 choiseNodes.append(node)
     return choiseNodes
-
-def geometryClean_create_obj(self,):
-    pass
 
 def objSence_check_string(objName):
     if cmds.objExists(objName):

@@ -1,13 +1,77 @@
+import os
 import maya.cmds as cmds
 import pymel.core as pm
 
-import cgInTools as sf
-import cJson as sj
+import cJson as cj
+
+class Naming():
+    def __init__(self):
+        self.obj="obj"
+        self.name="name"
+        self.pos="C"
+        self.node="node"
+        self.num='0'.zfill(2)
+        sceneName=cmds.workspace(q=True,sn=True).split("/")[-1]
+        self.scene=sceneName
+        self.orders=["name","node","pos","num"]
+
+#Public function
+    def setObj(self,obj):
+        self.obj=obj
+        return self.obj
+
+    def setName(self,name):
+        self.name=name
+        return self.name
+
+    def setPos(self,pos):
+        self.pos=pos
+        return self.pos
+
+    def setOrders(self,orders):
+        self.orders=orders
+        return self.orders
+
+    def rename(self):
+        self.node=self.node_query_str(self.obj)
+        orders=[]
+        for order in self.orders:
+            add=eval("self."+order)
+            orders.append(add)
+        rename_list = [order for order in orders if order != ""]
+        autoRename = "_".join(rename_list)
+        cmds.rename(self.obj, autoRename)
+
+#Private function
+    def node_query_str(self,obj):
+        root_path = os.path.dirname(__file__) #.../cgInTools/maya/library
+        maya_path = os.path.abspath(os.path.join(root_path,".."))
+        maya_settings_path = os.path.join(maya_path,"_settings")
+        setting_path=cj.pathSetting_create_str(maya_settings_path,"autoRename")
+        readSettings_dict=cj.readJson_quary_dict(setting_path)
+        getNode_str=self.isNodeType_query_str(obj)
+        nodeName_str=readSettings_dict["node_renames"][getNode_str]
+        return nodeName_str
+
+    def isNodeType_query_str(self,obj):
+        objType_str=cmds.objectType(obj)
+        if objType_str=="transform":
+            shape_list = cmds.listRelatives(obj,s=True)
+            if shape_list==None:
+                return "none"
+            else :
+                shapeType_str=cmds.objectType(shape_list[0])
+                return shapeType_str
+        else :
+            objType_str=cmds.objectType(obj)
+            return objType_str
+
 
 class NamingSplits():
     def __init__(self):
-        setting = sj.pathSetting_create_str(sf.maya_settings_folder,"autoRename")
-        self.read_setting = sj.readJson_quary_dict(setting)
+        pass
+        #setting = sj.pathSetting_create_str(sf.maya_settings_path,"autoRename")
+        #self.read_setting = sj.readJson_quary_dict(setting)
 
     def scene(self):
         sceneName = pm.sceneName().basename()
@@ -39,136 +103,6 @@ class NamingSplits():
         else :
             obj = part[0]
             return obj
-
-    def node(self,sel):
-        for node_rename in self.read_setting["node_renames"]:
-            if cmds.nodeType(sel) == node_rename.keys()[0]:
-                if isinstance(node_rename.values()[0], list):
-                    for child_node in node_rename.values()[0]:
-                        shape = cmds.listRelatives(sel,s=True)
-                        if cmds.nodeType(shape) == child_node.keys()[0]:
-                            node = child_node.values()[0]
-                            return node
-                        elif cmds.nodeType(shape) == None:
-                            node = "null"
-                            return node
-                else:
-                    node = node_rename.values()[0]
-                    return node
-
-    def old_node(self, sel):
-        if cmds.nodeType(sel) == "transform":
-            if cmds.listRelatives(sel,s=True) == None:
-                node = "null"
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'mesh'):
-                node = 'geo'
-                # cage
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'nurbsCurve'):
-                node = 'ctl'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'nurbsSurface'):
-                node = 'surf'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'camera'):
-                node = 'cam'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'locator'):
-                node = 'loc'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'imagePlane'):
-                node = 'image'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'spotLight'):
-                node = 'spl'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'ambientLight'):
-                node = 'aml'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'pointLight'):
-                node = 'pol'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'directionalLight'):
-                node = 'drl'
-                return node
-            elif pm.listRelatives(sel, c = True, type = 'follicle'):
-                node = 'flc'
-                return node
-        elif sel.nodeType() == 'joint':
-            node = 'jnt'
-            return node
-        elif sel.nodeType() == 'parentConstraint':
-            node = 'prc'
-            return node
-        elif sel.nodeType() == 'pointConstraint':
-            node = 'pnc'
-            return node
-        elif sel.nodeType() == 'orientConstraint':
-            node = 'orc'
-            return node
-        elif sel.nodeType() == 'scaleConstraint':
-            node = 'slc'
-            return node
-        elif sel.nodeType() == 'aimConstraint':
-            node = 'amc'
-            return node
-        elif sel.nodeType() == 'poleVectorConstraint':
-            node = 'pvc'
-            return node
-        elif sel.nodeType() == 'ikHandle':
-            node = 'ikhl'
-            return node
-        elif sel.nodeType() == 'ikEffector':
-            node = 'ikef'
-            return node
-        elif sel.nodeType() == 'condition':
-            node = 'cnd'
-            return node
-        elif sel.nodeType() == 'multiplyDivide':
-            node = 'mdp'
-            return node
-        elif sel.nodeType() == 'plusMinusAverage':
-            node = 'pma'
-            return node
-        elif sel.nodeType() == 'reverse':
-            node = 'rvs'
-            return node
-        elif sel.nodeType() == 'clamp':
-            node = 'clp'
-            return node
-        elif sel.nodeType() == 'blendColors':
-            node = 'bdc'
-            return node
-        elif sel.nodeType() == 'multMatrix':
-            node = 'mmx'
-            return node
-        elif sel.nodeType() == 'decomposeMatrix':
-            node = 'dmx'
-            return node
-        elif sel.nodeType() == 'composeMatrix':
-            node = 'cmx'
-            return node
-        elif sel.nodeType() == 'distanceBetween':
-            node = 'dist'
-            return node
-        elif sel.nodeType() == 'curveInfo':
-            node = 'info'
-            return node
-        elif sel.nodeType() == 'skinCluster':
-            node = 'skc'
-            # csw = copy skin weights
-            return node
-        elif sel.nodeType() == 'lambert':
-            node = 'lbt'
-            #test = pm.listConnections(sel + '.color', d = True)
-            #print test
-            #pm.rename(color,node + obj(sel) + scene())
-            return node
-
-        #elif sel.nodeType() == 'file':
-            node = 'color' #baseColor
-            node = 'nmp' #normalMap
 
     def pos(self, sel):
         pos = 'C'
