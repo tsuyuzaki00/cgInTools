@@ -1,19 +1,23 @@
 import os
+import itertools
 import maya.cmds as cmds
 import pymel.core as pm
 
 import cJson as cj
+import cAttributes as ca; reload(ca);
 
 class Naming():
     def __init__(self):
-        self.obj="obj"
+        self.obj="null"
         self.name="name"
         self.pos="C"
         self.node="node"
-        self.num='0'.zfill(2)
+        self.number=0
+        self.num=str(self.number).zfill(2)
         sceneName=cmds.workspace(q=True,sn=True).split("/")[-1]
         self.scene=sceneName
         self.orders=["name","node","pos","num"]
+        self.rename_str=""
 
 #Public function
     def setObj(self,obj):
@@ -32,15 +36,49 @@ class Naming():
         self.orders=orders
         return self.orders
 
+    def getRename(self):
+        order_list=[]
+        nullDel_list = [order for order in self.orders if order != ""]
+        for chengeSelf in nullDel_list:
+            add=eval("self."+chengeSelf)
+            order_list.append(add)
+        self.rename_str = "_".join(order_list)
+        return self.rename_str
+
+    def markAttr(self):
+        self.node=self.node_query_str(self.obj)
+        self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
+        mark=ca.Attrebute()
+        mark.setObj(self.obj)
+        mark.setAttrType("string")
+        self.addStringAttrs=[
+            {"attrName":"cname","attrString":self.name},
+            {"attrName":"cpos","attrString":self.pos},
+            {"attrName":"cnode","attrString":self.node},
+            {"attrName":"cnum","attrString":self.num},
+        ]
+        for addStringAttr in self.addStringAttrs:
+            mark.setName(addStringAttr["attrName"])
+            mark.setStringName(addStringAttr["attrString"])
+            mark.addAttr()
+
     def rename(self):
         self.node=self.node_query_str(self.obj)
-        orders=[]
-        for order in self.orders:
-            add=eval("self."+order)
-            orders.append(add)
-        rename_list = [order for order in orders if order != ""]
-        autoRename = "_".join(rename_list)
-        cmds.rename(self.obj, autoRename)
+        self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
+        rename_str=self.getRename()
+        cmds.rename(self.obj,rename_str)
+
+    def setRename(self):
+        self.addStringAttrs=[
+            {"attrName":"cname","attrString":self.name},
+            {"attrName":"cpos","attrString":self.pos},
+            {"attrName":"cnode","attrString":self.node},
+            {"attrName":"cnum","attrString":self.num},
+        ]
+        for addStringAttr in self.addStringAttrs:
+            addStringAttr["attrString"]=cmds.getAttr(self.obj+"."+addStringAttr["attrName"])            
+        rename_str=self.getRename()
+        cmds.rename(self.obj,rename_str)
 
 #Private function
     def node_query_str(self,obj):
@@ -65,6 +103,45 @@ class Naming():
         else :
             objType_str=cmds.objectType(obj)
             return objType_str
+
+    def number_query_str(self,obj,name,pos,node,num):
+        num_str=str(num).zfill(2) 
+        one_list = [(name),(pos),(node),(num_str)]
+        two_list = list(itertools.product([name,pos,node,num_str],repeat=2))
+        three_list = list(itertools.product([name,pos,node,num_str],repeat=3))
+        four_list = list(itertools.product([name,pos,node,num_str],repeat=4))
+        same_lists = one_list+two_list+three_list+four_list
+    
+        for same_list in same_lists:
+            name_str="_".join(same_list)
+            if cmds.objExists(name_str):
+                num=self.count_edit_int(obj,name_str,num)
+                num_str=str(num).zfill(2)
+                return num_str
+        num_str=str(num).zfill(2)    
+        return num_str
+
+    def count_edit_int(self,obj,same,num):
+        nowNum=num
+        oldNum=num
+        while cmds.objExists(same):
+            if obj == same:
+                return nowNum
+            nowNum=nowNum+1
+            same=same.replace(str(oldNum).zfill(2),str(nowNum).zfill(2))
+            oldNum=int(oldNum+1)
+        return nowNum
+
+    def scene_query_str(self):
+        sceneName = pm.sceneName().basename()
+        part = sceneName.split("_")
+        if part[0].endswith('.ma') or part[0].endswith('.mb'):
+            scene = part[0][:-3]
+        elif part[0] == '':
+            scene = 'scene'
+        else:
+            scene = part[0]
+        return scene
 
 
 class NamingSplits():
