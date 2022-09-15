@@ -126,13 +126,18 @@ class File():
             self.exportOBJFBX_create_func(self.objs,self.path,self.name,self.fileType[0],self.fileType[1])
 
     def grpsExport(self):
-        dupObjs=self.grpsDuplicate_create_list(self.objs)
-        cc.delThree_edit_func(dupObjs)
+        uncleanObjs=[]
+        dupGrps=self.grpsDuplicate_create_list(self.objs)
+        for dupGrp in dupGrps:
+            uncleans=cmds.listRelatives(dupGrp,c=True,f=True)
+            uncleanObjs=uncleanObjs+uncleans
+        cc.delThree_edit_func(uncleanObjs)
+        cc.defaultMaterial_edit_func(uncleanObjs)
         if self.fileType[0] is "ma" or "mb":
-            self.exportMAMB_create_func(dupObjs,self.path,self.name,self.fileType[0],self.fileType[1])
+            self.exportMAMB_create_func(dupGrps,self.path,self.name,self.fileType[0],self.fileType[1])
         elif self.fileType[0] is "obj" or "fbx":
-            self.exportOBJFBX_create_func(dupObjs,self.path,self.name,self.fileType[0],self.fileType[1])
-        self.undoDuplicate_edit_func(self.objs,dupObjs)
+            self.exportOBJFBX_create_func(dupGrps,self.path,self.name,self.fileType[0],self.fileType[1])
+        self.undoDuplicate_edit_func(self.objs,dupGrps)
         
 #Private function
     def fileSave_edit_str(self,name,exType="mayaAscii"):
@@ -157,7 +162,6 @@ class File():
     def grpsDuplicate_create_list(self,grps):
         exportGrps=[]
         for grp in grps:
-            print(grp)
             cmds.rename(grp,grp+"_original")
             cmds.duplicate(grp+"_original")
             exportGrp=cmds.rename(grp+"_original1",grp)

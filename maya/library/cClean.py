@@ -22,3 +22,7 @@ def delUnknownNode_edit_func():
         for p in unknown_plugins:
             cmds.unknownPlugin(p, r=True)
             print('Removed unknown plugin : {}'.format(p))
+
+def defaultMaterial_edit_func(objs):
+    for obj in objs:
+        cmds.sets(obj,e=True,forceElement="initialShadingGroup")
