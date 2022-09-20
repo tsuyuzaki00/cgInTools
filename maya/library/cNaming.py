@@ -3,6 +3,7 @@ import itertools
 import maya.cmds as cmds
 import pymel.core as pm
 
+import cgInTools as cit
 import cJson as cj
 import cAttributes as ca; reload(ca);
 
@@ -82,10 +83,7 @@ class Naming():
 
 #Private function
     def node_query_str(self,obj):
-        root_path = os.path.dirname(__file__) #.../cgInTools/maya/library
-        maya_path = os.path.abspath(os.path.join(root_path,".."))
-        maya_settings_path = os.path.join(maya_path,"_settings")
-        setting_path=cj.pathSetting_create_str(maya_settings_path,"autoRename")
+        setting_path=cj.pathSetting_create_str(cit.maya_settings_path,"autoRename")
         readSettings_dict=cj.readJson_quary_dict(setting_path)
         getNode_str=self.isNodeType_query_str(obj)
         nodeName_str=readSettings_dict["node_renames"][getNode_str]

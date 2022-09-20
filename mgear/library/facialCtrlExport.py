@@ -4,9 +4,9 @@ import os
 import maya.cmds as cmds
 from mgear.core import curve
 
-from ..library import simpleJson as SJ
-from ..library import pyNodeEdit as PNE
-import cgInTools as SF
+from ..library import simpleJson as sj
+from ..library import pyNodeEdit as pne
+import cgInTools as cit
 
 class FacialCtrl():
     def set_cstp_path(wrk_dir='',folder_name=''):
@@ -21,13 +21,13 @@ class FacialCtrl():
         return new_path
 
     def facialCtrl_query_json(self,facialCtrl_json=""):
-        _SimpleJson = SJ.SimpleJson()
-        facialCtrl_path = _SimpleJson.path_setting(SF.mgear_settings_folder,facialCtrl_json)
+        _SimpleJson = sj.SimpleJson()
+        facialCtrl_path = _SimpleJson.path_setting(cit.mgear_settings_path,facialCtrl_json)
         facialCtrl_dict3 = _SimpleJson.read_json(facialCtrl_path)
         return facialCtrl_dict3
 
     def curve_export_json(self,path="",file="",export_ctrls=[]):
         curve_path = self.setCurve_create_path(path,file)
-        _PyNodes = PNE.PyNodes()
+        _PyNodes = pne.PyNodes()
         objs = _PyNodes.change_pyNode(export_ctrls)
         curve.export_curve(curve_path,objs)
