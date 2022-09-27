@@ -1,4 +1,4 @@
-import os
+# -*- coding: iso-8859-15 -*-
 import itertools
 import maya.cmds as cmds
 import pymel.core as pm

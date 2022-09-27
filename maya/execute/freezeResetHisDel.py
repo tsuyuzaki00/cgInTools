@@ -4,4 +4,4 @@ from ..library import cClean as cl
 
 def main():
     objs = cmds.ls(sl=True,dag=True,tr=True)
-    cl.delThree_edit_func(objs)
+    cl.delFRHThree_edit_func(objs)

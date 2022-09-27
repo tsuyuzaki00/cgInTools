@@ -20,7 +20,9 @@
     {
         "cleaning":[
             ["Geometry Reset","cgInTools.maya.execute","freezeResetHisDel","main()",""],
-            ["UnKnown Delete","cgInTools.maya.execute","unknownDel","main()",""]
+            ["UnKnown Delete","cgInTools.maya.execute","unknownDel","main()",""],
+            ["Garbage Reference Delete","cgInTools.maya.execute","garbageReference","main()",""],
+            ["Reset Material","cgInTools.maya.execute","resetMaterial","main()",""]
         ],
         "window":[],
         "modeling":
