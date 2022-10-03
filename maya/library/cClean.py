@@ -38,4 +38,4 @@ def delGarbageReference_edit_func():
                 cmds.delete(ref)
                 count += 1
 
-    print("Total errors found: " + count)
+    print("Total errors found: " + str(count))
