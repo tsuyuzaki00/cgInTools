@@ -9,10 +9,10 @@ import maya.cmds as cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import cgInTools as sf
-from ...ui import targetPositionUI as UI
-from ..library import targetMove as TM
+from ...ui import targetPositionUI as ui
+from ..library import cTargetMove as ctm
 
-class TargetPosWindow(UI.TargetPosWindowBase):
+class TargetPosWindow(ui.TargetPosWindowBase):
     def __init__(self, parent):
         super(TargetPosWindow, self).__init__(parent)
         self.setObjectName("target_move_position")
@@ -27,8 +27,11 @@ class TargetPosWindow(UI.TargetPosWindowBase):
         position_id = self.position_group.checkedId()
         source_name = eval(source_line)
         target_name = eval(target_line)
-        _CTgmv = TM.CTargetMove(target_name,source_name,position_id)
-        _CTgmv.run()
+        targetSet = ctm.TargetMove()
+        targetSet.setTarget(target_name)
+        targetSet.setSource(source_name)
+        targetSet.setPos(position_id)
+        targetSet.run()
 
     def center_button_onClicked(self):
         source_line = self.source_line.text()

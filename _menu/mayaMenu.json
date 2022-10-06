@@ -27,12 +27,13 @@
         "window":[],
         "modeling":
         [
-            ["autoRename","cgInTools.maya.execute","autoRename","main()",""],
-            ["CornerEdge","cgInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
+            ["Auto Rename","cgInTools.maya.execute","autoRename","main()",""],
+            ["Corner Edge","cgInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
         ],
         "rigging":
         [
-            ["targetPosition","cgInTools.maya.manager","targetPosition","main()",""]
+            ["Center Target Pos","cgInTools.maya.execute","selectCenterPosMove","main()",""],
+            [1,"cgInTools.maya.manager","targetPosition","main()",""]
         ],
         "create_object":
         [
