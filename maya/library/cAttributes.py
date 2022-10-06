@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
-class Attrebute():
+class Attribute():
     def __init__(self):
         self.obj="null"
         self.attrType="bool"
