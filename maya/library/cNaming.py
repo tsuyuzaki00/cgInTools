@@ -3,8 +3,8 @@ import itertools
 import maya.cmds as cmds
 import pymel.core as pm
 
-import cgInTools as cit
-import cJson as cj
+import cgInTools as cit; reload(cit);
+import cJson as cj; reload(cj);
 import cAttributes as ca; reload(ca);
 
 class Naming():
@@ -15,8 +15,7 @@ class Naming():
         self.node="node"
         self.number=0
         self.num=str(self.number).zfill(2)
-        sceneName=cmds.workspace(q=True,sn=True).split("/")[-1]
-        self.scene=sceneName
+        self.scene="scene"
         self.orders=["name","node","pos","num"]
         self.rename_str=""
 
@@ -48,7 +47,8 @@ class Naming():
 
     def markAttr(self):
         self.node=self.node_query_str(self.obj)
-        self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
+        #self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
+        self.scene=self.scene_query_str()
         mark=ca.Attrebute()
         mark.setObj(self.obj)
         mark.setAttrType("string")
@@ -65,7 +65,8 @@ class Naming():
 
     def rename(self):
         self.node=self.node_query_str(self.obj)
-        self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
+        #self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
+        self.scene=self.scene_query_str()
         rename_str=self.getRename()
         cmds.rename(self.obj,rename_str)
 
@@ -131,15 +132,23 @@ class Naming():
         return nowNum
 
     def scene_query_str(self):
-        sceneName = pm.sceneName().basename()
-        part = sceneName.split("_")
-        if part[0].endswith('.ma') or part[0].endswith('.mb'):
-            scene = part[0][:-3]
-        elif part[0] == '':
-            scene = 'scene'
+        sceneName=cmds.file(q=True,sn=True).split("/")[-1]
+        sceneName=sceneName.split(".")[0]
+        sceneParent=cmds.workspace(q=True,sn=True).split("/")[-1]
+        if sceneName == "":
+            self.scene=sceneParent
         else:
-            scene = part[0]
-        return scene
+            self.scene=sceneName
+        return self.scene
+
+    def sameName_check_str(self,check,sel):
+        if sel is not check:
+            if cmds.objExists(check):
+                check = check + '_NG'
+                return check
+            else :
+                return check
+        return check
 
 
 class NamingSplits():
@@ -242,14 +251,6 @@ class NamingSplits():
             else :
                 num = '0'.zfill(2)
                 return num
-
-    def same_name_check(self, check):
-        print (check)
-        if pm.objExists(check):
-            check = check + '_NG'
-            return check
-        else :
-            return check
 
 def main():
     sel = cmds.ls(sl=True)
