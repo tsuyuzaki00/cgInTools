@@ -9,53 +9,69 @@ class Attribute():
         self.niceName=self.name.capitalize()
         self.stringName="string"
         self.enums=["Green","Blue","Red"]
+        self.useMinMax=False
         self.min=0
         self.max=1
         self.defautValue=0
         self.attrLists=[]
+        self.haveAttr=""
         self.lah=True
 
 #Public function
-    def setObj(self,obj):
-        self.obj=obj
+    def setObj(self,variable):
+        self.obj=variable
         return self.obj
 
-    def setAttrType(self,attrType):
-        self.attrType=attrType
+    def setAttrType(self,variable):
+        self.attrType=variable
         return self.attrType
 
-    def setName(self,name):
-        self.name=name
+    def setName(self,variable):
+        self.name=variable
         return self.name
 
-    def setNiceName(self,niceName):
-        self.niceName=niceName
+    def setNiceName(self,variable):
+        self.niceName=variable
         return self.niceName
 
-    def setStringName(self,stringName):
-        self.stringName=stringName
+    def setStringName(self,variable):
+        self.stringName=variable
         return self.stringName
 
-    def setEnums(self,enums):
-        self.enums=enums
+    def setEnums(self,variable):
+        self.enums=variable
         return self.enums
 
-    def setMin(self,min):
-        self.min=min
+    def setMin(self,variable):
+        self.min=variable
         return self.min
     
-    def setMax(self,max):
-        self.max=max
+    def setMax(self,variable):
+        self.max=variable
         return self.max
+
+    def setUseMinMax(self,variable):
+        self.useMinMax=variable
+        return self.useMinMax
+
+    def setHaveAttr(self,variable):
+        self.haveAttr=variable
+        return self.haveAttr
     
-    def setDefautValue(self,defautValue):
-        self.defautValue=defautValue
+    def setDefautValue(self,variable):
+        self.defautValue=variable
         return self.defautValue
 
-    def setHideAttrs(self,attrLists,lah=True):
-        self.attrLists=attrLists
+    def setHideAttrs(self,variable,lah=True):
+        self.attrLists=variable
         self.lah=lah
         return self.attrLists
+
+    def getCreateAttr(self):
+        return self.haveAttr
+    
+    def getObjAttr(self):
+        return self.obj+"."+self.haveAttr
 
     def getKeyableAttrs(self,find=""):
         keyable_list=self.keyable_quary_list(self.obj,find)
@@ -75,22 +91,40 @@ class Attribute():
 
     def addAttr(self):
         if self.attrType == "bool":
-            self.addAttrBool_create_func(self.obj,self.name,self.niceName)
+            attrName=self.addAttrBool_create_attrName(self.obj,self.name,self.niceName)
+            return attrName
         elif self.attrType == "int":
-            self.addAttrInt_create_func(self.obj,self.name,self.niceName,self.min,self.max,self.defautValue)
+            if self.useMinMax:
+                attrName=self.addAttrIntLimit_create_attrName(self.obj,self.name,self.niceName,self.min,self.max,self.defautValue)
+            else:
+                attrName=self.addAttrInt_create_attrName(self.obj,self.name,self.niceName,self.defautValue)
+            return attrName
         elif self.attrType == "float":
-            self.addAttrFloat_create_func(self.obj,self.name,self.niceName,self.min,self.max,self.defautValue)
+            if self.useMinMax:
+                attrName=self.addAttrFloatLimit_create_attrName(self.obj,self.name,self.niceName,self.min,self.max,self.defautValue)
+            else:
+                attrName=self.addAttrFloat_create_attrName(self.obj,self.name,self.niceName,self.defautValue)
+            return attrName
         elif self.attrType == "string":
-            self.addAttrString_create_func(self.obj,self.name,self.niceName,self.stringName)
+            attrName=self.addAttrString_create_attrName(self.obj,self.name,self.niceName,self.stringName)
+            return attrName
         elif self.attrType == "enum":
-            self.addAttrEnum_create_func(self.obj,self.name,self.niceName,self.enums)
+            attrName=self.addAttrEnum_create_attrName(self.obj,self.name,self.niceName,self.enums)
+            return attrName
         elif self.attrType == "vector":
-            self.addAttrVector_create_func(self.obj,self.name,self.niceName)
+            attrName=self.addAttrVector_create_attrName(self.obj,self.name,self.niceName)
+            return attrName
         else:
             cmds.error('There is no attribute type "'+self.attrType+'".')
 
+    def editHaveAttr(self,variable):
+        cmds.setAttr(self.obj+"."+self.haveAttr,variable)
+
+    def delHaveAttr(self):
+        cmds.deleteAttr(self.obj+"."+self.haveAttr)
+
 #Private function
-    def addAttrVector_create_func(self,obj,name,niceName=None):
+    def addAttrVector_create_attrName(self,obj,name,niceName=None):
         attr_bool=self.addAttr_check_bool(obj,name)
         if attr_bool:
             cmds.setAttr(obj+"."+name,keyable=True)
@@ -106,40 +140,63 @@ class Attribute():
             cmds.setAttr(obj+"."+name+"X",keyable=True)
             cmds.setAttr(obj+"."+name+"Y",keyable=True)
             cmds.setAttr(obj+"."+name+"Z",keyable=True)
+        return name
 
-    def addAttrInt_create_func(self,obj,name,niceName=None,min=0,max=1,defaultValue=0):
+    def addAttrInt_create_attrName(self,obj,name,niceName=None,defaultValue=0):
+        attr_bool=self.addAttr_check_bool(obj,name)
+        if attr_bool:
+            cmds.setAttr(obj+"."+name,keyable=True)
+        else:
+            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="long",dv=defaultValue)
+            cmds.setAttr(obj+"."+name,keyable=True)
+        return name
+    
+    def addAttrFloat_create_attrName(self,obj,name,niceName=None,defaultValue=0):
+        attr_bool=self.addAttr_check_bool(obj,name)
+        if attr_bool:
+            cmds.setAttr(obj+"."+name,keyable=True)
+        else:
+            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double",dv=defaultValue)
+            cmds.setAttr(obj+"."+name,keyable=True)
+        return name
+
+    def addAttrIntLimit_create_attrName(self,obj,name,niceName=None,min=0,max=1,defaultValue=0):
         attr_bool=self.addAttr_check_bool(obj,name)
         if attr_bool:
             cmds.setAttr(obj+"."+name,keyable=True)
         else:
             cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="long",min=min,max=max,dv=defaultValue)
             cmds.setAttr(obj+"."+name,keyable=True)
+        return name
     
-    def addAttrFloat_create_func(self,obj,name,niceName=None,min=0,max=1,defaultValue=0):
+    def addAttrFloatLimit_create_attrName(self,obj,name,niceName=None,min=0,max=1,defaultValue=0):
         attr_bool=self.addAttr_check_bool(obj,name)
         if attr_bool:
             cmds.setAttr(obj+"."+name,keyable=True)
         else:
             cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double",min=min,max=max,dv=defaultValue)
             cmds.setAttr(obj+"."+name,keyable=True)
+        return name
     
-    def addAttrBool_create_func(self,obj,name,niceName=None):
+    def addAttrBool_create_attrName(self,obj,name,niceName=None):
         attr_bool=self.addAttr_check_bool(obj,name)
         if attr_bool:
             cmds.setAttr(obj+"."+name,keyable=True)
         else:
             cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="bool")
             cmds.setAttr(obj+"."+name,keyable=True)
+        return name
 
-    def addAttrString_create_func(self,obj,name,niceName=None,stringName="string"):
+    def addAttrString_create_attrName(self,obj,name,niceName=None,stringName="string"):
         attr_bool=self.addAttr_check_bool(obj,name)
         if attr_bool:
             cmds.setAttr(obj+"."+name,stringName,type="string")
         else:
             cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,dt="string")
             cmds.setAttr(obj+"."+name,stringName,type="string")
+        return name
     
-    def addAttrEnum_create_func(self,obj,name,niceName=None,enums=["Green","Blue","Red"]):
+    def addAttrEnum_create_attrName(self,obj,name,niceName=None,enums=["Green","Blue","Red"]):
         attr_bool=self.addAttr_check_bool(obj,name)
         enumSet=""
         for enum in enums:
@@ -149,6 +206,7 @@ class Attribute():
         else:
             cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="enum",en=enumSet)
             cmds.setAttr(obj+"."+name,keyable=True)
+        return name
 
     def addAttr_check_bool(self,node,attr):
         attr_bool=cmds.attributeQuery(attr,node=node,exists=True)

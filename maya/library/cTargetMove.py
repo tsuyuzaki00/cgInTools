@@ -6,34 +6,34 @@ class TargetMove():
         self.target = ""
         self.posNum = 4
 
-    def setSource(self,obj):
-        self.source=obj
+    def setSource(self,variable):
+        self.source=variable
         return self.source
 
-    def setTarget(self,obj):
-        self.target=obj
+    def setTarget(self,variable):
+        self.target=variable
         return self.target
 
-    def setPos(self,var):
-        if var is "up" or 1:
+    def setPos(self,variable):
+        if variable is 1 or variable is "up":
             self.posNum = 1
             return self.posNum
-        elif var is "back" or 2:
+        elif variable is 2 or variable is "back":
             self.posNum = 2
             return self.posNum
-        elif var is "left" or 3:
+        elif variable is 3 or variable is "left":
             self.posNum = 3
             return self.posNum
-        elif var is "center" or 4:
+        elif variable is 4 or variable is "center":
             self.posNum = 4
             return self.posNum
-        elif var is "right" or 5:
+        elif variable is 5 or variable is "right":
             self.posNum = 5
             return self.posNum
-        elif var is "front" or 6:
+        elif variable is 6 or variable is "front":
             self.posNum = 6
             return self.posNum
-        elif var is "down" or 7:
+        elif variable is 7 or variable is "down":
             self.posNum = 7
             return self.posNum
 
