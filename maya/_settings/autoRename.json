@@ -38,6 +38,11 @@
             "composeMatrix":"comx",
             "distanceBetween":"dist",
             "curveInfo":"info",
-            "skinCluster":"skc"
+            "skinCluster":"skc",
+            "angleBetween":"abw",
+            "axisAngleToQuat":"atoq",
+            "quatProd":"qprd",
+            "quatToEuler":"qtoe",
+            "floatMath":"fltm"
         }
 }
