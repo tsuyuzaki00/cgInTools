@@ -1,39 +1,114 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
+from cgInTools.maya.library import cClean as cc
 
-class CreateNurbs():
-    def __init__():
-        pass
+class QuadPosSurface():
+    def __init__(self):
+        self.locatorsFour=["","","",""]
+        self.name=""
 
-def main():
-    createPlane=[]
-    point_lists=[(1,1,0,1),(-1,1,0,1),(1,-1,0,1),(-1,-1,0,1)]
-    for point in point_lists:
-        append_MFloatPoint=om2.MFloatPoint(point[0],point[1],point[2],point[3])
-        createPlane.append(append_MFloatPoint)
+    def setName(self,variable):
+        self.name=variable
+        return self.name
 
+    def setLoctorsFour(self,variable):
+        self.locatorsFour=variable
+        self.loctorPos_update()
+        return self.locatorsFour
 
-    create=om2.MFloatPointArray()
-    create.append((-1,1,0,1))
-    create.append((1,1,0,1))
-    create.append((-1,-1,0,1))
-    create.append((1,-1,0,1))
-    nurbsSurface_MObject=om2.MFnNurbsSurface().create(create,[0.0,1.0],[0.0,1.0],1,1,1,1,False)
-    nurbPlane_MObject=om2.MFnDependencyNode().create("makeNurbPlane")
+    def create(self):
+        plane=cmds.nurbsPlane(n="test",u=2,v=2)[0]
+        self.name=plane
+        for edit in self.edits:
+            self.editNurbsSurface_edit_mFnNurbsSurface(plane,edit["cv"],edit["mVector"])
 
-    surface_MDagPath = om2.MDagPath()
-    surface_MDagPath.extendToShape()
+    def update(self):
+        self.loctorPos_update()
+        for edit in self.edits:
+            self.editNurbsSurface_edit_mFnNurbsSurface(self.name,edit["cv"],edit["mVector"])
 
-    source_MFnDependencyNode=om2.MFnDependencyNode(surface_MDagPath.node())
-    target_MFnDependencyNode=om2.MFnDependencyNode(nurbPlane_MObject)
+    def loctorPos_update(self):
+        cv00=self.getPos_create_MVector(self.locatorsFour[0])
+        cv04=self.getPos_create_MVector(self.locatorsFour[1])
+        cv44=self.getPos_create_MVector(self.locatorsFour[2])
+        cv40=self.getPos_create_MVector(self.locatorsFour[3])
+        cv22=(cv00+cv04+cv40+cv44)*0.5*0.5
+        cv02=(cv00+cv04)*0.5
+        cv20=(cv00+cv40)*0.5
+        cv42=(cv40+cv44)*0.5
+        cv24=(cv04+cv44)*0.5
+        cv01=(cv00+cv02)*0.5
+        cv03=(cv02+cv04)*0.5
+        cv10=(cv00+cv20)*0.5
+        cv30=(cv20+cv40)*0.5
+        cv41=(cv40+cv42)*0.5
+        cv43=(cv42+cv44)*0.5
+        cv14=(cv04+cv24)*0.5
+        cv34=(cv24+cv44)*0.5
+        cv32=(cv42+cv22)*0.5
+        cv12=(cv02+cv22)*0.5
+        cv21=(cv20+cv22)*0.5
+        cv23=(cv24+cv22)*0.5
+        cv11=(cv00+cv22)*0.5
+        cv13=(cv04+cv22)*0.5
+        cv31=(cv40+cv22)*0.5
+        cv33=(cv44+cv22)*0.5
 
-    source_MPlug=source_MFnDependencyNode.findPlug("outputSurface",False)
-    target_MPlug=target_MFnDependencyNode.findPlug("create",False)
+        self.edits=[
+            {"cv":(0,0),"mVector":cv00},
+            {"cv":(0,4),"mVector":cv04},
+            {"cv":(4,0),"mVector":cv40},
+            {"cv":(4,4),"mVector":cv44},
+            {"cv":(2,2),"mVector":cv22},
+            {"cv":(0,2),"mVector":cv02},
+            {"cv":(2,0),"mVector":cv20},
+            {"cv":(4,2),"mVector":cv42},
+            {"cv":(2,4),"mVector":cv24},
+            {"cv":(0,1),"mVector":cv01},
+            {"cv":(0,3),"mVector":cv03},
+            {"cv":(1,0),"mVector":cv10},
+            {"cv":(3,0),"mVector":cv30},
+            {"cv":(4,1),"mVector":cv41},
+            {"cv":(4,3),"mVector":cv43},
+            {"cv":(1,4),"mVector":cv14},
+            {"cv":(3,4),"mVector":cv34},
+            {"cv":(3,2),"mVector":cv32},
+            {"cv":(1,2),"mVector":cv12},
+            {"cv":(2,1),"mVector":cv21},
+            {"cv":(2,3),"mVector":cv23},
+            {"cv":(1,1),"mVector":cv11},
+            {"cv":(1,3),"mVector":cv13},
+            {"cv":(3,1),"mVector":cv31},
+            {"cv":(3,3),"mVector":cv33},
+        ]
 
-    #"outputSurface","create"
-    om2.MDGModifier.connect(source_MPlug,target_MPlug)
+    def getPos_create_MVector(self,obj):
+        pointNode_mSelectionList=om2.MSelectionList().add(obj)
+        pointNode_mObject=pointNode_mSelectionList.getDagPath(0)
+        point_mVector=om2.MFnTransform(pointNode_mObject).translation(om2.MSpace.kWorld)
+        return point_mVector
 
+    def objsInSurface_create_mFnNurbsSurface(self,objs=[]):
+        createPointArrays=om2.MFloatPointArray()
+        for obj in objs:
+            mVector=self.getPos_create_MVector(obj)
+            mPoint=om2.MPoint(mVector)
+            createPointArrays.append(mPoint)
+        nurbsSurface_mFnNurbsSurface=om2.MFnNurbsSurface()
+        nurbsSurface_mFnNurbsSurface.create(createPointArrays,[0.0,1.0],[0.0,1.0],1,1,1,1,True)
+        cc.defaultMaterial_edit_func(nurbsSurface_mFnNurbsSurface.name())
+
+    def editNurbsSurface_edit_mFnNurbsSurface(self,surface,cvs=(0,0),pos=(0,0,0,0)):
+        mPoint=om2.MPoint(pos)
+        surface_mSelectionList=om2.MSelectionList().add(surface)
+        surface_mDagPath=surface_mSelectionList.getDagPath(0)
+        surface_mDagPath.extendToShape()
+        surface_mObject=surface_mDagPath.node()
+        nurbsSurface_mFnNurbsSurface=om2.MFnNurbsSurface()
+        nurbsSurface_mFnNurbsSurface.setObject(surface_mObject)
+        nurbsSurface_mFnNurbsSurface.setCVPosition(cvs[0],cvs[1],mPoint)
+        return nurbsSurface_mFnNurbsSurface
 class NurbsToPoly():
     """
     ch bool constructionHistory
@@ -261,7 +336,6 @@ class NurbsToPoly():
                 mnd=self.matchNormalDir,
                 ntr=self.normalizeTrimmedUVRange,
                 uss=True)
-
 class NurbsMirror():
     def __init__(self):
         self.surfaceLeft=""
@@ -271,3 +345,31 @@ class NurbsMirror():
 
     def setNameJadges(self,):
         pass
+
+def main():
+    createPlane=[]
+    point_lists=[(1,1,0,1),(-1,1,0,1),(1,-1,0,1),(-1,-1,0,1)]
+    for point in point_lists:
+        append_MFloatPoint=om2.MFloatPoint(point[0],point[1],point[2],point[3])
+        createPlane.append(append_MFloatPoint)
+
+
+    create=om2.MFloatPointArray()
+    create.append((-1,1,0,1))
+    create.append((1,1,0,1))
+    create.append((-1,-1,0,1))
+    create.append((1,-1,0,1))
+    nurbsSurface_MObject=om2.MFnNurbsSurface().create(create,[0.0,1.0],[0.0,1.0],1,1,1,1,False)
+    nurbPlane_MObject=om2.MFnDependencyNode().create("makeNurbPlane")
+
+    surface_MDagPath = om2.MDagPath()
+    surface_MDagPath.extendToShape()
+
+    source_MFnDependencyNode=om2.MFnDependencyNode(surface_MDagPath.node())
+    target_MFnDependencyNode=om2.MFnDependencyNode(nurbPlane_MObject)
+
+    source_MPlug=source_MFnDependencyNode.findPlug("outputSurface",False)
+    target_MPlug=target_MFnDependencyNode.findPlug("create",False)
+
+    #"outputSurface","create"
+    om2.MDGModifier.connect(source_MPlug,target_MPlug)
