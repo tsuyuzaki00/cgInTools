@@ -18,7 +18,8 @@ class QuadPosSurface():
         return self.locatorsFour
 
     def create(self):
-        plane=cmds.nurbsPlane(n="test",u=2,v=2)[0]
+        plane=cmds.nurbsPlane(n=self.name,u=2,v=2)[0]
+        cmds.delete(plane,ch=True)
         self.name=plane
         for edit in self.edits:
             self.editNurbsSurface_edit_mFnNurbsSurface(plane,edit["cv"],edit["mVector"])
