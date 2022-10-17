@@ -1,4 +1,5 @@
-from cgInTools.maya.library import cNurbs as ps; reload(ps);
+from cgInTools.maya.library import cNurbs as cn; reload(cn);
+from cgInTools.maya.library import cGrouping as cgrp; reload(cgrp);
 
 locator_dicts=[
 {"locators":["legUp01_loc_R","legUp01_loc_L","legUp05_loc_L","legUp05_loc_R"],"name":"hip01_surf_CF"},
@@ -237,23 +238,26 @@ locator_dicts=[
 {"locators":["hand22_loc_R","hand21_loc_R","hand24_loc_R","hand23_loc_R"],"name":"hand05_surf_RD"}
 ]
 
-surf=ps.QuadPosSurface()
-for locator in locator_dicts:
-    surf.setName(locator["name"])
-    surf.setLoctorsFour(locator["locators"])
-    surf.create()
-
-def reverseLocatorDict_edit_dict(locator_dicts):
-    new_list=[]
-    new_dict={}
-    reverse_list=[]
+def create():
+    surf=cn.QuadPosSurface()
+    grp=cgrp.GroupIng()
+    grp.setGrpName("surface_grp")
     for locator in locator_dicts:
-        new_dict["name"]=locator["name"]
-        reverse_list.append(locator["locators"][1])
-        reverse_list.append(locator["locators"][0])
-        reverse_list.append(locator["locators"][3])
-        reverse_list.append(locator["locators"][2])
-        new_dict["locators"]=reverse_list
-        new_list.append(new_dict)
-        reverse_list=[]
-    return new_list
+        surf.setName(locator["name"])
+        surf.setLoctorsFour(locator["locators"])
+        grp.addParentObjs(locator["name"])
+        surf.create()
+    grp.group()
+
+def update():
+    surf=cn.QuadPosSurface()
+    for locator in locator_dicts:
+        surf.setName(locator["name"])
+        surf.setLoctorsFour(locator["locators"])
+        surf.update()
+
+def main():
+    #create()
+    update()
+
+main()

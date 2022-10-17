@@ -109,6 +109,7 @@ class QuadPosSurface():
         nurbsSurface_mFnNurbsSurface=om2.MFnNurbsSurface()
         nurbsSurface_mFnNurbsSurface.setObject(surface_mObject)
         nurbsSurface_mFnNurbsSurface.setCVPosition(cvs[0],cvs[1],mPoint)
+        nurbsSurface_mFnNurbsSurface.updateSurface()
         return nurbsSurface_mFnNurbsSurface
 class NurbsToPoly():
     """

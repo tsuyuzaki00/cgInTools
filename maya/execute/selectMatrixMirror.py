@@ -5,7 +5,7 @@ from cgInTools.maya.library import cMirror as ps; reload(ps);
 loc=ps.MatrixMirror()
 objs=cmds.ls(sl=True)
 for obj in objs:
-    targetName=obj.replace("_L","_R")
+    targetName=loc.reversedLeftRight_edit_string(obj)
     loc.setSourceNode(obj)
     loc.setTargetNode(targetName)
     loc.translateOnly()

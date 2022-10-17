@@ -47,20 +47,40 @@ class MatrixMirror():
 
 
     def reversedLeftRight_edit_string(self,name):
-        if "Left" in name:
-            newName=name.replace("Left","Right")
-            return newName
-        elif "Right" in name:
-            newName=name.replace("Right","Left")
-            return newName
-        elif "L" in name:
-            newName=name.replace("L","R")
-            return newName
-        elif "R" in name:
-            newName=name.replace("R","L")
-            return newName
-        else:
-            cmds.error("left or Right or L or R is not in the name")
+        LRs=[
+            ["_Left","_Right"],
+            ["Left_","Right_"],
+            ["_Right","_Left"],
+            ["Right_","Left_"],
+            ["_left","_right"],
+            ["left_","right_"],
+            ["_right","_left"],
+            ["right_","left_"],
+            ["_L","_R"],
+            ["L_","R_"],
+            ["_R","_L"],
+            ["R_","L_"],
+            ]
+        for lr in LRs:
+            if lr[0] in name:
+                newName=name.replace(lr[0],lr[1])
+                return newName    
+        cmds.error("left or Right or L or R is not in the name")
+
+    def reverseLocatorDict_edit_dict(self,locator_dicts):
+        new_list=[]
+        new_dict={}
+        reverse_list=[]
+        for locator in locator_dicts:
+            new_dict["name"]=locator["name"]
+            reverse_list.append(locator["locators"][1])
+            reverse_list.append(locator["locators"][0])
+            reverse_list.append(locator["locators"][3])
+            reverse_list.append(locator["locators"][2])
+            new_dict["locators"]=reverse_list
+            new_list.append(new_dict)
+            reverse_list=[]
+        return new_list
 
     def mirrorAxis_edit_tuple(self,mirrorX=True,mirrorY=False,mirrorZ=False):
         mirror_list=[1,1,1]
