@@ -22,12 +22,14 @@ class QuadPosSurface():
         cmds.delete(plane,ch=True)
         self.name=plane
         for edit in self.edits:
-            self.editNurbsSurface_edit_mFnNurbsSurface(plane,edit["cv"],edit["mVector"])
+            surf=self.editNurbsSurface_edit_mFnNurbsSurface(plane,edit["cv"],edit["mVector"])
+        return surf
 
     def update(self):
         self.loctorPos_update()
         for edit in self.edits:
-            self.editNurbsSurface_edit_mFnNurbsSurface(self.name,edit["cv"],edit["mVector"])
+            surf=self.editNurbsSurface_edit_mFnNurbsSurface(self.name,edit["cv"],edit["mVector"])
+        return surf
 
     def loctorPos_update(self):
         cv00=self.getPos_create_MVector(self.locatorsFour[0])
@@ -283,9 +285,9 @@ class NurbsToPoly():
         self.count=variable
         return self.count
 
-    def run(self):
+    def create(self):
         if self.format is 0:
-            cmds.nurbsToPoly(self.obj,
+            polygon=cmds.nurbsToPoly(self.obj,
                 ch=self.constructionHistory,
                 n=self.name,
                 mrt=self.matchRender,
@@ -296,7 +298,7 @@ class NurbsToPoly():
                 pc=self.count,
                 uss=True)
         elif self.format is 1:
-            cmds.nurbsToPoly(self.obj,
+            polygon=cmds.nurbsToPoly(self.obj,
                 ch=self.constructionHistory,
                 n=self.name,
                 mrt=self.matchRender,
@@ -310,7 +312,7 @@ class NurbsToPoly():
                 d=self.delta3D,
                 uss=True)
         elif self.format is 2:
-            cmds.nurbsToPoly(self.obj,
+            polygon=cmds.nurbsToPoly(self.obj,
                 ch=self.constructionHistory,
                 n=self.name,
                 mrt=self.matchRender,
@@ -329,7 +331,7 @@ class NurbsToPoly():
                 es=self.edgeSwap,
                 uss=True)
         elif self.format is 3:
-            cmds.nurbsToPoly(self.obj,
+            polygon=cmds.nurbsToPoly(self.obj,
                 ch=self.constructionHistory,
                 n=self.name,
                 mrt=self.matchRender,
@@ -338,6 +340,7 @@ class NurbsToPoly():
                 mnd=self.matchNormalDir,
                 ntr=self.normalizeTrimmedUVRange,
                 uss=True)
+        return polygon[0]
 class NurbsMirror():
     def __init__(self):
         self.surfaceLeft=""

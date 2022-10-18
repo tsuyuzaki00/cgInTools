@@ -67,9 +67,6 @@ class Attribute():
         self.lah=lah
         return self.attrLists
 
-    def getCreateAttr(self):
-        return self.haveAttr
-    
     def getObjAttr(self):
         return self.obj+"."+self.haveAttr
 
@@ -80,6 +77,9 @@ class Attribute():
     def getLockAttrs(self,find=""):
         lock_list=self.lock_quary_list(self.obj,find)
         return lock_list
+
+    def queryHaveAttr(self):
+        return self.haveAttr
 
     def lockAndHide(self):
         self.lockAndHide_edit_func(self.obj,self.attrLists,self.lah)
