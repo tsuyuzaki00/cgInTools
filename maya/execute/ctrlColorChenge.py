@@ -2,8 +2,6 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-import pymel.core as pm
-
 class OptionWidget(QWidget):
     def __init__(self, *args, **kwargs):
         super(OptionWidget, self).__init__(*args, **kwargs)
@@ -33,7 +31,7 @@ class OptionWidget(QWidget):
         cyan = QRadioButton('Cyan', self)
         subBlue = QRadioButton('DarkBlue', self)
         purple = QRadioButton('Purple', self)
-        magenta = QRadioButton('Magenta', self)
+        teal = QRadioButton('Magenta', self)
         crimson = QRadioButton('Crimson', self)
         change_button = QPushButton('chengeColor')
         yellow.setChecked(True)
@@ -47,7 +45,7 @@ class OptionWidget(QWidget):
         right_layout.addWidget(mainRed, True)
         right_layout.addWidget(pink, True)
         right_layout.addWidget(subRed, True)
-        other_layout.addWidget(magenta, True)
+        other_layout.addWidget(teal, True)
         other_layout.addWidget(purple, True)
         other_layout.addWidget(crimson, True)
 
@@ -61,7 +59,7 @@ class OptionWidget(QWidget):
         self.__across.addButton(mainRed, 6)
         self.__across.addButton(pink, 7)
         self.__across.addButton(subRed, 8)
-        self.__across.addButton(magenta, 9)
+        self.__across.addButton(teal, 9)
         self.__across.addButton(purple, 10)
         self.__across.addButton(crimson, 11)
 
@@ -78,7 +76,7 @@ class OptionWidget(QWidget):
         cyan.setStyleSheet('color: cyan;')
         subBlue.setStyleSheet('color: darkBlue;')
         purple.setStyleSheet('color: purple;')
-        magenta.setStyleSheet('color: magenta;')
+        teal.setStyleSheet('color: teal;')
         crimson.setStyleSheet('color: crimson;')
 
     def chenge(self):
@@ -113,7 +111,7 @@ def colorChange(radio):
         elif radio == 8:
             cmds.setAttr(shape + '.overrideColor', 4)#DarkRed
         elif radio == 9:
-            cmds.setAttr(shape + '.overrideColor', 9)#Magenta
+            cmds.setAttr(shape + '.overrideColor', 18)#Teal
         elif radio == 10:
             cmds.setAttr(shape + '.overrideColor', 30)#Purple
         elif radio == 11:
@@ -123,7 +121,7 @@ def colorChange(radio):
 def get_maya_main_window():
     omui.MQtUtil.mainWindow()
     ptr = omui.MQtUtil.mainWindow()
-    widget = wrapInstance(long(ptr), QWidget)
+    widget = wrapInstance(int(ptr),QWidget)
     return widget
 
 def main():

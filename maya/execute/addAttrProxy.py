@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 
-def proxy_connect_attr(source,attr_name,target):
+def proxy_connect_attr(source,target,attr_name):
     if(target == None or target == ''):
         return
     cmds.select(target)

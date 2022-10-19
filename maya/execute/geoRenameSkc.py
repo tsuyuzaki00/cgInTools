@@ -2,7 +2,7 @@
 # -*- coding: iso-8859-15 -*-
 
 import maya.cmds as cmds
-from ..library import cBindJoint as cbj;
+from ..library import cBindJoint as cbj
 
 def main():
     sels = cmds.ls(sl = True)

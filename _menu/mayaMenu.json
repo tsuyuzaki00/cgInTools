@@ -2,75 +2,72 @@
     "menu_title":"cgInTools",
     "order_menu":
     [
+        ["single","Chack"],
         ["multi","cleaning"],
-        ["single","modeling"],
-        ["multi","create_object"],
-        ["single","rigging"],
+        ["single","Create"],
+        ["multi","geometry"],
+        ["multi","joint"],
+        ["multi","curve"],
+        ["multi","surface"],
+        ["multi","guide"],
+        ["single","Edit"],
+        ["multi","object rename"],
+        ["multi","object position"],
+        ["multi","object mirror"],
+        ["multi","drawing color"],
+        ["multi","vertex"],
+        ["multi","edge"],
+        ["multi","face"],
+        ["multi","cv"],
         ["multi","skin"],
-        ["multi","color_chenge"],
-        ["multi","set_curves"],
-        ["multi","selects_edit"],
-        ["single","mgear"],
-        ["multi","export"],
-        ["single","window"],
+        ["single","Query"],
         ["multi","inquiry"],
-        ["multi","scripts"]
+        ["single","Mgear"],
+        ["multi","facial ctrl export"]
     ],
     "menus":
     {
+        "Chack":[],
+        "Create":[],
+        "Edit":[],
+        "Query":[],
+        "Mgear":[],
         "cleaning":[
             ["Geometry Reset","cgInTools.maya.execute","freezeResetHisDel","main()",""],
             ["UnKnown Delete","cgInTools.maya.execute","unknownDel","main()",""],
             ["Garbage Reference Delete","cgInTools.maya.execute","garbageReference","main()",""],
             ["Reset Material","cgInTools.maya.execute","resetMaterial","main()",""]
         ],
-        "window":[],
-        "modeling":
-        [
-            ["Auto Rename","cgInTools.maya.execute","autoRename","main()",""],
-            ["Corner Edge","cgInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
+        "geometry":[],
+        "joint":[],
+        "curve":[],
+        "surface":[],
+        "guide":[],
+        "object rename":[
+            ["Auto Rename","cgInTools.maya.execute","autoRename","main()",""]
         ],
-        "rigging":
-        [
+        "object position":[
             ["Center Target Pos","cgInTools.maya.execute","selectCenterPosMove","main()",""],
             [1,"cgInTools.maya.manager","targetPosition","main()",""]
         ],
-        "create_object":
-        [
-            ["Cube","cgInTools.maya.execute","createNodes_polyCube","main()","polyCube.png"],
-            ["Ball","cgInTools.maya.execute","createNodes_polyBall","main()","polySphere.png"],
-            ["Cylinder","cgInTools.maya.execute","createNodes_polyCylinder","main()","polyCylinder.png"],
-            ["Plean","cgInTools.maya.execute","createNodes_polyPlane","main()","polyMesh.png"],
-            ["ImagePlean","cgInTools.maya.execute","createNodes_imagePlane","main()","ImagePlane.png"],
-            ["Camera","cgInTools.maya.execute","createNodes_camera","main()" ,"view.png"],
-            ["AmbientLight","cgInTools.maya.execute","createNodes_ambientLight","main()","ambientlight.png"],
-            ["DirectionalLight","cgInTools.maya.execute","createNodes_directionalLight","main()","directionallight.png"],
-            ["PointLight","cgInTools.maya.execute","createNodes_pointLight","main()","pointlight.png"],
-            ["SpotLight","cgInTools.maya.execute","createNodes_spotLight","main()","spotlight.png"]
-        ],
-        "set_curves": 
-        [
-        ],
-        "color_chenge":
+        "object mirror":[],
+        "drawing color":
         [
             ["CtrlColorChange","cgInTools.maya.execute","ctrlColorChenge","main()",""],
             ["CtrlColorFreeChange","cgInTools.maya.execute","ctrlColorFreeChenge","main()",""]
         ],
+        "vertex":[],
+        "edge":[
+            ["Corner Edge","cgInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
+        ],
+        "face":[],
+        "cv":[],
         "skin":
         [
             ["WeightPaintValue","cgInTools.maya.manager","weightPaintValue","main()","skinPaintValue.png"],
             ["MultiCopySkinWeight","cgInTools.maya.execute","multiCopySkinWeight","main()",""],
             ["InfJointRemove","cgInTools.maya.execute","infJntRemoveEdit","main()",""],
             ["RenameSkc","cgInTools.maya.execute","geoRenameSkc","main()",""]
-        ],
-        "selects_edit":
-        [
-            ["JointRadiusEdit","cgInTools.maya.execute","jointRadius","main()",""],
-            [1,"cgInTools.maya.execute","jointRadius","option()",""]
-        ],
-        "select_view":
-        [
-            ["Selections","cgInTools.maya.manager","selectListView","main()",""]
         ],
         "inquiry":
         [
@@ -80,12 +77,7 @@
             ["LookSelectKeyAttr","cgInTools.maya.manager","lookSelectKeyAttr","main()",""],
             ["LookMatrix","cgInTools.maya.manager","lookMatrix","main()",""]
         ],
-        "scripts":
-        [
-            ["SelectBindJoints","cgInTools.maya.manager","selectTransferSkinWeight","main()",""]
-        ],
-        "mgear":[],
-        "export":
+        "facial ctrl export":
         [
             ["LipCtrls","cgInTools.mgear.execute","lipCtrlsExport","main()",""],
             ["EyeCtrls","cgInTools.mgear.execute","eyeCtrlsExport","main()",""],

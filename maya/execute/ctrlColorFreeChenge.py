@@ -1,7 +1,7 @@
 import os, json
+import maya.cmds as cmds
 from PySide2 import QtWidgets, QtCore, QtGui
 from ..library import qt
-import pymel.core as pm
 
 class OptionWidget(QtWidgets.QWidget):
     def __init__(self, *args, **kwargs):
@@ -13,12 +13,12 @@ class OptionWidget(QtWidgets.QWidget):
             colorChange(dialog.selectedColor())
 
 def colorChange(radio):
-    sel = pm.selected()
-    shapes = pm.listRelatives(sel[0:], type='nurbsCurve')
+    objs = cmds.ls(sl=True)
+    shapes = cmds.listRelatives(objs[0:],type='nurbsCurve')
     for shape in shapes:
-        pm.setAttr(shape + '.overrideEnabled', 1)
-        pm.setAttr(shape + '.overrideRGBColors', 1)
-        pm.setAttr(shape + '.overrideColorRGB', radio.redF(), radio.greenF(), radio.blueF(), type = 'double3')
+        cmds.setAttr(shape + '.overrideEnabled', 1)
+        cmds.setAttr(shape + '.overrideRGBColors', 1)
+        cmds.setAttr(shape + '.overrideColorRGB', radio.redF(), radio.greenF(), radio.blueF(), type = 'double3')
 
 
 def main():

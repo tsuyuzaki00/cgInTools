@@ -151,6 +151,7 @@ class BendRollCtrl():
             cmds.connectAttr(connectAttr["source"],connectAttr["target"])
 
     def run(self):
+        self.update()
         self.createNodes_create_list(self.createNode_list)
         self.setAttrs_edit_func(self.setAttr_list)
         self.connectAttrs_edit_func(self.connectAttr_list)
@@ -160,7 +161,6 @@ def main():
     mirror=BendRollCtrl()
     mirror.setSource(cmds.ls(sl=True)[0])
     mirror.setTarget(cmds.ls(sl=True)[1])
-    mirror.update()
     mirror.run()
 
 main()

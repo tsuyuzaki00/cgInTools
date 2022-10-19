@@ -1,6 +1,6 @@
-from cgInTools.maya.library import cNurbs as cn; reload(cn);
-from cgInTools.maya.library import cGrouping as cgrp; reload(cgrp);
-from cgInTools.maya.library import cAttributes as cab; reload(cab);
+from cgInTools.maya.library import cNurbs as cn
+from cgInTools.maya.library import cGrouping as cgrp
+from cgInTools.maya.library import cAttributes as cab
 
 surface_dicts=[
 {"locators":["legUp01_loc_R","legUp01_loc_L","legUp05_loc_L","legUp05_loc_R"],"name":"hip01_surf_CF","numberU":5,"numberV":5},

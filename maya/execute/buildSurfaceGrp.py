@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-from cgInTools.maya.library import cNurbs as cn; reload(cn);
-from cgInTools.maya.library import cGrouping as cgrp; reload(cgrp);
+from cgInTools.maya.library import cNurbs as cn
+from cgInTools.maya.library import cGrouping as cgrp
 
 def surfaceBuild_create_objs():
     poly=cn.NurbsToPoly()

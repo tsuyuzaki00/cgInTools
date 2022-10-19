@@ -1,12 +1,13 @@
-import pymel.core as pm
+# -*- coding: iso-8859-15 -*-
+import maya.cmds as cmds
 
 def main():
-    exSel = pm.selected()[0]
-    inSels = pm.selected()[1:]
+    exSel=cmds.ls(sl=True)[0]
+    inSels=cmds.ls(sl=True)[1:]
 
     for inSel in inSels:
-        nextSel = pm.duplicate(exSel)
-        shapes = pm.listRelatives(nextSel, type='nurbsCurve')
-        pm.rename(shapes, inSel+'Shape')
-        pm.parent(shapes, inSel , r = True , s = True)
-        pm.delete(nextSel)
+        nextSel=cmds.duplicate(exSel)
+        shapes=cmds.listRelatives(nextSel,type="nurbsCurve")
+        cmds.rename(shapes,inSel+"Shape")
+        cmds.parent(shapes,inSel,r=True,s=True)
+        cmds.delete(nextSel)

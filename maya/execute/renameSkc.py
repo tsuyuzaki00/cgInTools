@@ -1,12 +1,11 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-
-from ..Library import selectBindJoints as sbj; reload(sbj);
+from ..library import cSkin as cs
 
 def skinClusterRename_edit(obj):
-    _weights = sbj.ListBindJoints()
-    skinCluster_node = _weights.geoSkinCluster_query(obj)
-    skinClusterRename_name = _weights.clusterName_edit(obj)
+    _weights = cs.CTransferBind()
+    skinCluster_node = _weights.geoSkinCluster_query_node(obj)
+    skinClusterRename_name = _weights.clusterRename_edit_obj(obj)
     cmds.rename(skinCluster_node,skinClusterRename_name)
 
 def main():

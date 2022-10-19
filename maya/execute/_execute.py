@@ -1,11 +1,16 @@
 #import maya.cmds as cmds
 #import pymel.core as pm
+
 ''' Reload '''
+### Python 2
 #from cgInTools.ui import clickSelectUI as UI; reload(UI);
 #from cgInTools.maya.library import click as lib; reload(lib);
+### Python 3
+#import importlib
+#from cgInTools.ui import clickSelectUI as UI; importlib.reload(UI);
+#from cgInTools.maya.library import click as lib; importlib.reload(lib);
 
 ''' Run '''
-#from mgear_guide._tools.Maya.Manager import facialExportCurvesOP as ps
 from cgInTools.maya.execute import ctrlOffsetConnect as ps
 from cgInTools.maya.library import cConstraint as cct
-reload(ps); ps.main()
+ps.main()

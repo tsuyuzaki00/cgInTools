@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
-from ..library import cBindJoint as cbj; reload(cbj);
+from ..library import cBindJoint as cbj
 def main():
     objs = cmds.ls(sl=True,l=True)
     if len(objs) < 2:

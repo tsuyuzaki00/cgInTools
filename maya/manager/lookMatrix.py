@@ -86,7 +86,7 @@ def sel_matrix(sel):
 def get_maya_main_window():
     omui.MQtUtil.mainWindow()
     ptr = omui.MQtUtil.mainWindow()
-    widget = wrapInstance(long(ptr), QWidget)
+    widget = wrapInstance(int(ptr), QWidget)
     return widget
 
 def main():

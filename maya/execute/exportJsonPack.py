@@ -1,10 +1,12 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-from cgInTools.maya.library import cJson as cj; reload(cj);
-from cgInTools.maya.library import cFiling as cf; reload(cf);
+from cgInTools.maya.library import cJson as cj
+from cgInTools.maya.library import cFiling as cf
 
 json_name="skin"
 ex="CSkin"
+path=cf.Path()
+path.setPath()
 path=cf.wrkDir_create_path(wrkDir=r"D:\_test",addFolder="jsonTest")
 
 objs=cmds.ls(sl=True)

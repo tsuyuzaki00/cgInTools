@@ -88,8 +88,8 @@ class QuadPosSurface():
 
     def getPos_create_MVector(self,obj):
         pointNode_mSelectionList=om2.MSelectionList().add(obj)
-        pointNode_mObject=pointNode_mSelectionList.getDagPath(0)
-        point_mVector=om2.MFnTransform(pointNode_mObject).translation(om2.MSpace.kWorld)
+        pointNode_mDagPath=pointNode_mSelectionList.getDagPath(0)
+        point_mVector=om2.MFnTransform(pointNode_mDagPath).translation(om2.MSpace.kWorld)
         return point_mVector
 
     def objsInSurface_create_mFnNurbsSurface(self,objs=[]):

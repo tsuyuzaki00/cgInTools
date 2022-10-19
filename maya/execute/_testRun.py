@@ -1,7 +1,9 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-from cgInTools.maya.library import cJson as cj; reload(cj);
-from cgInTools.maya.library import cFiling as cf; reload(cf);
+#import importlib
+from cgInTools.maya.library import cJson as cj
+from cgInTools.maya.library import cFiling as cf
+#importlib.reload(cj)
 
 cage_file=cf.File()
 cage_path=cf.Path()

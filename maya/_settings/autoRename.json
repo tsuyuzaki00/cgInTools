@@ -43,6 +43,7 @@
             "axisAngleToQuat":"atoq",
             "quatProd":"qprd",
             "quatToEuler":"qtoe",
-            "floatMath":"fltm"
+            "floatMath":"fltm",
+            "clusterHandle":"clhl"
         }
 }

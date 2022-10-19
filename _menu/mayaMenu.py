@@ -44,9 +44,9 @@ class Menu():
         if menuItem_string[0] == None:
             pass
         elif menuItem_string[0] == True or menuItem_string[0] == 1:
-            cmds.menuItem(optionBox=menuItem_string[0], c="from "+menuItem_string[1]+" import "+menuItem_string[2]+" as ps; reload(ps); ps."+menuItem_string[3])
+            cmds.menuItem(optionBox=menuItem_string[0], c="from "+menuItem_string[1]+" import "+menuItem_string[2]+" as ps; ps."+menuItem_string[3])
         else:
-            cmds.menuItem(label=menuItem_string[0],c="from "+menuItem_string[1]+" import "+menuItem_string[2]+" as ps; reload(ps); ps."+menuItem_string[3],i=menuItem_string[4])
+            cmds.menuItem(label=menuItem_string[0],c="from "+menuItem_string[1]+" import "+menuItem_string[2]+" as ps; ps."+menuItem_string[3],i=menuItem_string[4])
 
 def main():
     menuJson_query_dicts = importJson_quary_dicts("mayaMenu.json",os.path.dirname(__file__))

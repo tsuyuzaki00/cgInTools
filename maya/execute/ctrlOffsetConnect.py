@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-from cgInTools.maya.library import cConstraint as cct; reload(cct);
-from cgInTools.maya.library import cNaming as cn; reload(cn);
+from cgInTools.maya.library import cConstraint as cct
+from cgInTools.maya.library import cNaming as cn
 
 
 def main():
