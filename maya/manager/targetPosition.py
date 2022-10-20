@@ -4,11 +4,9 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-import os
 import maya.cmds as cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
-import cgInTools as sf
 from ...ui import targetPositionUI as ui
 from ..library import cTargetMove as ctm
 

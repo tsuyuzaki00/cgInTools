@@ -2,40 +2,40 @@
 import maya.cmds as cmds
 import os
 import shutil
-import cClean as cc
+from . import cClean as cc
 
 class Path():
     def __init__(self):
         self.wrkDir=cmds.workspace(q=True,rd=True,o=True)
-        self.setDir=os.path.abspath(os.path.join(self.wrkDir,".."))
+        self.defDir=os.path.abspath(os.path.join(self.wrkDir,".."))
         self.projectName= "_newProject"
 
 #Public function
-    def rootPath(self):
-        print(self.wrkDir)
-        return self.wrkDir
 
-    def setProjectName(self,name):
-        self.projectName=name
+    def setProjectName(self,variable):
+        self.projectName=variable
         return self.projectName
 
-    def setPath(self,path):
-        self.setDir=path
-        return self.setDir
+    def setDefPath(self,variable):
+        self.defDir=variable
+        return self.defDir
 
-    def addPath(self,add):
-        self.setDir=os.path.abspath(os.path.join(self.setDir,add))
-        return self.setDir
+    def inDefPath(self,variable):
+        self.defDir=os.path.abspath(os.path.join(self.defDir,variable))
+        return self.defDir
 
-    def queryPath(self):
-        return self.setDir
+    def queryDefPath(self):
+        return self.defDir
+
+    def queryWrkPath(self):
+        return self.wrkDir
 
     def createProject(self):
-        self.wrkDir=self.setProject_create_path(self.setDir,self.projectName)
+        self.wrkDir=self.setProject_create_path(self.defDir,self.projectName)
         return self.wrkDir
 
     def editProject(self):
-        self.wrkDir=self.setProject_edit_path(self.setDir,self.projectName)
+        self.wrkDir=self.setProject_edit_path(self.defDir,self.projectName)
         return self.wrkDir
 
     def upCreateProject(self):
@@ -43,20 +43,21 @@ class Path():
         return self.wrkDir
 
 #Private function
-    def setProject_create_path(self,setDir,name):
+    def setProject_create_path(self,defDir,name):
         root_path = os.path.dirname(__file__) #.../cgInTools/maya/library
         maya_path = os.path.abspath(os.path.join(root_path,".."))
         maya_defSetProject_path = os.path.join(maya_path,"_defSetProject")
-        setDir=self.isPath_check_path(setDir)
-        wrkDir=os.path.join(setDir,name)
+        
+        defDir=self.isPath_check_path(defDir)
+        wrkDir=os.path.join(defDir,name)
         wrkDir=self.notSamePath_check_path(wrkDir)
         shutil.copytree(maya_defSetProject_path,wrkDir)
         cmds.workspace(wrkDir,o=True)
         wrkDir=cmds.workspace(q=True,rd=True)
         return wrkDir
     
-    def setProject_edit_path(self,setDir,name):
-        wrkDir=os.path.join(setDir,name)
+    def setProject_edit_path(self,defDir,name):
+        wrkDir=os.path.join(defDir,name)
         wrkDir=self.isPath_check_path(wrkDir)
         cmds.workspace(wrkDir,o=True)
         wrkDir=cmds.workspace(q=True,rd=True)

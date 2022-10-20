@@ -53,7 +53,7 @@
         "object mirror":[],
         "drawing color":
         [
-            ["CtrlColorChange","cgInTools.maya.execute","ctrlColorChenge","main()",""],
+            ["CtrlColorChange","cgInTools.maya.manager","ctrlColorChange","main()",""],
             ["CtrlColorFreeChange","cgInTools.maya.execute","ctrlColorFreeChenge","main()",""]
         ],
         "vertex":[],

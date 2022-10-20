@@ -3,8 +3,8 @@ import itertools
 import maya.cmds as cmds
 
 import cgInTools as cit
-import cJson as cj
-import cAttributes as ca
+from . import cJson as cj
+from . import cAttributes as ca
 
 class Naming():
     def __init__(self):
