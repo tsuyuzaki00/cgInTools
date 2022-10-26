@@ -39,7 +39,9 @@
             ["Reset Material","cgInTools.maya.execute","resetMaterial","main()",""]
         ],
         "geometry":[],
-        "joint":[],
+        "joint":[
+            ["Select Position Joint","cgInTools.maya.execute","selectPosJoint","main()",""]
+        ],
         "curve":[],
         "surface":[],
         "guide":[],

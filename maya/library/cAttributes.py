@@ -109,7 +109,7 @@ class Attribute():
             attrName=self.addAttrString_create_attrName(self.obj,self.name,self.niceName,self.stringName)
             return attrName
         elif self.attrType == "enum":
-            attrName=self.addAttrEnum_create_attrName(self.obj,self.name,self.niceName,self.enums)
+            attrName=self.addAttrEnum_create_attrName(self.obj,self.name,self.niceName,self.enums,self.defautValue)
             return attrName
         elif self.attrType == "vector":
             attrName=self.addAttrVector_create_attrName(self.obj,self.name,self.niceName)
@@ -196,15 +196,12 @@ class Attribute():
             cmds.setAttr(obj+"."+name,stringName,type="string")
         return name
     
-    def addAttrEnum_create_attrName(self,obj,name,niceName=None,enums=["Green","Blue","Red"]):
+    def addAttrEnum_create_attrName(self,obj,name,niceName=None,enums=["Green","Blue","Red"],defaultValue=0):
         attr_bool=self.addAttr_check_bool(obj,name)
-        enumSet=""
-        for enum in enums:
-            enumSet+=enum+":"
         if attr_bool:
             cmds.setAttr(obj+"."+name,keyable=True)
         else:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="enum",en=enumSet)
+            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="enum",en=":".join(enums),dv=defaultValue)
             cmds.setAttr(obj+"."+name,keyable=True)
         return name
 

@@ -90,7 +90,7 @@ class Naming():
 
 #Private function
     def node_query_str(self,obj):
-        setting_path=cj.pathSetting_create_str(cit.maya_settings_path,"autoRename")
+        setting_path=cj.pathSetting_create_str(cit.mayaSettings_path,"autoRename")
         readSettings_dict=cj.readJson_quary_dict(setting_path)
         getNode_str=self.isNodeType_query_str(obj)
         nodeName_str=readSettings_dict["node_renames"][getNode_str]

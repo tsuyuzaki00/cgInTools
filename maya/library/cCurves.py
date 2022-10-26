@@ -1,7 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 
 import maya.cmds as cmds
-import namingSplits as ngs
 import math
 
 class SetCurve():
