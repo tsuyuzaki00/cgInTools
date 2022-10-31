@@ -122,8 +122,8 @@ class CopyVertexSkinWeights():
         self.targetObj=""
         self.sourceVertexID=0
         self.targetVertexID=0
-        self.sourceJointID=0
-        self.targetJointID=0
+        self.sourceJoint=0
+        self.targetJoint=0
 
     def setSourceObj(self,variable):
         self.sourceObj=variable
@@ -141,13 +141,13 @@ class CopyVertexSkinWeights():
         self.targetVertexID=variable
         return self.targetVertexID
     
-    def setSourceJointID(self,variable):
-        self.sourceJointID=variable
-        return self.sourceJointID
+    def setSourceJoint(self,variable):
+        self.sourceJoint=variable
+        return self.sourceJoint
     
-    def setTargetJointID(self,variable):
-        self.targetJointID=variable
-        return self.targetJointID
+    def setTargetJoint(self,variable):
+        self.targetJoint=variable
+        return self.targetJoint
     
     def __sourceParams(self):
         sourceMesh_MObject=self.getShapes_query_MObject(self.sourceObj)
@@ -165,15 +165,37 @@ class CopyVertexSkinWeights():
         targetVertex_MObject=self.singleIdComp_query_MObject(self.targetVertexID)
         return target_MFnSkinCluster,targetMesh_MDagPath,targetVertex_MObject
 
+    def sourceJointIDQuery(self):
+        source_MFnSkinCluster,sourceMesh_MDagPath,sourceVertex_MObject=self.__sourceParams()
+        tests=source_MFnSkinCluster.influenceObjects()
+        sourceJointID_dict={}
+        for num in range(len(tests)):
+            sourceJointID_dict[str(tests[num])]=num
+            #print(str(num)+":"+str(tests[num]))
+        return sourceJointID_dict
+
+    def targetJointIDQuery(self):
+        target_MFnSkinCluster,targetMesh_MDagPath,targetVertex_MObject=self.__targetParams()
+        tests=target_MFnSkinCluster.influenceObjects()
+        targetJointID_dict={}
+        for num in range(len(tests)):
+            targetJointID_dict[str(tests[num])]=num
+            #print(str(num)+":"+str(tests[num]))
+        return targetJointID_dict
+
     def run(self):
         source_MFnSkinCluster,sourceMesh_MDagPath,sourceVertex_MObject=self.__sourceParams()
         target_MFnSkinCluster,targetMesh_MDagPath,targetVertex_MObject=self.__targetParams()
+        sourceJointID_dict=self.getJointID_query_dict(source_MFnSkinCluster)
+        targetJointID_dict=self.getJointID_query_dict(target_MFnSkinCluster)
+        sourceJointID_int=sourceJointID_dict[self.sourceJoint]
+        targetJointID_int=targetJointID_dict[self.targetJoint]
         # shapes_MDagPath       (MDagPath) - メッシュ
         # vertexComp_MObject   (MObject) - 頂点MObject
         # influence        (int) - 何番目のジョイント
         weightData=source_MFnSkinCluster.getWeights(sourceMesh_MDagPath,sourceVertex_MObject)
         #DagPathのVertexにて何番目のジョイントにウェイトを振るか
-        target_MFnSkinCluster.setWeights(targetMesh_MDagPath,targetVertex_MObject,self.targetJointID,weightData[0][self.sourceJointID],normalize=True)
+        target_MFnSkinCluster.setWeights(targetMesh_MDagPath,targetVertex_MObject,targetJointID_int,weightData[0][sourceJointID_int],normalize=True)
         print("Complete")
 
     def queryGetWeights(self):
@@ -182,12 +204,6 @@ class CopyVertexSkinWeights():
         print(weightData[0])
         return weightData
     
-    def jointIDCheck(self):
-        source_MFnSkinCluster,sourceMesh_MDagPath,sourceVertex_MObject=self.__sourceParams()
-        tests=source_MFnSkinCluster.influenceObjects()
-        for num in range(len(tests)):
-            print(str(num)+":"+str(tests[num]))
-
     def getShapes_query_MObject(self,obj):
         nodeList_MSelectionList=om2.MGlobal.getSelectionListByName(obj)
         sourceMesh_MDagPath=nodeList_MSelectionList.getDagPath(0)
@@ -213,3 +229,10 @@ class CopyVertexSkinWeights():
         vertexComp_MObject=singleIdComp_MFnSingleIndexedComponent.create(om2.MFn.kMeshVertComponent)
         singleIdComp_MFnSingleIndexedComponent.addElements([vertexID])
         return vertexComp_MObject
+
+    def getJointID_query_dict(self,MFnSkinCluster):
+        joint_MDagPathArray=MFnSkinCluster.influenceObjects()
+        jointID_dict={}
+        for num in range(len(joint_MDagPathArray)):
+            jointID_dict[str(joint_MDagPathArray[num])]=num
+        return jointID_dict
