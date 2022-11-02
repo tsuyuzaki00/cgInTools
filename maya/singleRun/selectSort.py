@@ -1,9 +1,11 @@
-import pymel.core as pm
+# -*- coding: iso-8859-15 -*-
+import maya.cmds as cmds
 
-sels = pm.selected()
-
-hoge = sorted(sels, key=str)
-sels.sort()
-
-for sel in sels:
-    pm.(sel, back = True)
+def selectSortingOutliner_edit_func(objs):
+    objSort_list=sorted(objs,key=str)
+    for objSort in objSort_list:
+        cmds.reorder(objSort,back=True)
+        
+def main():
+    objs=cmds.ls(sl=True)
+    selectSortingOutliner_edit_func(objs)

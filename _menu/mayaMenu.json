@@ -62,7 +62,7 @@
         ],
         "vertex":[],
         "edge":[
-            ["Corner Edge","cgInTools.maya.execute","cornerEdgeSelect","main()","cornerEdge.png"]
+            ["Corner Edge","cgInTools.maya.execute","selectCornerEdgeEX","main()","cornerEdge.png"]
         ],
         "face":[],
         "cv":[],

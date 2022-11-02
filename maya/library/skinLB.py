@@ -2,7 +2,9 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 import maya.api.OpenMayaAnim as oma2
-
+import cgInTools as cit
+from cgInTools.maya.library import setBaseLB as sb
+cit.verReload(sb)
 
 def objsSkin_export_list(self,path,objs):
     pass
@@ -116,101 +118,103 @@ class CTransferBind():
                 return fix_name
             
 
-class CopyVertexSkinWeights():
+class CopyVertexSkinWeights(sb.SetPair):
     def __init__(self):
-        self.sourceObj=""
-        self.targetObj=""
-        self.sourceVertexID=0
-        self.targetVertexID=0
-        self.sourceJoint=0
-        self.targetJoint=0
-
-    def setSourceObj(self,variable):
-        self.sourceObj=variable
-        return self.sourceObj
-    
-    def setTargetObj(self,variable):
-        self.targetObj=variable
-        return self.targetObj
-    
-    def setSourceVertexID(self,variable):
-        self.sourceVertexID=variable
-        return self.sourceVertexID
-    
-    def setTargetVertexID(self,variable):
-        self.targetVertexID=variable
-        return self.targetVertexID
-    
-    def setSourceJoint(self,variable):
-        self.sourceJoint=variable
-        return self.sourceJoint
-    
-    def setTargetJoint(self,variable):
-        self.targetJoint=variable
-        return self.targetJoint
-    
-    def __sourceParams(self):
-        sourceMesh_MObject=self.getShapes_query_MObject(self.sourceObj)
-        source_node=self.replaceShapeMObject_query_skc(sourceMesh_MObject)
-        source_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(source_node)
-        sourceMesh_MDagPath=om2.MDagPath().getAPathTo(sourceMesh_MObject)
-        sourceVertex_MObject=self.singleIdComp_query_MObject(self.sourceVertexID)
-        return source_MFnSkinCluster,sourceMesh_MDagPath,sourceVertex_MObject
-    
-    def __targetParams(self):
-        targetMesh_MObject=self.getShapes_query_MObject(self.targetObj)
-        target_node=self.replaceShapeMObject_query_skc(targetMesh_MObject)
-        target_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(target_node)
-        targetMesh_MDagPath=om2.MDagPath().getAPathTo(targetMesh_MObject)
-        targetVertex_MObject=self.singleIdComp_query_MObject(self.targetVertexID)
-        return target_MFnSkinCluster,targetMesh_MDagPath,targetVertex_MObject
-
-    def sourceJointIDQuery(self):
-        source_MFnSkinCluster,sourceMesh_MDagPath,sourceVertex_MObject=self.__sourceParams()
-        tests=source_MFnSkinCluster.influenceObjects()
-        sourceJointID_dict={}
-        for num in range(len(tests)):
-            sourceJointID_dict[str(tests[num])]=num
-            #print(str(num)+":"+str(tests[num]))
-        return sourceJointID_dict
-
-    def targetJointIDQuery(self):
-        target_MFnSkinCluster,targetMesh_MDagPath,targetVertex_MObject=self.__targetParams()
-        tests=target_MFnSkinCluster.influenceObjects()
-        targetJointID_dict={}
-        for num in range(len(tests)):
-            targetJointID_dict[str(tests[num])]=num
-            #print(str(num)+":"+str(tests[num]))
-        return targetJointID_dict
+        """
+        self.sourceNode # string
+        self.targetNode # string
+        self.sourceAttr # string
+        self.targetAttr # string
+        self.sourceComponent # int only
+        self.targetComponent # int only
+        self.sourceParameter # float or string
+        self.targetParameter # float or string
+        self.sourceJoint # string
+        self.targetJoint # string
+        """
 
     def run(self):
-        source_MFnSkinCluster,sourceMesh_MDagPath,sourceVertex_MObject=self.__sourceParams()
-        target_MFnSkinCluster,targetMesh_MDagPath,targetVertex_MObject=self.__targetParams()
-        sourceJointID_dict=self.getJointID_query_dict(source_MFnSkinCluster)
-        targetJointID_dict=self.getJointID_query_dict(target_MFnSkinCluster)
+        sourceSkc_node=self.getSkc_query_node(self.sourceNode)
+        sourceJointID_dict=self.getJointIDAtJoint_query_dict(sourceSkc_node)
         sourceJointID_int=sourceJointID_dict[self.sourceJoint]
+        source_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(sourceSkc_node)
+        sourceMesh_MDagPath=self.getMesh_query_MDagPath(self.sourceNode)
+        sourceVertex_MObject=self.singleIdComp_query_MObject(self.sourceComponent)
+
+        targetSkc_node=self.getSkc_query_node(self.targetNode)
+        targetJointID_dict=self.getJointIDAtJoint_query_dict(targetSkc_node)
         targetJointID_int=targetJointID_dict[self.targetJoint]
+        target_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(targetSkc_node)
+        targetMesh_MDagPath=self.getMesh_query_MDagPath(self.targetNode)
+        targetVertex_MObject=self.singleIdComp_query_MObject(self.targetComponent)
+
         # shapes_MDagPath       (MDagPath) - メッシュ
         # vertexComp_MObject   (MObject) - 頂点MObject
         # influence        (int) - 何番目のジョイント
         weightData=source_MFnSkinCluster.getWeights(sourceMesh_MDagPath,sourceVertex_MObject)
         #DagPathのVertexにて何番目のジョイントにウェイトを振るか
         target_MFnSkinCluster.setWeights(targetMesh_MDagPath,targetVertex_MObject,targetJointID_int,weightData[0][sourceJointID_int],normalize=True)
-        print("Complete")
 
-    def queryGetWeights(self):
-        source_MFnSkinCluster,sourceMesh_MDagPath,sourceVertex_MObject=self.__sourceParams()
+    def querySourceWeights(self):
+        sourceSkc_node=self.getSkc_query_node(self.sourceNode)
+        source_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(sourceSkc_node)
+        sourceMesh_MDagPath=self.getMesh_query_MDagPath(self.sourceNode)
+        sourceVertex_MObject=self.singleIdComp_query_MObject(self.sourceComponent)
+
         weightData=source_MFnSkinCluster.getWeights(sourceMesh_MDagPath,sourceVertex_MObject)
-        print(weightData[0])
-        return weightData
-    
-    def getShapes_query_MObject(self,obj):
+        weight_list=[self.sourceNode+".vtx["+str(self.sourceComponent)+"]",list(weightData[0])]        
+        return weight_list
+
+    def querySourceWeightsDict(self):
+        sourceSkc_node=self.getSkc_query_node(self.sourceNode)
+        source_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(sourceSkc_node)
+        sourceMesh_MDagPath=self.getMesh_query_MDagPath(self.sourceNode)
+        sourceVertex_MObject=self.singleIdComp_query_MObject(self.sourceComponent)
+        sourceJointID_dict=self.getJointAtJointID_query_dict(sourceSkc_node)
+
+        weightData=source_MFnSkinCluster.getWeights(sourceMesh_MDagPath,sourceVertex_MObject)
+        weight_dict={}
+        jointValue_dict={}
+        nodeAttr_string=self.sourceNode+".vtx["+str(self.sourceComponent)+"]"
+        for num in range(len(list(weightData[0]))):
+            add_dict={sourceJointID_dict[num]:weightData[0][num]}
+            jointValue_dict.update(add_dict)
+        weight_dict[nodeAttr_string]=jointValue_dict
+        return weight_dict
+
+    def queryTargetWeights(self):
+        targetSkc_node=self.getSkc_query_node(self.targetNode)
+        target_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(targetSkc_node)
+        targetMesh_MDagPath=self.getMesh_query_MDagPath(self.targetNode)
+        targetVertex_MObject=self.singleIdComp_query_MObject(self.targetComponent)
+
+        weightData=target_MFnSkinCluster.getWeights(targetMesh_MDagPath,targetVertex_MObject)
+        weight_list=[self.targetNode+".vtx["+str(self.targetComponent)+"]",list(weightData[0])]        
+        return weight_list
+
+    def queryTargetWeightsDict(self):
+        targetSkc_node=self.getSkc_query_node(self.targetNode)
+        target_MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(targetSkc_node)
+        targetMesh_MDagPath=self.getMesh_query_MDagPath(self.targetNode)
+        targetVertex_MObject=self.singleIdComp_query_MObject(self.targetComponent)
+        targetJointID_dict=self.getJointAtJointID_query_dict(targetSkc_node)
+
+        weightData=target_MFnSkinCluster.getWeights(targetMesh_MDagPath,targetVertex_MObject)
+        weight_dict={}
+        jointValue_dict={}
+        nodeAttr_string=self.targetNode+".vtx["+str(self.targetComponent)+"]"
+        for num in range(len(list(weightData[0]))):
+            add_dict={targetJointID_dict[num]:weightData[0][num]}
+            jointValue_dict.update(add_dict)
+        weight_dict[nodeAttr_string]=jointValue_dict
+        return weight_dict
+        
+# private functions
+    def getSkc_query_node(self,obj):
         nodeList_MSelectionList=om2.MGlobal.getSelectionListByName(obj)
         sourceMesh_MDagPath=nodeList_MSelectionList.getDagPath(0)
         sourceMesh_MDagPath.extendToShape()
-        return sourceMesh_MDagPath.node()
-
-    def replaceShapeMObject_query_skc(self,shapes_MObject):
+        shapes_MObject=sourceMesh_MDagPath.node()
         mesh_MFnDependencyNode=om2.MFnDependencyNode(shapes_MObject)
         inMesh_MPlug=mesh_MFnDependencyNode.findPlug("inMesh",False)
         skc_MPlug=inMesh_MPlug.connectedTo(True,False)[0]
@@ -218,21 +222,37 @@ class CopyVertexSkinWeights():
         skc_node=skc_nodeAttr.split(".")[0]
         return skc_node
 
+    def getJointIDAtJoint_query_dict(self,skc_node):
+        MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(skc_node)
+        joint_MDagPathArray=MFnSkinCluster.influenceObjects()
+        jointID_dict={}
+        for num in range(len(joint_MDagPathArray)):
+            jointID_dict[str(joint_MDagPathArray[num])]=num
+        return jointID_dict
+
+    def getJointAtJointID_query_dict(self,skc_node):
+        MFnSkinCluster=self.replaceSkcNode_query_MFnSkinCluster(skc_node)
+        joint_MDagPathArray=MFnSkinCluster.influenceObjects()
+        jointID_dict={}
+        for num in range(len(joint_MDagPathArray)):
+            jointID_dict[num]=str(joint_MDagPathArray[num])
+        return jointID_dict
+
+# OpenMaya functions
     def replaceSkcNode_query_MFnSkinCluster(self,skc_node):
         skcList_MSelectionList=om2.MGlobal.getSelectionListByName(skc_node)
         skc_MObject=skcList_MSelectionList.getDependNode(0)
         skc_MFnSkinCluster=oma2.MFnSkinCluster(skc_MObject)
         return skc_MFnSkinCluster
+
+    def getMesh_query_MDagPath(self,obj):
+        nodeList_MSelectionList=om2.MGlobal.getSelectionListByName(obj)
+        sourceMesh_MDagPath=nodeList_MSelectionList.getDagPath(0)
+        sourceMesh_MDagPath.extendToShape()
+        return sourceMesh_MDagPath
     
     def singleIdComp_query_MObject(self,vertexID):
         singleIdComp_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent()
         vertexComp_MObject=singleIdComp_MFnSingleIndexedComponent.create(om2.MFn.kMeshVertComponent)
         singleIdComp_MFnSingleIndexedComponent.addElements([vertexID])
         return vertexComp_MObject
-
-    def getJointID_query_dict(self,MFnSkinCluster):
-        joint_MDagPathArray=MFnSkinCluster.influenceObjects()
-        jointID_dict={}
-        for num in range(len(joint_MDagPathArray)):
-            jointID_dict[str(joint_MDagPathArray[num])]=num
-        return jointID_dict
