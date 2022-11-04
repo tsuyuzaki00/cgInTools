@@ -1,7 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import json,os
-import pprint
 
 from cgInTools.maya.library import setBaseLB as sb
 import cgInTools as cit
