@@ -3,7 +3,7 @@ import maya.cmds as cmds
 import cgInTools as cit
 from cgInTools.maya.library import jsonLB as cj
 
-def cornerEdge_query_func(obj,lowAngle=30,highAngle=150):
+def cornerEdge_query_func(obj,lowAngle=30,highAngle=165):
     selEdge_int=cmds.polyEvaluate(e=True)
     edgeNum_int=selEdge_int-1
     cmds.select(obj+".e[0:"+str(edgeNum_int)+"]",add=True)
@@ -15,9 +15,9 @@ def cornerEdge_query_func(obj,lowAngle=30,highAngle=150):
 def main():
     setting=cj.Json()
     setting.setPath(cit.mayaData_path)
-    setting.setFile("selectCornerEdge")
+    setting.setFile("geometryCornerEdge")
     data_dict=setting.read()
     
-    objs = cmds.ls(sl=True)
+    objs = cmds.ls(sl=True,o=True)
     for obj in objs:
         cornerEdge_query_func(obj,data_dict["lowAngle"],data_dict["highAngle"])

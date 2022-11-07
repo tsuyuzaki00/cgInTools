@@ -10,7 +10,7 @@ class MainWindowBase(QMainWindow):
         menuBar = self.menuBar()
         statusBar = self.statusBar()
         file_menu = menuBar.addMenu("File")
-        self.centerWidget = QWidget()
+        self.centerWidget=QWidget()
 
         refresh_action = QAction("Refresh Settings", self)
         restore_action = QAction("Restore Settings", self)
