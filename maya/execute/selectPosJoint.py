@@ -6,6 +6,10 @@ cit.verReload(cj)
 
 def main():
     objs=cmds.ls(sl=True)
-    for obj in objs:
-        trs=cmds.xform(obj,q=True,ws=True,t=True)
-        cj.jointOnly(p=trs)
+    if objs == []:
+        cj.jointOnly()
+        cmds.select(cl=True)
+    else :
+        for obj in objs:
+            trs=cmds.xform(obj,q=True,ws=True,t=True)
+            cj.jointOnly(p=trs)
