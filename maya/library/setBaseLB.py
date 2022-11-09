@@ -1,19 +1,11 @@
 # -*- coding: iso-8859-15 -*-
 
-class SetObject():
+class SetName():
     def __init__(self):
         self.name=""
         self.node=""
         self.position=""
         self.number=00
-        self.object=""
-        self.parent=""
-        self.childs=[]
-        self.shape=""
-        self.component=""
-        self.attr=""
-        self.parameter=0
-        self.joint=""
 
     def setName(self,variable):
         self.name=variable
@@ -30,6 +22,29 @@ class SetObject():
     def setNumber(self,variable):
         self.number=variable
         return self.number
+
+    def getName(self):
+        return self.name
+
+    def getNode(self):
+        return self.node
+
+    def getPosition(self):
+        return self.position
+
+    def getNumber(self):
+        return self.number
+
+class SetObject():
+    def __init__(self):
+        self.object=""
+        self.parent=""
+        self.childs=[]
+        self.shape=""
+        self.component=""
+        self.attr=""
+        self.parameter=0
+        self.joint=""
 
     def setObject(self,variable):
         self.object=variable
@@ -62,18 +77,6 @@ class SetObject():
     def setJoint(self,variable):
         self.joint=variable
         return self.joint
-
-    def getName(self):
-        return self.name
-
-    def getNode(self):
-        return self.node
-
-    def getPosition(self):
-        return self.position
-
-    def getNumber(self):
-        return self.number
 
     def getObject(self):
         return self.object

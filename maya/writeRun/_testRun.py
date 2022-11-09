@@ -1,11 +1,30 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import cgInTools as cit
-from cgInTools.maya.library import cJson as cj
-from cgInTools.maya.library import cFiling as cf
-from cgInTools.maya.library import setBaseLB as sb
-cit.verReload(cf)
+from cgInTools.maya.library import ctrlConnectLB as ccLB
+cit.verReload(ccLB)
 
-class Test(sb.SetBase):
-    def __init__(self):
-        
+def offset():
+    ctrl=ccLB.CtrlParent()
+    root=cmds.ls(sl=True)[0]
+    ctrl.setObject(root)
+    ctrl.offsetCtrlRoot()
+
+    joints=cmds.listRelatives(root,ad=True,typ="joint")
+    joints.reverse()
+    for joint in joints:
+        ctrl.setObject(joint)
+        ctrl.offsetCtrl()
+
+def aimset():
+    ctrl=ccLB.CtrlParent()
+    root=cmds.ls(sl=True)[0]
+    joints=cmds.ls(sl=True)[1:]
+    ctrl.setObject(root)
+    ctrl.aimsetCtrlRoot()
+    for joint in joints:
+        ctrl.setObject(joint)
+        ctrl.aimsetCtrl()
+
+#offset()
+aimset()
