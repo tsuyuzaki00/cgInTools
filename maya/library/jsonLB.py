@@ -9,64 +9,49 @@ cit.verReload(sb)
 class Json(sb.SetFile):
     def __init__(self):
         """
-        self.path # string
-        self.file # string
+        self._path # string
+        self._file # string
+        self._extension="json" # string
         """
-        self.extension="json" # string
-        self.writeDict={}
-        self.writePackDicts=[]
-        self.readDict={}
-        self.readPackDicts=[]
+        self._writeDict={}
+        self._writePackDicts=[]
+        self._readDict={}
+        self._readPackDicts=[]
 
     def setWriteDict(self,variable):
-        self.writeDict=variable
-        return self.writeDict
-
+        self._writeDict=variable
+        return self._writeDict
     def getWriteDict(self):
-        return self.writeDict
-
-    def __getFileJudge(self,file):
-        if type(file) is str:
-            return True
-        elif file is None:
-            return False
-        else:
-            cmds.warning("Please give me a string type.")
-
-    def setPackDicts(self,variable,file=None):
-        if self.__getFileJudge(file):
-            self.writePackDicts=[{"fileName":file,"dataDict":variable}]
-            return self.writePackDicts
-        else:
-            self.writePackDicts=[{"fileName":self.file,"dataDict":variable}]
-            return self.writePackDicts
-
-    def addPackDicts(self,variable,file=None):
-        if self.__getFileJudge(file):
-            self.writePackDicts.append({"fileName":file,"dataDict":variable})
-            return self.writePackDicts
-        else:
-            self.writePackDicts.append({"fileName":self.file,"dataDict":variable})
-            return self.writePackDicts
+        return self._writeDict
 
     def getPackDicts(self):
-        return self.writePackDicts
+        return self._writePackDicts
 
+    def setDictInPack(self,variable,file=None):
+        file=file or self._file
+        _writePackDicts=[{"fileName":file,"dataDict":variable}]
+        return _writePackDicts
+
+    def addDictInPack(self,variable,file=None):
+        file=file or self._file
+        self._writePackDicts.append({"fileName":file,"dataDict":variable})
+        return self._writePackDicts
+        
     def read(self):
-        self.readDict=self.readJson_quary_dict(self.path,self.file,self.extension)
+        self.readDict=self.readJson_quary_dict(self._path,self._file,self._extension)
         return self.readDict
 
     def readPacks(self):
-        self.readPackDicts=self.readPack_quary_list(self.path,self.file,self.extension)
+        self.readPackDicts=self.readPack_quary_list(self._path,self._file,self._extension)
         return self.readPackDicts
 
     def write(self):
-        self.writeJson_create_func(self.path,self.file,self.extension,self.writeDict)
+        self.writeJson_create_func(self._path,self._file,self._extension,self._writeDict)
 
     def writePacks(self):
-        self.writePack_create_func(self.writePackDicts,self.path,self.file,self.extension)
+        self.writePack_create_func(self.writePackDicts,self._path,self._file,self._extension)
 
-    # Jsonファイル名及びパスの設定をする関数
+#Private function
     def pathSetting_create_str(self,path,json_name,extension="json",new_folder=None):
         if new_folder == None:
             json_file = os.path.join(path,json_name+"."+extension)
@@ -75,16 +60,14 @@ class Json(sb.SetFile):
             json_file = os.path.join(path,new_folder,json_name+"."+extension)
             return json_file
 
-    # 単体読み込み関数
     def readJson_quary_dict(self,path,file,extension):
         data_file=self.pathSetting_create_str(path,file,extension)
         with open(data_file, 'r') as f:
             data_dict = json.load(f)
             return data_dict
 
-    # パック読み込み関数
     def readPack_quary_list(self,path,file,extension):
-        #self.thisPack_check_str(path,file,extension,"packFiles")
+        self.thisPack_check_func(path,file,extension,"packFiles")
         pack_dict=self.readJson_quary_dict(path,file,extension+"Pack")
         data_dicts=[]
         for data_str in pack_dict["packFiles"]:
@@ -92,24 +75,20 @@ class Json(sb.SetFile):
             data_dicts.append(data_dict)
         return data_dicts
 
-    # 読み込んだdict内に"packFiles"があるか確認する関数
-    def thisPack_check_str(self,path,file,extension,checkDict):
+    def thisPack_check_func(self,path,file,extension,checkDict):
         pack_dict=self.readJson_quary_dict(path,file,extension+"Pack")
         try:
-            pack_dict[checkDict]
-            return pack_dict
+            print(pack_dict[checkDict])
         except:
             cmds.error("setFile is No packFiles.")
 
-    # 単体書き出し関数
     def writeJson_create_func(self,path,file,extension,write_dict):
-        data_file=self.pathSetting_create_str(path,file,extension)
+        data_file=self._pathSetting_create_str(path,file,extension)
         with open(data_file, 'w') as f:
             json.dump(write_dict,f,indent=4,ensure_ascii=False)
 
-    # パック書き出し関数
     def writePack_create_func(self,pack_dicts,path,file,extension):
-        pack_file=self.pathSetting_create_str(path,file,extension+"Pack")
+        pack_file=self._pathSetting_create_str(path,file,extension+"Pack")
         packFiles=[]
         for pack_dict in pack_dicts:
             packFiles.append(pack_dict["fileName"])

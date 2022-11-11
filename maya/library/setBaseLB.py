@@ -2,220 +2,216 @@
 
 class SetName():
     def __init__(self):
-        self.name=""
-        self.node=""
-        self.position=""
-        self.number=00
+        self._object=""
+        self._name=""
+        self._title=""
+        self._node=""
+        self._side=""
+        self._hierarchy=""
+        self._number=00
+        self.test=""
+
+    def setObject(self,variable):
+        self._object=variable
+        return self._object
+    def getObject(self):
+        return self._object
 
     def setName(self,variable):
-        self.name=variable
-        return self.name
+        self._name=variable
+        return self._name
+    def getName(self):
+        return self._name
+    
+    def setTitle(self,variable):
+        self._title=variable
+        return self._title
+    def getTitle(self):
+        return self._title
 
     def setNode(self,variable):
-        self.node=variable
-        return self.node
+        self._node=variable
+        return self._node
+    def getNode(self):
+        return self._node
 
-    def setPosition(self,variable):
-        self.position=variable
-        return self.position
+    def setSide(self,variable):
+        self._side=variable
+        return self._side
+    def getSide(self):
+        return self._side
+
+    def setHierarchy(self,variable):
+        self._hierarchy=variable
+        return self._hierarchy
+    def getSide(self):
+        return self._hierarchy
 
     def setNumber(self,variable):
-        self.number=variable
-        return self.number
-
-    def getName(self):
-        return self.name
-
-    def getNode(self):
-        return self.node
-
-    def getPosition(self):
-        return self.position
-
+        self._number=variable
+        return self._number
     def getNumber(self):
-        return self.number
+        return self._number
 
 class SetObject():
     def __init__(self):
-        self.object=""
-        self.parent=""
-        self.childs=[]
-        self.shape=""
-        self.component=""
-        self.attr=""
-        self.parameter=0
-        self.joint=""
+        self._object=""
+        self._parent=""
+        self._childs=[]
+        self._shape=""
+        self._component=""
+        self._attr=""
+        self._value=0
+        self._joint=""
 
     def setObject(self,variable):
-        self.object=variable
-        return self.object
+        self._object=variable
+        return self._object
+    def getObject(self):
+        return self._object
 
     def setParent(self,variable):
-        self.parent=variable
-        return self.parent
+        self._parent=variable
+        return self._parent
+    def getParent(self):
+        return self._parent
     
     def setChilds(self,variable):
-        self.childs=variable
-        return self.childs
+        self._childs=variable
+        return self._childs
+    def getChilds(self):
+        return self._childs
 
     def setShape(self,variable):
-        self.shape=variable
-        return self.shape
+        self._shape=variable
+        return self._shape
+    def getShape(self):
+        return self._shape
 
     def setComponent(self,variable):
-        self.component=variable
-        return self.component
+        self._component=variable
+        return self._component
+    def getComponent(self):
+        return self._component
 
     def setAttr(self,variable):
-        self.attr=variable
-        return self.attr
+        self._attr=variable
+        return self._attr
+    def getAttr(self):
+        return self._attr
 
-    def setParameter(self,variable):
-        self.parameter=variable
-        return self.parameter
+    def setValue(self,variable):
+        self._value=variable
+        return self._value
+    def getValue(self):
+        return self._value
 
     def setJoint(self,variable):
-        self.joint=variable
-        return self.joint
-
-    def getObject(self):
-        return self.object
-
-    def getParent(self):
-        return self.parent
-    
-    def getChilds(self):
-        return self.childs
-
-    def getShape(self):
-        return self.shape
-
-    def getComponent(self):
-        return self.component
-
-    def getAttr(self):
-        return self.attr
-
-    def getParameter(self):
-        return self.parameter
-
+        self._joint=variable
+        return self._joint
     def getJoint(self):
-        return self.joint
+        return self._joint
 
 class SetPair():
     def __init__(self):
-        self.sourceNode="" # string
-        self.targetNode="" # string
-        self.sourceAttr="" # string
-        self.targetAttr="" # string
-        self.sourceComponent=0 # int only
-        self.targetComponent=0 # int only
-        self.sourceParameter="" # float or string
-        self.targetParameter="" # float or string
-        self.sourceJoint="" # string
-        self.targetJoint="" # string
+        self._sourceNode="" # string
+        self._targetNode="" # string
+        self._sourceAttr="" # string
+        self._targetAttr="" # string
+        self._sourceComponent=0 # int only
+        self._targetComponent=0 # int only
+        self._sourceParameter="" # float or string
+        self._targetParameter="" # float or string
+        self._sourceJoint="" # string
+        self._targetJoint="" # string
         
-    def sPathurceNode(self,variable):
-        self.sourceNode=variable
-        return self.sourceNode
+    def setSourceNode(self,variable):
+        self._sourceNode=variable
+        return self._sourceNode
+    def getSourceNode(self):
+        return self._sourceNode
 
     def setTargetNode(self,variable):
-        self.targetNode=variable
-        return self.targetNode
+        self._targetNode=variable
+        return self._targetNode
+    def getTargetNode(self):
+        return self._targetNode
 
     def setSourceAttr(self,variable):
-        self.sourceAttr=variable
-        return self.sourceAttr
+        self._sourceAttr=variable
+        return self._sourceAttr
+    def getSourceAttr(self):
+        return self._sourceAttr
 
     def setTargetAttr(self,variable):
-        self.targetAttr=variable
-        return self.targetAttr
+        self._targetAttr=variable
+        return self._targetAttr
+    def getTargetAttr(self):
+        return self._targetAttr
 
     def setSourceComponent(self,variable):
-        self.sourceComponent=variable
-        return self.sourceComponent
+        self._sourceComponent=variable
+        return self._sourceComponent
+    def getSourceComponent(self):
+        return self._sourceComponent
 
     def setTargetComponent(self,variable):
-        self.targetComponent=variable
-        return self.targetComponent
+        self._targetComponent=variable
+        return self._targetComponent
+    def getTargetComponent(self):
+        return self._targetComponent
 
     def setSourceParameter(self,variable):
-        self.sourceParameter=variable
-        return self.sourceParameter
+        self._sourceParameter=variable
+        return self._sourceParameter
+    def getSourceParameter(self):
+        return self._sourceParameter
 
     def setTargetParameter(self,variable):
-        self.targetParameter=variable
-        return self.targetParameter
+        self._targetParameter=variable
+        return self._targetParameter
+    def getTargetParameter(self):
+        return self._targetParameter
 
     def setSourceJoint(self,variable):
-        self.sourceJoint=variable
-        return self.sourceJoint
+        self._sourceJoint=variable
+        return self._sourceJoint
+    def getSourceJoint(self):
+        return self._sourceJoint
 
     def setTargetJoint(self,variable):
-        self.targetJoint=variable
-        return self.targetJoint
-
-    def gPathurceNode(self):
-        return self.sourceNode
-
-    def getTargetNode(self):
-        return self.targetNode
-
-    def getSourceAttr(self):
-        return self.sourceAttr
-
-    def getTargetAttr(self):
-        return self.targetAttr
-    
-    def getSourceJoint(self):
-        return self.sourceJoint
-
+        self._targetJoint=variable
+        return self._targetJoint
     def getTargetJoint(self):
-        return self.targetJoint
-
-    def getSourceComponent(self):
-        return self.sourceComponent
-
-    def getTargetComponent(self):
-        return self.targetComponent
-
-    def getSourceParameter(self):
-        return self.sourceParameter
-
-    def getTargetParameter(self):
-        return self.targetParameter
+        return self._targetJoint
 
 class SetFile():
     def __init__(self):
-        self.path=""
-        self.file=""
-        self.extension=""
-        self.packs=[]
+        self._path=""
+        self._file=""
+        self._extension="json"
+        self._packs=[]
 
     def setPath(self,variable):
-        self.path=variable
-        return self.path
+        self._path=variable
+        return self._path
+    def getPath(self):
+        return self._path
 
     def setFile(self,variable):
-        self.file=variable
-        return self.file
+        self._file=variable
+        return self._file
+    def getFile(self):
+        return self._file
 
     def setExtension(self,variable):
-        self.extension=variable
-        return self.extension
+        self._extension=variable
+        return self._extension
+    def getExtension(self):
+        return self._extension
 
     def setPacks(self,variable):
-        self.packs=variable
-        return self.packs
-    
-    def getPath(self):
-        return self.path
-
-    def getFile(self):
-        return self.file
-
-    def getExtension(self):
-        return self.extension
-    
+        self._packs=variable
+        return self._packs
     def getPacks(self):
-        return self.packs
+        return self._packs
