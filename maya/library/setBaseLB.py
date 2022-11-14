@@ -120,8 +120,8 @@ class SetPair():
         self._targetAttr="" # string
         self._sourceComponent=0 # int only
         self._targetComponent=0 # int only
-        self._sourceParameter="" # float or string
-        self._targetParameter="" # float or string
+        self._sourceValue="" # float or string
+        self._targetValue="" # float or string
         self._sourceJoint="" # string
         self._targetJoint="" # string
         
@@ -161,17 +161,17 @@ class SetPair():
     def getTargetComponent(self):
         return self._targetComponent
 
-    def setSourceParameter(self,variable):
-        self._sourceParameter=variable
-        return self._sourceParameter
-    def getSourceParameter(self):
-        return self._sourceParameter
+    def setSourceValue(self,variable):
+        self._sourceValue=variable
+        return self._sourceValue
+    def getSourceValue(self):
+        return self._sourceValue
 
-    def setTargetParameter(self,variable):
-        self._targetParameter=variable
-        return self._targetParameter
-    def getTargetParameter(self):
-        return self._targetParameter
+    def setTargetValue(self,variable):
+        self._targetValue=variable
+        return self._targetValue
+    def getTargetValue(self):
+        return self._targetValue
 
     def setSourceJoint(self,variable):
         self._sourceJoint=variable

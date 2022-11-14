@@ -1,5 +1,5 @@
 import maya.cmds as cmds
-from cgInTools.maya.library import cNaming as cn;
+from maya.library import namingLB as cn;
 
 def main():
     objs=cmds.ls(sl=True)

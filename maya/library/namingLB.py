@@ -3,52 +3,61 @@ import itertools
 import maya.cmds as cmds
 
 import cgInTools as cit
-from . import cJson as cj
-from . import cAttributes as ca
+from . import setBaseLB as sbLB
+from . import jsonLB as jLB
+from . import attributeLB as ca
 
-class Naming():
+class Naming(sbLB.SetName):
     def __init__(self):
-        self.obj="null"
-        self.name="name"
-        self.node="node"
-        self.pos="C"
-        self.number=0
-        self.num=str(self.number).zfill(2)
-        self.nameNum=self.name+self.num
-        self.nodeNum=self.node+self.num
-        self.posNum=self.pos+self.num
-        self.scene="scene"
-        self.orders=["name","node","pos","num"]
-        self.rename_str=""
+        self._object=""
+        self._name=""
+        self._title=""
+        self._node=""
+        self._side=""
+        self._hierarchy=""
+        self._number=00
+        self._autoSwitch=True
+        self._orders=["title","node","side","num"]
+
+    def setLoading(self):
+        self._num=str(self._number).zfill(2)
+        self._titleNum=self._title+self._num
+        self._nodeNum=self._node+self._num
+        self._sideNum=self._side+self._num
+        self._titleHie=self._title+self._hierarchy
+        self._scene="scene"
 
 #Public function
-    def setObj(self,obj):
-        self.obj=obj
-        return self.obj
+    def setOrders(self,variable):
+        self._orders=variable
+        return self._orders
+    def getOrders(self):
+        return self._orders
 
-    def setName(self,name):
-        self.name=name
-        return self.name
+    def setAutoSwitch(self,variable):
+        self._autoSwitch=variable
+        return self._autoSwitch
+    def getAutoSwitch(self):
+        return self._autoSwitch
 
-    def setPos(self,pos):
-        self.pos=pos
-        return self.pos
-
-    def setOrders(self,orders):
-        self.orders=orders
-        return self.orders
-
-    def getRename(self):
+    def autoNamer(self):
         order_list=[]
-        nullDel_list = [order for order in self.orders if order != ""]
+        nullDel_list=[order for order in self._orders if order != ""]
         for chengeSelf in nullDel_list:
-            add=eval("self."+chengeSelf)
+            add=eval("self._"+chengeSelf)
             order_list.append(add)
-        self.rename_str = "_".join(order_list)
-        return self.rename_str
+        self._auteName = "_".join(order_list)
+        return self._auteName
 
     def rename(self):
-        self.node=self.node_query_str(self.obj)
+        if self._autoSwitch:
+            name=self.autoNamer()
+        else:
+            name=self._name
+        rename=cmds.rename(self._object,name)
+        return rename
+        """
+        self.node=self.node_query_str(self._object)
         if "num" in self.orders or "nameNum" in self.orders or "nodeNum" in self.orders or "posNum" in self.orders:
             self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
             self.nameNum=self.name+self.num
@@ -56,7 +65,7 @@ class Naming():
             self.posNum=self.pos+self.num
         self.scene=self.scene_query_str()
         rename_str=self.getRename()
-        cmds.rename(self.obj,rename_str)
+        """
 
     def markAttr(self):
         self.node=self.node_query_str(self.obj)
@@ -66,10 +75,10 @@ class Naming():
         mark.setObj(self.obj)
         mark.setAttrType("string")
         self.addStringAttrs=[
-            {"attrName":"cname","attrString":self.name},
-            {"attrName":"cpos","attrString":self.pos},
-            {"attrName":"cnode","attrString":self.node},
-            {"attrName":"cnum","attrString":self.num},
+            {"attrName":"ctitle","attrString":self._title},
+            {"attrName":"cside","attrString":self._side},
+            {"attrName":"cnode","attrString":self._node},
+            {"attrName":"cnum","attrString":self._num},
         ]
         for addStringAttr in self.addStringAttrs:
             mark.setName(addStringAttr["attrName"])
@@ -78,10 +87,10 @@ class Naming():
 
     def setRename(self):
         self.addStringAttrs=[
-            {"attrName":"cname","attrString":self.name},
-            {"attrName":"cpos","attrString":self.pos},
-            {"attrName":"cnode","attrString":self.node},
-            {"attrName":"cnum","attrString":self.num},
+            {"attrName":"cname","attrString":self._name},
+            {"attrName":"cpos","attrString":self._pos},
+            {"attrName":"cnode","attrString":self._node},
+            {"attrName":"cnum","attrString":self._num},
         ]
         for addStringAttr in self.addStringAttrs:
             addStringAttr["attrString"]=cmds.getAttr(self.obj+"."+addStringAttr["attrName"])            
@@ -90,10 +99,12 @@ class Naming():
 
 #Private function
     def node_query_str(self,obj):
-        setting_path=cj.pathSetting_create_str(cit.mayaSettings_path,"autoRename")
-        readSettings_dict=cj.readJson_quary_dict(setting_path)
+        nodeType=jLB.Json()
+        nodeType.setPath(cit.mayaSettings_path)
+        nodeType.setFile("autoRename")
+        nodeType_dict=nodeType.read()
         getNode_str=self.isNodeType_query_str(obj)
-        nodeName_str=readSettings_dict["node_renames"][getNode_str]
+        nodeName_str=nodeType_dict["node_renames"][getNode_str]
         return nodeName_str
 
     def isNodeType_query_str(self,obj):

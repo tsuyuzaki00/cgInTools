@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 from cgInTools.maya.library import cConstraint as cct
-from cgInTools.maya.library import cNaming as cn
+from maya.library import namingLB as cn
 
 
 def main():

@@ -49,7 +49,7 @@ class Json(sb.SetFile):
         self.writeJson_create_func(self._path,self._file,self._extension,self._writeDict)
 
     def writePacks(self):
-        self.writePack_create_func(self.writePackDicts,self._path,self._file,self._extension)
+        self.writePack_create_func(self._writePackDicts,self._path,self._file,self._extension)
 
 #Private function
     def pathSetting_create_str(self,path,json_name,extension="json",new_folder=None):
@@ -83,12 +83,12 @@ class Json(sb.SetFile):
             cmds.error("setFile is No packFiles.")
 
     def writeJson_create_func(self,path,file,extension,write_dict):
-        data_file=self._pathSetting_create_str(path,file,extension)
+        data_file=self.pathSetting_create_str(path,file,extension)
         with open(data_file, 'w') as f:
             json.dump(write_dict,f,indent=4,ensure_ascii=False)
 
     def writePack_create_func(self,pack_dicts,path,file,extension):
-        pack_file=self._pathSetting_create_str(path,file,extension+"Pack")
+        pack_file=self.pathSetting_create_str(path,file,extension+"Pack")
         packFiles=[]
         for pack_dict in pack_dicts:
             packFiles.append(pack_dict["fileName"])

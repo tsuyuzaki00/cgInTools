@@ -1,4 +1,4 @@
-from .cAttributes import *
+from .attributeLB import *
 from .cClean import *
-from .cNaming import *
+from .namingLB import *
 from .cNurbs import *
