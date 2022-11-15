@@ -24,14 +24,13 @@ class Naming(sbLB.SetName):
         # title node side num titleNum nodeNum sideNum titleHie scene
         self._orders=["title","node","side","num"]
 
-    def loading(self):
+    def __loading(self):
         self._titleNum=self._title+self.rangeNumber_query_str(self._title)
         self._nodeNum=self._node+self.rangeNumber_query_str(self._node)
         self._sideNum=self._side+self.rangeNumber_query_str(self._side)
         self._titleHie=self._title+self.rangeAlphabet_query_str(self._title)
-        print(self._titleHie)
         self._scene=self.scene_query_str()
-        self._num=self.replaceNumber(self._orders)
+        self._num=self._replaceNumber_query_str(self._orders)
 
     def __getStringAttr(self):
         addStringAttrs=[
@@ -43,7 +42,7 @@ class Naming(sbLB.SetName):
         ]
         return addStringAttrs
 
-#Public function
+#Public Function
     def setOrders(self,variable):
         self._orders=variable
         return self._orders
@@ -56,51 +55,17 @@ class Naming(sbLB.SetName):
     def getSwitch(self):
         return self._switch
 
-    def titleName(self,obj):
-        splitObjs=obj.split("_")
-        self.nodeName_query_str(obj)
-        self.sideName_query_str(obj)
-
-        for l in range(len(splitObjs)):
-            if not splitObjs[l].isdigit():
-                name=self.smashNumbers_edit_str(splitObjs[l])
-                if not name==self.nodeName_query_str(obj) and\
-                   not name==self.sideName_query_str(obj) and\
-                   not name==None:
-                    return name
-
-    def replaceNumber(self,orders):
-        if "num" in orders:
-            index=orders.index("num")
-            orderName=self.orderName(orders)
-            for num in range(100):
-                splitNum=orderName.split("_")[index]
-                replaceName=orderName.replace(splitNum,str(num).zfill(2))
-                if not cmds.objExists(replaceName):
-                    return str(num).zfill(2)
-        else:
-            return str(0).zfill(2)
-
-    def orderName(self,orders):
-        order_list=[]
-        nullDel_list=[order for order in orders if order != ""]
-        for chengeSelf in nullDel_list:
-            add=eval("self._"+chengeSelf)
-            order_list.append(add)
-        self._orderName = "_".join(order_list)
-        return self._orderName
-
     def rename(self):
         if self._switch=="fullAuto":
-            self._title=self.titleName(self._object)
+            self._title=self._titleName_query_str(self._object)
             self._node=self.nodeName_query_str(self._object)
             self._side=self.sideName_query_str(self._object)
-            self.loading()
-            name=self.orderName(self._orders)
+            self.__loading()
+            name=self._orderName_query_str(self._orders)
 
         elif self._switch=="setAuto":
-            self.loading()
-            name=self.orderName(self._orders)
+            self.__loading()
+            name=self._orderName_query_str(self._orders)
 
         elif self._switch=="mark":
             _addStringAttrs=self.__getStringAttr()
@@ -109,8 +74,8 @@ class Naming(sbLB.SetName):
             self._node=cmds.getAttr(self._object+"."+_addStringAttrs[2]["attrName"])
             self._num=cmds.getAttr(self._object+"."+_addStringAttrs[3]["attrName"])
             self._hierarchy=cmds.getAttr(self._object+"."+_addStringAttrs[4]["attrName"])
-            self.loading()
-            name=self.orderName(self._orders)
+            self.__loading()
+            name=self._orderName_query_str(self._orders)
 
         elif self._switch=="name":
             if type(self._replace) is tuple:
@@ -126,9 +91,11 @@ class Naming(sbLB.SetName):
         return rename
 
     def markAttr(self):
-        self.loading()
+        self.__loading()
         if self._switch=="fullAuto":
-            self.__autoNameSetting(self._object)
+            self._title=self._titleName_query_str(self._object)
+            self._node=self.nodeName_query_str(self._object)
+            self._side=self.sideName_query_str(self._object)
         mark=aLB.Attribute()
         mark.setObject(self._object)
         mark.setAttrType("string")
@@ -138,7 +105,42 @@ class Naming(sbLB.SetName):
             mark.setStringName(_addStringAttr["attrString"])
             mark.addAttr()
 
-#Private function
+#Private Function
+    def _titleName_query_str(self,obj):
+        splitObjs=obj.split("_")
+        self.nodeName_query_str(obj)
+        self.sideName_query_str(obj)
+
+        for l in range(len(splitObjs)):
+            if not splitObjs[l].isdigit():
+                name=self.smashNumbers_edit_str(splitObjs[l])
+                if not name==self.nodeName_query_str(obj) and\
+                   not name==self.sideName_query_str(obj) and\
+                   not name==None:
+                    return name
+
+    def _replaceNumber_query_str(self,orders):
+        if "num" in orders:
+            index=orders.index("num")
+            orderName=self._orderName_query_str(orders)
+            for num in range(100):
+                splitNum=orderName.split("_")[index]
+                replaceName=orderName.replace(splitNum,str(num).zfill(2))
+                if not cmds.objExists(replaceName):
+                    return str(num).zfill(2)
+        else:
+            return str(0).zfill(2)
+
+    def _orderName_query_str(self,orders):
+        order_list=[]
+        nullDel_list=[order for order in orders if order != ""]
+        for chengeSelf in nullDel_list:
+            add=eval("self._"+chengeSelf)
+            order_list.append(add)
+        self._orderName = "_".join(order_list)
+        return self._orderName
+
+#Single Function
     def nodeName_query_str(self,obj):
         nodeType=jLB.Json()
         nodeType.setPath(cit.mayaSettings_path)
