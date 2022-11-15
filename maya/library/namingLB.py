@@ -5,7 +5,8 @@ import maya.cmds as cmds
 import cgInTools as cit
 from . import setBaseLB as sbLB
 from . import jsonLB as jLB
-from . import attributeLB as ca
+from . import attributeLB as aLB
+cit.verReload(aLB)
 
 class Naming(sbLB.SetName):
     def __init__(self):
@@ -14,18 +15,33 @@ class Naming(sbLB.SetName):
         self._title=""
         self._node=""
         self._side=""
-        self._hierarchy=""
+        self._hierarchy="A"
+        self._replace=None #(beforeName,aftarName)
         self._number=00
-        self._autoSwitch=True
+        self._num=str(self._number).zfill(2)
+        # fullAuto setAuto mark name
+        self._switch="fullAuto"
+        # title node side num titleNum nodeNum sideNum titleHie scene
         self._orders=["title","node","side","num"]
 
-    def setLoading(self):
-        self._num=str(self._number).zfill(2)
-        self._titleNum=self._title+self._num
-        self._nodeNum=self._node+self._num
-        self._sideNum=self._side+self._num
-        self._titleHie=self._title+self._hierarchy
-        self._scene="scene"
+    def loading(self):
+        self._titleNum=self._title+self.rangeNumber_query_str(self._title)
+        self._nodeNum=self._node+self.rangeNumber_query_str(self._node)
+        self._sideNum=self._side+self.rangeNumber_query_str(self._side)
+        self._titleHie=self._title+self.rangeAlphabet_query_str(self._title)
+        print(self._titleHie)
+        self._scene=self.scene_query_str()
+        self._num=self.replaceNumber(self._orders)
+
+    def __getStringAttr(self):
+        addStringAttrs=[
+            {"attrName":"titleName","attrString":self._title},
+            {"attrName":"nodeName","attrString":self._node},
+            {"attrName":"sideName","attrString":self._side},
+            {"attrName":"numberName","attrString":self._num},
+            {"attrName":"hierarchyName","attrString":self._hierarchy},
+        ]
+        return addStringAttrs
 
 #Public function
     def setOrders(self,variable):
@@ -34,74 +50,100 @@ class Naming(sbLB.SetName):
     def getOrders(self):
         return self._orders
 
-    def setAutoSwitch(self,variable):
-        self._autoSwitch=variable
-        return self._autoSwitch
-    def getAutoSwitch(self):
-        return self._autoSwitch
+    def setSwitch(self,variable):
+        self._switch=variable
+        return self._switch
+    def getSwitch(self):
+        return self._switch
 
-    def autoNamer(self):
+    def titleName(self,obj):
+        splitObjs=obj.split("_")
+        self.nodeName_query_str(obj)
+        self.sideName_query_str(obj)
+
+        for l in range(len(splitObjs)):
+            if not splitObjs[l].isdigit():
+                name=self.smashNumbers_edit_str(splitObjs[l])
+                if not name==self.nodeName_query_str(obj) and\
+                   not name==self.sideName_query_str(obj) and\
+                   not name==None:
+                    return name
+
+    def replaceNumber(self,orders):
+        if "num" in orders:
+            index=orders.index("num")
+            orderName=self.orderName(orders)
+            for num in range(100):
+                splitNum=orderName.split("_")[index]
+                replaceName=orderName.replace(splitNum,str(num).zfill(2))
+                if not cmds.objExists(replaceName):
+                    return str(num).zfill(2)
+        else:
+            return str(0).zfill(2)
+
+    def orderName(self,orders):
         order_list=[]
-        nullDel_list=[order for order in self._orders if order != ""]
+        nullDel_list=[order for order in orders if order != ""]
         for chengeSelf in nullDel_list:
             add=eval("self._"+chengeSelf)
             order_list.append(add)
-        self._auteName = "_".join(order_list)
-        return self._auteName
+        self._orderName = "_".join(order_list)
+        return self._orderName
 
     def rename(self):
-        if self._autoSwitch:
-            name=self.autoNamer()
+        if self._switch=="fullAuto":
+            self._title=self.titleName(self._object)
+            self._node=self.nodeName_query_str(self._object)
+            self._side=self.sideName_query_str(self._object)
+            self.loading()
+            name=self.orderName(self._orders)
+
+        elif self._switch=="setAuto":
+            self.loading()
+            name=self.orderName(self._orders)
+
+        elif self._switch=="mark":
+            _addStringAttrs=self.__getStringAttr()
+            self._title=cmds.getAttr(self._object+"."+_addStringAttrs[0]["attrName"])
+            self._side=cmds.getAttr(self._object+"."+_addStringAttrs[1]["attrName"])
+            self._node=cmds.getAttr(self._object+"."+_addStringAttrs[2]["attrName"])
+            self._num=cmds.getAttr(self._object+"."+_addStringAttrs[3]["attrName"])
+            self._hierarchy=cmds.getAttr(self._object+"."+_addStringAttrs[4]["attrName"])
+            self.loading()
+            name=self.orderName(self._orders)
+
+        elif self._switch=="name":
+            if type(self._replace) is tuple:
+                name=self._object
+                name.replace(self._replace[0],self._replace[1])
+            else:
+                name=self._name
+
         else:
-            name=self._name
+            cmds.error("Unknown string in swicth value.")
+
         rename=cmds.rename(self._object,name)
         return rename
-        """
-        self.node=self.node_query_str(self._object)
-        if "num" in self.orders or "nameNum" in self.orders or "nodeNum" in self.orders or "posNum" in self.orders:
-            self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
-            self.nameNum=self.name+self.num
-            self.nodeNum=self.node+self.num
-            self.posNum=self.pos+self.num
-        self.scene=self.scene_query_str()
-        rename_str=self.getRename()
-        """
 
     def markAttr(self):
-        self.node=self.node_query_str(self.obj)
-        #self.num=self.number_query_str(self.obj,self.name,self.pos,self.node,self.number)
-        self.scene=self.scene_query_str()
-        mark=ca.Attrebute()
-        mark.setObj(self.obj)
+        self.loading()
+        if self._switch=="fullAuto":
+            self.__autoNameSetting(self._object)
+        mark=aLB.Attribute()
+        mark.setObject(self._object)
         mark.setAttrType("string")
-        self.addStringAttrs=[
-            {"attrName":"ctitle","attrString":self._title},
-            {"attrName":"cside","attrString":self._side},
-            {"attrName":"cnode","attrString":self._node},
-            {"attrName":"cnum","attrString":self._num},
-        ]
-        for addStringAttr in self.addStringAttrs:
-            mark.setName(addStringAttr["attrName"])
-            mark.setStringName(addStringAttr["attrString"])
+        _addStringAttrs=self.__getStringAttr()
+        for _addStringAttr in _addStringAttrs:
+            mark.setAttr(_addStringAttr["attrName"])
+            mark.setStringName(_addStringAttr["attrString"])
             mark.addAttr()
 
-    def setRename(self):
-        self.addStringAttrs=[
-            {"attrName":"cname","attrString":self._name},
-            {"attrName":"cpos","attrString":self._pos},
-            {"attrName":"cnode","attrString":self._node},
-            {"attrName":"cnum","attrString":self._num},
-        ]
-        for addStringAttr in self.addStringAttrs:
-            addStringAttr["attrString"]=cmds.getAttr(self.obj+"."+addStringAttr["attrName"])            
-        rename_str=self.getRename()
-        cmds.rename(self.obj,rename_str)
-
 #Private function
-    def node_query_str(self,obj):
+    def nodeName_query_str(self,obj):
         nodeType=jLB.Json()
         nodeType.setPath(cit.mayaSettings_path)
         nodeType.setFile("autoRename")
+        nodeType.setExtension("json")
         nodeType_dict=nodeType.read()
         getNode_str=self.isNodeType_query_str(obj)
         nodeName_str=nodeType_dict["node_renames"][getNode_str]
@@ -120,33 +162,41 @@ class Naming(sbLB.SetName):
             objType_str=cmds.objectType(obj)
             return objType_str
 
-    def number_query_str(self,obj,name,pos,node,num):
-        num_str=str(num).zfill(2)
-        one_list = [(name),(pos),(node),(num_str)]
-        two_list = list(itertools.product([name,pos,node,num_str],repeat=2))
-        three_list = list(itertools.product([name,pos,node,num_str],repeat=3))
-        four_list = list(itertools.product([name,pos,node,num_str],repeat=4))
-        same_lists = one_list+two_list+three_list+four_list
-    
-        for same_list in same_lists:
-            name_str="_".join(same_list)
-            if cmds.objExists(name_str):
-                num=self.count_edit_int(obj,name_str,num)
-                num_str=str(num).zfill(2)
-                return num_str
-        num_str=str(num).zfill(2)    
-        return num_str
+    def sideName_query_str(self,obj,about=1):
+        trsX=cmds.xform(obj,q=True,ws=True,t=True)[0]
+        if trsX>about:
+            return "L"
+        elif trsX<about*-1:
+            return "R"
+        else:
+            return "C"
 
-    def count_edit_int(self,obj,same,num):
-        nowNum=num
-        oldNum=num
-        while cmds.objExists(same):
-            if obj == same:
-                return nowNum
-            nowNum=nowNum+1
-            same=same.replace(str(oldNum).zfill(2),str(nowNum).zfill(2))
-            oldNum=int(oldNum+1)
-        return nowNum
+    def smashNumbers_edit_str(self,name):
+        while name[-1].isdigit():
+            name=name[:-1]
+        while name[-1].isupper():
+            name=name[:-1]
+            if name=="":
+                return None
+        return name
+
+    def rangeNumber_query_str(self,name):
+        for i in range(100):
+            if i is None:
+                cmds.error("Can't go over 99.")
+            while name[-1].isdigit():
+                name=name[:-1]
+            if not cmds.objExists("*"+name+str(i).zfill(2)+"*"):
+                return str(i).zfill(2)
+
+    def rangeAlphabet_query_str(self,name):
+        for i in range(65, 91):
+            if i is None:
+                cmds.error("Can't go over Z.")
+            if name[-1].isupper():
+                name=name[:-1]
+            if not cmds.objExists("*"+name+chr(i)+"*"):
+                return chr(i)
 
     def scene_query_str(self):
         sceneName=cmds.file(q=True,sn=True).split("/")[-1]
@@ -157,12 +207,3 @@ class Naming(sbLB.SetName):
         else:
             self.scene=sceneName
         return self.scene
-
-    def sameName_check_str(self,check,sel):
-        if sel is not check:
-            if cmds.objExists(check):
-                check = check + '_NG'
-                return check
-            else :
-                return check
-        return check

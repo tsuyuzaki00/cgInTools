@@ -11,7 +11,7 @@ class Json(sb.SetFile):
         """
         self._path # string
         self._file # string
-        self._extension="json" # string
+        self._extension="json"
         """
         self._writeDict={}
         self._writePackDicts=[]

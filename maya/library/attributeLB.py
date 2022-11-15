@@ -17,7 +17,7 @@ class Attribute(sbLB.SetObject):
         self._haveAttr=""
         self._lockandhide=True
     
-    def setLoading(self):
+    def loading(self):
         self._niceName=self._attr.capitalize()
 
 #Public function
@@ -84,7 +84,7 @@ class Attribute(sbLB.SetObject):
         return self._attrs
 
     def addAttr(self):
-        self.setLoading()
+        self.loading()
         if self._attrType == "bool":
             attrName=self.addAttrBool_create_attrName(self._object,self._attr,self._niceName)
             return attrName
