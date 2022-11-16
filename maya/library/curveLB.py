@@ -9,12 +9,6 @@ class SetCurve(sbLB.SetName):
         self._name="curveName"
         self._curveType="circlePlane"
 
-    def setCurveType(self,variable):
-        self._curveType=variable
-        return self._curveType
-    def getCurveType(self):
-        return self._curveType
-
     def create(self):
         curveFunction=eval("self."+self._curveType+"_create_curve")
         curveFunction(name=self._name)

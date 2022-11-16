@@ -2,41 +2,21 @@
 import maya.cmds as cmds
 import json,os
 
-from cgInTools.maya.library import setBaseLB as sb
 import cgInTools as cit
-cit.verReload(sb)
+from cgInTools.maya.library import setBaseLB as sbLB
+cit.reloads([sbLB])
 
-class Json(sb.SetFile):
+class Json(sbLB.SetFile):
     def __init__(self):
-        """
-        self._path # string
-        self._file # string
+        self._path=""
+        self._file=""
         self._extension="json"
-        """
         self._writeDict={}
         self._writePackDicts=[]
         self._readDict={}
         self._readPackDicts=[]
 
-    def setWriteDict(self,variable):
-        self._writeDict=variable
-        return self._writeDict
-    def getWriteDict(self):
-        return self._writeDict
-
-    def getPackDicts(self):
-        return self._writePackDicts
-
-    def setDictInPack(self,variable,file=None):
-        file=file or self._file
-        _writePackDicts=[{"fileName":file,"dataDict":variable}]
-        return _writePackDicts
-
-    def addDictInPack(self,variable,file=None):
-        file=file or self._file
-        self._writePackDicts.append({"fileName":file,"dataDict":variable})
-        return self._writePackDicts
-        
+#Public Function
     def read(self):
         self.readDict=self.readJson_quary_dict(self._path,self._file,self._extension)
         return self.readDict
@@ -51,7 +31,7 @@ class Json(sb.SetFile):
     def writePacks(self):
         self.writePack_create_func(self._writePackDicts,self._path,self._file,self._extension)
 
-#Private function
+#Single Function
     def pathSetting_create_str(self,path,json_name,extension="json",new_folder=None):
         if new_folder == None:
             json_file = os.path.join(path,json_name+"."+extension)

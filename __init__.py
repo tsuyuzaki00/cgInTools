@@ -1,12 +1,13 @@
 # -*- coding: iso-8859-15 -*-
 import os,sys
 
-def verReload(i):
-    if sys.version.startswith("2"):
-        reload(i)
-    elif sys.version.startswith("3"):
-        import importlib
-        importlib.reload(i)
+def reloads(ps):
+    for p in ps:
+        if sys.version.startswith("2"):
+            reload(p)
+        elif sys.version.startswith("3"):
+            import importlib
+            importlib.reload(p)
 
 root_path = os.path.dirname(__file__) #.../cgInTools/
 ui_path = os.path.join(root_path,"ui")

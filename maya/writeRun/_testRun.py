@@ -2,16 +2,18 @@
 import maya.cmds as cmds
 import cgInTools as cit
 from cgInTools.maya.library import ctrlConnectLB as ccLB
-cit.verReload(ccLB)
+cit.reloads([ccLB])
 
 def offset():
     ctrl=ccLB.CtrlParent()
-    root=cmds.ls(sl=True)[0]
-    ctrl.setObject(root)
-    ctrl.offsetCtrlRoot()
-
-    joints=cmds.listRelatives(root,ad=True,typ="joint")
-    joints.reverse()
+    isJoint=cmds.ls(sl=True,typ="joint")[0]
+    joints=cmds.ls(sl=True,typ="joint")[1:]
+    parentJoint=cmds.listRelatives(isJoint,p=True,typ="joint")
+    if parentJoint==None:
+        ctrl.setObject(isJoint)
+        ctrl.offsetCtrlRoot()
+    else:
+        joints=cmds.ls(sl=True,typ="joint")
     for joint in joints:
         ctrl.setObject(joint)
         ctrl.offsetCtrl()

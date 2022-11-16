@@ -9,7 +9,8 @@
         ["multi","joint"],
         ["multi","curve"],
         ["multi","surface"],
-        ["multi","guide"],
+        ["multi","guide"], 
+        ["multi","connect"], 
         ["single","Edit"],
         ["multi","object rename"],
         ["multi","object position"],
@@ -45,8 +46,12 @@
         "curve":[],
         "surface":[],
         "guide":[],
+        "connect":[
+            ["Offset Ctrl","cgInTools.maya.execute","connectOffsetCtrlEX","main()",""],
+            ["Aim Ctrl","cgInTools.maya.execute","connectAimCtrlEX","main()",""]
+        ],
         "object rename":[
-            ["Auto Rename","cgInTools.maya.execute","autoRename","main()",""]
+            ["Auto Rename","cgInTools.maya.execute","autoRenameEX","main()",""]
         ],
         "object position":[
             ["Center Target Pos","cgInTools.maya.execute","selectCenterPosMove","main()",""],

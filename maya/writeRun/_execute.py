@@ -1,17 +1,18 @@
-#import maya.cmds as cmds
+import maya.cmds as cmds
 #import pymel.core as pm
 
-"""Reload"""
-### Python 2
-#from cgInTools.ui import clickSelectUI as UI; reload(UI);
-#from cgInTools.maya.library import click as lib; reload(lib);
-### Python 3
-#import importlib
-#from cgInTools.ui import clickSelectUI as UI; importlib.reload(UI);
-#from cgInTools.maya.library import click as lib; importlib.reload(lib);
+import cgInTools as cit
+from cgInTools import ui as UI
+from cgInTools.maya import library as LB
+from cgInTools.maya import execute as EX
+from cgInTools.maya import manager as MN
+from cgInTools.maya import option as OP
+cit.reloads([UI,LB,EX,MN,OP])
 
-"""Run"""
-#from cgInTools.maya.library import cConstraint as ps
-#from cgInTools.maya.execute import ctrlOffsetConnect as ps
-from cgInTools.maya.manager import ctrlColorChange as ps
-ps.main()
+obj=cmds.ls(sl=True)
+name=LB.Naming()
+name.setSwitch("fullAuto")
+name.setOrders(["title","node","side"])
+name.setObject(obj[0])
+rename=name.getRename()
+print(rename)

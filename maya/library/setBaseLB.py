@@ -9,7 +9,9 @@ class SetName():
         self._side=""
         self._hierarchy=""
         self._number=00
-        self.test=""
+        self._orders=[]
+        self._switch=""
+        self._replace=None #(beforeName,aftarName)
 
     def setObject(self,variable):
         self._object=variable
@@ -53,6 +55,30 @@ class SetName():
     def getNumber(self):
         return self._number
 
+    def setOrders(self,variable):
+        self._orders=variable
+        return self._orders
+    def getOrders(self):
+        return self._orders
+
+    def setSwitch(self,variable):
+        self._switch=variable
+        return self._switch
+    def getSwitch(self):
+        return self._switch
+
+    def setReplace(self,variable1,variable2):
+        self._replace=(variable1,variable2)
+        return self._replace
+    def getReplace(self):
+        return self._replace
+
+    def setCurveType(self,variable):
+        self._curveType=variable
+        return self._curveType
+    def getCurveType(self):
+        return self._curveType
+
 class SetObject():
     def __init__(self):
         self._object=""
@@ -63,6 +89,8 @@ class SetObject():
         self._attr=""
         self._value=0
         self._joint=""
+        self._aimVector="+X"
+        self._upVector="+Y"
 
     def setObject(self,variable):
         self._object=variable
@@ -111,6 +139,18 @@ class SetObject():
         return self._joint
     def getJoint(self):
         return self._joint
+    
+    def setAimVector(self,variable):
+        self._aimVector=variable
+        return self._aimVector
+    def getAimVector(self):
+        return self._aimVector
+    
+    def setUpVector(self,variable):
+        self._upVector=variable
+        return self._upVector
+    def getUpVector(self):
+        return self._upVector
 
 class SetPair():
     def __init__(self):
@@ -191,6 +231,10 @@ class SetFile():
         self._file=""
         self._extension="json"
         self._packs=[]
+        self._writeDict={}
+        self._writePackDicts=[]
+        self._readDict={}
+        self._readPackDicts=[]
 
     def setPath(self,variable):
         self._path=variable
@@ -215,3 +259,20 @@ class SetFile():
         return self._packs
     def getPacks(self):
         return self._packs
+
+    def setWriteDict(self,variable):
+        self._writeDict=variable
+        return self._writeDict
+    def getWriteDict(self):
+        return self._writeDict
+
+    def setDictInPack(self,variable,file=None):
+        file=file or self._file
+        _writePackDicts=[{"fileName":file,"dataDict":variable}]
+        return _writePackDicts
+    def addDictInPack(self,variable,file=None):
+        file=file or self._file
+        self._writePackDicts.append({"fileName":file,"dataDict":variable})
+        return self._writePackDicts
+    def getPackDicts(self):
+        return self._writePackDicts

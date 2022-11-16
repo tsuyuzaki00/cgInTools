@@ -2,7 +2,7 @@
 import maya.cmds as cmds
 import cgInTools as cit
 from cgInTools.maya.library import cJoint as cj
-cit.verReload(cj)
+cit.reloads([cj])
 
 def main():
     objs=cmds.ls(sl=True)

@@ -1,12 +1,11 @@
 # -*- coding: iso-8859-15 -*-
-import itertools
 import maya.cmds as cmds
 
 import cgInTools as cit
 from . import setBaseLB as sbLB
 from . import jsonLB as jLB
 from . import attributeLB as aLB
-cit.verReload(aLB)
+cit.reloads([sbLB,jLB,aLB])
 
 class Naming(sbLB.SetName):
     def __init__(self):
@@ -16,21 +15,20 @@ class Naming(sbLB.SetName):
         self._node=""
         self._side=""
         self._hierarchy="A"
-        self._replace=None #(beforeName,aftarName)
         self._number=00
-        self._num=str(self._number).zfill(2)
         # fullAuto setAuto mark name
         self._switch="fullAuto"
         # title node side num titleNum nodeNum sideNum titleHie scene
         self._orders=["title","node","side","num"]
+        self._replace=None #(beforeName,aftarName)
 
     def __loading(self):
         self._titleNum=self._title+self.rangeNumber_query_str(self._title)
         self._nodeNum=self._node+self.rangeNumber_query_str(self._node)
         self._sideNum=self._side+self.rangeNumber_query_str(self._side)
-        self._titleHie=self._title+self.rangeAlphabet_query_str(self._title)
+        self._num=self._numberName_query_str(self._orders)
+        self._titleHie=self._title+self._hierarchy
         self._scene=self.scene_query_str()
-        self._num=self._replaceNumber_query_str(self._orders)
 
     def __getStringAttr(self):
         addStringAttrs=[
@@ -43,29 +41,23 @@ class Naming(sbLB.SetName):
         return addStringAttrs
 
 #Public Function
-    def setOrders(self,variable):
-        self._orders=variable
-        return self._orders
-    def getOrders(self):
-        return self._orders
-
-    def setSwitch(self,variable):
-        self._switch=variable
-        return self._switch
-    def getSwitch(self):
-        return self._switch
-
     def rename(self):
+        name=self.getRename()
+        rename=cmds.rename(self._object,name)
+        return rename
+
+    def getRename(self):
         if self._switch=="fullAuto":
             self._title=self._titleName_query_str(self._object)
             self._node=self.nodeName_query_str(self._object)
             self._side=self.sideName_query_str(self._object)
-            self.__loading()
+            self._hierarchy=self.rangeAlphabet_query_str(self._title)
             name=self._orderName_query_str(self._orders)
+            return name
 
         elif self._switch=="setAuto":
-            self.__loading()
             name=self._orderName_query_str(self._orders)
+            return name
 
         elif self._switch=="mark":
             _addStringAttrs=self.__getStringAttr()
@@ -74,8 +66,8 @@ class Naming(sbLB.SetName):
             self._node=cmds.getAttr(self._object+"."+_addStringAttrs[2]["attrName"])
             self._num=cmds.getAttr(self._object+"."+_addStringAttrs[3]["attrName"])
             self._hierarchy=cmds.getAttr(self._object+"."+_addStringAttrs[4]["attrName"])
-            self.__loading()
             name=self._orderName_query_str(self._orders)
+            return name
 
         elif self._switch=="name":
             if type(self._replace) is tuple:
@@ -83,16 +75,14 @@ class Naming(sbLB.SetName):
                 name.replace(self._replace[0],self._replace[1])
             else:
                 name=self._name
+                return name
 
         else:
             cmds.error("Unknown string in swicth value.")
 
-        rename=cmds.rename(self._object,name)
-        return rename
-
     def markAttr(self):
         self.__loading()
-        if self._switch=="fullAuto":
+        if self._switch=="fullAuto" or self._switch=="name":
             self._title=self._titleName_query_str(self._object)
             self._node=self.nodeName_query_str(self._object)
             self._side=self.sideName_query_str(self._object)
@@ -106,20 +96,23 @@ class Naming(sbLB.SetName):
             mark.addAttr()
 
 #Private Function
-    def _titleName_query_str(self,obj):
+    def _titleName_query_str(self,obj,delAlph=True):
         splitObjs=obj.split("_")
         self.nodeName_query_str(obj)
         self.sideName_query_str(obj)
-
         for l in range(len(splitObjs)):
+            if delAlph:
+                smashName=self.smashAlphabet_edit_str(splitObjs[l])
+            else:
+                smashName=splitObjs[l]
             if not splitObjs[l].isdigit():
-                name=self.smashNumbers_edit_str(splitObjs[l])
+                name=self.smashNumber_edit_str(smashName)
                 if not name==self.nodeName_query_str(obj) and\
                    not name==self.sideName_query_str(obj) and\
                    not name==None:
                     return name
 
-    def _replaceNumber_query_str(self,orders):
+    def _numberName_query_str(self,orders):
         if "num" in orders:
             index=orders.index("num")
             orderName=self._orderName_query_str(orders)
@@ -132,6 +125,7 @@ class Naming(sbLB.SetName):
             return str(0).zfill(2)
 
     def _orderName_query_str(self,orders):
+        self.__loading()
         order_list=[]
         nullDel_list=[order for order in orders if order != ""]
         for chengeSelf in nullDel_list:
@@ -139,6 +133,12 @@ class Naming(sbLB.SetName):
             order_list.append(add)
         self._orderName = "_".join(order_list)
         return self._orderName
+
+    def _getAlphabet_query_str(self,obj):
+        splitObjs=obj.split("_")
+        for i in range(len(splitObjs)):
+            if splitObjs[i][-1].isupper() and len(splitObjs[i])>1:
+                return splitObjs[i][-1]
 
 #Single Function
     def nodeName_query_str(self,obj):
@@ -173,9 +173,14 @@ class Naming(sbLB.SetName):
         else:
             return "C"
 
-    def smashNumbers_edit_str(self,name):
+    def smashNumber_edit_str(self,name):
         while name[-1].isdigit():
             name=name[:-1]
+            if name=="":
+                return None
+        return name
+    
+    def smashAlphabet_edit_str(self,name):
         while name[-1].isupper():
             name=name[:-1]
             if name=="":
