@@ -2,7 +2,7 @@
 import maya.cmds as cmds
 import os
 import shutil
-from . import cClean as cc
+from . import cleanLB as cc
 
 class Path():
     def __init__(self):

@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
-from cgInTools.maya.library import cClean as cc
+from maya.library import cleanLB as cc
 import math
 
 def mirrorAxis_query_tuple(self,mirrorX=True,mirrorY=False,mirrorZ=False):

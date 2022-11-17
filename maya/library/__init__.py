@@ -1,4 +1,4 @@
 from .attributeLB import *
-from .cClean import *
+from .cleanLB import *
 from .namingLB import *
 from .cNurbs import *

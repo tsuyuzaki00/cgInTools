@@ -1,7 +1,7 @@
 import json
 import maya.mel as mel
 import pymel.core as pm
-from . import cNaming as gns
+from . import namingLB as gns
 
 class SelctJson():
     def __init__(self, fileName = '', workSpacePath = ''):

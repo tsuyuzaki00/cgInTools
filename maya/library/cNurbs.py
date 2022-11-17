@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
-from cgInTools.maya.library import cClean as cc
+from cgInTools.maya.library import cleanLB as cc
 
 class QuadPosSurface():
     def __init__(self):

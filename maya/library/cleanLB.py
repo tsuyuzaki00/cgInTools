@@ -39,3 +39,6 @@ def delGarbageReference_edit_func():
                 count += 1
 
     print("Total errors found: " + str(count))
+
+def unlockInitialShadingGroup_edit_func():
+    cmds.lockNode('initialShadingGroup',l=False,lu=False)
