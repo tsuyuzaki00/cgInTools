@@ -7,12 +7,15 @@ def valueRelation_check_func(obj,attr,relation,edit=False):
         if value is not relation:
             cmds.setAttr(obj+"."+attr,relation)
         else:
-            print("OK:"+obj+"."+attr+":"+str(value))
+            ok="OK:"+obj+"."+attr+":"+str(value)
+            return ok
     else:
         if value is relation:
-            print("OK:"+obj+"."+attr+":"+str(value))
+            ok="OK:"+obj+"."+attr+":"+str(value)
+            return ok
         else:
-            print("NG:"+obj+"."+attr+":"+str(value))
+            ng="NG:"+obj+"."+attr+":"+str(value)
+            return ng
         
 def main():
     mesh_shapes=cmds.ls(type="mesh")
@@ -23,6 +26,7 @@ def main():
     ]
     for mesh_shape in mesh_shapes:
         for chackAttr_dict in chackAttr_dicts:
-            valueRelation_check_func(mesh_shape,chackAttr_dict["attr"],chackAttr_dict["relation"])
+            check=valueRelation_check_func(mesh_shape,chackAttr_dict["attr"],chackAttr_dict["relation"])
+            print(check)
 
 main()
