@@ -6,30 +6,30 @@ import cgInTools as cit
 from cgInTools.maya.library import setBaseLB as sbLB
 cit.reloads([sbLB])
 
-class Json(sbLB.SetFile):
+class Json(sbLB.BaseFile):
     def __init__(self):
         self._path=""
         self._file=""
         self._extension="json"
         self._writeDict={}
-        self._writePackDicts=[]
+        self._writePack_dicts=[]#{"dataDict":{},"fileName":""}
         self._readDict={}
-        self._readPackDicts=[]
+        self._readPack_dicts=[]
 
 #Public Function
     def read(self):
-        self.readDict=self.readJson_quary_dict(self._path,self._file,self._extension)
-        return self.readDict
+        self._readDict=self.readJson_quary_dict(self._path,self._file,self._extension)
+        return self._readDict
 
     def readPacks(self):
-        self.readPackDicts=self.readPack_quary_list(self._path,self._file,self._extension)
-        return self.readPackDicts
+        self._readPack_dicts=self.readPack_quary_list(self._path,self._file,self._extension)
+        return self._readPack_dicts
 
     def write(self):
         self.writeJson_create_func(self._path,self._file,self._extension,self._writeDict)
 
     def writePacks(self):
-        self.writePack_create_func(self._writePackDicts,self._path,self._file,self._extension)
+        self.writePack_create_func(self._writePack_dicts,self._path,self._file,self._extension)
 
 #Single Function
     def pathSetting_create_str(self,path,json_name,extension="json",new_folder=None):

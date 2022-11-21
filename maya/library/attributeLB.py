@@ -1,8 +1,8 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-from . import setBaseLB as sbLB
+from cgInTools.maya.library import setBaseLB as sbLB
 
-class Attribute(sbLB.SetObject):
+class Attribute(sbLB.BaseObject):
     def __init__(self):
         self._object=""
         self._attr=""

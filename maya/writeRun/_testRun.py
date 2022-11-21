@@ -1,32 +1,25 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import cgInTools as cit
-from cgInTools.maya.library import ctrlConnectLB as ccLB
-cit.reloads([ccLB])
+from cgInTools.maya.library import checkLB as chLB
+cit.reloads([chLB])
 
-def offset():
-    ctrl=ccLB.CtrlParent()
-    isJoint=cmds.ls(sl=True,typ="joint")[0]
-    joints=cmds.ls(sl=True,typ="joint")[1:]
-    parentJoint=cmds.listRelatives(isJoint,p=True,typ="joint")
-    if parentJoint==None:
-        ctrl.setObject(isJoint)
-        ctrl.offsetCtrlRoot()
-    else:
-        joints=cmds.ls(sl=True,typ="joint")
-    for joint in joints:
-        ctrl.setObject(joint)
-        ctrl.offsetCtrl()
+def main():
+    check=chLB.Check()
+    mesh_shapes=cmds.ls(type="mesh")
+    chackAttr_dicts=[
+        {"attr":"aiSubdivType","same":1},
+        {"attr":"aiSubdivIterations","same":1},
+        {"attr":"aiSubdivUvSmoothing","same":1},
+    ]
+    for mesh_shape in mesh_shapes:
+        for chackAttr_dict in chackAttr_dicts:
+            check.setObject(mesh_shape)
+            check.setAttr(chackAttr_dict["attr"])
+            check.setSame(chackAttr_dict["same"])
+            check.setEdit(False)
+            test=check.attrSame()
+            if not test["bool"]:
+                print("NG:"+test["object"]+"."+test["attr"]+","+str(test["relation"]))
 
-def aimset():
-    ctrl=ccLB.CtrlParent()
-    root=cmds.ls(sl=True)[0]
-    joints=cmds.ls(sl=True)[1:]
-    ctrl.setObject(root)
-    ctrl.aimsetCtrlRoot()
-    for joint in joints:
-        ctrl.setObject(joint)
-        ctrl.aimsetCtrl()
-
-#offset()
-aimset()
+main()

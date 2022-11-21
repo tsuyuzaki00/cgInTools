@@ -10,9 +10,5 @@ from cgInTools.maya import option as OP
 cit.reloads([UI,LB,EX,MN,OP])
 
 obj=cmds.ls(sl=True)
-name=LB.Naming()
-name.setSwitch("fullAuto")
-name.setOrders(["title","node","side"])
-name.setObject(obj[0])
-rename=name.getRename()
-print(rename)
+test=LB.File()
+print(test.setFileType("ma"))

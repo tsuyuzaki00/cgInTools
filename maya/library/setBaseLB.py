@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 
-class SetName():
+class BaseName():
     def __init__(self):
         self._object=""
         self._name=""
@@ -79,7 +79,7 @@ class SetName():
     def getCurveType(self):
         return self._curveType
 
-class SetObject():
+class BaseObject():
     def __init__(self):
         self._object=""
         self._parent=""
@@ -152,7 +152,7 @@ class SetObject():
     def getUpVector(self):
         return self._upVector
 
-class SetPair():
+class BasePair():
     def __init__(self):
         self._sourceNode="" # string
         self._targetNode="" # string
@@ -225,16 +225,22 @@ class SetPair():
     def getTargetJoint(self):
         return self._targetJoint
 
-class SetFile():
+class BaseFile():
     def __init__(self):
         self._path=""
         self._file=""
         self._extension="json"
-        self._packs=[]
-        self._writeDict={}
-        self._writePackDicts=[]
-        self._readDict={}
-        self._readPackDicts=[]
+        self._write_dict={}
+        self._writePack_dicts=[]
+        self._read_dict={}
+        self._readPack_dicts=[]
+        self._objs=[]
+        self._fileType_dict={
+            "ma":"mayaAscii",
+            "mb":"mayaBinary",
+            "obj":"OBJ export",
+            "fbx":"FBX export"
+            }
 
     def setPath(self,variable):
         self._path=variable
@@ -254,25 +260,125 @@ class SetFile():
     def getExtension(self):
         return self._extension
 
-    def setPacks(self,variable):
-        self._packs=variable
-        return self._packs
-    def getPacks(self):
-        return self._packs
-
     def setWriteDict(self,variable):
-        self._writeDict=variable
-        return self._writeDict
+        self._write_dict=variable
+        return self._write_dict
     def getWriteDict(self):
-        return self._writeDict
+        return self._write_dict
 
     def setDictInPack(self,variable,file=None):
         file=file or self._file
-        _writePackDicts=[{"fileName":file,"dataDict":variable}]
-        return _writePackDicts
+        self._writePack_dicts=[{"fileName":file,"dataDict":variable}]
+        return self._writePack_dicts
     def addDictInPack(self,variable,file=None):
         file=file or self._file
-        self._writePackDicts.append({"fileName":file,"dataDict":variable})
-        return self._writePackDicts
+        self._writePack_dicts.append({"fileName":file,"dataDict":variable})
+        return self._writePack_dicts
     def getPackDicts(self):
-        return self._writePackDicts
+        return self._writePack_dicts
+
+    def setFileType(self,variable):
+        self._fileType=variable,self._fileType_dict[variable]
+        return self._fileType
+    def getFileType(self):
+        return self._fileType
+
+    def setObjs(self,variable):
+        self._objs=variable
+        return self._objs
+    def addObjs(self,variable):
+        self._objs.append(variable)
+        return self._objs
+    def getObjs(self):
+        return self._objs
+
+class BasePath():
+    def __init__(self):
+        self._absolute_path=""
+        self._relative_path=""
+        self._work_path=""
+        self._def_path=""
+        self._projectName_path=""
+
+    def setAbsolutePath(self,variable):
+        self._absolute_path=variable
+        return self._absolute_path
+    def getAbsolutePath(self):
+        return self._absolute_path
+
+    def setRelativePath(self,variable):
+        self._relative_path=variable
+        return self._relative_path
+    def getRelativePath(self):
+        return self._relative_path
+
+    def setWorkPath(self,variable):
+        self._work_path=variable
+        return self._work_path
+    def getWorkPath(self):
+        return self._work_path
+
+    def setDefPath(self,variable):
+        self._def_path=variable
+        return self._def_path
+    def getDefPath(self):
+        return self._def_path
+
+    def setProjectName(self,variable):
+        self._projectName_path=variable
+        return self._projectName_path
+    def getProjectName(self):
+        return self._projectName_path
+
+class BaseCheck():
+    def __init__(self):
+        self._same=""
+        self._max=1
+        self._min=0
+        self._relation=""
+        self._edit=False
+        self._node=""
+        self._attr=""
+        self._value=0
+
+    def setSame(self,variable):
+        self._same=variable
+        return self._same
+    def getSame(self):
+        return self._same
+
+    def setMax(self,variable):
+        self._max=variable
+        return self._max
+    def getMax(self):
+        return self._max
+
+    def setMin(self,variable):
+        self._min=variable
+        return self._min
+    def getMin(self):
+        return self._min
+
+    def setRelation(self,variable):
+        self._relation=variable
+        return self._relation
+    def getRelation(self):
+        return self._relation
+
+    def setEdit(self,variable):
+        self._edit=variable
+        return self._edit
+    def getEdit(self):
+        return self._edit
+
+    def setNode(self,variable):
+        self._node=variable
+        return self._node
+    def getNode(self):
+        return self._node
+
+    def setAttr(self,variable):
+        self._attr=variable
+        return self._attr
+    def getAttr(self):
+        return self._attr

@@ -7,7 +7,7 @@ from . import jsonLB as jLB
 from . import attributeLB as aLB
 cit.reloads([sbLB,jLB,aLB])
 
-class Naming(sbLB.SetName):
+class Naming(sbLB.BaseName):
     def __init__(self):
         self._object=""
         self._name=""
