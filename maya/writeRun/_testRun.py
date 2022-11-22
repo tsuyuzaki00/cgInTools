@@ -14,7 +14,7 @@ def main():
     ]
     for mesh_shape in mesh_shapes:
         for chackAttr_dict in chackAttr_dicts:
-            check.setObject(mesh_shape)
+            check.setNode(mesh_shape)
             check.setAttr(chackAttr_dict["attr"])
             check.setSame(chackAttr_dict["same"])
             check.setEdit(False)
