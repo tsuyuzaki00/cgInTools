@@ -11,8 +11,33 @@ cit.reloads([sbLB,cLB])
 
 class Path(sbLB.BasePath):
     def __init__(self):
-        self._absolute_path=""
-        self._relative_path=""
+        self._path=""
+        self._name=""
+        self._split="_"
+        self._index=0
+
+    def __loading(self):
+        self._path=os.path.normpath(self._path)
+        pass
+
+#Public Function
+    def clean(self):
+        self.__loading()
+
+    def getSplitPathOfIndex(self):
+        norm_path=os.path.normpath(self._path)
+        split_str=norm_path.split("\\")[self._index]
+        return split_str
+
+    def getSplitNameOfIndex(self):
+        split_str=self._name.split(self._split)[self._index]
+        return split_str
+
+#Mulch Function
+#Single Function
+
+class Project(sbLB.BasePath):
+    def __init__(self):
         self._work_path=cmds.workspace(q=True,rd=True,o=True)
         self._def_path=os.path.abspath(os.path.join(self._work_path,".."))
         self._projectName_path="_newProject"
@@ -20,8 +45,7 @@ class Path(sbLB.BasePath):
     def __loading():
         pass
 
-#Public Function
-    def getInDefPath(self,variable):
+    def queryInDefPath(self,variable):
         inDefPath=os.path.abspath(os.path.join(self._def_path,variable))
         return inDefPath
         

@@ -78,7 +78,6 @@ class BaseName():
         return self._curveType
     def getCurveType(self):
         return self._curveType
-
 class BaseObject():
     def __init__(self):
         self._object=""
@@ -294,23 +293,37 @@ class BaseFile():
 
 class BasePath():
     def __init__(self):
-        self._absolute_path=""
-        self._relative_path=""
+        self._path=""
+        self._name=""
+        self._split=""
+        self._index=0
         self._work_path=""
         self._def_path=""
         self._projectName_path=""
 
-    def setAbsolutePath(self,variable):
-        self._absolute_path=variable
-        return self._absolute_path
-    def getAbsolutePath(self):
-        return self._absolute_path
+    def setPath(self,variable):
+        self._path=variable
+        return self._path
+    def getPath(self):
+        return self._path
 
-    def setRelativePath(self,variable):
-        self._relative_path=variable
-        return self._relative_path
-    def getRelativePath(self):
-        return self._relative_path
+    def setName(self,variable):
+        self._name=variable
+        return self._name
+    def getName(self):
+        return self._name
+
+    def setSplit(self,variable):
+        self._split=variable
+        return self._split
+    def getSplit(self):
+        return self._split
+
+    def setIndex(self,variable):
+        self._index=variable
+        return self._index
+    def getIndex(self):
+        return self._index
 
     def setWorkPath(self,variable):
         self._work_path=variable
@@ -329,7 +342,6 @@ class BasePath():
         return self._projectName_path
     def getProjectName(self):
         return self._projectName_path
-
 class BaseCheck():
     def __init__(self):
         self._same=""

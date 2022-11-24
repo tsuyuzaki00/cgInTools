@@ -9,12 +9,12 @@ import re
 
 class Check(sbLB.BaseCheck):
     def __init__(self):
+        self._relation=""
         self._same=""
         self._maxLimit=100
         self._minLimit=0
         self._highLimit=100
         self._lowLimit=0
-        self._relation=""
         self._edit=False
         self._node=""
         self._attr=""
@@ -31,6 +31,14 @@ class Check(sbLB.BaseCheck):
 
     def relationIsSame(self):
         judge_dict=self.relationIsSame_check_dict(self._relation,self._same)
+        return judge_dict
+
+    def includedString(self):
+        judge_dict=self.includedString_check_dict(self._relation,self._same)
+        return judge_dict
+
+    def thePath(self):
+        judge_dict=self.thePath_check_dict(self._relation)
         return judge_dict
 
     def minRelation(self):
@@ -121,6 +129,24 @@ class Check(sbLB.BaseCheck):
     def relationIsSame_check_dict(self,relation,same):
         evaluation_dict={"bool":False,"relation":relation,"same":same}
         if relation is same:
+            evaluation_dict["bool"]=True
+            return evaluation_dict
+        else:
+            evaluation_dict["bool"]=False
+            return evaluation_dict
+
+    def includedString_check_dict(self,relation,same):
+        evaluation_dict={"bool":False,"relation":relation,"same":same}
+        if same in relation:
+            evaluation_dict["bool"]=True
+            return evaluation_dict
+        else:
+            evaluation_dict["bool"]=False
+            return evaluation_dict
+
+    def thePath_check_dict(self,relation):
+        evaluation_dict={"bool":False,"relation":relation}
+        if os.path.isdir(os.path.dirname(relation)):
             evaluation_dict["bool"]=True
             return evaluation_dict
         else:
