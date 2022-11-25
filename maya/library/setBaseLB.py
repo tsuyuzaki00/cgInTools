@@ -344,14 +344,23 @@ class BasePath():
         return self._projectName_path
 class BaseCheck():
     def __init__(self):
-        self._same=""
-        self._max=1
-        self._min=0
         self._relation=""
+        self._same=""
+        self._same_list=[]
+        self._maxLimit=100
+        self._minLimit=0
+        self._highLimit=100
+        self._lowLimit=0
         self._edit=False
         self._node=""
         self._attr=""
         self._value=0
+
+    def setRelation(self,variable):
+        self._relation=variable
+        return self._relation
+    def getRelation(self):
+        return self._relation
 
     def setSame(self,variable):
         self._same=variable
@@ -359,23 +368,35 @@ class BaseCheck():
     def getSame(self):
         return self._same
 
-    def setMax(self,variable):
-        self._max=variable
-        return self._max
-    def getMax(self):
-        return self._max
+    def setSameList(self,variable):
+        self._same_list=variable
+        return self._same_list
+    def getSameList(self):
+        return self._same_list
 
-    def setMin(self,variable):
-        self._min=variable
-        return self._min
-    def getMin(self):
-        return self._min
+    def setMaxLimit(self,variable):
+        self._maxLimit=variable
+        return self._maxLimit
+    def getMaxLimit(self):
+        return self._maxLimit
 
-    def setRelation(self,variable):
-        self._relation=variable
-        return self._relation
-    def getRelation(self):
-        return self._relation
+    def setMinLimit(self,variable):
+        self._minLimit=variable
+        return self._minLimit
+    def getMinLimit(self):
+        return self._minLimit
+
+    def setHighLimit(self,variable):
+        self._highLimit=variable
+        return self._highLimit
+    def getHighLimit(self):
+        return self._highLimit
+
+    def setLowLimit(self,variable):
+        self._lowLimit=variable
+        return self._lowLimit
+    def getLowLimit(self):
+        return self._lowLimit
 
     def setEdit(self,variable):
         self._edit=variable

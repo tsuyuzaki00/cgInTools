@@ -11,6 +11,7 @@ class Check(sbLB.BaseCheck):
     def __init__(self):
         self._relation=""
         self._same=""
+        self._same_list=[]
         self._maxLimit=100
         self._minLimit=0
         self._highLimit=100
@@ -18,7 +19,7 @@ class Check(sbLB.BaseCheck):
         self._edit=False
         self._node=""
         self._attr=""
-        self._evaluation_dict={"bool":False,"relation":self._relation}
+        self._evaluation_dict={"bool":False}
     
 #Public Function
     def attrSame(self):
@@ -79,6 +80,14 @@ class Check(sbLB.BaseCheck):
 
     def trashReferences(self):
         judge_dict=self.trashReferences_check_dict(self._node)
+        return judge_dict
+    
+    def andSameRelation(self):
+        judge_dict=self.andSameRelation_check_dict(self._relation,self._same_list)
+        return judge_dict
+    
+    def andMatchRelation(self):
+        judge_dict=self.andMatchRelation_check_dict(self._relation,self._same_list)
         return judge_dict
 
 #Private Function
@@ -227,3 +236,29 @@ class Check(sbLB.BaseCheck):
         except RuntimeError:
             evaluation_dict["bool"]=False
             return evaluation_dict
+
+    def andSameRelation_check_dict(self,relation,same_list):
+        judge_bools=[]
+        judge_dict={"bool":False,"relation":relation,"same_list":same_list}
+        for same in same_list:
+            if relation in same:
+                judge_bools.append(True)
+        if True in judge_bools:
+            judge_dict["bool"]=True
+            return judge_dict
+        else:
+            judge_dict["bool"]=False
+            return judge_dict
+
+    def andMatchRelation_check_dict(self,relation,same_list):
+        judge_bools=[]
+        judge_dict={"bool":False,"relation":relation,"same_list":same_list}
+        for same in same_list:
+            if re.match(same,relation):
+                judge_bools.append(True)
+        if True in judge_bools:
+            judge_dict["bool"]=True
+            return judge_dict
+        else:
+            judge_dict["bool"]=False
+            return judge_dict

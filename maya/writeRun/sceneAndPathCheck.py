@@ -5,37 +5,37 @@ from cgInTools.maya.library import checkLB as chLB
 cit.reloads([chLB])
 
 import os
-import re
 
-def fileName_check_func():
+def fileName_check_func(maxLimit=6):
     check=chLB.Check()
-    check.setMax(6)
+    check.setMaxLimit(maxLimit)
     judge_dict=check.fileUnderCount()
     if judge_dict["bool"]:
         print("OK:"+" relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
     else:
         print("NG:"+" relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
     
-def pathName_check_func():
+def pathName_check_func(maxLimit=10):
     check=chLB.Check()
-    check.setMax(10)
+    check.setMaxLimit(maxLimit)
     judge_dict=check.pathUnderCount()
     if judge_dict["bool"]:
         print("OK:"+" relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
     else:
         print("NG:"+" relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
 
-def samePathAndSceneName_check_func():
+def samePathAndSceneName_check_func(same_dicts=[{"relation":"","same":""}]):
     file_path=cmds.file(q=True,sn=True)
     ma_file = os.path.basename(file_path)
     pathParts_list = file_path.lower().split('/')
     nameParts_list = ma_file.replace('.ma','').lower().split('_')
-    same_dicts=[
+    same_dicts=same_dicts or [
         {"relation":nameParts_list[0],"same":pathParts_list[1].lower()},
         {"relation":nameParts_list[1],"same":pathParts_list[5].lower()},
         {"relation":nameParts_list[2],"same":pathParts_list[6].lower()},
         {"relation":nameParts_list[3],"same":pathParts_list[7].lower()},
     ]
+
     check=chLB.Check()
     for same_dict in same_dicts:
         check.setRelation(same_dict["relation"])
@@ -57,10 +57,7 @@ def sameObjName_check_func():
         else:
             print("NG:"+" node:"+str(judge_dict["node"]))
 
-def graySameRigName_check_func():
-    hierarchyName="rig"
-    hierarchyNumber=2
-    
+def graySameRigName_check_func(hierarchyName="rig",hierarchyNumber=2):
     judge_dicts=[]
     dagNodes=cmds.ls(dag=True)
     for dagNode in dagNodes:
@@ -95,8 +92,7 @@ def trashReferences_check_func():
         else:
             print("NG:"+" reference:"+str(judge_dict["reference"])+" scene:"+str(judge_dict["scene"]))
 
-def nodeUnLocked_check_func():
-    node="initialShadingGroup"
+def nodeUnLocked_check_func(node="initialShadingGroup"):
     check=chLB.Check()
     check.setNode(node)
     judge_dict=check.nodeUnLocked()
@@ -106,7 +102,7 @@ def nodeUnLocked_check_func():
     else:
         print("NG:"+" node:"+str(judge_dict["node"]))
  
-def arnoldSetting_check_func():
+def arnoldSetting_check_func(chackAttr_dicts=[{"attr":"","same":""}]):
     check=chLB.Check()
     mesh_shapes=cmds.ls(type="mesh")
     geos=cmds.ls(cmds.listRelatives(mesh_shapes,parent=True),l=True)
@@ -114,7 +110,7 @@ def arnoldSetting_check_func():
         {"attr":"aiSubdivType","same":1},
         {"attr":"aiSubdivIterations","same":1},
         {"attr":"aiSubdivUvSmoothing","same":1},
-    ]
+    ] or chackAttr_dicts
     for geo in list(set(geos)):
         for chackAttr_dict in chackAttr_dicts:
             check.setNode(geo)
@@ -142,10 +138,10 @@ def inheritances_check_func():
         else:
             print("OK:"+judge_dict["node"]+" relation:"+str(judge_dict["relation"]))
 
-def readPath_check_func():
+def readPath_check_func(absolute_path="N:/GMR/source/pub/assets"):
     file_paths=cmds.filePathEditor(q=True,listDirectories="")
     check=chLB.Check()
-    check.setSame(os.path.normpath("N:/GMR/source/pub/assets"))
+    check.setSame(os.path.normpath(absolute_path))
     for file_path in file_paths:
         file_path=os.path.normpath(file_path)
         check.setRelation(file_path)
@@ -155,12 +151,12 @@ def readPath_check_func():
         else:
             print("NG:"+" relation:"+str(judge_dict["relation"])+" same:"+str(judge_dict["same"]))
 
-def readFile_check_func():
+def readFile_check_func(absolute_path="N:/GMR/source/pub/assets"):
     #----------------------------------------------------------
     file_paths=cmds.filePathEditor(q=True,listDirectories="")
     same_dicts=[]
     check=chLB.Check()
-    check.setSame(os.path.normpath("N:/GMR/source/pub/assets"))
+    check.setSame(os.path.normpath(absolute_path))
     for file_path in file_paths:
         file_path=os.path.normpath(file_path)
         check.setRelation(file_path)
@@ -182,102 +178,28 @@ def readFile_check_func():
             else:
                 print("NG:"+" node:"+str(judge_dict["node"])+" relation:"+str(judge_dict["relation"]))
 
+def imagesUsed_check_func(image_path="N:/GMR/source/pub/assets/Chr/operatorMob1/Maps/"):
+    same_list=[]
+    image_path=os.path.normpath(os.path.join(image_path))
+    file_names=cmds.filePathEditor(q=True,listFiles=image_path)
+    for file_name in file_names:
+        if '<udim>' in file_name.lower():
+            file_name=file_name.replace(r'<udim>',r'\d{4}').replace(r'<UDIM>',r'\d{4}')
+        same_list.append(file_name)
 
-def UDIM_check_func():
-    #----------------------------------------------------------
-    file_paths=cmds.filePathEditor(q=True,listDirectories="")
-    same_dicts=[]
+    relations=os.listdir(image_path)
     check=chLB.Check()
-    check.setSame(os.path.normpath("N:/GMR/source/pub/assets"))
-    for file_path in file_paths:
-        file_path=os.path.normpath(file_path)
-        check.setRelation(file_path)
-        judge_dict=check.includedString()
+    check.setSameList(same_list)
+    for relation in relations:
+        check.setRelation(relation)
+        judge_dict=check.andMatchRelation()
         if judge_dict["bool"]:
-            same_dicts.append(judge_dict)
-    #----------------------------------------------------------
-    """
-    check=chLB.Check()
-    file_dicts=[]
-    for same_dict in same_dicts:
-        file_names=cmds.filePathEditor(q=True,listFiles=same_dict["relation"],withAttribute=True)
-        twoTake=iter(file_names)
-        for file,obj in zip(twoTake,twoTake):
-            full_path=os.path.normpath(os.path.join(same_dict["relation"],file))
-            check.setRelation(full_path)
-            judge_dict=check.thePath()
-            judge_dict["object"]=obj
-            if judge_dict["bool"]:
-                file_dicts.append(judge_dict)
-    #----------------------------------------------------------
-    check=chLB.Check()
-    for file_dict in file_dicts:
-        full_path=os.path.normpath(file_dict["relation"])
-        file=os.path.basename(full_path)
-        if '<udim>' in file.lower():
-            regex = file.replace(r'<udim>', r'\d{4}').replace(r'<UDIM>', r'\d{4}')
-            for f in os.listdir(filedir):
-                if re.match(regex, f):
-                    for udim_file in udim_files:
-                        udimfullpath = os.path.join(filedir,udim_file)
-                        if not os.path.isfile(udimfullpath):
-                            print(udimfullpath)
-    """
-    #----------------------------------------------------------
-    check=chLB.Check()
-    file_dicts=[]
-    for same_dict in same_dicts:
-
-        file_names=cmds.filePathEditor(q=True,listFiles=same_dict["relation"],withAttribute=True)
-        image_path=os.path.normpath(os.path.join(same_dict["relation"]))
-        twoTake=iter(file_names)
-        for file,obj in zip(twoTake,twoTake):
-            if '<udim>' in file.lower():
-                regex=file.replace(r'<udim>',r'\d{4}').replace(r'<UDIM>',r'\d{4}')
-                try:
-                    for image in os.listdir(image_path):
-                        if re.match(regex,image):
-                            print("OK:"+regex,obj)
-                        else:
-                            print("NG:"+regex,obj)
-                except:
-                    pass
-def test():
-    image_path=os.path.normpath(os.path.join("N:/GMR/source/pub/assets/Chr/operatorMob1/Maps/GMR_Chr_operatorMob1_Mdl_19170"))
-    file_names=cmds.filePathEditor(q=True,listFiles=image_path,withAttribute=True)
-    OK_nodes=[]
-    NG_nodes=[]
-    judge_dicts=[]
-    twoTake=iter(file_names)
-    for file,node in zip(twoTake,twoTake):
-        if '<udim>' in file.lower():
-            file=file.replace(r'<udim>',r'\d{4}').replace(r'<UDIM>',r'\d{4}')
-        for image in os.listdir(image_path):
-            if re.match(file,image):
-                OK_nodes.append(node)
-                judge_dict={"bool":True,"node":node,"relation":file,"same":image}
-                judge_dicts.append(judge_dict)
-            else:
-                judge_dict={"bool":False,"node":node,"relation":file,"same":image}
-                judge_dicts.append(judge_dict)
-    
-    for judge_dict in judge_dicts:
-        if judge_dict["bool"]:
-            #print("OK:"+" node:"+str(judge_dict["node"])+" same:"+str(judge_dict["same"]))
-            pass
+            print("OK:"+" relation:"+str(judge_dict["relation"]))
         else:
-            NG_nodes.append(judge_dict["bool"])
-            
-    print(set(OK_nodes)-set(NG_nodes))
-            
-
-
-    #difference=list(set(ok_dicts["node"])-set(ng_dicts["node"]))
-    #if difference==[]:
-        #print("OK")
-    #else:
-        #print("NG")
-
+            if ".*png" in judge_dict["relation"]:
+                print("NG:"+" relation:"+str(judge_dict["relation"]))
+            else:
+                print("OK:"+" relation:"+str(judge_dict["relation"]))
 
 def main():
     #fileName_check_func()
@@ -285,14 +207,13 @@ def main():
     #samePathAndSceneName_check_func()
     #sameObjName_check_func()
     #graySameRigName_check_func()
-    #arnoldSetting_check_func()
+    arnoldSetting_check_func()
     #inheritances_check_func()
     #trashReferences_check_func()
     #nodeUnLocked_check_func()
     #readPath_check_func()
     #readFile_check_func()
-    #UDIM_check_func()
-    test()
+    #imagesUsed_check_func()
     pass
 
 main()
