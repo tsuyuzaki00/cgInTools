@@ -239,9 +239,9 @@ class Check(sbLB.BaseCheck):
 
     def andSameRelation_check_dict(self,relation,same_list):
         judge_bools=[]
-        judge_dict={"bool":False,"relation":relation,"same_list":same_list}
+        judge_dict={"bool":False,"relation":relation,"sameList":same_list}
         for same in same_list:
-            if relation in same:
+            if same in relation:
                 judge_bools.append(True)
         if True in judge_bools:
             judge_dict["bool"]=True
@@ -252,7 +252,7 @@ class Check(sbLB.BaseCheck):
 
     def andMatchRelation_check_dict(self,relation,same_list):
         judge_bools=[]
-        judge_dict={"bool":False,"relation":relation,"same_list":same_list}
+        judge_dict={"bool":False,"relation":relation,"sameList":same_list}
         for same in same_list:
             if re.match(same,relation):
                 judge_bools.append(True)
