@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 
 import maya.cmds as cmds
-from ..library import mayaRender as MR
+from ..library import renderLB as MR
 
 # demo
 test_json = {

@@ -205,6 +205,10 @@ class Naming(sbLB.BaseName):
             if not cmds.objExists("*"+name+chr(i)+"*"):
                 return chr(i)
 
+    def firstLowerCaseOnly_edit_str(str):
+        str=str[0].lower()+str[1:]
+        return str
+
     def scene_query_str(self):
         sceneName=cmds.file(q=True,sn=True).split("/")[-1]
         sceneName=sceneName.split(".")[0]

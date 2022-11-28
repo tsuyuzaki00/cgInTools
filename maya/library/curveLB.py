@@ -4,7 +4,7 @@ import math
 
 from cgInTools.maya.library import setBaseLB as sbLB
 
-class SetCurve(sbLB.SetName):
+class SetCurve(sbLB.BaseName):
     def __init__(self):
         self._name="curveName"
         self._curveType="circlePlane"
@@ -32,7 +32,7 @@ class SetCurve(sbLB.SetName):
         else:
             pass
 
-    #template function
+#Single Function
     def degresslinear_create_curve(self,points,name):
         knot=list(range(len(points)))
         previousCurve=cmds.curve(d=1,per=True,p=points,k=knot)
@@ -1321,3 +1321,32 @@ class SetCurve(sbLB.SetName):
         points=[a00,a01,a02,a03,a04,a05,a06,a07,a08,a09,a10,a11,a12,a13,a14,a15,a00,a01,a02]
         curve=self.degresscubic_create_curve(points,name)
         return curve
+
+class EditCurve(sbLB.BasePair):
+    def __init__(self):
+        self._sourceNode=""
+        self._targetNode=""
+
+#Multi Function
+    def replaceShape_edit_func(self,sourceNode,targetNode):
+        shapes=self.getShapes_edit_shapes(targetNode)
+        cmds.delete(shapes)
+        self.setShapes_edit_func(sourceNode,targetNode)
+
+#Single Function
+    def renameShapes_edit_func(self,node):
+        shapes=cmds.listRelatives(node,f=True,type='nurbsCurve')
+        for shape in shapes:
+            shape=cmds.rename(shape,node+"Shape")
+
+    def getShapes_edit_shapes(self,node):
+        shapes=cmds.listRelatives(node,type='nurbsCurve')
+        return shapes
+
+    def setShapes_edit_func(self,sourceNode,targetNode):
+        copy_list=cmds.duplicate(sourceNode)
+        shapes=cmds.listRelatives(copy_list[0],f=True,type='nurbsCurve')
+        for shape in shapes:
+            shape=cmds.rename(shape,targetNode+"Shape")
+            cmds.parent(shape,targetNode,r=True,s=True)
+        cmds.delete(copy_list)

@@ -24,8 +24,8 @@ class Template():
         self.single_mode_func()
         pass
 
-#Mulch Function
-    def mulch_mode_func(self):
+#Multi Function
+    def multi_mode_func(self):
         self.single_mode_func()
         pass
 

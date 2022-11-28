@@ -155,14 +155,23 @@ class BasePair():
     def __init__(self):
         self._sourceNode="" # string
         self._targetNode="" # string
+        self._thirdNode="" # string
+
         self._sourceAttr="" # string
         self._targetAttr="" # string
+        self._thirdAttr="" # string
+        
         self._sourceComponent=0 # int only
         self._targetComponent=0 # int only
+        self._thirdComponent=0 # int only
+        
         self._sourceValue="" # float or string
         self._targetValue="" # float or string
+        self._thirdValue="" # float or string
+        
         self._sourceJoint="" # string
         self._targetJoint="" # string
+        self._thirdJoint="" # string
         
     def setSourceNode(self,variable):
         self._sourceNode=variable
@@ -175,6 +184,12 @@ class BasePair():
         return self._targetNode
     def getTargetNode(self):
         return self._targetNode
+    
+    def setThirdNode(self,variable):
+        self._thirdNode=variable
+        return self._thirdNode
+    def getThirdNode(self):
+        return self._thirdNode
 
     def setSourceAttr(self,variable):
         self._sourceAttr=variable
@@ -187,6 +202,12 @@ class BasePair():
         return self._targetAttr
     def getTargetAttr(self):
         return self._targetAttr
+    
+    def setThirdAttr(self,variable):
+        self._thirdAttr=variable
+        return self._thirdAttr
+    def getThirdAttr(self):
+        return self._thirdAttr
 
     def setSourceComponent(self,variable):
         self._sourceComponent=variable
@@ -199,6 +220,12 @@ class BasePair():
         return self._targetComponent
     def getTargetComponent(self):
         return self._targetComponent
+    
+    def setThirdComponent(self,variable):
+        self._thirdComponent=variable
+        return self._thirdComponent
+    def getThirdComponent(self):
+        return self._thirdComponent
 
     def setSourceValue(self,variable):
         self._sourceValue=variable
@@ -211,6 +238,12 @@ class BasePair():
         return self._targetValue
     def getTargetValue(self):
         return self._targetValue
+    
+    def setThirdValue(self,variable):
+        self._thirdValue=variable
+        return self._thirdValue
+    def getThirdValue(self):
+        return self._thirdValue
 
     def setSourceJoint(self,variable):
         self._sourceJoint=variable
@@ -223,7 +256,12 @@ class BasePair():
         return self._targetJoint
     def getTargetJoint(self):
         return self._targetJoint
-
+    
+    def setThirdJoint(self,variable):
+        self._thirdJoint=variable
+        return self._thirdJoint
+    def getThirdJoint(self):
+        return self._thirdJoint
 class BaseFile():
     def __init__(self):
         self._path=""

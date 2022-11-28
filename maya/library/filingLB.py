@@ -38,6 +38,7 @@ class Path(sbLB.BasePath):
 
 class Project(sbLB.BasePath):
     def __init__(self):
+        self._name=cmds.file(q=True,sceneName=True).split('/')[-1]
         self._work_path=cmds.workspace(q=True,rd=True,o=True)
         self._def_path=os.path.abspath(os.path.join(self._work_path,".."))
         self._projectName_path="_newProject"
