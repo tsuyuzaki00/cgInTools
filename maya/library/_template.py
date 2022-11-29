@@ -20,7 +20,7 @@ class Template():
 #Private Function
     def _private_mode_func(self):
         print(self._value)
-        self.mulch_mode_func()
+        self.multi_mode_func()
         self.single_mode_func()
         pass
 

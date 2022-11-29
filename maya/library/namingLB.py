@@ -164,11 +164,13 @@ class Naming(sbLB.BaseName):
             objType_str=cmds.objectType(obj)
             return objType_str
 
-    def sideName_query_str(self,obj,about=1):
-        trsX=cmds.xform(obj,q=True,ws=True,t=True)[0]
-        if trsX>about:
+    def sideName_query_str(self,obj,dist=1):
+        boundingBox=cmds.xform(obj,q=True,bb=True,ws=True)
+        minX=boundingBox[0]
+        maxX=boundingBox[3]
+        if minX > dist and maxX > dist:
             return "L"
-        elif trsX<about*-1:
+        elif minX < -dist and maxX < -dist:
             return "R"
         else:
             return "C"

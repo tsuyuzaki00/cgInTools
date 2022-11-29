@@ -32,12 +32,12 @@ class Json(sbLB.BaseFile):
         self.writePack_create_func(self._writePack_dicts,self._path,self._file,self._extension)
 
 #Single Function
-    def pathSetting_create_str(self,path,json_name,extension="json",new_folder=None):
+    def pathSetting_create_str(self,path,name,extension="json",new_folder=None):
         if new_folder == None:
-            json_file = os.path.join(path,json_name+"."+extension)
+            json_file=os.path.join(path,name+"."+extension)
             return json_file
         else:
-            json_file = os.path.join(path,new_folder,json_name+"."+extension)
+            json_file=os.path.join(path,new_folder,name+"."+extension)
             return json_file
 
     def readJson_quary_dict(self,path,file,extension):
