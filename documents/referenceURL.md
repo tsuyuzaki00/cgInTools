@@ -1,1 +1,0 @@
-[UIの考え方参考](https://tech-art.online/pyside101/)

@@ -4,56 +4,34 @@
 
 ## 各フォルダーの定義
 
-### _Menu
+[_menu](/_menu/README.md)
+
 上部メニューに表示させるフォルダー
 
-### readme
-readmeの参照するフォルダー
+[document](/document/README.md)
 
-### documents
-全体で使用するマニュアルをまとめるフォルダー
+全体で使用するマニュアルをまとめるフォルダ
 
-### image
-README.mdで使用する画像を保存するフォルダー
+[maya](/maya/README.md)
 
-### ui
-どのDCCツールでも使えるUIファイルを格納するフォルダー
-### init.py
-外部フォルダーのパスを取得する際に使用可能
+アプリケーションMayaで使用するスクリプトフォルダ
 
-## アプリ内フォルダーの定義
-### setup
-初期設定で各データを配置するためのフォルダー
+[mgear](/mgear/README.md)
 
-mayaの場合
+3DCGツールMayaで使用するスクリプトフォルダ
 
-・iconsはscriptsと同じ階層
+[sourceTrail](/sourceTrail/README.md)
 
-・modulesはC:\Users\"user_name"\Documents\maya
-    
-modに読み込んでほしいパスを書く
-    
-例 + CustomTools 1 D:/Maya (オンオフ なんでもいい名前 番号 パス名)
+スクリプトの参照、継承の流れが見えるアプリケーションsourceTrailのフォルダ
 
-・userSetupはscripts内の階層
+[ui](/ui/README.md)
 
+どのDCCツールでも使えるUIファイルを格納するフォルダ
 
-### _settings
-UIの初期設定をjsonファイルにして保存するフォルダー
-### data
-書き出し読み込みを行うjsonファイルを保存するフォルダー
+[init.py](/documents/init.md)
 
-### execute
-Libraryを読み込んだりして、コマンド実行する物を格納するフォルダー
+内部フォルダーのパスを取得する際に使用可能な変数群
 
-### library
-使いまわしやすいスクリプトを格納するフォルダー
+バージョンの違いに適した変数を返す関数群
 
-### manager
-execute,libray,uiのファイルをインポートして組み合わせたものを格納するフォルダー
-
-### documents
-アプリ内フォルダーのみで使用するマニュアルをまとめるフォルダー
-
-### images
-アプリ内フォルダーのみで使用する画像を保存するフォルダー
+import cgInTools as cit で主に使用している

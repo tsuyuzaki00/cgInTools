@@ -14,13 +14,12 @@ class Attribute(sbLB.BaseObject):
         self._min=0
         self._max=1
         self._attrs=[]
-        self._haveAttr=""
-        self._lockandhide=True
     
-    def loading(self):
+    def __loading(self):
+        self._haveAttr=""
+        self._lockAndHide=True
         self._niceName=self._attr.capitalize()
 
-#Public function
     def getObjectAttr(self):
         return self._object+"."+self._haveAttr
 
@@ -75,6 +74,7 @@ class Attribute(sbLB.BaseObject):
         lock_list=self.lock_quary_list(self._object,find)
         return lock_list
 
+#Public Function
     def lockAndHide(self):
         self.lockAndHide_edit_func(self._object,self._attrs,self._lockAndHide)
         return self._attrs
@@ -84,7 +84,7 @@ class Attribute(sbLB.BaseObject):
         return self._attrs
 
     def addAttr(self):
-        self.loading()
+        self.__loading()
         if self._attrType == "bool":
             attrName=self.addAttrBool_create_attrName(self._object,self._attr,self._niceName)
             return attrName
@@ -112,7 +112,7 @@ class Attribute(sbLB.BaseObject):
         else:
             cmds.error('There is no attribute type "'+self._attrType+'".')
 
-#Private function
+#Single Function
     def addAttrVector_create_attrName(self,obj,name,niceName=None):
         attr_bool=self.addAttr_check_bool(obj,name)
         XYZs=["","X","Y","Z"]
