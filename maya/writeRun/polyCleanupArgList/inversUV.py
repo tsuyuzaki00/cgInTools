@@ -1,9 +1,9 @@
 from maya import cmds,mel
 
 def OKList(sel, check):
-    print 'OK' + ' : ' + check + ' : ' + sel
+    print ('OK' + ' : ' + check + ' : ' + sel)
 def NGList(sel, check):
-    print 'NG' + ' : ' + check + ' : ' + sel
+    print ('NG' + ' : ' + check + ' : ' + sel)
 
 def inversUVCheck(sels):
     check = 'Invers UV'

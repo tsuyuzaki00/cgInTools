@@ -1,9 +1,10 @@
-from maya import cmds,mel
+import maya.cmds as cmds
+import maya.mel as mel
 
 def OKList(sel, check):
-    print 'OK' + ' : ' + check + ' : ' + sel
+    print ('OK' + ' : ' + check + ' : ' + sel)
 def NGList(sel, check):
-    print 'NG' + ' : ' + check + ' : ' + sel
+    print ('NG' + ' : ' + check + ' : ' + sel)
 
 def concaveCheck(sels):
     check = 'ConcaveFace'

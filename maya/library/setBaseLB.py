@@ -390,6 +390,7 @@ class BaseCheck():
         self._highLimit=100
         self._lowLimit=0
         self._edit=False
+        self._path=""
         self._node=""
         self._attr=""
         self._value=0
@@ -441,6 +442,12 @@ class BaseCheck():
         return self._edit
     def getEdit(self):
         return self._edit
+
+    def setPath(self,variable):
+        self._path=variable
+        return self._path
+    def getPath(self):
+        return self._path
 
     def setNode(self,variable):
         self._node=variable
