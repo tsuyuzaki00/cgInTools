@@ -2,7 +2,7 @@
 import maya.cmds as cmds
 import math
 
-from cgInTools.maya.library import setBaseLB as sbLB
+from . import setBaseLB as sbLB
 
 class SetCurve(sbLB.BaseName):
     def __init__(self):
@@ -1327,10 +1327,15 @@ class EditCurve(sbLB.BasePair):
         self._sourceNode=""
         self._targetNode=""
 
+#Public Function
+    def replaceShape(self):
+        self.replaceShape_edit_func(self._sourceNode,self._targetNode)
+
 #Multi Function
     def replaceShape_edit_func(self,sourceNode,targetNode):
         shapes=self.getShapes_edit_shapes(targetNode)
-        cmds.delete(shapes)
+        if not shapes == None:
+            cmds.delete(shapes)
         self.setShapes_edit_func(sourceNode,targetNode)
 
 #Single Function

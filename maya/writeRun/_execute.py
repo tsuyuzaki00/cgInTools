@@ -1,14 +1,16 @@
+# -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-#import pymel.core as pm
-
 import cgInTools as cit
-from cgInTools import ui as UI
-from cgInTools.maya import library as LB
-from cgInTools.maya import execute as EX
-from cgInTools.maya import manager as MN
-from cgInTools.maya import option as OP
-cit.reloads([UI,LB,EX,MN,OP])
+from cgInTools.maya.library import constrainLB as LB
+cit.reloads([LB])
 
-obj=cmds.ls(sl=True)
-test=LB.File()
-print(test.setFileType("ma"))
+def main():
+    sourceNode=cmds.ls(sl=True)[0]
+    targetNode=cmds.ls(sl=True)[1]
+
+    replace=LB.Constrain()
+    replace.setSourceNode(sourceNode)
+    replace.setTargetNode(targetNode)
+    replace.proximityPin()
+
+main()

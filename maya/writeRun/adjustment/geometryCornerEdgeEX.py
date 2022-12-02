@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import cgInTools as cit
-from cgInTools.maya.library import jsonLB as cj
+from ..library import jsonLB as cj
 
 def cornerEdge_query_func(obj,lowAngle=30,highAngle=165):
     selEdge_int=cmds.polyEvaluate(e=True)

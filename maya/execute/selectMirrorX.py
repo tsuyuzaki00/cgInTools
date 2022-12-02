@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import cgInTools as cit
-from cgInTools.maya.library import cMirror as cm
+from ..library import cMirror as cm
 cit.verReload(cm)
 
 def main():

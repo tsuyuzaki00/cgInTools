@@ -12,23 +12,23 @@ class Template():
     def __loading(self):
         self._value=""
 
-    #Public Function
+#Public Function
     def public(self):
         print(self._value)
         pass
 
-    #Private Function
+#Private Function
     def _private_mode_func(self):
         print(self._value)
         self.multi_mode_func()
         self.single_mode_func()
         pass
 
-    #Multi Function
+#Multi Function
     def multi_mode_func(self):
         self.single_mode_func()
         pass
 
-    #Single Function
+#Single Function
     def single_mode_func(self):
         pass

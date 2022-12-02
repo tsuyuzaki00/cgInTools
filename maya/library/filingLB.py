@@ -5,8 +5,8 @@ import os
 import shutil
 
 import cgInTools as cit
-from cgInTools.maya.library import setBaseLB as sbLB
-from cgInTools.maya.library import cleanLB as cLB
+from . import setBaseLB as sbLB
+from . import cleanLB as cLB
 cit.reloads([sbLB,cLB])
 
 class Path(sbLB.BasePath):
@@ -35,7 +35,6 @@ class Path(sbLB.BasePath):
 
 #Mulch Function
 #Single Function
-
 class Project(sbLB.BasePath):
     def __init__(self):
         self._name=cmds.file(q=True,sceneName=True).split('/')[-1]

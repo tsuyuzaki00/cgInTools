@@ -12,3 +12,8 @@ def transferOrient(node):
         jointOrient_tuple=cmds.getAttr(node+".jointOrient")[0]
         cmds.setAttr(node+".rotate",jointOrient_tuple[0],jointOrient_tuple[1],jointOrient_tuple[2],type="double3")
         cmds.setAttr(node+".jointOrient",0,0,0,type="double3")
+
+def setLabelling(obj,side=0,type=18,other=""):
+    cmds.setAttr(obj+'.side',side) # 0=Center 1=Left 2=Right 3=None
+    cmds.setAttr(obj+'.type',type) # 18=Other
+    cmds.setAttr(obj+'.otherType',other,type='string')

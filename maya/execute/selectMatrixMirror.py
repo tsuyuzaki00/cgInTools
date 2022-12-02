@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-from cgInTools.maya.library import cMirror as ps;
+from ..library import cMirror as ps;
 
 def main():
     loc=ps.MatrixMirror()

@@ -1,9 +1,5 @@
 {
-    "naming_order":
-    [
-        "title","node","side","num"
-    ],
-    "node_renames":
+    "nodeName_dict":
         {
             "none":"null",
             "mesh":"geo",

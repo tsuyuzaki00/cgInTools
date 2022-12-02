@@ -34,14 +34,14 @@
         "Query":[],
         "Mgear":[],
         "cleaning":[
-            ["Geometry Reset","cgInTools.maya.execute","freezeResetHisDel","main()",""],
-            ["UnKnown Delete","cgInTools.maya.execute","unknownDel","main()",""],
-            ["Garbage Reference Delete","cgInTools.maya.execute","garbageReference","main()",""],
-            ["Reset Material","cgInTools.maya.execute","resetMaterial","main()",""]
+            ["Geometry Reset","cgInTools.maya.execute","freezeResetHisDelEX","main()",""],
+            ["UnKnown Delete","cgInTools.maya.execute","unknownDelEX","main()",""],
+            ["Garbage Reference Delete","cgInTools.maya.execute","garbageReferenceEX","main()",""],
+            ["Reset Material","cgInTools.maya.execute","resetMaterialEX","main()",""]
         ],
         "geometry":[],
         "joint":[
-            ["Select Position Joint","cgInTools.maya.execute","selectPosJoint","main()",""]
+            ["Select Position Joint","cgInTools.maya.execute","selectPosJointEX","main()",""]
         ],
         "curve":[],
         "surface":[],
@@ -54,8 +54,8 @@
             ["Auto Rename","cgInTools.maya.execute","autoRenameEX","main()",""]
         ],
         "object position":[
-            ["Center Target Pos","cgInTools.maya.execute","selectCenterPosMove","main()",""],
-            [1,"cgInTools.maya.manager","targetPosition","main()",""]
+            ["Center Target Pos","cgInTools.maya.execute","selectCenterPosMoveEX","main()",""],
+            [1,"cgInTools.maya.manager","targetPositionMN","main()",""]
         ],
         "object mirror":[
             ["Selection MirrorX","cgInTools.maya.execute","selectMirrorX","main()",""]

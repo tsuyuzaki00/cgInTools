@@ -328,7 +328,6 @@ class BaseFile():
         return self._objs
     def getObjs(self):
         return self._objs
-
 class BasePath():
     def __init__(self):
         self._path=""

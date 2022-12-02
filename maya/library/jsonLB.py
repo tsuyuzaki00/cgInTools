@@ -3,7 +3,7 @@ import maya.cmds as cmds
 import json,os
 
 import cgInTools as cit
-from cgInTools.maya.library import setBaseLB as sbLB
+from . import setBaseLB as sbLB
 cit.reloads([sbLB])
 
 class Json(sbLB.BaseFile):
@@ -76,3 +76,11 @@ class Json(sbLB.BaseFile):
             self.writeJson_create_func(data_file,pack_dict["dataDict"])
         write_dict={"packFiles":packFiles}
         self.writeJson_create_func(pack_file,write_dict)
+
+def getJson(path,file):
+    data=Json()
+    data.setPath(path)
+    data.setFile(file)
+    data.setExtension("json")
+    data=data.read()
+    return data

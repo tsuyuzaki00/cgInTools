@@ -7,6 +7,8 @@ from . import jsonLB as jLB
 from . import attributeLB as aLB
 cit.reloads([sbLB,jLB,aLB])
 
+rules_dict=jLB.getJson(cit.mayaSettings_path,"namingLB")
+
 class Naming(sbLB.BaseName):
     def __init__(self):
         self._object=""
@@ -142,13 +144,8 @@ class Naming(sbLB.BaseName):
 
 #Single Function
     def nodeName_query_str(self,obj):
-        nodeType=jLB.Json()
-        nodeType.setPath(cit.mayaSettings_path)
-        nodeType.setFile("autoRename")
-        nodeType.setExtension("json")
-        nodeType_dict=nodeType.read()
         getNode_str=self.isNodeType_query_str(obj)
-        nodeName_str=nodeType_dict["node_renames"][getNode_str]
+        nodeName_str=rules_dict["nodeName_dict"][getNode_str]
         return nodeName_str
 
     def isNodeType_query_str(self,obj):

@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
+import maya.api.OpenMaya as om2
 from cgInTools.maya.library import setBaseLB as sbLB
 
 class Attribute(sbLB.BaseObject):
@@ -10,6 +11,7 @@ class Attribute(sbLB.BaseObject):
         self._attrType="bool"
         self._stringName="string"
         self._enums=["Green","Blue","Red"]
+        self._proxy=False
         self._useMinMax=False
         self._min=0
         self._max=1
@@ -50,6 +52,10 @@ class Attribute(sbLB.BaseObject):
     def setMax(self,variable):
         self._max=variable
         return self._max
+    
+    def setProxy(self,variable):
+        self._proxy=variable
+        return self._proxy
     
     def setHaveAttr(self,variable):
         self._haveAttr=variable
@@ -111,6 +117,10 @@ class Attribute(sbLB.BaseObject):
             return attrName
         else:
             cmds.error('There is no attribute type "'+self._attrType+'".')
+
+    def isProxy(self):
+        nodeAttr=self.isProxy_edit_nodeAttr(self._object,self._attr,self._proxy)
+        return nodeAttr
 
 #Single Function
     def addAttrVector_create_attrName(self,obj,name,niceName=None):
@@ -204,3 +214,13 @@ class Attribute(sbLB.BaseObject):
             attr_list=cmds.listAttr(obj,l=True)
             newNode_list=[node for node in attr_list if findName in node]
             return newNode_list
+
+    def isProxy_edit_nodeAttr(self,obj,attr,proxy=False):
+        if cmds.addAttr(obj+"."+attr,q=True,usedAsProxy=True) == None:
+            cmds.error("Cannot be set for standard attributes.")
+        nodeAttr=obj+"."+attr
+        nodeAttr_MSelectionList=om2.MSelectionList().add(nodeAttr)
+        nodeAttr_MPlug=nodeAttr_MSelectionList.getPlug(0)
+        nodeAttr_MFnAttribute=om2.MFnAttribute(nodeAttr_MPlug.attribute())
+        nodeAttr_MFnAttribute.isProxyAttribute=proxy
+        return nodeAttr
