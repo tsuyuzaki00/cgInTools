@@ -1,7 +1,5 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-import mgear.rigbits as rb
-import pymel.core as pm
 
 import cgInTools as cit
 from cgInTools.maya.library import setBaseLB as sbLB
@@ -58,31 +56,23 @@ class Constrain(sbLB.BasePair):
         self.matrixParent_create_func(self._sourceNode,self._targetNode)
 
     def proximityPin(self):
-        proxPin_node=self.proximityPinNode_create_func(self._targetNode)
+        proxPin_node=self.proximityPin_create_node(self._targetNode)
         self.proximityPinMatrix_create_func(self._sourceNode,proxPin_node)
 
     #Multi Function
-    def proximityPinNode_create_func(self,geo):
-        geo=self.bindShape_check_geo(geo)
-        bind_shape,orig_shape=self.getBindShapes_query_bindMesh_origMesh(geo)
-        proxPin_node=self.proximityPin_create_node(geo)
-        self.connectMeshAndProxPin_edit_func(orig_shape,bind_shape,proxPin_node)
-        return proxPin_node
-    
     def proximityPinMatrix_create_func(self,ctrl,proxPin,matrixIndex=0):
-
-        ctrl_npo=rb.addNPO(objs=pm.PyNode(ctrl))
-        worldMatrix_node=self.multMatrix_create_node(ctrl,"worldMatrix",ctrl+"WdMx"+str(matrixIndex).zfill(2)+"_mtmx")
+        ctrlNull_obj=self.addParentNull_create_null(ctrl)
+        worldMatrix_node=self.setNodeMultMatrix_create_node(ctrl,"worldMatrix",ctrl+"WdMx"+str(matrixIndex).zfill(2)+"_mtmx")
         parentInverseMatrix_node=cmds.createNode("multMatrix",n=ctrl+"PrIMx"+str(matrixIndex).zfill(2)+"_mtmx")
         decomposeMatirix_node=cmds.createNode("decomposeMatrix",n=ctrl+str(matrixIndex).zfill(2)+"_dcmx")
         __matrixConnects=[
             {"sourceAttr":str(worldMatrix_node)+".matrixSum","targetAttr":str(proxPin)+".inputMatrix["+str(matrixIndex)+"]"},
             {"sourceAttr":str(proxPin)+".outputMatrix["+str(matrixIndex)+"]","targetAttr":str(parentInverseMatrix_node)+".matrixIn[0]"},
-            {"sourceAttr":str(ctrl_npo[0])+".parentInverseMatrix[0]","targetAttr":str(parentInverseMatrix_node)+".matrixIn[1]"},
+            {"sourceAttr":str(ctrlNull_obj)+".parentInverseMatrix[0]","targetAttr":str(parentInverseMatrix_node)+".matrixIn[1]"},
             {"sourceAttr":str(parentInverseMatrix_node)+".matrixSum","targetAttr":str(decomposeMatirix_node)+".inputMatrix"},
-            {"sourceAttr":str(decomposeMatirix_node)+".outputTranslate","targetAttr":str(ctrl_npo[0])+".translate"},
-            {"sourceAttr":str(decomposeMatirix_node)+".outputRotate","targetAttr":str(ctrl_npo[0])+".rotate"},
-            {"sourceAttr":str(decomposeMatirix_node)+".outputShear","targetAttr":str(ctrl_npo[0])+".shear"},
+            {"sourceAttr":str(decomposeMatirix_node)+".outputTranslate","targetAttr":str(ctrlNull_obj)+".translate"},
+            {"sourceAttr":str(decomposeMatirix_node)+".outputRotate","targetAttr":str(ctrlNull_obj)+".rotate"},
+            {"sourceAttr":str(decomposeMatirix_node)+".outputShear","targetAttr":str(ctrlNull_obj)+".shear"},
         ]
         for __matrixConnect in __matrixConnects:
             cmds.connectAttr(__matrixConnect["sourceAttr"],__matrixConnect["targetAttr"])
@@ -163,15 +153,14 @@ class Constrain(sbLB.BasePair):
             return geo
         else:
             cmds.error("Bind to the "+geo+".")
-
-    def getBindShapes_query_bindMesh_origMesh(self,geo):
+            
+    def proximityPin_create_node(self,geo):
+        # get shapes
         child_mesh=cmds.listRelatives(geo,c=True,type="mesh")
         bind_shape=child_mesh[0]
         orig_shape=child_mesh[1]
-        return bind_shape,orig_shape
-            
-    def proximityPin_create_node(self,node):
-        proxPin_node=cmds.createNode("proximityPin",n=node+"_pxmp")
+        # create and settings proximityPin
+        proxPin_node=cmds.createNode("proximityPin",n=geo+"_pxmp")
         __proxPin_dicts=[
             {"node":str(proxPin_node),"attr":"coordMode","value":1}, # Uses UV for coordinate mode
             {"node":str(proxPin_node),"attr":"normalAxis","value":0}, # Uses X for Normal Axis
@@ -181,39 +170,38 @@ class Constrain(sbLB.BasePair):
         ]
         for __proxPin_dict in __proxPin_dicts:
             cmds.setAttr(__proxPin_dict["node"]+"."+__proxPin_dict["attr"],__proxPin_dict["value"])
-        return proxPin_node
-
-    def multMatrix_create_node(self,node,matrixAttr,name="poxy_mumx",setIndex=0):
-        multMatrix_node=cmds.createNode("multMatrix",n=name)
-        get_matrix=cmds.getAttr(node+"."+matrixAttr+"[0]")
-        cmds.setAttr(multMatrix_node+".matrixIn["+str(setIndex)+"]",get_matrix,type="matrix")
-        return multMatrix_node
-
-    def connectMeshAndProxPin_edit_func(self,orig_shape,bind_shape,proxPin_node):
+        # connections
         __connection_dicts=[
             {"sourceAttr":str(orig_shape)+".outMesh","targetAttr":str(proxPin_node)+".originalGeometry"},
             {"sourceAttr":str(bind_shape)+".worldMesh[0]","targetAttr":str(proxPin_node)+".deformedGeometry"}
         ]
         for __connection_dict in __connection_dicts:
             cmds.connectAttr(__connection_dict["sourceAttr"],__connection_dict["targetAttr"])
+        return proxPin_node
 
-    def ctrlConnectNodes_create_dict(ctrl):
-        ctrl_npo=rb.addNPO(objs=pm.PyNode(ctrl))
-        worldMatrix_node=self.multMatrix_create_node(ctrl,"worldMatrix",ctrl+"WdMx"+str(matrixIndex).zfill(2)+"_mtmx")
-        parentInverseMatrix_node=cmds.createNode("multMatrix",n=ctrl+"PrIMx"+str(matrixIndex).zfill(2)+"_mtmx")
-        decomposeMatirix_node=cmds.createNode("decomposeMatrix",n=ctrl+str(matrixIndex).zfill(2)+"_dcmx")
-        ctrlConnectNodes_dict={"worldMatrix":worldMatrix_node,"parentInverseMatrix":parentInverseMatrix_node,"decomposeMatirix":decomposeMatirix_node,}
-        return ctrlConnectNodes_dict
+    def setNodeMultMatrix_create_node(self,node,matrixAttr,name="poxy_mumx"):
+        multMatrix_node=cmds.createNode("multMatrix",n=name)
+        getMatrix=cmds.getAttr(node+"."+matrixAttr+"[0]")
+        cmds.setAttr(multMatrix_node+".matrixIn[0]",getMatrix,type="matrix")
+        return multMatrix_node
 
-    def connectProxPinAndMatrix_edit_func(self,proxPin,ctrl_npo,matrixIndex,worldMatrix_node,parentInverseMatrix_node,decomposeMatirix_node):
-        __matrixConnects=[
-            {"sourceAttr":str(worldMatrix_node)+".matrixSum","targetAttr":str(proxPin)+".inputMatrix["+str(matrixIndex)+"]"},
-            {"sourceAttr":str(proxPin)+".outputMatrix["+str(matrixIndex)+"]","targetAttr":str(parentInverseMatrix_node)+".matrixIn[0]"},
-            {"sourceAttr":str(ctrl_npo[0])+".parentInverseMatrix[0]","targetAttr":str(parentInverseMatrix_node)+".matrixIn[1]"},
-            {"sourceAttr":str(parentInverseMatrix_node)+".matrixSum","targetAttr":str(decomposeMatirix_node)+".inputMatrix"},
-            {"sourceAttr":str(decomposeMatirix_node)+".outputTranslate","targetAttr":str(ctrl_npo[0])+".translate"},
-            {"sourceAttr":str(decomposeMatirix_node)+".outputRotate","targetAttr":str(ctrl_npo[0])+".rotate"},
-            {"sourceAttr":str(decomposeMatirix_node)+".outputShear","targetAttr":str(ctrl_npo[0])+".shear"},
-        ]
-        for __matrixConnect in __matrixConnects:
-            cmds.connectAttr(__matrixConnect["sourceAttr"],__matrixConnect["targetAttr"])
+    def addParentNull_create_null(self,obj):
+        parent=cmds.listRelatives(obj,p=True)
+        if not parent == None:
+            parent=parent[0]
+        null=cmds.createNode("transform",n=obj+"_null",p=parent,ss=True)
+        getMatrix=cmds.xform(obj,q=True,m=True)
+        cmds.xform(null,m=getMatrix)
+        cmds.parent(obj,null)
+        return null
+    
+    def addOffsetNull_create_null(self,obj):
+        parent=cmds.listRelatives(obj,p=True)
+        if not parent == None:
+            parent=parent[0]
+        null=cmds.createNode("transform",n=obj+"_null",ss=True)
+        getMatrix=cmds.xform(parent,q=True,m=True,a=True)
+        cmds.xform(null,m=getMatrix)
+        cmds.parent(null,parent)
+        cmds.parent(obj,null)
+        return null
