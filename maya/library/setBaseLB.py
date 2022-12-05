@@ -172,6 +172,8 @@ class BasePair():
         self._sourceJoint="" # string
         self._targetJoint="" # string
         self._thirdJoint="" # string
+
+        self._ui=""
         
     def setSourceNode(self,variable):
         self._sourceNode=variable
@@ -262,6 +264,25 @@ class BasePair():
         return self._thirdJoint
     def getThirdJoint(self):
         return self._thirdJoint
+    
+    def setUI(self,variable):
+        self._ui=variable
+        return self._ui
+    def getUI(self):
+        return self._ui
+    
+    def setFKCtrls(self,variable):
+        self._fkCtrls=variable
+        return self._fkCtrls
+    def getFKCtrls(self):
+        return self._fkCtrls
+        
+    def setIKCtrls(self,variable):
+        self._ikCtrls=variable
+        return self._ikCtrls
+    def getIKCtrls(self):
+        return self._ikCtrls
+
 class BaseFile():
     def __init__(self):
         self._path=""

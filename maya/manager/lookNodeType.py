@@ -53,13 +53,13 @@ def node_list(sels):
 # mayaのメインウインドウを取得する
 def get_maya_main_window():
     omui.MQtUtil.mainWindow()
-    ptr = omui.MQtUtil.mainWindow()
-    widget = wrapInstance(int(ptr), QWidget)
+    ptr=omui.MQtUtil.mainWindow()
+    widget=wrapInstance(int(ptr),QWidget)
     return widget
 
 def main():
     # 依存関係のないウインドウを継承して作ったMaya用のボタンUI
-    maya_window_instance = LookNodeTypeWindow(parent=get_maya_main_window())
-    sels = cmds.ls(sl = True)
-    maya_window_instance.view_scripts(sels)
+    maya_window_instance=LookNodeTypeWindow(parent=get_maya_main_window())
+    objs=cmds.ls(sl=True)
+    maya_window_instance.view_scripts(objs)
     maya_window_instance.show()

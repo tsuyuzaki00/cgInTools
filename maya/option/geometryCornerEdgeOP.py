@@ -10,8 +10,8 @@ from shiboken2 import wrapInstance
 import cgInTools as cit
 from cgInTools.ui import geometryCornerEdgeUI as UI
 from cgInTools.maya.library import jsonLB as jLB
-from cgInTools.maya.execute import geometryCornerEdgeEX as ex
-cit.verReload(UI)
+from cgInTools.maya.execute import geometryCornerEdgeEX as EX
+cit.reloads([UI,jLB,EX])
 
 class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
     def __init__(self,*args,**kwargs):
@@ -24,12 +24,12 @@ class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
 
     def buttonLeft_onClicked_func(self):
         self.__exportJson(self.setPath,self.fileName)
-        ex.main()
+        EX.main()
         self.close()
 
     def buttonCenter_onClicked_func(self):
         self.__exportJson(self.setPath,self.fileName)
-        ex.main()
+        EX.main()
 
     def buttonRight_onClicked_func(self):
         self.close()

@@ -12,126 +12,126 @@ def objsSkin_export_list(self,path,objs):
 def objsSkinPack_export_list(self,path,objs,file="skin"):
     pass
 
-    objs = cmds.ls(sl=True,l=True)
-    if len(objs) < 2:
-        cmds.warning("At less 2 objects must be selected")
-        return None
-    else:
-        source = objs[0]
-        targets = objs[1:]
+class CopySkinWeight(sbLB.BasePair):
+    def __init__(self):
+        self._sourceNode=""
+        self._targetNode=""
 
-class CTransferBind():
-    def __init__(self,sourceObj,targetObjs):
-        self.source = sourceObj
-        self.targets = targetObjs
-
-    def run(self):
-        normal_targets,cluster_targets = self.geoBindSplit_edit_tuple_list2(self.targets)
-        self.copyJointWeights_edit_func(self.source,normal_targets)
-        self.copySkinWeights_edit_func(self.source,normal_targets)
-        #self.addJointWeights_edit_func(self.source,cluster_targets)
-        self.copySkinWeights_edit_func(self.source,cluster_targets)
-        
-    # オブジェクトにskinClusterがあれば取得する関数
-    def geoSkinCluster_query_node(self,obj):
-        shape = cmds.listRelatives(obj,c=True,f=True)
-        histories = cmds.listHistory(shape[0], pruneDagObjects=True, interestLevel=2)
-        try:
-            skinCluster_node = cmds.ls(histories, type="skinCluster")[0]
-        except IndexError:
-            return None
+    #Single Function
+    def geoSkinCluster_check_bool(self,geo):
+        shape_list=cmds.listRelatives(geo,c=True,f=True)
+        histories=cmds.listHistory(shape_list[0],pruneDagObjects=True,interestLevel=2)
+        if not histories == None:
+            for historie in histories:
+                if cmds.nodeType(historie) == "skinCluster":
+                    return True
+                else:
+                    cmds.error("No skin cluster in this "+geo+".")
         else:
-            return skinCluster_node
+            return False
 
-    # オブジェクトにバインドされているジョイントを取得する関数
-    def geoBindJoints_query_list(self,obj):
-        skinCluster = self.geoSkinCluster_query_node(obj)
-        influences = cmds.skinCluster(skinCluster, q=True, influence=True)
-        if influences is None:
-            cmds.error('There is no'+ obj +'of bind joints.')
-        return influences
-
-    # clusterがあるかないかを2種類に区別する関数
-    def geoBindSplit_edit_tuple_list2(self,targets):
-        cluster_meshs = []
-        normal_meshs = []
-        for target in targets:
-            skinCluster_node = self.geoSkinCluster_query_node(target)
-            if skinCluster_node == None:
-                normal_meshs.append(target)
-            elif cmds.nodeType(skinCluster_node) == "skinCluster":
-                cluster_meshs.append(target)
-            else:
-                cmds.warning('There may be history in '+ target +'.')
-        return normal_meshs,cluster_meshs
-
-    # ソースのオブジェクトからジョイントを取得して複数のターゲットにバインドする関数
-    def copyJointWeights_edit_func(self,source,targets):
-        joints = self.geoBindJoints_query_list(source)
-        for target in targets:
-            target_name = self.clusterRename_edit_obj(target)
-            target_part = target_name.split("|") # parent1|child1|child2
-            cmds.skinCluster(target,joints,n=target_part[-1],tsb=True)
-
-    # 複数のターゲットにコピースキンウェイトする関数
-    def copySkinWeights_edit_func(self,source,targets,sa="closestPoint",ia="closestJoint"):
-        source_obj = self.geoSkinCluster_query_node(source)
-        for target in targets:
-            destination_obj = self.geoSkinCluster_query_node(target)
-            cmds.copySkinWeights(ss=source_obj,ds=destination_obj,sa=sa,ia=ia,noMirror=True)
-    
-    # 複数のジョイントをウェイトに新しく追加する関数
-    def addInfluences_edit_func(self,obj,joints):
-        skinCluster = self.geoSkinCluster_query_node(obj)
-        for joint in joints:
-            cmds.skinCluster(skinCluster,ai=joint,e=True,ug=True,dr=4,ps=0,ns=10,lw=True,wt=0)
-
-    # 複数のジョイントをウェイトから除外する関数
-    def removeInfluences_edit_func(self,obj,joints):
-        skinCluster = self.geoSkinCluster_query_node(obj)
-        for joint in joints:
-            cmds.skinCluster(skinCluster,ri=joint,e=True)
-
-    # 元々バインドされているジオメトリにジョイントを追加する関数
-    def addJointWeights_edit_func(self,source,targets):
-        source_joints = self.geoBindJoints_query_list(source)
-        for target in targets:
-            target_joints = self.geoBindJoints_query_list(target)
-            add_joints = set(source_joints) ^ set(target_joints)
-            self.addInfluences_edit(target,list(add_joints))
-
-    # ジオメトリと複数のジョイントを選択してバインドする関数
-    def renameBindSkin_edit_func(self,geo,joints):
-        skc_name=self.clusterRename_edit_obj(geo)
-        cmds.skinCluster(geo,joints,n=skc_name,tsb=True)
-
-    # ジオメトリ名を取得してclusterの名前を変更します   
-    def clusterRename_edit_obj(self,obj):
-        renamers = [
+    def clusterRename_create_str(self,obj):
+        __renamers = [
             {"source":"Geo","rename":"Skc"},
             {"source":"geo","rename":"skc"},
             {"source":"cage","rename":"sskc"},
         ]
-        for renamer in renamers:
-            if renamer["source"] in obj:
-                fix_name = obj.replace(renamer["source"],renamer["rename"])
-                return fix_name
-            
+        for __renamer in __renamers:
+            if __renamer["source"] in obj:
+                fixName_str=obj.replace(__renamer["source"],__renamer["rename"])
+                return fixName_str    
+        fixName_str=obj+"_skc"
+        return fixName_str
+
+    #Multi Function
+    def _geoSkinCluster_query_node(self,geo):
+        skc_bool=self.geoSkinCluster_check_bool(geo)
+        if skc_bool:
+            shape_list=cmds.listRelatives(geo,c=True,f=True)
+            histories=cmds.listHistory(shape_list[0],pruneDagObjects=True,interestLevel=2)
+            skinCluster_node=cmds.ls(histories,type="skinCluster")[0]
+            return skinCluster_node
+
+    def _geoBindJoints_check_bool(self,geo):
+        skc_node=self._geoSkinCluster_query_node(geo)
+        influences=cmds.skinCluster(skc_node,q=True,influence=True)
+        if not influences is None:
+            return True
+        else:
+            return False
+        
+    def _geoBindJoints_query_joints(self,geo):
+        influences_bool=self._geoBindJoints_check_bool(geo)
+        if influences_bool:
+            skc_node=self._geoSkinCluster_query_node(geo)
+            joints=cmds.skinCluster(skc_node,q=True,influence=True)
+            return joints
+        else:
+            cmds.error('There is no'+ geo +'of bind joints.')
+
+    def _jointDifference_query_joints(self,geoSource,geoTarget):
+        new_targetJoints=[]
+        sourceJoints=self._geoBindJoints_query_joints(geoSource)
+        targetJoints=self._geoBindJoints_query_joints(geoTarget)
+        for sourceJoint in sourceJoints:
+            if sourceJoint in targetJoints:
+                new_targetJoints.append(sourceJoint)
+        diffJoints=set(new_targetJoints) ^ set(sourceJoints)
+        return diffJoints
+        
+    def _copyBindJoint_edit_func(self,geoSource,geoTarget):
+        joints=self._geoBindJoints_query_joints(geoSource)
+        skcName_str=self.clusterRename_create_str(geoTarget)
+        skcPart_str=skcName_str.split("|") # parent1|child1|child2
+        cmds.skinCluster(geoTarget,joints,n=skcPart_str[-1],tsb=True)
+
+    def _copySkinWeights_edit_func(self,geoSource,geoTarget,sa="closestPoint",ia="closestJoint"):
+        sourceSkc_node=self._geoSkinCluster_query_node(geoSource)
+        targteSkc_node=self._geoSkinCluster_query_node(geoTarget)
+        cmds.copySkinWeights(ss=sourceSkc_node,ds=targteSkc_node,sa=sa,ia=ia,noMirror=True)
+    
+    def _addInfluences_edit_func(self,geo,joints):
+        skc_node=self._geoSkinCluster_query_node(geo)
+        for joint in joints:
+            cmds.skinCluster(skc_node,ai=joint,e=True,ug=False,dr=4,ps=0,ns=10,lw=True,wt=0)
+
+    def _removeInfluences_edit_func(self,geo,joints):
+        skc_node=self._geoSkinCluster_query_node(geo)
+        for joint in joints:
+            cmds.skinCluster(skc_node,ri=joint,e=True)
+
+    #Public Function
+    def copyBindAndSkinWeights(self):
+        targetSkc_bool=self.geoSkinCluster_check_bool(self._targetNode)
+        if targetSkc_bool:
+            diffJoints=self._jointDifference_query_joints(self._sourceNode,self._targetNode)
+            if not diffJoints == None:
+                self._addInfluences_edit_func(self._targetNode,diffJoints)
+            self._copySkinWeights_edit_func(self._sourceNode,self._targetNode)
+        else:
+            self._copyBindJoint_edit_func(self._sourceNode,self._targetNode)
+            self._copySkinWeights_edit_func(self._sourceNode,self._targetNode)
+
+    def targetRemoveJoints(self):
+        targetSkc_bool=self.geoSkinCluster_check_bool(self._targetNode)
+        if targetSkc_bool:
+            diffJoints=self._jointDifference_query_joints(self._targetNode,self._sourceNode)
+            self._removeInfluences_edit_func(self._targetNode,diffJoints)
+        else:
+            cmds.error('There is no'+ geo +'of bind joints.')
 
 class CopyVertexSkinWeights(sbLB.BasePair):
     def __init__(self):
-        """
-        self.sourceNode # string
-        self.targetNode # string
-        self.sourceAttr # string
-        self.targetAttr # string
-        self.sourceComponent # int only
-        self.targetComponent # int only
-        self.sourceParameter # float or string
-        self.targetParameter # float or string
-        self.sourceJoint # string
-        self.targetJoint # string
-        """
+        self._sourceNode="" # string
+        self._targetNode="" # string
+        self._sourceAttr="" # string
+        self._targetAttr="" # string
+        self._sourceComponent=0 # int only
+        self._targetComponent=0 # int only
+        self._sourceValue="" # float or string
+        self._targetValue="" # float or string
+        self._sourceJoint="" # string
+        self._targetJoint="" # string
 
     def run(self):
         sourceSkc_node=self.getSkc_query_node(self._sourceNode)
@@ -209,7 +209,7 @@ class CopyVertexSkinWeights(sbLB.BasePair):
         weight_dict[nodeAttr_string]=jointValue_dict
         return weight_dict
         
-#Single Functions
+    #Single Functions
     def getSkc_query_node(self,obj):
         nodeList_MSelectionList=om2.MGlobal.getSelectionListByName(obj)
         sourceMesh_MDagPath=nodeList_MSelectionList.getDagPath(0)
@@ -238,7 +238,7 @@ class CopyVertexSkinWeights(sbLB.BasePair):
             jointID_dict[num]=str(joint_MDagPathArray[num])
         return jointID_dict
 
-#OpenMaya Functions
+    #OpenMaya Functions
     def replaceSkcNode_query_MFnSkinCluster(self,skc_node):
         skcList_MSelectionList=om2.MGlobal.getSelectionListByName(skc_node)
         skc_MObject=skcList_MSelectionList.getDependNode(0)
@@ -256,78 +256,4 @@ class CopyVertexSkinWeights(sbLB.BasePair):
         vertexComp_MObject=singleIdComp_MFnSingleIndexedComponent.create(om2.MFn.kMeshVertComponent)
         singleIdComp_MFnSingleIndexedComponent.addElements([vertexID])
         return vertexComp_MObject
-class jointWeight():
-    def __init__(self):
-        self._joint=""
-        self._vertexsValue_list=[]#[(["",""],0),(["",""],0)]
 
-    def __loading(self):
-        self._parent_list=cmds.listRelatives(self._joint,p=True)
-        self._skinCluster_list=cmds.listConnections(self._joint+".objectColorRGB",d=True)
-        self._child_list=cmds.listRelatives(self._joint,c=True)
-
-    def loading(self):
-        self.__loading()
-
-    def setJoint(self,variable):
-        self._joint=variable
-        self.__loading()
-        return self._joint
-    def getJoint(self):
-        return self._joint
-    
-    def setVertexsValueList(self,variable):
-        self._vertexsValue_list=[variable]
-        return self._vertexsValue_list
-    def addVertexsValueList(self,variable):
-        self._vertexsValue_list.append(variable)
-        return self._vertexsValue_list
-    def getVertexsValueList(self):
-        return self._vertexsValue_list
-
-    def getParentList(self):
-        return self._parent_list
-    
-    def getSkinClusterList(self):
-        return self._skinCluster_list
-    
-    def getChildList(self):
-        return self._child_list
-
-def main():
-    joint01=jointWeight()
-    joint01.setJoint("joint1")
-    joint01.setVertexsValueList((["test_geo.vtx[0:261]"],1))
-
-    joint02=jointWeight()
-    joint02.setJoint("joint2")
-    joint02.setVertexsValueList((["test_geo.vtx[100:259]","test_geo.vtx[261]"],1))
-    joint02.addVertexsValueList((["test_geo.vtx[80:99]"],0.8835))
-    joint02.addVertexsValueList((["test_geo.vtx[60:79]"],0.4078))
-    
-    joint03=jointWeight()
-    joint03.setJoint("joint3")
-    joint03.setVertexsValueList((["test_geo.vtx[120:259]","test_geo.vtx[261]"],1))
-    joint03.addVertexsValueList((["test_geo.vtx[100:119]"],0.5))
-    
-    joint04=jointWeight()
-    joint04.setJoint("joint4")
-    joint04.setVertexsValueList((["test_geo.vtx[160:259]","test_geo.vtx[261]"],1))
-    joint04.addVertexsValueList((["test_geo.vtx[140:159]"],0.5))
-    
-    joint05=jointWeight()
-    joint05.setJoint("joint5")
-    joint05.setVertexsValueList((["test_geo.vtx[200:259]","test_geo.vtx[261]"],1))
-    joint05.addVertexsValueList((["test_geo.vtx[180:199]"],0.5))
-
-    #weights=[joint01,joint02,joint03]
-    weights=[joint01,joint02,joint03,joint04,joint05]
-    for weight in weights:
-        cmds.setAttr(weight.getJoint()+".liw",0)
-    for weight in weights:
-        for vertexsValue in weight.getVertexsValueList():
-            cmds.skinPercent(weight.getSkinClusterList()[0],vertexsValue[0],transformValue=[(weight.getJoint(),vertexsValue[1])],nrm=True)
-        if not weight.getParentList() == None:
-            cmds.setAttr(weight.getParentList()[0]+".liw",1)
-
-main()

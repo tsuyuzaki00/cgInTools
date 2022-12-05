@@ -1,57 +1,38 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
+from . import namingLB as nLB
+from . import setBaseLB as sbLB
 
 #mel.eval('GoToBindPose;')
 
-def getReverseJoint_create_list(joint_list):
-    inputLoc_list=[]
-    #各ジョイントごとの処理
-    for j in joint_list:
-        #あらかじめ反転対象のジョイントを探しておく
-        mirrorJoint = j 
-        if "Left" in j:
-            mirrorJoint = j.replace("Left","Right") 
-        elif "Right" in j:
-            mirrorJoint = j.replace("Right","Left") 
-        if not mirrorJoint in joint_list:
-            #ミラー対象が見当たらなければ処理をスキップ
-            continue
-        #各ジョイントごとにTransformノードを作り、コンストレインで接続
-        loc = cmds.createNode("transform",n=j.replace("jnt","loc"))
-        inputLoc_list.append(loc)
-    
-        #移動・回転に0.0をセットすることで初期位置に戻れるようにoffsetノードを用意
-        cmds.pointConstraint(j,loc,n=j.replace("jnt","poic")) 
-        cmds.orientConstraint(j,loc,mo=True,n=j.replace("jnt","oric"))
-    return inputLoc_list
-
-class BendRollCtrl():
+class BendRollCtrl(sbLB.BasePair):
     def __init__(self):
-        self.source=""
-        self.target=""
-        self.sourceCut=self.source.split("_")[0]
-        self.targetCut=self.target.split("_")[0]
+        self._sourceNode=""
+        self._targetNode=""
 
-    def update(self):
-        rotate_comx="_".join(["rotate","comx",self.sourceCut,self.targetCut])
-        aimVector_comx="_".join(["aimVector","comx",self.sourceCut,self.targetCut])
-        upVector_comx="_".join(["upVector","comx",self.sourceCut,self.targetCut])
-        aimVector_mumx="_".join(["aimVector","mumx",self.sourceCut,self.targetCut])
-        upVector_mumx="_".join(["upVector","mumx",self.sourceCut,self.targetCut])
-        aimVector_demx="_".join(["aimVector","demx",self.sourceCut,self.targetCut])
-        upVector_demx="_".join(["upVector","demx",self.sourceCut,self.targetCut])
-        aimVectorRevers_fltm="_".join(["aimVectorRevers","fltm",self.sourceCut,self.targetCut])
-        upVectorRevers_fltm="_".join(["upVectorRevers","fltm",self.sourceCut,self.targetCut])
-        self.getBendAxisAngle_agbw="_".join(["getBendAxisAngle","agbw",self.sourceCut,self.targetCut])
-        getRollAxisAngle_agbw="_".join(["getRollAxisAngle","agbw",self.sourceCut,self.targetCut])
-        getBendQuat_atoq="_".join(["getBendQuat","atoq",self.sourceCut,self.targetCut])
-        getRollQuat_atoq="_".join(["getRollQuat","atoq",self.sourceCut,self.targetCut])
-        getBend_comx="_".join(["getBend","comx",self.sourceCut,self.targetCut])
-        getUpVectorBendedOrg_mumx="_".join(["getUpVectorBendedOrg","mumx",self.sourceCut,self.targetCut])
-        upVectorBended_demx="_".join(["upVectorBended","demx",self.sourceCut,self.targetCut])
-        quatCul_qprd="_".join(["quatCul","qprd",self.sourceCut,self.targetCut])
-        quatToEuler_qtoe="_".join(["quatToEuler","qtoe",self.sourceCut,self.targetCut])
-        translateRevers_fltm="_".join(["translateRevers","fltm",self.sourceCut,self.targetCut])
+    def __loading(self):
+        getName=nLB.Naming()
+        sourceTitle=getName._titleName_query_str(self._sourceNode)
+        targetTitle=getName._titleName_query_str(self._targetNode)
+        rotate_comx="_".join(["rotate","comx",sourceTitle,targetTitle])
+        aimVector_comx="_".join(["aimVector","comx",sourceTitle,targetTitle])
+        upVector_comx="_".join(["upVector","comx",sourceTitle,targetTitle])
+        aimVector_mumx="_".join(["aimVector","mumx",sourceTitle,targetTitle])
+        upVector_mumx="_".join(["upVector","mumx",sourceTitle,targetTitle])
+        aimVector_demx="_".join(["aimVector","demx",sourceTitle,targetTitle])
+        upVector_demx="_".join(["upVector","demx",sourceTitle,targetTitle])
+        aimVectorRevers_fltm="_".join(["aimVectorRevers","fltm",sourceTitle,targetTitle])
+        upVectorRevers_fltm="_".join(["upVectorRevers","fltm",sourceTitle,targetTitle])
+        self.getBendAxisAngle_agbw="_".join(["getBendAxisAngle","agbw",sourceTitle,targetTitle])
+        getRollAxisAngle_agbw="_".join(["getRollAxisAngle","agbw",sourceTitle,targetTitle])
+        getBendQuat_atoq="_".join(["getBendQuat","atoq",sourceTitle,targetTitle])
+        getRollQuat_atoq="_".join(["getRollQuat","atoq",sourceTitle,targetTitle])
+        getBend_comx="_".join(["getBend","comx",sourceTitle,targetTitle])
+        getUpVectorBendedOrg_mumx="_".join(["getUpVectorBendedOrg","mumx",sourceTitle,targetTitle])
+        upVectorBended_demx="_".join(["upVectorBended","demx",sourceTitle,targetTitle])
+        quatCul_qprd="_".join(["quatCul","qprd",sourceTitle,targetTitle])
+        quatToEuler_qtoe="_".join(["quatToEuler","qtoe",sourceTitle,targetTitle])
+        translateRevers_fltm="_".join(["translateRevers","fltm",sourceTitle,targetTitle])
 
         self.createNode_list=[
             {"nodeType":"composeMatrix","name":rotate_comx},
@@ -90,7 +71,7 @@ class BendRollCtrl():
             {"nodeAttr":getBend_comx+".useEulerRotation","value":0}
         ]
         self.connectAttr_list=[
-            {"source":self.source+".rotate","target":rotate_comx+".inputRotate"},
+            {"source":self._sourceNode+".rotate","target":rotate_comx+".inputRotate"},
             {"source":aimVector_comx+".outputMatrix","target":aimVector_mumx+".matrixIn[0]"},
             {"source":upVector_comx+".outputMatrix","target":upVector_mumx+".matrixIn[0]"},
             {"source":rotate_comx+".outputMatrix","target":aimVector_mumx+".matrixIn[1]"},
@@ -118,23 +99,22 @@ class BendRollCtrl():
             {"source":getBendQuat_atoq+".outputQuat","target":quatCul_qprd+".input1Quat"},
             {"source":getRollQuat_atoq+".outputQuat","target":quatCul_qprd+".input2Quat"},
             {"source":quatCul_qprd+".outputQuat","target":quatToEuler_qtoe+".inputQuat"},
-            {"source":quatToEuler_qtoe+".outputRotate","target":self.target+".rotate"},
-            {"source":self.source+".translateX","target":translateRevers_fltm+".floatA"},
-            {"source":translateRevers_fltm+".outFloat","target":self.target+".translateX"},
-            {"source":self.source+".translateY","target":self.target+".translateY"},
-            {"source":self.source+".translateZ","target":self.target+".translateZ"}
+            {"source":quatToEuler_qtoe+".outputRotate","target":self._targetNode+".rotate"},
+            {"source":self._sourceNode+".translateX","target":translateRevers_fltm+".floatA"},
+            {"source":translateRevers_fltm+".outFloat","target":self._targetNode+".translateX"},
+            {"source":self._sourceNode+".translateY","target":self._targetNode+".translateY"},
+            {"source":self._sourceNode+".translateZ","target":self._targetNode+".translateZ"}
         ]
-
-    def setSource(self,variable):
-        self.source=variable
-        self.sourceCut=self.source.split("_")[0]
-        return self.source
     
-    def setTarget(self,variable):
-        self.target=variable
-        self.targetCut=self.target.split("_")[0]
-        return self.target
+    #Public Function
+    def run(self):
+        self.__loading()
+        self.createNodes_create_list(self.createNode_list)
+        self.setAttrs_edit_func(self.setAttr_list)
+        self.connectAttrs_edit_func(self.connectAttr_list)
+        cmds.disconnectAttr(self.getBendAxisAngle_agbw+".vector2",self.getBendAxisAngle_agbw+".vector1")
 
+    #Single Function
     def createNodes_create_list(self,createNode_list):
         culNodeList=[]
         for createNode in createNode_list:
@@ -150,17 +130,29 @@ class BendRollCtrl():
         for connectAttr in connectAttr_list:
             cmds.connectAttr(connectAttr["source"],connectAttr["target"])
 
-    def run(self):
-        self.update()
-        self.createNodes_create_list(self.createNode_list)
-        self.setAttrs_edit_func(self.setAttr_list)
-        self.connectAttrs_edit_func(self.connectAttr_list)
-        cmds.disconnectAttr(self.getBendAxisAngle_agbw+".vector2",self.getBendAxisAngle_agbw+".vector1")
 
-def main():
-    mirror=BendRollCtrl()
-    mirror.setSource(cmds.ls(sl=True)[0])
-    mirror.setTarget(cmds.ls(sl=True)[1])
-    mirror.run()
-
-main()
+def getReverseJoint_create_list(joint_list):
+    inputLoc_list=[]
+    #各ジョイントごとの処理
+    for j in joint_list:
+        #あらかじめ反転対象のジョイントを探しておく
+        mirrorJoint = j 
+        if "Left" in j:
+            mirrorJoint = j.replace("Left","Right") 
+        elif "Right" in j:
+            mirrorJoint = j.replace("Right","Left") 
+        elif "_L" in j:
+            mirrorJoint = j.replace("_L","_R") 
+        elif "_R" in j:
+            mirrorJoint = j.replace("_R","_L") 
+        if not mirrorJoint in joint_list:
+            #ミラー対象が見当たらなければ処理をスキップ
+            continue
+        #各ジョイントごとにTransformノードを作り、コンストレインで接続
+        loc = cmds.createNode("transform",n=j.replace("jnt","loc"))
+        inputLoc_list.append(loc)
+    
+        #移動・回転に0.0をセットすることで初期位置に戻れるようにoffsetノードを用意
+        cmds.pointConstraint(j,loc,n=j.replace("jnt","poic")) 
+        cmds.orientConstraint(j,loc,mo=True,n=j.replace("jnt","oric"))
+    return inputLoc_list

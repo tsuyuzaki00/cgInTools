@@ -9,7 +9,38 @@ class SourceToTarget(sbLB.BasePair):
         self._sourceNode=""
         self._targetNode=""
         self._posNum=4
+    
+    #Single Function
+    def alignmentPos_quary_vector(self,object,positionID_int):
+        bbox=cmds.exactWorldBoundingBox(object,ignoreInvisible=False)
+        if positionID_int == 1:
+            up=[(bbox[0]+bbox[3])/2,bbox[4],(bbox[2]+bbox[5])/2]
+            return up
+        elif positionID_int == 2:
+            back=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[2]]
+            return back
+        elif positionID_int == 3:
+            left=[bbox[0],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
+            return left
+        elif positionID_int == 4:    
+            center=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
+            return center
+        elif positionID_int == 5:
+            right=[bbox[3],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
+            return right
+        elif positionID_int == 6:
+            front=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[5]]
+            return front
+        elif positionID_int == 7:
+            down=[(bbox[0]+bbox[3])/2,bbox[1],(bbox[2]+bbox[5])/2]
+            return down
 
+    #Multi Function
+    def _moveToTarget_edit_func(self,source,target,positionID_int):
+        source_vector=self.alignmentPos_quary_vector(source,positionID_int)
+        cmds.move(source_vector[0],source_vector[1],source_vector[2],target,a=True)
+    
+    #Public Function
     def setPos(self,variable):
         if variable is 1 or variable is "up":
             self._posNum = 1
@@ -36,33 +67,4 @@ class SourceToTarget(sbLB.BasePair):
         return self._posNum
 
     def moveToTarget(self):
-        self.moveToTarget_edit_func(self._sourceNode,self._targetNode,self._posNum)
-
-    def moveToTarget_edit_func(self,source,target,positionID_int):
-        source_vector=self.alignmentPos_quary_vector(source,positionID_int)
-        cmds.move(source_vector[0],source_vector[1],source_vector[2],target,a=True)
-    
-    def alignmentPos_quary_vector(self,object,positionID_int):
-        bbox=cmds.exactWorldBoundingBox(object,ignoreInvisible=False)
-        if positionID_int == 1:
-            up=[(bbox[0]+bbox[3])/2,bbox[4],(bbox[2]+bbox[5])/2]
-            return up
-        elif positionID_int == 2:
-            back=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[2]]
-            return back
-        elif positionID_int == 3:
-            left=[bbox[0],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
-            return left
-        elif positionID_int == 4:    
-            center=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
-            return center
-        elif positionID_int == 5:
-            right=[bbox[3],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
-            return right
-        elif positionID_int == 6:
-            front=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[5]]
-            return front
-        elif positionID_int == 7:
-            down=[(bbox[0]+bbox[3])/2,bbox[1],(bbox[2]+bbox[5])/2]
-            return down
-    
+        self._moveToTarget_edit_func(self._sourceNode,self._targetNode,self._posNum)

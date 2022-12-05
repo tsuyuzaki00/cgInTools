@@ -3,8 +3,8 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
 import cgInTools as cit
-from cgInTools.ui.template import mayaWindowUI as UI
-cit.verReload(UI)
+from cgInTools.ui._reference import mayaWindowUI as UI
+cit.reloads([UI])
 
 class ObjCornerEdgeOPBase(UI.MainWindowBase):
     def __init__(self,*args,**kwargs):

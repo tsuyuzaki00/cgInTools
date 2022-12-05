@@ -74,10 +74,11 @@
         "cv":[],
         "skin":
         [
-            ["WeightPaintValue","cgInTools.maya.manager","weightPaintValue","main()","skinPaintValue.png"],
-            ["MultiCopySkinWeight","cgInTools.maya.execute","multiCopySkinWeight","main()",""],
-            ["InfJointRemove","cgInTools.maya.execute","infJntRemoveEdit","main()",""],
-            ["RenameSkc","cgInTools.maya.execute","geoRenameSkc","main()",""]
+            ["Rename Skc Select Geo","cgInTools.maya.execute","renameSkcInGeoEX","main()",""],
+            ["Multi Copy Skin Weight","cgInTools.maya.execute","multiCopySkinWeightEX","main()",""],
+            ["Multi Remove Target Joints","cgInTools.maya.execute","multiRemoveTargetJointsEX","main()",""],
+            ["Remove From InfluenceUI","cgInTools.maya.execute","infJntRemoveEX","main()",""],
+            ["Weight Paint Value","cgInTools.maya.manager","weightPaintValue","main()","skinPaintValue.png"]
         ],
         "inquiry":
         [
