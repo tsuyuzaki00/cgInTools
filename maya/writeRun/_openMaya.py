@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
-from maya.library import cleanLB as cc
+from cgInTools.maya.library import cleanLB as cc
 import math
 
 def mirrorAxis_query_tuple(self,mirrorX=True,mirrorY=False,mirrorZ=False):
@@ -46,8 +46,29 @@ def getSurfacePoint_query_mPoint(node):
     surf_mFnNurbsSurface.add
     """
 
+def test(node):
+    type="tstr"
+    nodeTypeFn_dict={
+        "skinCluster":686,
+        "tstr":7
+    }
+    findConnectedTo_list=[]
+    node_MSelectionList=om2.MSelectionList().add(node)
+    node_MObject=node_MSelectionList.getDependNode(0)
+    node_MFnDagNode=om2.MFnDagNode(node_MObject)
+    connections_MPlugArray=node_MFnDagNode.getConnections()
+    for connection_MPlug in connections_MPlugArray:
+        targets_MPlugArray=connection_MPlug.connectedTo(False,True)
+        for target_MPlug in targets_MPlugArray:
+            target_MObject=target_MPlug.node()
+            if target_MObject.hasFn(nodeTypeFn_dict[type]):
+                skc_MFnDependencyNode=om2.MFnDependencyNode(target_MObject)
+                findConnectedTo_list.append(skc_MFnDependencyNode.name())
+                return list(set(findConnectedTo_list))
 
 def main():
-    pass
+    obj="joint1"
+    #obj=cmds.ls(sl=True)[0]
+    print(test(obj))
     
 main()
