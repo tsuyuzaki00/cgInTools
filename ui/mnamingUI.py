@@ -52,21 +52,3 @@ class MNamingWindow(QWidget):
         run_layout.addWidget(rename_button, True)
         main_layout.addRow(run_layout)
 
-from maya import cmds
-from maya import OpenMayaUI as omui
-from shiboken2 import wrapInstance
-# mayaのメインウインドウを取得する
-def get_maya_main_window():
-    omui.MQtUtil.mainWindow()
-    ptr = omui.MQtUtil.mainWindow()
-    widget = wrapInstance(long(ptr), QWidget)
-    return widget
-
-# 依存関係のないウインドウを継承して作ったMaya用のボタンUI
-maya_window_instance = MayaMgearDictWindow(parent=get_maya_main_window())
-maya_window_instance.show()
-
-def option():
-    window = MNamingWindow(qt.getMayaWindow())
-    window.setWindowFlags(QtCore.Qt.Window)
-    window.show()

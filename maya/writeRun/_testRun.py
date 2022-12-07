@@ -5,6 +5,6 @@ from cgInTools.maya.library import testPath as tp
 cit.reloads([tp])
 
 def main():
-    tp.main(__file__)
+    pass
 
 main()

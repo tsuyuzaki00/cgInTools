@@ -1,6 +1,6 @@
 {
-    "menu_title":"cgInTools",
-    "order_menu":
+    "menuTitle":"cgInTools",
+    "orderMenu":
     [
         ["single","Chack"],
         ["multi","cleaning"],
@@ -47,15 +47,15 @@
         "surface":[],
         "guide":[],
         "connect":[
-            ["Offset Ctrl","cgInTools.maya.execute","connectOffsetCtrlEX","main()",""],
-            ["Aim Ctrl","cgInTools.maya.execute","connectAimCtrlEX","main()",""]
+            ["Joint Offset Ctrl","cgInTools.maya.execute","connectOffsetCtrlEX","main()",""],
+            ["Joint Aim Ctrl","cgInTools.maya.execute","connectAimCtrlEX","main()",""]
         ],
         "object rename":[
             ["Auto Rename","cgInTools.maya.execute","autoRenameEX","main()",""]
         ],
         "object position":[
             ["Center Target Pos","cgInTools.maya.execute","selectCenterPosMoveEX","main()",""],
-            [1,"cgInTools.maya.manager","targetPositionMN","main()",""]
+            ["Window Target Pos","cgInTools.maya.manager","targetPositionMN","main()",""]
         ],
         "object mirror":[
             ["Selection MirrorX","cgInTools.maya.execute","selectMirrorX","main()",""]

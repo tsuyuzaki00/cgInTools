@@ -1,23 +1,23 @@
-from maya import cmds,mel
+import maya.cmds as cmds
+import maya.mel as mel
 
-def OKList(sel, check):
-    print ('OK' + ' : ' + check + ' : ' + sel)
-def NGList(sel, check):
-    print ('NG' + ' : ' + check + ' : ' + sel)
-
-def zeroEdgeLengthCheck(sels):
-    check = 'ZeroEdgeLength'
-    zeroEdge = mel.eval('polyCleanupArgList 4 { "0","2","0","0","0","0","0","0","0","1e-005","1","1e-005","0","1e-005","0","-1","0" };')
-    for sel in sels:
-        if zeroEdge == []:
-            OKList(sel, check)
-        else :
-            for i in zeroEdge:
-                cmds.select(zeroEdge)
-                NGList(i, check)
+class KARI():
+    def zeroEdgeLength_check_dict(self,node):
+        evaluation_dict={"bool":False,"node":node,"zeroEdgeLength":[]}
+        zeroEdgeLengths=mel.eval('polyCleanupArgList 4 { "0","2","0","0","0","0","0","0","0","1e-005","1","1e-005","0","1e-005","0","-1","0" };')
+        if zeroEdgeLengths == []:
+            evaluation_dict["bool"]=True
+            return evaluation_dict
+        else:
+            evaluation_dict["bool"]=False
+            for zeroEdgeLength in zeroEdgeLengths:
+                evaluation_dict["zeroEdgeLength"].append(zeroEdgeLength)
+            return evaluation_dict
             
 def main():
-    sels = cmds.ls(sl = True)
-    zeroEdgeLengthCheck(sels)
+    objs=cmds.ls(sl=True)
+    run=KARI()
+    for obj in objs:
+        print(run.zeroEdgeLength_check_dict(obj))
 
 main()

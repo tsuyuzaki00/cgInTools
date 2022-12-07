@@ -4,7 +4,7 @@ import maya.cmds as cmds
 from maya import utils
 
 from cgInTools._menu import mayaMenu
-utils.executeDeferred(mayaMenu.main)
+utils.executeDeferred(mayaMenu.setUp)
 
 """
 sys.path.append("D:/")

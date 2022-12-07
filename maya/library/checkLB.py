@@ -23,8 +23,8 @@ class Check(sbLB.BaseCheck):
         self._attr=""
         self._evaluation_dict={"bool":False}
     
-#Public Function
-#same relation check
+    #Public Function
+    #same relation check
     def attrSame(self):
         judge_dict=self.attrSame_check_dict(self._node,self._attr,self._same,self._edit)
         return judge_dict
@@ -61,7 +61,7 @@ class Check(sbLB.BaseCheck):
         judge_dict=self.maxRelation_check_dict(self._relation,self._highLimit)
         return judge_dict
 
-#path check
+    #path check
     def thePath(self):
         judge_dict=self.thePath_check_dict(self._relation)
         return judge_dict
@@ -74,7 +74,7 @@ class Check(sbLB.BaseCheck):
         judge_dict=self.fileUnderCount_check_dict(self._maxLimit)
         return judge_dict
 
-#node check
+    #node check
     def nodeUnLocked(self):
         judge_dict=self.nodeUnLocked_check_dict(self._node)
         return judge_dict
@@ -164,7 +164,7 @@ class Check(sbLB.BaseCheck):
         judge_dict=self.noUV_check_dict(self._node)
         return judge_dict
     
-#same multiple check    
+    #same multiple check    
     def andSameRelation(self):
         judge_dict=self.andSameRelation_check_dict(self._relation,self._same_list)
         return judge_dict
@@ -173,9 +173,9 @@ class Check(sbLB.BaseCheck):
         judge_dict=self.andMatchRelation_check_dict(self._relation,self._same_list)
         return judge_dict
 
-#Private Function
+    #Private Function
 
-#Mulch Function
+    #Mulch Function
     def pathUnderCount_check_dict(self,maxLimit):
         file_path=cmds.file(q=True,sn=True)
         pathParts_list=file_path.lower().split('/')
@@ -208,8 +208,8 @@ class Check(sbLB.BaseCheck):
         evaluation_dict=self.maxRelation_check_dict(numRelation,maxLimit)
         return evaluation_dict        
 
-#Single Function
-#same relation check
+    #Single Function
+    #same relation check
     def sameRelation_check_dict(self,relation,same):
         evaluation_dict={"bool":False,"relation":relation,"same":same}
         if relation == same:
@@ -282,7 +282,7 @@ class Check(sbLB.BaseCheck):
             evaluation_dict["bool"]=False
             return evaluation_dict
 
-#path check
+    #path check
     def thePath_check_dict(self,relation):
         evaluation_dict={"bool":False,"relation":relation}
         if os.path.isdir(os.path.dirname(relation)):
@@ -292,7 +292,7 @@ class Check(sbLB.BaseCheck):
             evaluation_dict["bool"]=False
             return evaluation_dict
 
-#node check
+    #node check
     def nodeUnLocked_check_dict(self,node):
         evaluation_dict={"bool":False,"node":node}
         if cmds.lockNode(node,q=True)[0]:
@@ -635,7 +635,7 @@ class Check(sbLB.BaseCheck):
             evaluation_dict["bool"]=False
             return evaluation_dict
 
-#same multiple check
+    #same multiple check
     def andSameRelation_check_dict(self,relation,same_list):
         evaluation_bools=[]
         evaluation_dict={"bool":False,"relation":relation,"sameList":same_list}

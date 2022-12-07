@@ -4,51 +4,52 @@ import json,os
 #("labal=string or optionbox=True","path_import=string","run_function=string","icon=string")
 #["label_name","from_name","import_name","executionFunction_name","imageFile_name"]
 
-def importJson_quary_dicts(json_name,path_name):
-    json_file = os.path.join(path_name,json_name)
-    with open(json_file, 'r') as f:
-        connect_list = json.load(f)
-        return connect_list
-
 class Menu():
-    def settingMenu_create_func(self,menuJson_query_dicts):
-        self.titleMenu_create_func(menuJson_query_dicts["menu_title"])
-        menu_dicts = menuJson_query_dicts["menus"]
-        order_dicts = menuJson_query_dicts["order_menu"]
-        self.organizeMenu_create_func(menu_dicts,order_dicts)
+    def __init__(self):
+        self._path=os.path.dirname(__file__)
+        self._file="mayaMenu.json"
 
-    def organizeMenu_create_func(self,menu_dicts,order_dicts):
-        for order_name in order_dicts:
-            if order_name[0] == "single":
-                self.singleItem_create_func(order_name[1],menu_dicts[order_name[1]])
-            elif order_name[0] == "multi":
-                self.multiItem_create_func(order_name[1],menu_dicts[order_name[1]])
+    #Single Function
+    def setUpJson_quary_dict(self,path,file):
+        json_file=os.path.join(path,file)
+        with open(json_file, 'r') as f:
+            json_dict=json.load(f)
+            return json_dict
+
+    def setItem_create_func(self,title,relative_path,fileName,function,image):
+        if title == None:
+            pass
+        elif title == True or title == 1:
+            cmds.menuItem(optionBox=title, c="from "+relative_path+" import "+fileName+" as ps; ps."+function)
+        else:
+            cmds.menuItem(label=title,c="from "+relative_path+" import "+fileName+" as ps; ps."+function,i=image)
+
+    #Multi Function
+    def _singleItem_create_func(self,titleName,singleList_lists):
+        cmds.menuItem(divider=True,dividerLabel=titleName)
+        for menuItem_string in singleList_lists:
+            self.setItem_create_func(menuItem_string[0],menuItem_string[1],menuItem_string[2],menuItem_string[3],menuItem_string[4])
+
+    def _multiItem_create_func(self,titleName,multiList_lists):
+        cmds.menuItem(subMenu=True,to = True,label=titleName)
+        for menuItem_string in multiList_lists:
+            self.setItem_create_func(menuItem_string[0],menuItem_string[1],menuItem_string[2],menuItem_string[3],menuItem_string[4])
+        cmds.setParent("..",menu=True)
+
+    def _settingsMenu_create_func(self,menuTitle_str,orderMenu_lists,menus_dict):
+        cmds.menu(l=menuTitle_str,p="MayaWindow",to=True)
+        for orderMenu_list in orderMenu_lists:
+            if orderMenu_list[0] == "single":
+                self._singleItem_create_func(orderMenu_list[1],menus_dict[orderMenu_list[1]])
+            elif orderMenu_list[0] == "multi":
+                self._multiItem_create_func(orderMenu_list[1],menus_dict[orderMenu_list[1]])
             else:
                 pass
 
-    def titleMenu_create_func(self,menu_title):
-        cmds.menu(l = menu_title, p ="MayaWindow", to = True)
-
-    def singleItem_create_func(self,titleName,singleList_list5):
-        cmds.menuItem(divider=True,dividerLabel=titleName)
-        for menuItem_string in singleList_list5:
-            self.setItem_create_func(menuItem_string)
-
-    def multiItem_create_func(self,titleName,multiList_list5):
-        cmds.menuItem(subMenu=True,to = True,label=titleName)
-        for menuItem_string in multiList_list5:
-            self.setItem_create_func(menuItem_string)
-        cmds.setParent("..",menu=True)
-
-    def setItem_create_func(self,menuItem_string):
-        if menuItem_string[0] == None:
-            pass
-        elif menuItem_string[0] == True or menuItem_string[0] == 1:
-            cmds.menuItem(optionBox=menuItem_string[0], c="from "+menuItem_string[1]+" import "+menuItem_string[2]+" as ps; ps."+menuItem_string[3])
-        else:
-            cmds.menuItem(label=menuItem_string[0],c="from "+menuItem_string[1]+" import "+menuItem_string[2]+" as ps; ps."+menuItem_string[3],i=menuItem_string[4])
-
-def main():
-    menuJson_query_dicts = importJson_quary_dicts("mayaMenu.json",os.path.dirname(__file__))
-    _Menu = Menu()
-    _Menu.settingMenu_create_func(menuJson_query_dicts)
+    def run(self):
+        json_dict=self.setUpJson_quary_dict(self._path,self._file)
+        self._settingsMenu_create_func(json_dict["menuTitle"],json_dict["orderMenu"],json_dict["menus"])
+        
+def setUp():
+    menu=Menu()
+    menu.run()

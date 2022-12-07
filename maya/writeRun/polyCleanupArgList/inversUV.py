@@ -1,24 +1,24 @@
-from maya import cmds,mel
+import maya.cmds as cmds
+import maya.mel as mel
 
-def OKList(sel, check):
-    print ('OK' + ' : ' + check + ' : ' + sel)
-def NGList(sel, check):
-    print ('NG' + ' : ' + check + ' : ' + sel)
-
-def inversUVCheck(sels):
-    check = 'Invers UV'
-    for sel in sels:
-        cmds.hilite(sel)
-        invers = mel.eval('selectUVFaceOrientationComponents {} 1 2 1')
-        if invers == []:
-            OKList(sel, check)
-        else :
-            for i in invers:
-                cmds.select(invers)
-                NGList(i, check)
+class KARI():
+    def inversUV_check_dict(self,node):
+        evaluation_dict={"bool":False,"node":node,"invers":[]}
+        cmds.hilite(node)
+        invers=mel.eval('selectUVFaceOrientationComponents {} 1 2 1')
+        if invers_list == []:
+            evaluation_dict["bool"]=True
+            return evaluation_dict
+        else:
+            evaluation_dict["bool"]=False
+            for invers in invers_list:
+                evaluation_dict["invers"].append(invers)
+            return evaluation_dict
             
 def main():
-    sels = cmds.ls(sl = True)
-    inversUVCheck(sels)
+    objs=cmds.ls(sl=True)
+    run=KARI()
+    for obj in objs:
+        print(run.inversUV_check_dict(obj))
 
 main()
