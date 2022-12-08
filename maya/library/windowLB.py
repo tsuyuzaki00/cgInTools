@@ -5,7 +5,7 @@ from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 
 # mayaのメインウインドウを取得する
-def getMayaMainWindow():
+def mayaMainWindow_query_widget():
     ptr=omui.MQtUtil.mainWindow()
     widget=wrapInstance(int(ptr),QWidget)
     return widget

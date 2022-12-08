@@ -7,6 +7,7 @@ class MainWindowBase(QMainWindow):
         super(MainWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
         
+        #menu UI
         mainWindow_QMenuBar=self.menuBar()
         self.refresh_QAction=QAction("Refresh Settings",self)
         self.restore_QAction=QAction("Restore Settings",self)
@@ -28,9 +29,11 @@ class MainWindowBase(QMainWindow):
         self.import_QAction.triggered.connect(self.import_onClicked_func)
         self.export_QAction.triggered.connect(self.export_onClicked_func)
 
+        #main UI
         main_QHBoxLayout=QVBoxLayout(self)
         button_QHBoxLayout=QHBoxLayout(self)
         self.edit_QFormLayout=QFormLayout(self)
+        
         main_QHBoxLayout.addLayout(self.edit_QFormLayout)
         main_QHBoxLayout.addLayout(button_QHBoxLayout)
 

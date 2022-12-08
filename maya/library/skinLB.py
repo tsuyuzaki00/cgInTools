@@ -3,7 +3,7 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 import maya.api.OpenMayaAnim as oma2
 import cgInTools as cit
-from cgInTools.maya.library import setBaseLB as sbLB
+from . import setBaseLB as sbLB
 cit.reloads([sbLB])
 
 def objsSkin_export_list(self,path,objs):

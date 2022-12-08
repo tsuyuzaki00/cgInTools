@@ -2,7 +2,7 @@
 import maya.cmds as cmds
 import maya.mel as mel
 import cgInTools as cit
-from cgInTools.maya.library import setBaseLB as sbLB
+from . import setBaseLB as sbLB
 cit.reloads([sbLB])
 
 import os

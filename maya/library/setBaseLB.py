@@ -150,7 +150,6 @@ class BaseObject():
         return self._upVector
     def getUpVector(self):
         return self._upVector
-
 class BasePair():
     def __init__(self):
         self._sourceNode="" # string
@@ -282,7 +281,6 @@ class BasePair():
         return self._ikCtrls
     def getIKCtrls(self):
         return self._ikCtrls
-
 class BaseFile():
     def __init__(self):
         self._path=""

@@ -2,9 +2,9 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-class ScriptsRunWindowBase(QWidget):
+class QueryObjectWindowBase(QWidget):
     def __init__(self, *args, **kwargs):
-        super(ScriptsRunWindowBase, self).__init__(*args, **kwargs)
+        super(QueryObjectWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
 
         self.setObjectName("object_name")
@@ -18,8 +18,8 @@ class ScriptsRunWindowBase(QWidget):
         button_QHBoxLayout=QHBoxLayout(self)
         main_QFormLayout.addRow(button_QHBoxLayout)
         
-        self.textPlane_QPlainTextEdit=QPlainTextEdit(self)
-        plain_QVBoxLayout.addWidget(self.textPlane_QPlainTextEdit)
+        self.object_QTableWidget=QTableWidget(self)
+        plain_QVBoxLayout.addWidget(self.object_QTableWidget)
 
         self.left_QPushButton=QPushButton("left",self)
         button_QHBoxLayout.addWidget(self.left_QPushButton)
@@ -34,11 +34,11 @@ class ScriptsRunWindowBase(QWidget):
         self.right_button.clicked.connect(self.right_button_onClicked)
 
     def left_button_onClicked(self):
-        print("base")
+        print("click!")
     def center_button_onClicked(self):
-        print("base")
+        print("click!")
     def right_button_onClicked(self):
-        print("base")
+        print("click!")
 
 #window_instance=ScriptsRunWindowBase()
 #window_instance.show()

@@ -8,10 +8,12 @@ import os
 from maya import cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
-import cgInTools as SF
-from ..library import cJson as SJ
+import cgInTools as cit
 from ...ui import scriptsRunUI as UI
+from ..library import windowLB as wLB
+from ..library import jsonLB as jLB
 from ...ui import mainWindowUI as mainUI
+cit.reloads([UI,wLB,jLB])
 
 class MainMenu(mainUI.MainWindowBase):
     def __init__(self, parent):
@@ -74,14 +76,3 @@ def main():
 def select_function(get_scripts):
     exec(get_scripts)
     cmds.ls(sl=True)
-
-def save_function(json_file,dict_text):
-    simple_json = SJ.SimpleJson()
-    simple_json.write_run(json_file,dict_text)
-
-"""
-self.dict_setting(path=self.get_folder.maya_json_folder,new_folder="selection_export")
-dict_text = self.dict_text
-json_file = self.json_file
-save_function(json_file=json_file,dict_text=dict_text)
-"""
