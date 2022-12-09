@@ -2,12 +2,12 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
-objMFn_list=[
+transMFn_list=[
     110,# kTransform
     121,# kJoint
 ]
 
-childMFn_list=[
+shapeMFn_list=[
     296,# kMesh
     267,# kNurbsCurve
     294,# kNurbsSurface
@@ -24,24 +24,34 @@ nodeTypeToMFn_dict={
 
 class TrsObject():
     def __init__(self,obj):
+        self._fullPath_bool=False
         self._object=obj
         self._objectType=cmds.nodeType(self._object)
-        self._fullPath_bool=False
-        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,childMFn_list)
+        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,shapeMFn_list)
         self._shapeType_list=self.nodeTypes_query_list(self._shape_list)
         
-        self._subject=""
         self._parent_str=self.parent_query_str(self._object,self._fullPath_bool)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,objMFn_list)
+        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,transMFn_list)
+        
+        self._subject=None
 
     def __loading(self):
+        self._objectType=cmds.nodeType(self._object)
+        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,shapeMFn_list)
+        self._shapeType_list=self.nodeTypes_query_list(self._shape_list)
         self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._parentType_str=cmds.nodeType(self._parent_str)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,objMFn_list)
-        self._childType_list=self.nodeTypes_query_list(self._child_list)
+        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,transMFn_list)
+
+        self._subjectType=cmds.nodeType(self._subject)
+        self._subShape_list=self.childs_query_list(self._subject,self._fullPath_bool,shapeMFn_list)
+        self._subShapeType_list=self.nodeTypes_query_list(self._shape_list)
+        self._subParent_str=self.parent_query_str(self._subject,fullPath=self._fullPath_bool)
+        self._subChild_list=self.childs_query_list(self._subject,self._fullPath_bool,transMFn_list)
 
     #Single Function
     def parent_query_str(self,node,fullPath=False):
+        if node == None:
+            return None
         node_MSelectionList=om2.MSelectionList().add(node)
         node_MDagPath=node_MSelectionList.getDagPath(0)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
@@ -55,6 +65,8 @@ class TrsObject():
             return parent_MFnDagNode.name()
 
     def childs_query_list(self,node,fullPath=False,childMFn_list=[]):
+        if node == None:
+            return None
         node_MSelectionList=om2.MSelectionList().add(node)
         node_MDagPath=node_MSelectionList.getDagPath(0)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
@@ -79,6 +91,8 @@ class TrsObject():
         return converter[nodeType]
 
     def findConnect_query_list(self,node,source=True,target=True,mFnID=0):
+        if node == None:
+            return None
         findConnectedTo_list=[]
         node_MSelectionList=om2.MSelectionList().add(node)
         node_MObject=node_MSelectionList.getDependNode(0)
@@ -110,29 +124,25 @@ class TrsObject():
             return nodeTypes
     
     #Public Function
-    def setObject(self,variable):
-        self._object=variable
-        return self._object
-    def getObject(self):
-        return self._object
-    
-    def setSubject(self,variable):
-        self._subject=variable
-        return self._subject
-    def getSubject(self):
-        return self._subject
-
-    def getShapes(self):
-        return self._shape_list
-    def getShapeTypes(self):
-        return self._shapeType_list
-
     def setFullPathSwitch(self,variable):
         self._fullPath_bool=variable
         return self._fullPath_bool
     def getFullPathSwitch(self):
         return self._fullPath_bool
 
+    def setObject(self,variable):
+        self._object=variable
+        return self._object
+    def getObject(self):
+        return self._object
+
+    def getShapes(self):
+        self.__loading()
+        return self._shape_list
+    def getShapeTypes(self):
+        self.__loading()
+        return self._shapeType_list
+
     def getParent(self):
         self.__loading()
         return self._parent_str
@@ -140,117 +150,79 @@ class TrsObject():
     def getChilds(self):
         self.__loading()
         return self._child_list
+
+    def setSubject(self,variable):
+        self._subject=variable
+        return self._subject
+    def getSubject(self):
+        return self._subject
+
+    def getSubShapes(self):
+        self.__loading()
+        return self._subShape_list
+    def getSubShapeTypes(self):
+        self.__loading()
+        return self._subShapeType_list
+
+    def getSubParent(self):
+        self.__loading()
+        return self._subParent_str
+
+    def getSubChilds(self):
+        self.__loading()
+        return self._subChild_list
+
+    def loading(self):
+        self.__loading()
 
 class JointWeight(TrsObject):
-    def __init__(self,obj,subj):
-        self._object=obj
-        self._objectType=cmds.nodeType(self._object)
-        self._fullPath_bool=False
-        self._subject=subj
-        self._shape_list=self.childs_query_list(self._subject,self._fullPath_bool,childMFn_list)
-        self._shapeType_list=self.nodeTypes_query_list(self._shape_list)
-        self._useJoint=True
-        self._vertexsValue_dicts=[]#[{"vertexs":[],"value":0},{"vertexs":["","",...],"value":0}]
-        
-        self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,objMFn_list)
-        mFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
-        self._skinCluster_list=self.findConnect_query_list(self._shape_list[0],mFnID=mFn_int)
-
-    def __loading(self):
-        self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,objMFn_list)
-        mFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
-        self._skinCluster_list=self.findConnect_query_list(self._shape_list[0],mFnID=mFn_int)
-    
-    #Public Function
-    def setVertexsValueDict(self,variable):
-        self._vertexsValue_dicts=[variable]
-        return self._vertexsValue_dicts
-    def addVertexsValueDict(self,variable):
-        self._vertexsValue_dicts.append(variable)
-        return self._vertexsValue_dicts
-    def getVertexsValueDicts(self):
-        return self._vertexsValue_dicts
-
-    def setUseJoint(self,variable):
-        self._useJoint=variable
-        return self._useJoint
-    def getUseJoint(self):
-        return self._useJoint
-
-    def getParent(self):
-        self.__loading()
-        return self._parent_str
-    
-    def getChilds(self):
-        self.__loading()
-        return self._child_list
-
-    def getSkinClusters(self):
-        self.__loading()
-        return self._skinCluster_list
-    
-    def loading(self):
-        self.__loading()
-
-class GeoWeight(TrsObject):
     def __init__(self,obj):
-        self._object=obj
-        self._objectType=cmds.nodeType(self._object)
-        self._fullPath_bool=False
-        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,childMFn_list)
-        self._shapeType_list=self.nodeTypes_query_list(self._shape_list)
-        
-        self._useJoint_bool=True
-        self._vertexsValue_dicts=[]#[{"vertexs":[],"value":0},{"vertexs":["","",...],"value":0}]
-
-        self._subject=""
-        self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,objMFn_list)
-        
-        mFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
-        self._skinCluster_list=self.findConnect_query_list(self._shape_list[0],mFnID=mFn_int)
+        super().__init__(obj)
+        self._useJoint=True
+        self._vertexs=[]
+        self._value=0
 
     def __loading(self):
-        self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._parentType_str=cmds.nodeType(self._parent_str)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,objMFn_list)
-        self._childType_list=self.nodeTypes_query_list(self._child_list)
+        super().loading()
         mFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
-        self._skinCluster_list=self.findConnect_query_list(self._shape_list[0],mFnID=mFn_int)
+        self._skinCluster_list=self.findConnect_query_list(self._subShape_list[0],mFnID=mFn_int)
     
     #Public Function
-    def setVertexsValueDict(self,variable):
-        self._vertexsValue_dicts=[variable]
-        return self._vertexsValue_dicts
-    def addVertexsValueDict(self,variable):
-        self._vertexsValue_dicts.append(variable)
-        return self._vertexsValue_dicts
-    def getVertexsValueDicts(self):
-        return self._vertexsValue_dicts
-
     def setUseJoint(self,variable):
         self._useJoint=variable
         return self._useJoint
     def getUseJoint(self):
         return self._useJoint
 
+    def setVertexs(self,variable):
+        self._vertexs=variable
+        return self._vertexs
+    def addVertexs(self,variables):
+        for variable in variables:
+            self._vertexs.append(variable)
+        return self._vertexs
+    def getVertexs(self):
+        return self._vertexs
+    
+    def setValue(self,variable):
+        self._value=variable
+        return self._value
+    def getValue(self):
+        return self._value
+
     def getSkinClusters(self):
         self.__loading()
         return self._skinCluster_list
-    
-    def loading(self):
-        self.__loading()
 
 def sample():
     geo="test_geo"
     objs=cmds.ls(sl=True)
     for obj in objs:
-        test=JointWeight(obj,geo)
+        test=JointWeight(obj)
+        test.setSubject(geo)
         print(test.getParent())
         print(test.getChilds())
-        print(test.getShapeTypes())
+        print(test.getSubShapes())
         print(test.getSkinClusters())
 
 #sample()

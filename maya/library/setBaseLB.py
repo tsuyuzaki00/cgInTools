@@ -286,10 +286,10 @@ class BaseFile():
         self._path=""
         self._file=""
         self._extension="json"
-        self._write_dict={}
-        self._writePack_dicts=[]
         self._read_dict={}
         self._readPack_dicts=[]
+        self._write_dict={}
+        self._writePack_dicts=[]
         self._objs=[]
         self._fileType_dict={
             "ma":"mayaAscii",
@@ -315,6 +315,12 @@ class BaseFile():
         return self._extension
     def getExtension(self):
         return self._extension
+
+    def setReadDict(self,variable):
+        self._read_dict=variable
+        return self._read_dict
+    def getReadDict(self):
+        return self._read_dict
 
     def setWriteDict(self,variable):
         self._write_dict=variable

@@ -16,7 +16,7 @@ class Json(sbLB.BaseFile):
         self._readDict={}
         self._readPack_dicts=[]
 
-#Public Function
+    #Public Function
     def read(self):
         self._readDict=self.readJson_quary_dict(self._path,self._file,self._extension)
         return self._readDict
@@ -31,7 +31,7 @@ class Json(sbLB.BaseFile):
     def writePacks(self):
         self.writePack_create_func(self._writePack_dicts,self._path,self._file,self._extension)
 
-#Single Function
+    #Single Function
     def pathSetting_create_str(self,path,name,extension="json",new_folder=None):
         if new_folder == None:
             json_file=os.path.join(path,name+"."+extension)
