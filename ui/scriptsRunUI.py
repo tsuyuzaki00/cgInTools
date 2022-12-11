@@ -3,8 +3,8 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
 class ScriptsRunWindowBase(QWidget):
-    def __init__(self, *args, **kwargs):
-        super(ScriptsRunWindowBase, self).__init__(*args, **kwargs)
+    def __init__(self,*args,**kwargs):
+        super(ScriptsRunWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
 
         self.setObjectName("object_name")
@@ -23,15 +23,15 @@ class ScriptsRunWindowBase(QWidget):
 
         self.left_QPushButton=QPushButton("left",self)
         button_QHBoxLayout.addWidget(self.left_QPushButton)
-        self.left_button.clicked.connect(self.left_button_onClicked)
+        self.left_QPushButton.clicked.connect(self.left_button_onClicked)
         
         self.center_QPushButton=QPushButton("center",self)
         button_QHBoxLayout.addWidget(self.center_QPushButton)
-        self.center_button.clicked.connect(self.center_button_onClicked)
+        self.center_QPushButton.clicked.connect(self.center_button_onClicked)
         
         self.right_QPushButton=QPushButton("right",self)
         button_QHBoxLayout.addWidget(self.right_QPushButton)
-        self.right_button.clicked.connect(self.right_button_onClicked)
+        self.right_QPushButton.clicked.connect(self.right_button_onClicked)
 
     def left_button_onClicked(self):
         print("base")

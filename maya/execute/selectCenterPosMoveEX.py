@@ -6,6 +6,6 @@ from ..library import sourceToTargetLB as sttLB
 def main():
     obj=cmds.ls(sl=True,fl=True)
     targetSet=sttLB.SourceToTarget()
-    targetSet.setTargetNode(obj[0])
-    targetSet.setSourceNode(obj[1])
+    targetSet.setSourceNode(obj[0])
+    targetSet.setTargetNode(obj[1])
     targetSet.moveToTarget()

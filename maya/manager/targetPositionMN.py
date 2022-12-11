@@ -5,58 +5,53 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
 import maya.cmds as cmds
-from maya import OpenMayaUI as omui
-from shiboken2 import wrapInstance
-from ...ui import targetPositionUI as ui
-from ..library import sourceToTargetLB as sttLB
 
-class TargetPosWindow(ui.TargetPosWindowBase):
+import cgInTools as cit
+from ...ui import targetPositionUI as UI
+from ..library import sourceToTargetLB as sttLB
+from ..library import windowLB as wLB
+cit.reloads([UI,wLB,sttLB])
+
+class TargetPosWindow(UI.TargetPosWindowBase):
     def __init__(self, parent):
         super(TargetPosWindow, self).__init__(parent)
         self.setObjectName("target_move_position")
         self.setWindowTitle("target_move_position")
-        self.left_button.setText("Run")
-        self.center_button.setText("Reverse")
-        self.right_button.setText("Clear")
+        self.left_QPushButton.setText("Run")
+        self.center_QPushButton.setText("Reverse")
+        self.right_QPushButton.setText("Clear")
         
-    def left_button_onClicked(self):
-        source_line=self.source_line.text()
-        target_line=self.target_line.text()
-        position_id=self.position_group.checkedId()
-        source_name=eval(source_line)
-        target_name=eval(target_line)
+    def buttonLeft_onClicked_func(self):
+        source_str=self.source_QLineEdit.text()
+        target_str=self.target_QLineEdit.text()
+        position_id=self.position_QButtonGroup.checkedId()
+        sources=eval(source_str)
+        target_list=eval(target_str)
         targetSet=sttLB.SourceToTarget()
-        targetSet.setSourceNode(source_name)
-        targetSet.setTargetNode(target_name)
         targetSet.setPos(position_id)
-        targetSet.moveToTarget()
+        targetSet.setTargetNode(target_list[0])
+        for source in sources:
+            targetSet.setSourceNode(source)
+            targetSet.moveToTarget()
 
-    def center_button_onClicked(self):
-        source_line=self.source_line.text()
-        target_line=self.target_line.text()
-        self.source_line.setText(str(target_line))
-        self.target_line.setText(str(source_line))
+    def buttonCenter_onClicked_func(self):
+        source_str=self.source_QLineEdit.text()
+        target_str=self.target_QLineEdit.text()
+        self.source_QLineEdit.setText(str(target_str))
+        self.target_QLineEdit.setText(str(source_str))
 
-    def right_button_onClicked(self):
-        self.source_line.clear()
-        self.target_line.clear()
+    def buttonRight_onClicked_func(self):
+        self.source_QLineEdit.clear()
+        self.target_QLineEdit.clear()
 
-    def source_button_onClicked(self):
+    def buttonSource_onClicked_func(self):
         objs=cmds.ls(sl=True)
-        self.source_line.setText(str(objs))
+        self.source_QLineEdit.setText(str(objs))
 
-    def target_button_onClicked(self):
+    def buttonTarget_onClicked_func(self):
         objs=cmds.ls(sl=True)
-        self.target_line.setText(str(objs))
-
-# mayaのメインウインドウを取得する
-def get_maya_main_window():
-    omui.MQtUtil.mainWindow()
-    ptr=omui.MQtUtil.mainWindow()
-    widget=wrapInstance(int(ptr), QWidget)
-    return widget
+        self.target_QLineEdit.setText(str(objs))
 
 def main():
-    # 依存関係のないウインドウを継承して作ったMaya用のボタンUI
-    maya_window_instance=TargetPosWindow(parent=get_maya_main_window())
-    maya_window_instance.show()
+    mayaWindow=TargetPosWindow(parent=wLB.mayaMainWindow_query_widget())
+    mayaWindow.show()

@@ -45,7 +45,8 @@ class Menu():
                 self._multiItem_create_func(orderMenu_list[1],menus_dict[orderMenu_list[1]])
             else:
                 pass
-
+    
+    #Public Function
     def run(self):
         json_dict=self.setUpJson_quary_dict(self._path,self._file)
         self._settingsMenu_create_func(json_dict["menuTitle"],json_dict["orderMenu"],json_dict["menus"])

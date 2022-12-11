@@ -118,7 +118,7 @@ class CopySkinWeight(sbLB.BasePair):
             diffJoints=self._jointDifference_query_joints(self._targetNode,self._sourceNode)
             self._removeInfluences_edit_func(self._targetNode,diffJoints)
         else:
-            cmds.error('There is no'+ geo +'of bind joints.')
+            cmds.error('There is no'+ self._targetNode +'of bind joints.')
 
 class CopyVertexSkinWeights(sbLB.BasePair):
     def __init__(self):

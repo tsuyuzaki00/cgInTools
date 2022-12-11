@@ -3,32 +3,34 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
 class MainWindowBase(QMainWindow):
-    def __init__(self, *args, **kwargs):
-        super(MainWindowBase, self).__init__(*args, **kwargs)
+    def __init__(self,*args,**kwargs):
+        super(MainWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
 
-        menuBar = self.menuBar()
-        statusBar = self.statusBar()
-        file_menu = menuBar.addMenu("File")
-        self.centerWidget=QWidget()
+        menuBar_QMenuBar=self.menuBar()
+        statusBar_QStatusBar=self.statusBar()
+        menuBar_QMenu=menuBar_QMenuBar.addMenu("File")
 
-        refresh_action = QAction("Refresh Settings", self)
-        restore_action = QAction("Restore Settings", self)
-        save_action = QAction("Save Settings", self)
-        import_action = QAction("Import Settings", self)
-        export_action = QAction("Export Settings", self)
+        refresh_QAction=QAction("Refresh Settings",self)
+        menuBar_QMenu.addAction(refresh_QAction)
 
-        file_menu.addAction(refresh_action)
-        file_menu.addAction(restore_action)
-        file_menu.addAction(save_action)
-        file_menu.addSeparator()
-        file_menu.addAction(import_action)
-        file_menu.addAction(export_action)
+        restore_QAction=QAction("Restore Settings",self)
+        menuBar_QMenu.addAction(restore_QAction)
+        
+        save_QAction=QAction("Save Settings",self)
+        menuBar_QMenu.addAction(save_QAction)
+        
+        menuBar_QMenu.addSeparator()
+        
+        import_QAction=QAction("Import Settings",self)
+        menuBar_QMenu.addAction(import_QAction)
+        
+        export_QAction=QAction("Export Settings",self)
+        menuBar_QMenu.addAction(export_QAction)
 
-        #centralWidget.setLayout(layout) Widgetizing a layout
-        self.setCentralWidget(self.centerWidget)
-
-        statusBar.showMessage("")
+        self.center_QWidget=QWidget()
+        self.setCentralWidget(self.center_QWidget)
+        statusBar_QStatusBar.showMessage("")
         
 
 #window_instance = MainWindowBase()

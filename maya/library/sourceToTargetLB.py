@@ -37,8 +37,8 @@ class SourceToTarget(sbLB.BasePair):
 
     #Multi Function
     def _moveToTarget_edit_func(self,source,target,positionID_int):
-        source_vector=self.alignmentPos_quary_vector(source,positionID_int)
-        cmds.move(source_vector[0],source_vector[1],source_vector[2],target,a=True)
+        target_vector=self.alignmentPos_quary_vector(target,positionID_int)
+        cmds.move(target_vector[0],target_vector[1],target_vector[2],source,a=True)
     
     #Public Function
     def setPos(self,variable):
