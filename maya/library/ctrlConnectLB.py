@@ -8,7 +8,7 @@ from cgInTools.maya.library import namingLB as nLB
 from cgInTools.maya.library import curveLB as cLB
 cit.reloads([sbLB,nLB,cLB])
 
-class CtrlParent(sbLB.SetObject):
+class CtrlParent(sbLB.BaseObject):
     def __init__(self):
         self._object=""
         self._parent=""
@@ -85,7 +85,7 @@ class CtrlParent(sbLB.SetObject):
         cmds.parent(firstParent,self._grp)
         return offset_obj,trs_obj
 
-#Public Function
+    #Public Function
     def offsetCtrlRoot(self):
         offset_obj,trs_obj=self.__createNodes()
         # connect pointConstraint and orientConstraint
@@ -133,7 +133,7 @@ class CtrlParent(sbLB.SetObject):
         cmds.aimConstraint(trs_obj,self._parent,aim=self.__vector_dict[self._aimVector],u=self.__vector_dict[self._upVector],wut="object",wuo=up_obj,w=1)
         cmds.connectAttr(up_obj+"."+self._offsetSwitchName,offset_obj+"."+self._offsetSwitchName)
 
-#Private Function
+    #Private Function
     def _createNames(self):
         spaceNames=[]
         for _spaceNodeName in self._spaceNodeNames:
@@ -143,7 +143,7 @@ class CtrlParent(sbLB.SetObject):
         ctrlName=self.getRename_edit_func(self._object,self._ctrlNodeName)
         trsName=self.getRename_edit_func(self._object,self._trsNodeName)
 
-#Single Function
+    #Single Function
     def getRename_edit_func(self,object,node):
         name=nLB.Naming()
         name.setSwitch("setAuto")
