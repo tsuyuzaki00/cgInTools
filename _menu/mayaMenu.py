@@ -1,5 +1,6 @@
 from maya import cmds
 import json,os
+import cgInTools as cit
 
 #("labal=string or optionbox=True","path_import=string","run_function=string","icon=string")
 #["label_name","from_name","import_name","executionFunction_name","imageFile_name"]
@@ -17,12 +18,13 @@ class Menu():
             return json_dict
 
     def setItem_create_func(self,title,relative_path,fileName,function,image):
+        command="import cgInTools as cit; from "+relative_path+" import "+fileName+" as ps; ps."+function+"; cit.reloads([ps])"
         if title == None:
             pass
         elif title == True or title == 1:
-            cmds.menuItem(optionBox=title, c="from "+relative_path+" import "+fileName+" as ps; ps."+function)
+            cmds.menuItem(optionBox=title,c=command)
         else:
-            cmds.menuItem(label=title,c="from "+relative_path+" import "+fileName+" as ps; ps."+function,i=image)
+            cmds.menuItem(label=title,c=command,i=image)
 
     #Multi Function
     def _singleItem_create_func(self,titleName,singleList_lists):

@@ -18,10 +18,8 @@ class MainWindow(UI.MainWindowBase):
         super(MainWindow, self).__init__(parent)
         self.setWindowTitle("windowTitle")
         
-        layouts=QFormLayout(self)
-        self.centerWidget.setLayout(layouts)
-        #widget = NewClassName(self)
-        #layouts.addWidget(widget)
+        self.custom_QGridLayout.addWidget()
+        
 
 def main():
     mayaWindow=MainWindow(parent=wLB.mayaMainWindow_query_widget())

@@ -82,11 +82,11 @@
         ],
         "inquiry":
         [
-            ["SelectList","cgInTools.maya.manager","selectListView","main()",""],
-            ["LookNodeType","cgInTools.maya.manager","lookNodeType","main()",""],
-            ["LookShapeColor","cgInTools.maya.manager","lookShapeColor","main()",""],
-            ["LookSelectKeyAttr","cgInTools.maya.manager","lookSelectKeyAttr","main()",""],
-            ["LookMatrix","cgInTools.maya.manager","lookMatrix","main()",""]
+            ["Selections Query","cgInTools.maya.manager","querySelectionsMN","main()",""],
+            ["NodeType Query","cgInTools.maya.manager","queryNodeTypeMN","main()",""],
+            ["ShapeColor Query","cgInTools.maya.manager","queryShapeColorMN","main()",""],
+            ["KeyAttr Query","cgInTools.maya.manager","queryKeyAttrMN","main()",""],
+            ["Matrix Query","cgInTools.maya.manager","queryMatrixMN","main()",""]
         ],
         "facial ctrl export":
         [

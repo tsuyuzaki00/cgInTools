@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-15 -*-
-
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
@@ -9,10 +8,9 @@ from maya import cmds
 from maya import OpenMayaUI as omui
 from shiboken2 import wrapInstance
 import cgInTools as cit
-from ...ui import scriptsRunUI as UI
+from ...ui import tableUI as UI
 from ..library import windowLB as wLB
 from ..library import jsonLB as jLB
-from ...ui import mainWindowUI as mainUI
 cit.reloads([UI,wLB,jLB])
 
 class MainMenu(mainUI.MainWindowBase):
@@ -25,23 +23,23 @@ class MainMenu(mainUI.MainWindowBase):
         widget = ScriptsRunWindow(self)
         layouts.addWidget(widget)
 
-class ScriptsRunWindow(UI.ScriptsRunWindowBase):
+class SelectionTextWindow(UI.PlainTextWindowBase):
     def __init__(self, parent):
-        super(ScriptsRunWindow, self).__init__(parent)
-        self.setObjectName("select_list_view")
+        super(SelectionTextWindow, self).__init__(parent)
+        self.setObjectName("selectView_list")
+        self.setWindowTitle("selectView_list")
         self.left_button.setText("Selection")
         self.center_button.setText("Select Replace")
         self.right_button.setText("Select Add")
 
-    def view_scripts(self,sels):
-        for sel in sels:
-            self.scripts_plain.insertPlainText(str(sel)+'\n')
+    def select_function(get_scripts):
+        exec(get_scripts)
+        cmds.ls(sl=True)
 
-    def dict_setting(self,path,key_name="selections",json_name="selections",new_folder=None):
-        get_scripts = self.scripts_plain.toPlainText()
-        self.list_scripts = get_scripts.splitlines()
-        self.dict_text = {key_name:self.list_scripts}
-        self.json_file = self.simple_json.path_setting(path,json_name,new_folder)
+    def _planeText_create_func(self,objs,add=False):
+        if add is True:
+            pass
+        self.textPlain_QPlainTextEdit.setPlainText("objs="+str(obj)+"\n")
         
     def left_button_onClicked(self):
         get_scripts = self.scripts_plain.toPlainText()
@@ -58,21 +56,22 @@ class ScriptsRunWindow(UI.ScriptsRunWindowBase):
         objs = cmds.ls(sl=True)
         self.view_scripts(objs)
 
-# mayaのメインウインドウを取得する
-def get_maya_main_window():
-    omui.MQtUtil.mainWindow()
-    ptr = omui.MQtUtil.mainWindow()
-    widget = wrapInstance(int(ptr), QWidget)
-    return widget
+    #Public Function
+    def buttonLeftOnClicked(self):
+        getText_str=self.textPlain_QPlainTextEdit.toPlainText()
+        text_list=eval(getText_str)
+        cmds.select(text_list)
+
+    def buttonCenterOnClicked(self):
+        objs=cmds.ls(sl=True)
+        self._planeText_create_func(objs)
+
+    def buttonRightOnClicked(self):
+        objs=cmds.ls(sl=True)
+        self._planeText_create_func(objs,add=True)
 
 def main():
-    # 依存関係のないウインドウを継承して作ったMaya用のボタンUI
-    maya_window_instance = MainMenu(parent=get_maya_main_window())
-    sels = cmds.ls(sl = True)
-    #maya_window_instance.view_scripts(sels)
-    maya_window_instance.show()
-
-# 実行関数
-def select_function(get_scripts):
-    exec(get_scripts)
-    cmds.ls(sl=True)
+    viewWindow=SelectionTextWindow(parent=wLB.mayaMainWindow_query_widget())
+    objs=cmds.ls(sl=True)
+    viewWindow._planeText_create_func(objs)
+    viewWindow.show()
