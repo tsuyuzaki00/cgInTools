@@ -289,7 +289,7 @@ class BaseFile():
         self._read_dict={}
         self._readPack_dicts=[]
         self._write_dict={}
-        self._writePack_dicts=[]
+        self._writePack_dicts=[]# {"dataDict":{},"fileName":""}
         self._objs=[]
         self._fileType_dict={
             "ma":"mayaAscii",

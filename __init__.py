@@ -11,6 +11,7 @@ def reloads(ps):
 
 root_path=os.path.dirname(__file__) #.../cgInTools/
 ui_path=os.path.join(root_path,"ui")
+menu_path=os.path.join(root_path,"_menu")
 settings_path=os.path.join(root_path,"_settings")
 library_path=os.path.join(root_path,"library")
 

@@ -78,7 +78,7 @@
             ["Multi Copy Skin Weight","cgInTools.maya.execute","multiCopySkinWeightEX","main()",""],
             ["Multi Remove Target Joints","cgInTools.maya.execute","multiRemoveTargetJointsEX","main()",""],
             ["Remove From InfluenceUI","cgInTools.maya.execute","infJntRemoveEX","main()",""],
-            ["Weight Paint Value","cgInTools.maya.manager","weightPaintValue","main()","skinPaintValue.png"]
+            ["Weight Paint Value","cgInTools.maya.manager","paintWeightValueMN","main()","skinPaintValue.png"]
         ],
         "inquiry":
         [

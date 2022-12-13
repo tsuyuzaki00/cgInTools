@@ -12,5 +12,5 @@ class PlainTextWindowBase(UI.MainWindowBase):
         self.textPlain_QPlainTextEdit=QPlainTextEdit(self)
         self.custom_QGridLayout.addWidget(self.textPlain_QPlainTextEdit,0,0)
 
-viewWindow=PlainTextWindowBase()
-viewWindow.show()
+#viewWindow=PlainTextWindowBase()
+#viewWindow.show()

@@ -5,56 +5,38 @@ from PySide2.QtGui import *
 
 import os
 from maya import cmds
-from maya import OpenMayaUI as omui
-from shiboken2 import wrapInstance
+
 import cgInTools as cit
-from ...ui import tableUI as UI
+from ...ui import plainTextUI as UI
 from ..library import windowLB as wLB
 from ..library import jsonLB as jLB
 cit.reloads([UI,wLB,jLB])
 
-class MainMenu(mainUI.MainWindowBase):
-    def __init__(self, parent):
-        super(MainMenu, self).__init__(parent)
-        self.setWindowTitle("select_list_view")
-        
-        layouts = QFormLayout(self)
-        self.centerWidget.setLayout(layouts)
-        widget = ScriptsRunWindow(self)
-        layouts.addWidget(widget)
-
 class SelectionTextWindow(UI.PlainTextWindowBase):
-    def __init__(self, parent):
+    def __init__(self,parent):
         super(SelectionTextWindow, self).__init__(parent)
         self.setObjectName("selectView_list")
         self.setWindowTitle("selectView_list")
-        self.left_button.setText("Selection")
-        self.center_button.setText("Select Replace")
-        self.right_button.setText("Select Add")
+        self.buttonLeft_QPushButton.setText("print")
+        self.buttonCenter_QPushButton.setText("Select Replace")
+        self.buttonRight_QPushButton.setText("Select Add")
 
-    def select_function(get_scripts):
-        exec(get_scripts)
-        cmds.ls(sl=True)
-
-    def _planeText_create_func(self,objs,add=False):
+    def _plainText_create_func(self,objs,add=False):
         if add is True:
-            pass
-        self.textPlain_QPlainTextEdit.setPlainText("objs="+str(obj)+"\n")
-        
-    def left_button_onClicked(self):
-        get_scripts = self.scripts_plain.toPlainText()
-        self.list_scripts = get_scripts.splitlines()
-        run_script = "selections="+str(self.list_scripts)+"\n"+"cmds.select(selections)"
-        select_function(run_script)
-
-    def center_button_onClicked(self):
-        objs = cmds.ls(sl=True)
-        self.scripts_plain.clear()
-        self.view_scripts(objs)
-
-    def right_button_onClicked(self):
-        objs = cmds.ls(sl=True)
-        self.view_scripts(objs)
+            getText_str=self.textPlain_QPlainTextEdit.toPlainText()
+            texts=eval(getText_str)
+            texts.extend(objs)
+            texts=list(set(texts))
+        else:
+            texts=objs
+        for num,text in enumerate(texts):
+            if num == 0:
+                text_str="[\n"
+            text_str += '    "'+text+'",\n'
+            if num == len(texts) - 1:
+                text_str=text_str.rstrip(",\n")
+                text_str += "\n]"
+        self.textPlain_QPlainTextEdit.setPlainText(text_str)
 
     #Public Function
     def buttonLeftOnClicked(self):
@@ -64,14 +46,14 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
 
     def buttonCenterOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._planeText_create_func(objs)
+        self._plainText_create_func(objs)
 
     def buttonRightOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._planeText_create_func(objs,add=True)
+        self._plainText_create_func(objs,add=True)
 
 def main():
     viewWindow=SelectionTextWindow(parent=wLB.mayaMainWindow_query_widget())
     objs=cmds.ls(sl=True)
-    viewWindow._planeText_create_func(objs)
+    viewWindow._plainText_create_func(objs)
     viewWindow.show()

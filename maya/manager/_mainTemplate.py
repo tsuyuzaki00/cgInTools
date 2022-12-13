@@ -22,5 +22,5 @@ class MainWindow(UI.MainWindowBase):
         
 
 def main():
-    mayaWindow=MainWindow(parent=wLB.mayaMainWindow_query_widget())
-    mayaWindow.show()
+    viewWindow=MainWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow.show()

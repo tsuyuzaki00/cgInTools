@@ -18,7 +18,7 @@ class Menu():
             return json_dict
 
     def setItem_create_func(self,title,relative_path,fileName,function,image):
-        command="import cgInTools as cit; from "+relative_path+" import "+fileName+" as ps; ps."+function+"; cit.reloads([ps])"
+        command="import cgInTools as cit; from "+relative_path+" import "+fileName+" as ps; cit.reloads([ps]); ps."+function
         if title == None:
             pass
         elif title == True or title == 1:

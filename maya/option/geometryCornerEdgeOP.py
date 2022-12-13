@@ -4,14 +4,12 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-from maya import OpenMayaUI as omui
-from shiboken2 import wrapInstance
-
 import cgInTools as cit
 from cgInTools.ui import geometryCornerEdgeUI as UI
-from cgInTools.maya.library import jsonLB as jLB
+from ..library import windowLB as wLB
+from ..library import jsonLB as jLB
 from cgInTools.maya.execute import geometryCornerEdgeEX as EX
-cit.reloads([UI,jLB,EX])
+cit.reloads([UI,wLB,jLB,EX])
 
 class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
     def __init__(self,*args,**kwargs):
@@ -22,32 +20,32 @@ class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
 
         self.__importJson(self.setPath,self.fileName)
 
-    def buttonLeft_onClicked_func(self):
+    def buttonLeftOnClicked(self):
         self.__exportJson(self.setPath,self.fileName)
         EX.main()
         self.close()
 
-    def buttonCenter_onClicked_func(self):
+    def buttonCenterOnClicked(self):
         self.__exportJson(self.setPath,self.fileName)
         EX.main()
 
-    def buttonRight_onClicked_func(self):
+    def buttonRightOnClicked(self):
         self.close()
 
-    def refresh_onClicked_func(self):
+    def refreshOnClicked(self):
         self.__importJson(self.resetPath,self.fileName)
 
-    def restore_onClicked_func(self):
+    def restoreOnClicked(self):
         self.__importJson(self.setPath,self.fileName)
 
-    def save_onClicked_func(self):
+    def saveOnClicked(self):
         self.__exportJson(self.setPath,self.fileName)
 
-    def import_onClicked_func(self):
-        print("base")
+    def importOnClicked(self):
+        print("nanimonashi")
 
-    def export_onClicked_func(self):
-        print("base")
+    def exportOnClicked(self):
+        print("nanimonashi")
 
     def __exportJson(self,path,file):
         lowAngle_int=self.lowAngle_QSpinBox.value()
@@ -77,12 +75,6 @@ class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
         settings_dict=setting.read()
         return settings_dict
 
-def get_maya_main_window():
-    omui.MQtUtil.mainWindow()
-    ptr=omui.MQtUtil.mainWindow()
-    widget=wrapInstance(int(ptr), QWidget)
-    return widget
-
 def main():
-    maya_window_instance=ObjCornerEdgeOP(parent=get_maya_main_window())
-    maya_window_instance.show()
+    viewWindow=ObjCornerEdgeOP(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow.show()

@@ -18,6 +18,7 @@ class Naming(sbLB.BaseName):
         self._side=""
         self._hierarchy="A"
         self._number=00
+        self._none="none"
         # fullAuto setAuto mark name
         self._switch="fullAuto"
         # title node side num titleNum nodeNum sideNum titleHie scene
@@ -150,7 +151,8 @@ class Naming(sbLB.BaseName):
     def _orderName_query_str(self,orders):
         self.__loading()
         order_list=[]
-        nullDel_list=[order for order in orders if order != ""]
+        nullDel_list=[order for order in orders if order != "" or order != "none"]
+        print(nullDel_list)
         for chengeSelf in nullDel_list:
             add=eval("self._"+chengeSelf)
             order_list.append(add)

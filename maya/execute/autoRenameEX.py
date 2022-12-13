@@ -5,7 +5,7 @@ from ..library import namingLB as nLB
 from ..library import jsonLB as jLB
 cit.reloads([nLB,jLB])
 
-rules_dict=jLB.getJson(cit.mayaData_path,"autoRenameEX")
+rules_dict=jLB.getJson(cit.mayaData_path,"autoRename")
 
 def main():
     print(jLB)

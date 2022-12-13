@@ -3,7 +3,7 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
 import cgInTools as cit
-from cgInTools.ui._reference import mayaWindowUI as UI
+from ._reference import mainWindowUI as UI
 cit.reloads([UI])
 
 class ObjCornerEdgeOPBase(UI.MainWindowBase):
@@ -11,24 +11,27 @@ class ObjCornerEdgeOPBase(UI.MainWindowBase):
         super(ObjCornerEdgeOPBase,self).__init__(*args, **kwargs)
         self.setObjectName("objectCornerEdge")
         self.setWindowTitle("objectCornerEdgeOption")
-
-        self.lowAngle_QSpinBox=QSpinBox(self)
-        self.highAngle_QSpinBox=QSpinBox(self)
-
-        self.lowAngle_QSpinBox.setMaximum(180)
-        self.lowAngle_QSpinBox.setSingleStep(15)
-        self.lowAngle_QSpinBox.setBaseSize(300,50)
-        
-        self.highAngle_QSpinBox.setMaximum(180)
-        self.highAngle_QSpinBox.setSingleStep(15)
-        self.highAngle_QSpinBox.setBaseSize(300,50)
-
-        self.edit_QFormLayout.addRow("lowAngle:",self.lowAngle_QSpinBox)
-        self.edit_QFormLayout.addRow("highAngle:",self.highAngle_QSpinBox)
-
         self.buttonLeft_QPushButton.setText("run")
         self.buttonCenter_QPushButton.setText("apply")
         self.buttonRight_QPushButton.setText("close")
+
+        lowAngle_QLabel=QLabel("lowAngle:",self)
+        self.custom_QGridLayout.addWidget(lowAngle_QLabel,0,0)
+
+        self.lowAngle_QSpinBox=QSpinBox(self)
+        self.lowAngle_QSpinBox.setMaximum(180)
+        self.lowAngle_QSpinBox.setSingleStep(15)
+        self.lowAngle_QSpinBox.setBaseSize(300,50)
+        self.custom_QGridLayout.addWidget(self.lowAngle_QSpinBox,0,1)
+
+        highAngle_QLabel=QLabel("highAngle:",self)
+        self.custom_QGridLayout.addWidget(highAngle_QLabel,1,0)
+        
+        self.highAngle_QSpinBox=QSpinBox(self)
+        self.highAngle_QSpinBox.setMaximum(180)
+        self.highAngle_QSpinBox.setSingleStep(15)
+        self.highAngle_QSpinBox.setBaseSize(300,50)
+        self.custom_QGridLayout.addWidget(self.highAngle_QSpinBox,1,1)
                 
-#window_instance=ObjCornerEdgeOPBase()
-#window_instance.show()
+#viewWindow=ObjCornerEdgeOPBase()
+#viewWindow.show()
