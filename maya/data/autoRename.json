@@ -1,3 +1,13 @@
 {
-    "nameOrders":["titleHie","node","side"]
+    "modeSwitch": "fullAuto",
+    "customText": "",
+    "nodeText": "",
+    "sideText": "",
+    "nameOrders": [
+        "title",
+        "node",
+        "side",
+        "none",
+        "none"
+    ]
 }

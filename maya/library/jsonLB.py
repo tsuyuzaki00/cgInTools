@@ -23,7 +23,8 @@ class Json(sbLB.BaseFile):
     def thisPack_check_func(self,path,file,extension,checkDict):
         pack_dict=self.readJson_quary_dict(path,file,extension+"Pack")
         try:
-            print(pack_dict[checkDict])
+            pass
+            #print(pack_dict[checkDict])
         except:
             cmds.error("setFile is No packFiles.")
 

@@ -42,6 +42,6 @@ class DockWindowBase(QDockWidget):
     def buttonOnClicked(self):
         print("base")
 
-viewWindow=DockWindowBase()
-viewWindow.show()
+#viewWindow=DockWindowBase()
+#viewWindow.show()
 

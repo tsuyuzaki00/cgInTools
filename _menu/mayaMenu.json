@@ -51,7 +51,8 @@
             ["Joint Aim Ctrl","cgInTools.maya.execute","connectAimCtrlEX","main()",""]
         ],
         "object rename":[
-            ["Auto Rename","cgInTools.maya.execute","autoRenameEX","main()",""]
+            ["Auto Rename","cgInTools.maya.execute","autoRenameEX","main()",""],
+            [1,"cgInTools.maya.option","autoRenameOP","main()",""]
         ],
         "object position":[
             ["Center Target Pos","cgInTools.maya.execute","selectCenterPosMoveEX","main()",""],

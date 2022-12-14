@@ -19,16 +19,16 @@ class PaintWeightWindowBase(UI.DockWindowBase):
         self.radioGrp_QButtonGroup=QButtonGroup()
 
         context_QRadioButton=QRadioButton("Context",self)
-        self.radioGrp_QButtonGroup.addButton(context_QRadioButton)
+        self.radioGrp_QButtonGroup.addButton(context_QRadioButton,0)
         artAttr_QHBoxLayout.addWidget(context_QRadioButton)
 
         skinContext_QRadioButton=QRadioButton("SkinContext",self)
         skinContext_QRadioButton.setChecked(True)
-        self.radioGrp_QButtonGroup.addButton(skinContext_QRadioButton)
+        self.radioGrp_QButtonGroup.addButton(skinContext_QRadioButton,1)
         artAttr_QHBoxLayout.addWidget(skinContext_QRadioButton)
 
         blendShapeContext_QRadioButton=QRadioButton("BlendShapeContext",self)
-        self.radioGrp_QButtonGroup.addButton(blendShapeContext_QRadioButton)
+        self.radioGrp_QButtonGroup.addButton(blendShapeContext_QRadioButton,2)
         artAttr_QHBoxLayout.addWidget(blendShapeContext_QRadioButton)
 
         value_QHBoxLayout=QHBoxLayout(self)

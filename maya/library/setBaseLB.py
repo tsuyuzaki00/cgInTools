@@ -1,17 +1,22 @@
 # -*- coding: iso-8859-15 -*-
 
-class BaseName():
+class BaseName(object):
     def __init__(self):
         self._object=""
         self._name=""
         self._title=""
         self._node=""
         self._side=""
-        self._hierarchy=""
+        self._hierarchy="A"
         self._number=00
+        self._none="none"
+        self._custom=""
+        # fullAuto setAuto mark replace
+        self._switch="fullAuto"
+        # title node side num titleNum nodeNum sideNum titleHie scene custom
         self._orders=[]
-        self._switch=""
-        self._replace=None #(beforeName,aftarName)
+        self._find=None
+        self._replace=None
 
     def setObject(self,variable):
         self._object=variable
@@ -54,6 +59,12 @@ class BaseName():
         return self._number
     def getNumber(self):
         return self._number
+    
+    def setCustom(self,variable):
+        self._custom=variable
+        return self._custom
+    def getCustom(self):
+        return self._custom
 
     def setOrders(self,variable):
         self._orders=variable
@@ -67,8 +78,14 @@ class BaseName():
     def getSwitch(self):
         return self._switch
 
-    def setReplace(self,variable1,variable2):
-        self._replace=(variable1,variable2)
+    def setFind(self,variable):
+        self._find=(variable)
+        return self._find
+    def getFind(self):
+        return self._find
+    
+    def setReplace(self,variable):
+        self._replace=(variable)
         return self._replace
     def getReplace(self):
         return self._replace
@@ -78,7 +95,7 @@ class BaseName():
         return self._curveType
     def getCurveType(self):
         return self._curveType
-class BaseObject():
+class BaseObject(object):
     def __init__(self):
         self._object=""
         self._parent=""
@@ -150,7 +167,7 @@ class BaseObject():
         return self._upVector
     def getUpVector(self):
         return self._upVector
-class BasePair():
+class BasePair(object):
     def __init__(self):
         self._sourceNode="" # string
         self._targetNode="" # string
@@ -281,7 +298,7 @@ class BasePair():
         return self._ikCtrls
     def getIKCtrls(self):
         return self._ikCtrls
-class BaseFile():
+class BaseFile(object):
     def __init__(self):
         self._path=""
         self._file=""
@@ -353,7 +370,7 @@ class BaseFile():
         return self._objs
     def getObjs(self):
         return self._objs
-class BasePath():
+class BasePath(object):
     def __init__(self):
         self._path=""
         self._name=""
@@ -404,7 +421,7 @@ class BasePath():
         return self._projectName_path
     def getProjectName(self):
         return self._projectName_path
-class BaseCheck():
+class BaseCheck(object):
     def __init__(self):
         self._relation=""
         self._same=""

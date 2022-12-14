@@ -22,7 +22,7 @@ nodeTypeToMFn_dict={
     "skinCluster":686 # kDagPose
 }
 
-class TrsObject():
+class TrsObject(object):
     def __init__(self,obj):
         self._fullPath_bool=False
         self._object=obj
@@ -177,7 +177,7 @@ class TrsObject():
 
 class JointWeight(TrsObject):
     def __init__(self,obj):
-        super().__init__(obj)
+        super(JointWeight,self).__init__(obj)
         self._useJoint=True
         self._vertexs=[]
         self._value=0

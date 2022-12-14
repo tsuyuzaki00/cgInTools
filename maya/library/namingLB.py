@@ -11,19 +11,7 @@ rules_dict=jLB.getJson(cit.mayaSettings_path,"namingLB")
 
 class Naming(sbLB.BaseName):
     def __init__(self):
-        self._object=""
-        self._name=""
-        self._title=""
-        self._node=""
-        self._side=""
-        self._hierarchy="A"
-        self._number=00
-        self._none="none"
-        # fullAuto setAuto mark name
-        self._switch="fullAuto"
-        # title node side num titleNum nodeNum sideNum titleHie scene
-        self._orders=["title","node","side","num"]
-        self._replace=None #(beforeName,aftarName)
+        super(Naming,self).__init__()
 
     def __loading(self):
         self._titleNum=self._title+self.rangeNumber_query_str(self._title)
@@ -44,11 +32,6 @@ class Naming(sbLB.BaseName):
         return addStringAttrs
 
     #Single Function
-    def nodeName_query_str(self,obj):
-        getNode_str=self.isNodeType_query_str(obj)
-        nodeName_str=rules_dict["nodeName_dict"][getNode_str]
-        return nodeName_str
-
     def isNodeType_query_str(self,obj):
         objType_str=cmds.objectType(obj)
         if objType_str=="transform":
@@ -74,6 +57,8 @@ class Naming(sbLB.BaseName):
             return "C"
 
     def smashNumber_edit_str(self,name):
+        if name == None:
+            return None
         while name[-1].isdigit():
             name=name[:-1]
             if name=="":
@@ -81,6 +66,8 @@ class Naming(sbLB.BaseName):
         return name
     
     def smashAlphabet_edit_str(self,name):
+        if name == None:
+            return None
         while name[-1].isupper():
             name=name[:-1]
             if name=="":
@@ -93,7 +80,8 @@ class Naming(sbLB.BaseName):
                 cmds.error("Can't go over 99.")
             while name[-1].isdigit():
                 name=name[:-1]
-            if not cmds.objExists("*"+name+str(i).zfill(2)+"*"):
+            same_list=cmds.ls("*"+name+str(i).zfill(2)+"*",dag=True)
+            if same_list == []:
                 return str(i).zfill(2)
 
     def rangeAlphabet_query_str(self,name):
@@ -102,7 +90,8 @@ class Naming(sbLB.BaseName):
                 cmds.error("Can't go over Z.")
             if name[-1].isupper():
                 name=name[:-1]
-            if not cmds.objExists("*"+name+chr(i)+"*"):
+            same_list=cmds.ls("*"+name+chr(i)+"*",dag=True)
+            if same_list == []:
                 return chr(i)
 
     def firstLowerCaseOnly_edit_str(str):
@@ -119,10 +108,16 @@ class Naming(sbLB.BaseName):
             self.scene=sceneName
         return self.scene
 
+    #Multi Function
+    def _nodeName_query_str(self,obj):
+        getNode_str=self.isNodeType_query_str(obj)
+        nodeName_str=rules_dict["nodeName_dict"][getNode_str]
+        return nodeName_str
+
     #Private Function
     def _titleName_query_str(self,obj,delAlph=True):
         splitObjs=obj.split("_")
-        self.nodeName_query_str(obj)
+        self._nodeName_query_str(obj)
         self.sideName_query_str(obj)
         for l in range(len(splitObjs)):
             if delAlph:
@@ -131,7 +126,7 @@ class Naming(sbLB.BaseName):
                 smashName=splitObjs[l]
             if not splitObjs[l].isdigit():
                 name=self.smashNumber_edit_str(smashName)
-                if not name==self.nodeName_query_str(obj) and\
+                if not name==self._nodeName_query_str(obj) and\
                    not name==self.sideName_query_str(obj) and\
                    not name==None:
                     return name
@@ -150,9 +145,11 @@ class Naming(sbLB.BaseName):
 
     def _orderName_query_str(self,orders):
         self.__loading()
+        nullDel_list=[]
+        for order in orders:
+            if not order == "none" and not order == "":
+                nullDel_list.append(order)
         order_list=[]
-        nullDel_list=[order for order in orders if order != "" or order != "none"]
-        print(nullDel_list)
         for chengeSelf in nullDel_list:
             add=eval("self._"+chengeSelf)
             order_list.append(add)
@@ -174,13 +171,15 @@ class Naming(sbLB.BaseName):
     def getRename(self):
         if self._switch=="fullAuto":
             self._title=self._titleName_query_str(self._object)
-            self._node=self.nodeName_query_str(self._object)
+            self._node=self._nodeName_query_str(self._object)
             self._side=self.sideName_query_str(self._object)
             self._hierarchy=self.rangeAlphabet_query_str(self._title)
             name=self._orderName_query_str(self._orders)
             return name
 
         elif self._switch=="setAuto":
+            self._title=self._titleName_query_str(self._object)
+            self._hierarchy=self.rangeAlphabet_query_str(self._title)
             name=self._orderName_query_str(self._orders)
             return name
 
@@ -194,10 +193,10 @@ class Naming(sbLB.BaseName):
             name=self._orderName_query_str(self._orders)
             return name
 
-        elif self._switch=="name":
-            if type(self._replace) is tuple:
+        elif self._switch=="replace":
+            if not self._find == None and not self._replace == None:
                 name=self._object
-                name.replace(self._replace[0],self._replace[1])
+                name.replace(self._find,self._replace)
             else:
                 name=self._name
                 return name
@@ -209,7 +208,7 @@ class Naming(sbLB.BaseName):
         self.__loading()
         if self._switch=="fullAuto" or self._switch=="name":
             self._title=self._titleName_query_str(self._object)
-            self._node=self.nodeName_query_str(self._object)
+            self._node=self._nodeName_query_str(self._object)
             self._side=self.sideName_query_str(self._object)
         mark=aLB.Attribute()
         mark.setObject(self._object)
