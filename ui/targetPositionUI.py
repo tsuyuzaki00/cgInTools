@@ -2,7 +2,9 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-class TargetPosWindowBase(QWidget):
+from ui._reference import mainWindowUI as UI
+
+class TargetPosWindowBase(UI.MainWindowBase):
     def __init__(self,*args,**kwargs):
         super(TargetPosWindowBase,self).__init__(*args, **kwargs)
         self.setWindowFlags(Qt.Window)
@@ -11,15 +13,13 @@ class TargetPosWindowBase(QWidget):
         self.setWindowTitle("window_title")
 
         main_QFormLayout=QFormLayout(self)
+        self.custom_QGridLayout.addLayout(main_QFormLayout,0,0)
 
         position_QGridLayout=QGridLayout(self)
         main_QFormLayout.addRow(position_QGridLayout)
 
         self.objectText_QGridLayout=QGridLayout(self)
         main_QFormLayout.addRow(self.objectText_QGridLayout)
-
-        button_QHBoxLayout=QHBoxLayout(self)
-        main_QFormLayout.addRow(button_QHBoxLayout)
         
         self.position_QButtonGroup=QButtonGroup()
 
@@ -63,7 +63,7 @@ class TargetPosWindowBase(QWidget):
         
         self.source_QPushButton=QPushButton("<<",self)
         self.objectText_QGridLayout.addWidget(self.source_QPushButton,0,2)
-        self.source_QPushButton.clicked.connect(self.buttonSource_onClicked_func)
+        self.source_QPushButton.clicked.connect(self.buttonSourceOnClicked)
         
         self.target_QLabel=QLabel(">Pos Target:",self)
         self.objectText_QGridLayout.addWidget(self.target_QLabel,0,3)
@@ -73,30 +73,12 @@ class TargetPosWindowBase(QWidget):
         
         self.target_QPushButton=QPushButton("<<",self)
         self.objectText_QGridLayout.addWidget(self.target_QPushButton,0,5)
-        self.target_QPushButton.clicked.connect(self.buttonTarget_onClicked_func)
+        self.target_QPushButton.clicked.connect(self.buttonTargetOnClicked)
 
-        self.left_QPushButton=QPushButton("left",self)
-        button_QHBoxLayout.addWidget(self.left_QPushButton)
-        self.left_QPushButton.clicked.connect(self.buttonLeft_onClicked_func)
-
-        self.center_QPushButton=QPushButton("center",self)
-        button_QHBoxLayout.addWidget(self.center_QPushButton)
-        self.center_QPushButton.clicked.connect(self.buttonCenter_onClicked_func)
-
-        self.right_QPushButton=QPushButton("right",self)
-        button_QHBoxLayout.addWidget(self.right_QPushButton)
-        self.right_QPushButton.clicked.connect(self.buttonRight_onClicked_func)
-
-    def buttonSource_onClicked_func(self):
+    def buttonSourceOnClicked(self):
         print("base")
-    def buttonTarget_onClicked_func(self):
-        print("base")
-    def buttonLeft_onClicked_func(self):
-        print("base")
-    def buttonCenter_onClicked_func(self):
-        print("base")
-    def buttonRight_onClicked_func(self):
+    def buttonTargetOnClicked(self):
         print("base")
 
-#window_instance = TargetPosWindowBase()
-#window_instance.show()
+#viewWindow=TargetPosWindowBase()
+#viewWindow.show()

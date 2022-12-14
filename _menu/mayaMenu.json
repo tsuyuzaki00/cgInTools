@@ -63,8 +63,7 @@
         ],
         "drawing color":
         [
-            ["CtrlColorChange","cgInTools.maya.manager","ctrlColorChange","main()",""],
-            ["CtrlColorFreeChange","cgInTools.maya.execute","ctrlColorFreeChenge","main()",""]
+            ["Ctrl Color Change","cgInTools.maya.manager","ctrlColorChangeMN","main()",""]
         ],
         "vertex":[],
         "edge":[
@@ -72,7 +71,10 @@
             [1,"cgInTools.maya.option","geometryCornerEdgeOP","main()",""]
         ],
         "face":[],
-        "cv":[],
+        "cv":
+        [
+            ["Replace Curve","cgInTools.maya.execute","replaceCurvesEX","main()",""]
+        ],
         "skin":
         [
             ["Rename Skc Select Geo","cgInTools.maya.execute","renameSkcInGeoEX","main()",""],
