@@ -1,12 +1,12 @@
 {
-    "modeSwitch": "setAuto",
+    "modeSwitch": "fullAuto",
     "customText": "spine",
     "nodeText": "cage",
     "sideText": "C",
     "nameOrders": [
-        "title",
+        "titleHie",
         "node",
-        "none",
+        "side",
         "none",
         "none"
     ]

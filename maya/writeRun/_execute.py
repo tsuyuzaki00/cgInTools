@@ -1,15 +1,15 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import cgInTools as cit
-#from cgInTools.maya.manager import paintWeightValueMN as MN
-from cgInTools.maya.option import autoRenameOP as OP
+from cgInTools.maya.manager import skinWeightByJointMN as MN
+#from cgInTools.maya.option import autoRenameOP as OP
 #from cgInTools.maya.library import fkikLB as LB
 #from cgInTools.maya.execute import infJntRemoveEditEX as EX
-cit.reloads([OP])
+cit.reloads([MN])
 
 def main():
-    OP.main()
-    #MN.main()
+    #OP.main()
+    MN.main()
     #EX.main()
     """
     fkik=LB.FKIK()

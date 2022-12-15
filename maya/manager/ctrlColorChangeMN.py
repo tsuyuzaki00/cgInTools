@@ -7,8 +7,8 @@ import maya.cmds as cmds
 
 import cgInTools as cit
 from ...ui import ctrlColorChengeUI as UI
-from ..library import sourceToTargetLB as sttLB
 from ..library import windowLB as wLB
+from ..library import sourceToTargetLB as sttLB
 cit.reloads([UI,wLB,sttLB])
 
 class ColorChangeWindow(UI.ColorChengeWindouBase):
@@ -104,13 +104,6 @@ class ColorChangeWindow(UI.ColorChengeWindouBase):
         drowings=self.getSelectDrawingOverrides_query_list(objs)
         for drowing in drowings:
             cmds.setAttr(drowing+".overrideEnabled",0)
-
-# mayaのメインウインドウを取得する
-def get_maya_main_window():
-    omui.MQtUtil.mainWindow()
-    ptr = omui.MQtUtil.mainWindow()
-    widget = wrapInstance(int(ptr),QWidget)
-    return widget
 
 def main():
     mayaWindow=ColorChangeWindow(parent=wLB.mayaMainWindow_query_widget())

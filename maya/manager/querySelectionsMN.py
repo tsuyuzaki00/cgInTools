@@ -17,7 +17,7 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         super(SelectionTextWindow, self).__init__(parent)
         self.setObjectName("selectView_list")
         self.setWindowTitle("selectView_list")
-        self.buttonLeft_QPushButton.setText("print")
+        self.buttonLeft_QPushButton.setText("Selection")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
 

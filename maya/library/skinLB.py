@@ -257,3 +257,99 @@ class CopyVertexSkinWeights(sbLB.BasePair):
         singleIdComp_MFnSingleIndexedComponent.addElements([vertexID])
         return vertexComp_MObject
 
+class skinWeightByJoint():
+    def __init__(self):
+        super().__init__()
+        self._weights=[]
+    
+    #Single Function
+    def addWeights_create_JointWeights(self,joint,geo):
+        getSkc=oLB.JointWeight(joint)
+        getSkc.setSubject(geo)
+        vertex_int=cmds.polyEvaluate(geo,v=1)
+
+        valueVertex_lists=[]
+        value_list=[]
+        for num in range(vertex_int):
+            vertex=geo+".vtx["+str(num)+"]"
+            value=cmds.skinPercent(getSkc.getSkinClusters()[0],vertex,q=True,transform=getSkc.getObject())
+            value_list.append(value)
+            valueVertex_lists.append([value,vertex])  
+        
+        value_list=list(set(value_list))
+        value_list.remove(1.0)
+        value_list.remove(0.0)
+
+        group_dict={}
+        for value in value_list:
+            group_dict[value]=[]
+
+        for valueVertex_list in valueVertex_lists:
+            if valueVertex_list[0] in value_list:
+                group_dict[valueVertex_list[0]].append(valueVertex_list[1])
+
+        for value,vertexs in group_dict.items():
+            weight=oLB.JointWeight(joint)
+            weight.setSubject(geo)
+            weight.setUseJoint(True)
+            weight.setValue(value)
+            weight.setVertexs(vertexs)
+            self._weights.append(weight)
+        return self._weights
+
+    def replaceDictWithWeights_query_JointWeights(self,read):
+        for weight in read["weights"]:
+            joint=oLB.JointWeight(weight["object"])
+            joint.setSubject(weight["subject"])
+            joint.setUseJoint(weight["use"])
+            joint.setValue(weight["value"])
+            joint.setVertexs(weight["vertexs"])
+            self._weights.append(joint)
+        return self._weights
+
+    def replaceWeightsWithDict_create_dict(self,weights):
+        weight_list=[]
+        
+        return write_dict
+
+    def useSkinCluster_check_bool(self,weight):
+        if not weight.getSkinClusters() is None:
+            return True
+        else:
+            return False
+    
+    def weightRun_edit_func(self,weight):
+        cmds.skinPercent(weight.getSkinClusters()[0],weight.getVertexs(),transformValue=[(weight.getObject(),weight.getValue())],nrm=True)
+    
+    #Multi Function
+    def _weightUnLock_edit_weights(self,weight):
+        skinCluster_bool=self.useSkinCluster_check_bool(weight)
+        if skinCluster_bool:
+            cmds.setAttr(weight.getObject()+".liw",0)
+        else:
+            cmds.error(weight.getSubject()+" is not skin bind")
+
+    #Public Function
+    def setWeights(self,variable):
+        self._weights=variable
+        return self._weights
+    def getWeights(self):
+        return self._weights
+
+    def run(self):
+        for weight in  self._weights:
+            self._weightUnLock_edit_weights(weight)
+        for weight in  self._weights:
+            if not weight.getUseJoint() == True:
+                return 0
+            else:
+                self.weightRun_edit_func(weight)
+
+    def importWeights(self):
+        self._readDict=super().read()
+        self._weights=self.replaceDictWithWeights_query_list(self._readDict)
+        return self._weights
+
+    def exportWeights(self):
+        self._writeDict={"weights":self._weights}
+        super().write()

@@ -6,7 +6,7 @@ cit.reloads([chLB])
 
 import os
 
-def fileName_check_func(maxLimit=6):
+def fileUnderCount_check_func(maxLimit=6):
     check=chLB.Check()
     check.setMaxLimit(maxLimit)
     judge_dict=check.fileUnderCount()
@@ -14,9 +14,9 @@ def fileName_check_func(maxLimit=6):
         #print("OK:"+" relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
         pass
     else:
-        print("NG:"+"fileName relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
+        print("NG:"+"fileUnderCount relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
     
-def pathName_check_func(maxLimit=10):
+def pathUnderCount_check_func(maxLimit=10):
     check=chLB.Check()
     check.setMaxLimit(maxLimit)
     judge_dict=check.pathUnderCount()
@@ -24,7 +24,7 @@ def pathName_check_func(maxLimit=10):
         #print("OK:"+" relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
         pass
     else:
-        print("NG:"+"pathName relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
+        print("NG:"+"pathUnderCount relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
 
 def samePathAndSceneName_check_func(same_dicts=[{"relation":"","same":""}]):
     file_path=cmds.file(q=True,sn=True)
@@ -206,8 +206,8 @@ def imagesUsed_check_func(image_path="N:/GMR/source/pub/assets/Chr/operatorMob1/
                 pass
 
 def main():
-    fileName_check_func()
-    pathName_check_func()
+    fileUnderCount_check_func()
+    pathUnderCount_check_func()
     samePathAndSceneName_check_func()
     sameObjName_check_func()
     graySameRigName_check_func()
