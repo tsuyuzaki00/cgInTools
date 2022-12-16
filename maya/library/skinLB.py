@@ -4,7 +4,8 @@ import maya.api.OpenMaya as om2
 import maya.api.OpenMayaAnim as oma2
 import cgInTools as cit
 from . import setBaseLB as sbLB
-cit.reloads([sbLB])
+from . import objectLB as oLB
+cit.reloads([sbLB,oLB])
 
 def objsSkin_export_list(self,path,objs):
     pass
@@ -257,7 +258,7 @@ class CopyVertexSkinWeights(sbLB.BasePair):
         singleIdComp_MFnSingleIndexedComponent.addElements([vertexID])
         return vertexComp_MObject
 
-class skinWeightByJoint():
+class SkinWeightByJoint():
     def __init__(self):
         super().__init__()
         self._weights=[]
@@ -277,7 +278,7 @@ class skinWeightByJoint():
             valueVertex_lists.append([value,vertex])  
         
         value_list=list(set(value_list))
-        value_list.remove(1.0)
+        #value_list.remove(1.0)
         value_list.remove(0.0)
 
         group_dict={}
@@ -318,9 +319,6 @@ class skinWeightByJoint():
         else:
             return False
     
-    def weightRun_edit_func(self,weight):
-        cmds.skinPercent(weight.getSkinClusters()[0],weight.getVertexs(),transformValue=[(weight.getObject(),weight.getValue())],nrm=True)
-    
     #Multi Function
     def _weightUnLock_edit_weights(self,weight):
         skinCluster_bool=self.useSkinCluster_check_bool(weight)
@@ -339,11 +337,11 @@ class skinWeightByJoint():
     def run(self):
         for weight in  self._weights:
             self._weightUnLock_edit_weights(weight)
-        for weight in  self._weights:
+        for weight in self._weights:
             if not weight.getUseJoint() == True:
                 return 0
             else:
-                self.weightRun_edit_func(weight)
+                cmds.skinPercent(weight.getSkinClusters()[0],weight.getVertexs(),transformValue=[(weight.getObject(),weight.getValue())],nrm=True)
 
     def importWeights(self):
         self._readDict=super().read()

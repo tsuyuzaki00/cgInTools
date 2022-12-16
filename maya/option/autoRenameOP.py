@@ -97,6 +97,21 @@ class AutoRenameOP(UI.AutoRenameOPBase):
         self.exportJson_edit_func(path,file,orders,switch,plainText_dict["custom"],plainText_dict["node"],plainText_dict["side"])
 
     #Public Function
+    def refreshOnClicked(self):
+        self.__importJson(self.resetPath,self.fileName)
+
+    def restoreOnClicked(self):
+        self.__importJson(self.setPath,self.fileName)
+
+    def saveOnClicked(self):
+        self.__exportJson(self.setPath,self.fileName)
+
+    def importOnClicked(self):
+        print("import")
+
+    def exportOnClicked(self):
+        print("export")
+
     def buttonLeftOnClicked(self):
         self.__exportJson(self.setPath,self.fileName)
         EX.main()
@@ -108,21 +123,6 @@ class AutoRenameOP(UI.AutoRenameOPBase):
 
     def buttonRightOnClicked(self):
         self.close()
-
-    def refreshOnClicked(self):
-        self.__importJson(self.resetPath,self.fileName)
-
-    def restoreOnClicked(self):
-        self.__importJson(self.setPath,self.fileName)
-
-    def saveOnClicked(self):
-        self.__exportJson(self.setPath,self.fileName)
-
-    def importOnClicked(self):
-        print("nanimonashi")
-
-    def exportOnClicked(self):
-        print("nanimonashi")
 
 def main():
     viewWindow=AutoRenameOP(parent=wLB.mayaMainWindow_query_widget())
