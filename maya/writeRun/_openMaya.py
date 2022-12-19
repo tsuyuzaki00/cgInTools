@@ -4,22 +4,22 @@ import maya.api.OpenMaya as om2
 from cgInTools.maya.library import cleanLB as cc
 import math
 
-def mirrorAxis_query_tuple(self,mirrorX=True,mirrorY=False,mirrorZ=False):
-        mirror_list=[1,1,1]
-        if mirrorX:
-            mirror_list[0]=-1
-        if mirrorY:
-            mirror_list[1]=-1
-        if mirrorZ:
-            mirror_list[2]=-1
-        return tuple(mirror_list)
+def mirrorAxis_query_tuple(mirrorX=True,mirrorY=False,mirrorZ=False):
+    mirror_list=[1,1,1]
+    if mirrorX:
+        mirror_list[0]=-1
+    if mirrorY:
+        mirror_list[1]=-1
+    if mirrorZ:
+        mirror_list[2]=-1
+    return tuple(mirror_list)
 
 def pointMirror_edit_func(sourcePoint,targetPoint,mirrorX=True,mirrorY=False,mirrorZ=False):
     mirror=mirrorAxis_query_tuple(mirrorX,mirrorY,mirrorZ)
-    values=cmds.getAttr(sourcePoint)[0]
-    cmds.setAttr(targetPoint+".xValue",values[0]*mirror[0])
-    cmds.setAttr(targetPoint+".yValue",values[1]*mirror[1])
-    cmds.setAttr(targetPoint+".zValue",values[2]*mirror[2])
+    values=cmds.getAttr(sourcePoint+".translate")[0]
+    cmds.setAttr(targetPoint+".tx",values[0]*mirror[0])
+    cmds.setAttr(targetPoint+".ty",values[1]*mirror[1])
+    cmds.setAttr(targetPoint+".tz",values[2]*mirror[2])
 
 def getSurfacePoint_query_mPoint(node):
     node_mSelectionList=om2.MSelectionList().add(node)

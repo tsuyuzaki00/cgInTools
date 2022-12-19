@@ -3,6 +3,6 @@
 DCCツール関係なく使いまわせるスクリプト
 ## もくじ
 
-[title](/library/document/title.md)
+[title](/library/_document/title.md)
 
-[namingRules](/library/document/namingRules.md)
+[namingRules](/library/_document/namingRules.md)

@@ -2,4 +2,6 @@
 
 アプリ起動時に実行するフォルダー
 ## もくじ
-[title](/_menu/documect/title.md)
+[mayaMenu.py](/_menu/_documect/mayaMenuPy.md)
+
+[mayaMenu.json](/_menu/_documect/mayaMenuJson.md)

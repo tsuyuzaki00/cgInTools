@@ -10,34 +10,43 @@ class MatrixMirror():
         self.mirrorY=False
         self.mirrorZ=False
         self.duplicate=False
+        
     def setSourceNode(self,variable):
         self.sourceNode=variable
         return self.sourceNode
+
     def setTargetNode(self,variable):
         self.targetNode=variable
         return self.targetNode
+
     def setMirrorX(self,variable):
         self.mirrorX=variable
         return self.mirrorX
+
     def setMirrorY(self,variable):
         self.mirrorY=variable
         return self.mirrorY
+
     def setMirrorZ(self,variable):
         self.mirrorZ=variable
         return self.mirrorZ
+
     def setDuplicate(self,variable):
         self.duplicate=variable
         return self.duplicate
+
     def translateOnly(self):
         if self.duplicate:
             targetName=self.reversedLeftRight_edit_string(self.sourceNode)
             self.targetNode=cmds.duplicate(self.sourceNode,n=targetName)
         self.translateMirror_edit_func(self.sourceNode,self.targetNode,self.mirrorX,self.mirrorY,self.mirrorZ)
+
     def rotateOnly(self):
         if self.duplicate:
             targetName=self.reversedLeftRight_edit_string(self.sourceNode)
             self.targetNode=cmds.duplicate(self.sourceNode,n=targetName)
         self.rotateMirror_edit_func(self.sourceNode,self.targetNode,self.mirrorX,self.mirrorY,self.mirrorZ)
+
     def run(self):
         if self.duplicate:
             targetName=self.reversedLeftRight_edit_string(self.sourceNode)
@@ -92,12 +101,12 @@ class MatrixMirror():
             mirror_list[2]=-1
         return tuple(mirror_list)
 
-    def pointMirror_edit_func(sourcePoint,targetPoint,mirrorX=True,mirrorY=False,mirrorZ=False):
+    def pointMirror_edit_func(self,sourcePoint,targetPoint,mirrorX=True,mirrorY=False,mirrorZ=False):
         mirror=mirrorAxis_query_tuple(mirrorX,mirrorY,mirrorZ)
-        values=cmds.getAttr(sourcePoint)[0]
-        cmds.setAttr(targetPoint+".xValue",values[0]*mirror[0])
-        cmds.setAttr(targetPoint+".yValue",values[1]*mirror[1])
-        cmds.setAttr(targetPoint+".zValue",values[2]*mirror[2])
+        values=cmds.getAttr(sourcePoint+".translate")[0]
+        cmds.setAttr(targetPoint+".tx",values[0]*mirror[0])
+        cmds.setAttr(targetPoint+".ty",values[1]*mirror[1])
+        cmds.setAttr(targetPoint+".tz",values[2]*mirror[2])
 
     def getNodeMatrix_query_mMatrix(self,node):
         node_mSelectionList=om2.MSelectionList().add(node)

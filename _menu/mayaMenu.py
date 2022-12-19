@@ -2,40 +2,40 @@ from maya import cmds
 import json,os
 import cgInTools as cit
 
-#("labal=string or optionbox=True","path_import=string","run_function=string","icon=string")
-#["label_name","from_name","import_name","executionFunction_name","imageFile_name"]
+#("labal=string or optionbox=True","relativePath=string","fileName=string","run_function=string","icon=string")
+#["title","relativePath","fileName","function","icon"]
 
 class Menu():
     def __init__(self):
         self._path=os.path.dirname(__file__)
-        self._file="mayaMenu.json"
+        self._file="mayaMenu"
 
     #Single Function
-    def setUpJson_quary_dict(self,path,file):
-        json_file=os.path.join(path,file)
+    def setUpJson_quary_dict(self,path,file,extension="json"):
+        json_file=os.path.join(path,file+"."+extension)
         with open(json_file, 'r') as f:
             json_dict=json.load(f)
             return json_dict
 
-    def setItem_create_func(self,title,relative_path,fileName,function,image):
-        command="import cgInTools as cit; from "+relative_path+" import "+fileName+" as ps; cit.reloads([ps]); ps."+function
+    def setItem_create_func(self,title,relativePath,fileName,function,icon):
+        command="import cgInTools as cit; from "+relativePath+" import "+fileName+" as ps; cit.reloads([ps]); ps."+function
         if title == None:
             pass
         elif title == True or title == 1:
             cmds.menuItem(optionBox=title,c=command)
         else:
-            cmds.menuItem(label=title,c=command,i=image)
+            cmds.menuItem(label=title,c=command,i=icon)
 
     #Multi Function
-    def _singleItem_create_func(self,titleName,singleList_lists):
+    def _singleItem_create_func(self,titleName,singleItem_lists):
         cmds.menuItem(divider=True,dividerLabel=titleName)
-        for menuItem_string in singleList_lists:
-            self.setItem_create_func(menuItem_string[0],menuItem_string[1],menuItem_string[2],menuItem_string[3],menuItem_string[4])
+        for menuItem_list in singleItem_lists:
+            self.setItem_create_func(menuItem_list[0],menuItem_list[1],menuItem_list[2],menuItem_list[3],menuItem_list[4])
 
-    def _multiItem_create_func(self,titleName,multiList_lists):
-        cmds.menuItem(subMenu=True,to = True,label=titleName)
-        for menuItem_string in multiList_lists:
-            self.setItem_create_func(menuItem_string[0],menuItem_string[1],menuItem_string[2],menuItem_string[3],menuItem_string[4])
+    def _multiItem_create_func(self,titleName,multiItem_lists):
+        cmds.menuItem(subMenu=True,to=True,label=titleName)
+        for menuItem_list in multiItem_lists:
+            self.setItem_create_func(menuItem_list[0],menuItem_list[1],menuItem_list[2],menuItem_list[3],menuItem_list[4])
         cmds.setParent("..",menu=True)
 
     def _settingsMenu_create_func(self,menuTitle_str,orderMenu_lists,menus_dict):

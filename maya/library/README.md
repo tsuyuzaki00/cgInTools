@@ -10,48 +10,48 @@
 
 ### Operating Class
 
-[attributeLB](/documents/maya/library/attributeLB.md)
+[attributeLB](/maya/library/_document/attributeLB.md)
 
-[blendshapeLB](/documents/maya/library/blendshapeLB.md)
+[blendshapeLB](/maya/library/_document/blendshapeLB.md)
 
-[checkLB](/documents/maya/library/checkLB.md)
+[checkLB](/maya/library/_document/checkLB.md)
 
-[cleanLB](/documents/maya/library/cleanLB.md)
+[cleanLB](/maya/library/_document/cleanLB.md)
 
-[constraintLB](/documents/maya/library/constraintLB.md)
+[constraintLB](/maya/library/_document/constraintLB.md)
 
-[ctrlConnectLB](/documents/maya/library/ctrlConnectLB.md)
+[ctrlConnectLB](/maya/library/_document/ctrlConnectLB.md)
 
-[curveLB](/documents/maya/library/curveLB.md)
+[curveLB](/maya/library/_document/curveLB.md)
 
-[displayLayerLB](/documents/maya/library/displayLayerLB.md)
+[displayLayerLB](/maya/library/_document/displayLayerLB.md)
 
-[filingLB](/documents/maya/library/filingLB.md)
+[filingLB](/maya/library/_document/filingLB.md)
 
-[fkikLB](/documents/maya/library/fkikLB.md)
+[fkikLB](/maya/library/_document/fkikLB.md)
 
-[groupLB](/documents/maya/library/groupLB.md)
+[groupLB](/maya/library/_document/groupLB.md)
 
-[jointLB](/documents/maya/library/jointLB.md)
+[jointLB](/maya/library/_document/jointLB.md)
 
-[jsonLB](/documents/maya/library/jsonLB.md)
+[jsonLB](/maya/library/_document/jsonLB.md)
 
-[meshLB](/documents/maya/library/meshLB.md)
+[meshLB](/maya/library/_document/meshLB.md)
 
-[mirrorLB](/documents/maya/library/mirrorLB.md)
+[mirrorLB](/maya/library/_document/mirrorLB.md)
 
-[nurbsLB](/documents/maya/library/namingLB.md)
+[nurbsLB](/maya/library/_document/namingLB.md)
 
-[namingLB](/documents/maya/library/namingLB.md)
+[namingLB](/maya/library/_document/namingLB.md)
 
-[pointLB](/documents/maya/library/pointLB.md)
+[pointLB](/maya/library/_document/pointLB.md)
 
-[renderLB](/documents/maya/library/renderLB.md)
+[renderLB](/maya/library/_document/renderLB.md)
 
-[ribbonLB](/documents/maya/library/ribbonLB.md)
+[ribbonLB](/maya/library/_document/ribbonLB.md)
 
-[skinLB](/documents/maya/library/skinLB.md)
+[skinLB](/maya/library/_document/skinLB.md)
 
 ### Base object class
 
-[setBaseLB](/documents/maya/library/setBaseLB.md)
+[setBaseLB](/maya/library/_document/setBaseLB.md)

@@ -1,5 +1,114 @@
 # -*- coding: iso-8859-15 -*-
 
+class TypeCheck(object):
+    def __init__(self):
+        self._variable=None
+        self._relation=None
+        self._instance=None
+    
+    def int_check_bool(self,variable):
+        if type(variable) is int:
+            return True
+        else:
+            return False
+    
+    def float_check_bool(self,variable):
+        if type(variable) is float:
+            return True
+        else:
+            return False
+    
+    def string_check_bool(self,variable):
+        if type(variable) is str:
+            return True
+        else:
+            return False
+    
+    def boolean_check_bool(self,variable):
+        if type(variable) is bool:
+            return True
+        else:
+            return False
+    
+    def list_check_bool(self,variable):
+        if type(variable) is list:
+            return True
+        else:
+            return False
+    
+    def tuple_check_bool(self,variable):
+        if type(variable) is tuple:
+            return True
+        else:
+            return False
+    
+    def dict_check_bool(self,variable):
+        if type(variable) is dict:
+            return True
+        else:
+            return False
+    
+    def set_check_bool(self,variable):
+        if type(variable) is set:
+            return True
+        else:
+            return False
+
+    def instance_check_bool(self,variable,instance):
+        if isinstance(variable,instance):
+            return True
+        else:
+            return False
+
+    def setVariable(self,variable):
+        self._variable=variable
+        return self._variable
+    def getVariable(self):
+        return self._variable
+
+    def setRelation(self,variable):
+        self._relation=variable
+        return self._relation
+    def getRelation(self):
+        return self._relation
+    
+    def setInstance(self,variable):
+        self._instance=variable
+        return self._instance
+    def getInstance(self):
+        return self._instance
+
+    def check(self):
+        if str(self._relation) == "int" or self._relation == int:
+            boolean=self.int_check_bool(self._variable)
+            return boolean
+        elif str(self._relation) == "float" or self._relation == float:
+            boolean=self.float_check_bool(self._variable)
+            return boolean
+        elif str(self._relation) == "str" or tr(self._relation) == "string" or self._relation == str:
+            boolean=self.string_check_bool(self._variable)
+            return boolean
+        elif str(self._relation) == "bool" or tr(self._relation) == "boolean" or self._relation == bool:
+            boolean=self.boolean_check_bool(self._variable)
+            return boolean
+        elif str(self._relation) == "list" or self._relation == list:
+            boolean=self.list_check_bool(self._variable)
+            return boolean
+        elif str(self._relation) == "tuple" or self._relation == tuple:
+            boolean=self.tuple_check_bool(self._variable)
+            return boolean
+        elif str(self._relation) == "dict" or self._relation == dict:
+            boolean=self.dict_check_bool(self._variable)
+            return boolean
+        elif str(self._relation) == "set" or self._relation == set:
+            boolean=self.set_check_bool(self._variable)
+            return boolean
+        elif not self._instance == None:
+            boolean=self.instance_check_bool(self._variable,self._instance)
+            return boolean
+        else:
+            cmds.error("There is no data type "+self._relation)
+
 class BaseName(object):
     def __init__(self):
         self._object=""
