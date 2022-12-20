@@ -14,6 +14,7 @@ ui_path=os.path.join(root_path,"ui")
 menu_path=os.path.join(root_path,"_menu")
 settings_path=os.path.join(root_path,"_settings")
 library_path=os.path.join(root_path,"library")
+execute_path=os.path.join(root_path,"execute")
 
 maya_path=os.path.join(root_path,"maya")
 mayaDefSetProject_path=os.path.join(maya_path,"__defSetProject")
