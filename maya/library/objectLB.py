@@ -2,51 +2,40 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
-transMFn_list=[
-    110,# kTransform
-    121,# kJoint
-]
+import cgInTools as cit
+from . import jsonLB as jLB
+cit.reloads([jLB])
 
-shapeMFn_list=[
-    296,# kMesh
-    267,# kNurbsCurve
-    294,# kNurbsSurface
-    250,# kCamera
-    281,# kLocator
-    308,# kDirectionalLight
-    305,# kAreaLight
-    303,# kAmbientLight
-]
-
-nodeTypeToMFn_dict={
-    "skinCluster":686 # kDagPose
-}
+rules_dict=jLB.getJson(cit.mayaSettings_path,"openLibrary")
 
 class TrsObject(object):
     def __init__(self,obj):
+        self._transMFn_list=rules_dict["transMFn_list"]
+        self._shapeMFn_list=rules_dict["shapeMFn_list"]
+        self._nodeTypeToMFn_dict=rules_dict["nodeTypeToMFn_dict"]
         self._fullPath_bool=False
         self._object=obj
         self._objectType=cmds.nodeType(self._object)
-        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,shapeMFn_list)
+        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,self._shapeMFn_list)
         self._shapeType_list=self.nodeTypes_query_list(self._shape_list)
         
         self._parent_str=self.parent_query_str(self._object,self._fullPath_bool)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,transMFn_list)
+        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,self._transMFn_list)
         
         self._subject=None
 
     def __loading(self):
         self._objectType=cmds.nodeType(self._object)
-        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,shapeMFn_list)
+        self._shape_list=self.childs_query_list(self._object,self._fullPath_bool,self._shapeMFn_list)
         self._shapeType_list=self.nodeTypes_query_list(self._shape_list)
         self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,transMFn_list)
+        self._child_list=self.childs_query_list(self._object,self._fullPath_bool,self._transMFn_list)
 
         self._subjectType=cmds.nodeType(self._subject)
-        self._subShape_list=self.childs_query_list(self._subject,self._fullPath_bool,shapeMFn_list)
+        self._subShape_list=self.childs_query_list(self._subject,self._fullPath_bool,self._shapeMFn_list)
         self._subShapeType_list=self.nodeTypes_query_list(self._shape_list)
         self._subParent_str=self.parent_query_str(self._subject,fullPath=self._fullPath_bool)
-        self._subChild_list=self.childs_query_list(self._subject,self._fullPath_bool,transMFn_list)
+        self._subChild_list=self.childs_query_list(self._subject,self._fullPath_bool,self._transMFn_list)
 
     #Single Function
     def parent_query_str(self,node,fullPath=False):
@@ -87,9 +76,6 @@ class TrsObject(object):
         else:
             return childs
 
-    def nodeTypeToMFnConverter_query_int(self,nodeType,converter=nodeTypeToMFn_dict):
-        return converter[nodeType]
-
     def findConnect_query_list(self,node,source=True,target=True,mFnID=0):
         if node == None:
             return None
@@ -123,6 +109,10 @@ class TrsObject(object):
         else:
             return nodeTypes
     
+    #Private Function
+    def nodeTypeToMFnConverter_query_int(self,nodeType):
+        return self._nodeTypeToMFn_dict[nodeType]
+
     #Public Function
     def setFullPathSwitch(self,variable):
         self._fullPath_bool=variable
@@ -179,11 +169,11 @@ class JointWeight(TrsObject):
     def __init__(self,obj):
         super(JointWeight,self).__init__(obj)
         self._useJoint=True
-        self._vertexs=[]
+        self._vertexs=[]#{}
         self._value=0
 
     def __loading(self):
-        super().loading()
+        super(JointWeight,self).loading()
         mFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
         self._skinCluster_list=self.findConnect_query_list(self._subShape_list[0],mFnID=mFn_int)
     
@@ -214,15 +204,21 @@ class JointWeight(TrsObject):
         self.__loading()
         return self._skinCluster_list
 
-def sample():
-    geo="test_geo"
-    objs=cmds.ls(sl=True)
-    for obj in objs:
-        test=JointWeight(obj)
-        test.setSubject(geo)
-        print(test.getParent())
-        print(test.getChilds())
-        print(test.getSubShapes())
-        print(test.getSkinClusters())
+class RenderCamera(TrsObject):
+    def __init__(self,obj):
+        super(RenderCamera,self).__init__(obj)
+        self._anim_dicts=[]#{"matrix":[],"time":0,"in":"","out":""}
+        self._light_dicts=[]#{"light":"","name":"","matrix":[]}
 
-#sample()
+    def __loading(self):
+        super(RenderCamera,self).loading()
+
+    def setAnimDicts(self,variable):
+        self._anim_dicts=variable
+        return self._anim_dicts
+    def addAnimDicts(self,variables):
+        for variable in variables:
+            self._anim_dicts.append(variable)
+        return self._anim_dicts
+    def getAnimDicts(self):
+        return self._anim_dicts

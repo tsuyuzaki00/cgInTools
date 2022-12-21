@@ -1,0 +1,22 @@
+{
+    "transMFn_list":
+    [
+        110,
+        121
+    ],
+    "shapeMFn_list":
+    [
+        296,
+        267,
+        294,
+        250,
+        281,
+        308,
+        305,
+        303
+    ],
+    "nodeTypeToMFn_dict":
+    {
+        "skinCluster":686
+    }
+}

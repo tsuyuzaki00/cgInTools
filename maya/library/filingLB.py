@@ -1,5 +1,4 @@
 # -*- coding: iso-8859-15 -*-
-# -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import os
 import shutil
@@ -7,20 +6,23 @@ import shutil
 import cgInTools as cit
 from . import setBaseLB as sbLB
 from . import cleanLB as cLB
-cit.reloads([sbLB,cLB])
+from . import checkLB as chLB
+from . import jsonLB as jLB
+cit.reloads([sbLB,cLB,chLB,jLB])
+
+rules_dict=jLB.getJson(cit.mayaSettings_path,"library")
 
 class Path(sbLB.BasePath):
     def __init__(self):
-        self._path=""
-        self._name=""
-        self._split="_"
-        self._index=0
+        super(Path,self).__init__()
+        scene=cmds.file(q=True,sceneName=True).split("/")[-1]
+        self._file=scene.split(".")[0]
+        self._extension=scene.split(".")[1]
 
     def __loading(self):
         self._path=os.path.normpath(self._path)
-        pass
 
-#Public Function
+    #Public Function
     def clean(self):
         self.__loading()
 
@@ -33,124 +35,93 @@ class Path(sbLB.BasePath):
         split_str=self._name.split(self._split)[self._index]
         return split_str
 
-#Mulch Function
-#Single Function
 class Project(sbLB.BasePath):
     def __init__(self):
-        self._name=cmds.file(q=True,sceneName=True).split('/')[-1]
-        self._work_path=cmds.workspace(q=True,rd=True,o=True)
-        self._def_path=os.path.abspath(os.path.join(self._work_path,".."))
-        self._projectName_path="_newProject"
+        super(Project,self).__init__()
+        self._workPath=cmds.workspace(q=True,rd=True,o=True)
+        self._defPath=os.path.abspath(os.path.join(self._workPath,".."))
+        self._projectPathName="_newProject"
 
-    def __loading():
-        pass
+    def __loading(self):
+        self._workPath=cmds.workspace(q=True,rd=True)
+        self._defPath=os.path.abspath(os.path.join(self._workPath,".."))
 
-    def queryInDefPath(self,variable):
-        inDefPath=os.path.abspath(os.path.join(self._def_path,variable))
-        return inDefPath
-        
-    def createProject(self):
-        self._work_path=self.setProject_create_path(self._def_path,self._projectName_path)
-        return self._work_path
-
-    def editProject(self):
-        self._work_path=self.setProject_edit_path(self._def_path,self._projectName_path)
-        return self._work_path
-
-    def upCreateProject(self):
-        self._work_path=self.upSetProject_create_path(self._projectName_path)
-        return self._work_path
-
-#Mulch Function
-    def upSetProject_create_path(self,name):
-        root_path=cmds.workspace(q=True,rd=True)
-        up_path=os.path.abspath(os.path.join(root_path,".."))
-        work_path=self.setProject_create_path(up_path,name)
-        return work_path
-
-#Single Function
-    def setProject_create_path(self,path,name):
-        defSetProject_path=cit.mayaDefSetProject_path
-        path=self.isPath_check_path(path)
-        work_path=os.path.join(path,name)
-        work_path=self.notSamePath_check_path(work_path)
-        shutil.copytree(defSetProject_path,work_path)
-        cmds.workspace(work_path,o=True)
-        work_path=cmds.workspace(q=True,rd=True)
-        return work_path
-    
-    def setProject_edit_path(self,path,name):
-        work_path=os.path.join(path,name)
-        work_path=self.isPath_check_path(work_path)
-        cmds.workspace(work_path,o=True)
-        work_path=cmds.workspace(q=True,rd=True)
-        return work_path
-
-    def isPath_check_path(self,path):
-        bool=os.path.isdir(path)
-        if bool:
+    #Single Function
+    def isPath_check_str(self,path):
+        boolean=os.path.isdir(path)
+        if boolean:
             return path
         else :
             cmds.error(path+" path does not exist.")
 
-    def notSamePath_check_path(self,path):
-        bool=os.path.isdir(path)
-        if bool:
+    def notSamePath_check_str(self,path):
+        boolean=os.path.isdir(path)
+        if boolean:
             cmds.error(path+" folder with the same name already exists")
         else :
             return path
-        
+
+    def setProject_create_str(self,path,name):
+        workPath=os.path.join(path,name)
+        defSetProjectPath=cit.mayaDefSetProject_path
+        shutil.copytree(defSetProjectPath,workPath)
+        cmds.workspace(workPath,o=True)
+        workPath=cmds.workspace(q=True,rd=True)
+        return workPath
+    
+    def setProject_edit_str(self,path,name):
+        workPath=os.path.join(path,name)
+        cmds.workspace(workPath,o=True)
+        workPath=cmds.workspace(q=True,rd=True)
+        return workPath
+
+    #Multi Function
+    def isPathAndSamePath_check_func(self,path,name):
+        checkPath=os.path.join(path,name)
+        self.isPath_check_str(checkPath)
+        self.notSamePath_check_str(checkPath)
+
+    #Public Function
+    def queryInDefPath(self,variable):
+        inDefPath=os.path.abspath(os.path.join(self._defPath,variable))
+        return inDefPath
+
+    def createProject(self):
+        self.isPathAndSamePath_check_func(self._path,self._projectName)
+        self._workPath=self.setProject_create_str(self._path,self._projectName)
+        return self._workPath
+
+    def editProject(self):
+        self.isPathAndSamePath_check_func(self._path,self._projectName)
+        self._workPath=self.setProject_edit_str(self._path,self._projectName)
+        return self._workPath
+
+    def createInProject(self):
+        self.__loading()
+        self.isPathAndSamePath_check_func(self._defPath,self._projectName)
+        self._workPath=self.setProject_create_str(self._defPath,self._projectName)
+        return self._workPath
+
+    def editInProject(self):
+        self.__loading()
+        self.isPathAndSamePath_check_func(self._defPath,self._projectName)
+        self._workPath=self.setProject_edit_str(self._defPath,self._projectName)
+        return self._workPath
+ 
 class File(sbLB.BaseFile):
     def __init__(self):
-        work_path=cmds.workspace(q=True,sn=True)
-        self._path=work_path
+        self._fileType_dict=rules_dict["fileType_dict"]
+        workPath=cmds.workspace(q=True,sn=True)
+        self._path=workPath
         self._file=work_path.split("/")[-1]
-        self._fileType=("ma","mayaAscii")
-        self._objs=[]
-        self._fileType_dict={
-            "ma":"mayaAscii",
-            "mb":"mayaBinary",
-            "obj":"OBJ export",
-            "fbx":"FBX export"
-            }
 
-#Public Function
-    def addPath(self,variable):
-        self._path=os.path.abspath(os.path.join(self._path,variable))
-        return self._path
-
-    def save(self):
-        self.fileSave_edit_func(self._file,self._fileType[1])
-
-    def exportFile(self):
-        if self._fileType[0] is "ma" or self._fileType[0] is "mb":
-            self.exportMAMB_create_func(self._objs,self._path,self._file,self._fileType[0],self._fileType[1])
-        elif self._fileType[0] is "obj" or self._fileType[0] is "fbx":
-            self.exportOBJFBX_create_func(self._objs,self._path,self._file,self._fileType[0],self._fileType[1])
-
-    def grpsExport(self):
-        uncleanObjs=[]
-        dupGrps=self.grpsDuplicate_create_list(self._objs)
-        for dupGrp in dupGrps:
-            uncleans=cmds.listRelatives(dupGrp,c=True,f=True)
-            uncleanObjs=uncleanObjs+uncleans
-        cLB.delFRHThree_edit_func(uncleanObjs)
-        cLB.defaultMaterial_edit_func(uncleanObjs)
-        if self._fileType[0] is "ma" or self._fileType[0] is "mb":
-            self.exportMAMB_create_func(dupGrps,self._path,self._file,self._fileType[0],self._fileType[1])
-        elif self._fileType[0] is "obj" or self._fileType[0] is "fbx":
-            self.exportOBJFBX_create_func(dupGrps,self._path,self._file,self._fileType[0],self._fileType[1])
-        self.undoDuplicate_edit_func(self._objs,dupGrps)
-        
-#Single Function
+    #Single Function
     def fileSave_edit_func(self,file,exType="mayaAscii"):
-        currentScene_path=cmds.file(q=True,sn=True)
-        root=os.path.dirname(currentScene_path)
+        currentScenePath=cmds.file(q=True,sn=True)
+        root=os.path.dirname(currentScenePath)
         if root == "":
             cmds.file(rename=file)
-            cmds.file(save=True,op="v=0",type=exType)
-        else:
-            cmds.file(save=True,op="v=0",type=exType)
+        cmds.file(save=True,op="v=0",type=exType)
 
     def exportMAMB_create_func(self,objs,path,file,ex="ma",exType="mayaAscii"):
         cmds.select(objs)
@@ -175,3 +146,33 @@ class File(sbLB.BaseFile):
         cmds.delete(delGrps)
         for grp in grps:
             cmds.rename(grp+"_original",grp)
+
+    #Multi Function
+    def _judgeFileType_create_func(objs,path,file,extension,fileType_dict):
+        fileType=fileType_dict[extension]
+        if extension is "ma" or extension is "mb":
+            self.exportMAMB_create_func(objs,path,file,extension,fileType)
+        elif extension is "obj" or extension is "fbx":
+            self.exportOBJFBX_create_func(objs,path,file,extension,fileType)
+
+    #Public Function
+    def addPath(self,variable):
+        addPath=os.path.abspath(os.path.join(self._path,variable))
+        return addPath
+
+    def save(self):
+        self.fileSave_edit_func(self._file,self._fileType[1])
+
+    def exportFile(self):
+        self._judgeFileType_create_func(self._objs,self._path,self._file,self._extension,self._fileType_dict)
+
+    def grpsExport(self):
+        uncleanObjs=[]
+        dupGrps=self.grpsDuplicate_create_list(self._objs)
+        for dupGrp in dupGrps:
+            uncleans=cmds.listRelatives(dupGrp,c=True,f=True)
+            uncleanObjs=uncleanObjs+uncleans
+        cLB.delFRHThree_edit_func(uncleanObjs)
+        cLB.defaultMaterial_edit_func(uncleanObjs)
+        self._judgeFileType_create_func(self._objs,self._path,self._file,self._extension,self._fileType_dict)
+        self.undoDuplicate_edit_func(self._objs,dupGrps)

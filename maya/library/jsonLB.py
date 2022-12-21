@@ -6,7 +6,7 @@ import cgInTools as cit
 from . import setBaseLB as sbLB
 cit.reloads([sbLB])
 
-class Json(sbLB.BaseFile):
+class Json(sbLB.BaseJson):
     def __init__(self):
         super(Json,self).__init__()
 
@@ -20,6 +20,12 @@ class Json(sbLB.BaseFile):
             return json_file
 
     #Multi Function
+    def readJson_quary_dict(self,path,file,extension):
+        data_file=self.pathSetting_create_str(path,file,extension)
+        with open(data_file, 'r') as f:
+            data_dict = json.load(f)
+            return data_dict
+            
     def thisPack_check_func(self,path,file,extension,checkDict):
         pack_dict=self.readJson_quary_dict(path,file,extension+"Pack")
         try:
@@ -27,12 +33,6 @@ class Json(sbLB.BaseFile):
             #print(pack_dict[checkDict])
         except:
             cmds.error("setFile is No packFiles.")
-
-    def readJson_quary_dict(self,path,file,extension):
-        data_file=self.pathSetting_create_str(path,file,extension)
-        with open(data_file, 'r') as f:
-            data_dict = json.load(f)
-            return data_dict
 
     def readPack_quary_list(self,path,file,extension):
         self.thisPack_check_func(path,file,extension,"packFiles")

@@ -1,114 +1,5 @@
 # -*- coding: iso-8859-15 -*-
 
-class TypeCheck(object):
-    def __init__(self):
-        self._variable=None
-        self._relation=None
-        self._instance=None
-    
-    def int_check_bool(self,variable):
-        if type(variable) is int:
-            return True
-        else:
-            return False
-    
-    def float_check_bool(self,variable):
-        if type(variable) is float:
-            return True
-        else:
-            return False
-    
-    def string_check_bool(self,variable):
-        if type(variable) is str:
-            return True
-        else:
-            return False
-    
-    def boolean_check_bool(self,variable):
-        if type(variable) is bool:
-            return True
-        else:
-            return False
-    
-    def list_check_bool(self,variable):
-        if type(variable) is list:
-            return True
-        else:
-            return False
-    
-    def tuple_check_bool(self,variable):
-        if type(variable) is tuple:
-            return True
-        else:
-            return False
-    
-    def dict_check_bool(self,variable):
-        if type(variable) is dict:
-            return True
-        else:
-            return False
-    
-    def set_check_bool(self,variable):
-        if type(variable) is set:
-            return True
-        else:
-            return False
-
-    def instance_check_bool(self,variable,instance):
-        if isinstance(variable,instance):
-            return True
-        else:
-            return False
-
-    def setVariable(self,variable):
-        self._variable=variable
-        return self._variable
-    def getVariable(self):
-        return self._variable
-
-    def setRelation(self,variable):
-        self._relation=variable
-        return self._relation
-    def getRelation(self):
-        return self._relation
-    
-    def setInstance(self,variable):
-        self._instance=variable
-        return self._instance
-    def getInstance(self):
-        return self._instance
-
-    def check(self):
-        if str(self._relation) == "int" or self._relation == int:
-            boolean=self.int_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "float" or self._relation == float:
-            boolean=self.float_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "str" or tr(self._relation) == "string" or self._relation == str:
-            boolean=self.string_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "bool" or tr(self._relation) == "boolean" or self._relation == bool:
-            boolean=self.boolean_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "list" or self._relation == list:
-            boolean=self.list_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "tuple" or self._relation == tuple:
-            boolean=self.tuple_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "dict" or self._relation == dict:
-            boolean=self.dict_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "set" or self._relation == set:
-            boolean=self.set_check_bool(self._variable)
-            return boolean
-        elif not self._instance == None:
-            boolean=self.instance_check_bool(self._variable,self._instance)
-            return boolean
-        else:
-            cmds.error("There is no data type "+self._relation)
-
 class BaseName(object):
     def __init__(self):
         self._object=""
@@ -120,12 +11,10 @@ class BaseName(object):
         self._number=00
         self._none="none"
         self._custom=""
-        # fullAuto setAuto mark replace
-        self._switch="fullAuto"
-        # title node side num titleNum nodeNum sideNum titleHie scene custom
-        self._orders=[]
-        self._find=None
-        self._replace=None
+        self._switch="fullAuto"# fullAuto setAuto mark replace
+        self._orders=[]# title node side num titleNum nodeNum sideNum titleHie scene custom
+        self._find=""
+        self._replace=""
 
     def setObject(self,variable):
         self._object=variable
@@ -198,19 +87,13 @@ class BaseName(object):
         return self._replace
     def getReplace(self):
         return self._replace
-
-    def setCurveType(self,variable):
-        self._curveType=variable
-        return self._curveType
-    def getCurveType(self):
-        return self._curveType
 class BaseObject(object):
     def __init__(self):
         self._object=""
         self._parent=""
         self._childs=[]
-        self._shape=""
-        self._component=""
+        self._shapes=[]
+        self._components=[]
         self._attr=""
         self._value=0
         self._joint=""
@@ -235,17 +118,17 @@ class BaseObject(object):
     def getChilds(self):
         return self._childs
 
-    def setShape(self,variable):
-        self._shape=variable
-        return self._shape
-    def getShape(self):
-        return self._shape
+    def setShapes(self,variable):
+        self._shapes=variable
+        return self._shapes
+    def getShapes(self):
+        return self._shapes
 
-    def setComponent(self,variable):
-        self._component=variable
-        return self._component
-    def getComponent(self):
-        return self._component
+    def setComponents(self,variable):
+        self._components=variable
+        return self._components
+    def getComponents(self):
+        return self._components
 
     def setAttr(self,variable):
         self._attr=variable
@@ -298,7 +181,7 @@ class BasePair(object):
         self._targetJoint="" # string
         self._thirdJoint="" # string
 
-        self._ui=""
+        self._ui=""# string
         
     def setSourceNode(self,variable):
         self._sourceNode=variable
@@ -395,19 +278,7 @@ class BasePair(object):
         return self._ui
     def getUI(self):
         return self._ui
-    
-    def setFKCtrls(self,variable):
-        self._fkCtrls=variable
-        return self._fkCtrls
-    def getFKCtrls(self):
-        return self._fkCtrls
-        
-    def setIKCtrls(self,variable):
-        self._ikCtrls=variable
-        return self._ikCtrls
-    def getIKCtrls(self):
-        return self._ikCtrls
-class BaseFile(object):
+class BaseJson(object):
     def __init__(self):
         self._path=""
         self._file=""
@@ -416,13 +287,6 @@ class BaseFile(object):
         self._readPack_dicts=[]
         self._write_dict={}
         self._writePack_dicts=[]# {"dataDict":{},"fileName":""}
-        self._objs=[]
-        self._fileType_dict={
-            "ma":"mayaAscii",
-            "mb":"mayaBinary",
-            "obj":"OBJ export",
-            "fbx":"FBX export"
-            }
 
     def setPath(self,variable):
         self._path=variable
@@ -454,40 +318,23 @@ class BaseFile(object):
     def getWriteDict(self):
         return self._write_dict
 
-    def setDictInPack(self,variable,file=None):
+    def setWritePackDict(self,variable,file=None):
         file=file or self._file
         self._writePack_dicts=[{"fileName":file,"dataDict":variable}]
         return self._writePack_dicts
-    def addDictInPack(self,variable,file=None):
+    def addWritePackDict(self,variable,file=None):
         file=file or self._file
         self._writePack_dicts.append({"fileName":file,"dataDict":variable})
         return self._writePack_dicts
-    def getPackDicts(self):
+    def getWritePackDicts(self):
         return self._writePack_dicts
 
-    def setFileType(self,variable):
-        self._fileType=variable,self._fileType_dict[variable]
-        return self._fileType
-    def getFileType(self):
-        return self._fileType
-
-    def setObjs(self,variable):
-        self._objs=variable
-        return self._objs
-    def addObjs(self,variable):
-        self._objs.append(variable)
-        return self._objs
-    def getObjs(self):
-        return self._objs
-class BasePath(object):
+class BaseFile(object):
     def __init__(self):
         self._path=""
-        self._name=""
-        self._split=""
-        self._index=0
-        self._work_path=""
-        self._def_path=""
-        self._projectName_path=""
+        self._file=""
+        self._extension="ma"
+        self._objs=[]
 
     def setPath(self,variable):
         self._path=variable
@@ -495,11 +342,55 @@ class BasePath(object):
     def getPath(self):
         return self._path
 
-    def setName(self,variable):
-        self._name=variable
-        return self._name
-    def getName(self):
-        return self._name
+    def setFile(self,variable):
+        self._file=variable
+        return self._file
+    def getFile(self):
+        return self._file
+
+    def setExtension(self,variable):
+        self._extension=variable
+        return self._extension
+    def getExtension(self):
+        return self._extension
+
+    def setObjs(self,variable):
+        self._objs=variable
+        return self._objs
+    def addObjs(self,variables):
+        for variable in variables:
+            self._objs.append(variable)
+            return self._objs
+    def getObjs(self):
+        return self._objs
+class BasePath(object):
+    def __init__(self):
+        self._path=""
+        self._file=""
+        self._extension="ma"
+        self._split=""
+        self._index=0
+        self._workPath=""
+        self._defPath=""
+        self._projectPathName=""
+
+    def setPath(self,variable):
+        self._path=variable
+        return self._path
+    def getPath(self):
+        return self._path
+
+    def setFile(self,variable):
+        self._file=variable
+        return self._file
+    def getFile(self):
+        return self._file
+
+    def setExtension(self,variable):
+        self._extension=variable
+        return self._extension
+    def getExtension(self):
+        return self._extension
 
     def setSplit(self,variable):
         self._split=variable
@@ -514,27 +405,108 @@ class BasePath(object):
         return self._index
 
     def setWorkPath(self,variable):
-        self._work_path=variable
-        return self._work_path
+        self._workPath=variable
+        return self._workPath
     def getWorkPath(self):
-        return self._work_path
+        return self._workPath
 
     def setDefPath(self,variable):
-        self._def_path=variable
-        return self._def_path
+        self._defPath=variable
+        return self._defPath
     def getDefPath(self):
-        return self._def_path
+        return self._defPath
 
     def setProjectName(self,variable):
-        self._projectName_path=variable
-        return self._projectName_path
+        self._projectPathName=variable
+        return self._projectPathName
     def getProjectName(self):
-        return self._projectName_path
+        return self._projectPathName
+
+class BaseRender(object):
+    def __init__(self):
+        self._camera=""
+        self._wrkPath=""
+        self._exportFolder="images"
+        self._file="image"
+        self._extension="png"
+        self._imageFormat=32
+        self._width=1920
+        self._height=1080
+        self._isRenderer="mayaSoftware"#"mayaSoftware","mayaHardware2","mayaVector","arnold"
+        self._start=0
+        self._end=120
+
+    def setCamera(self,variable):
+        self._camera=variable
+        return self._camera
+    def getCamera(self):
+        return self._camera
+    
+    def setWrkPath(self,variable):
+        self._wrkPath=variable
+        return self._wrkPath
+    def getWrkPath(self):
+        return self._wrkPath
+    
+    def setExportFolder(self,variable):
+        self._exportFolder=variable
+        return self._exportFolder
+    def getExportFolder(self):
+        return self._exportFolder
+
+    def setFile(self,variable):
+        self._file=variable
+        return self._file
+    def getFile(self):
+        return self._file
+
+    def setExtension(self,variable):
+        self._extension=variable
+        return self._extension
+    def getExtension(self):
+        return self._extension
+
+    def setImageFormat(self,variable):
+        self._imageFormat=variable
+        return self._imageFormat
+    def getImageFormat(self):
+        return self._imageFormat
+    
+    def setWidth(self,variable):
+        self._width=variable
+        return self._width
+    def getWidth(self):
+        return self._width
+    
+    def setHeight(self,variable):
+        self._height=variable
+        return self._height
+    def getHeight(self):
+        return self._height
+    
+    def setIsRenderer(self,variable):
+        self._isRenderer=variable
+        return self._isRenderer
+    def getIsRenderer(self):
+        return self._isRenderer
+    
+    def setStart(self,variable):
+        self._start=variable
+        return self._start
+    def getStart(self):
+        return self._start
+    
+    def setEnd(self,variable):
+        self._end=variable
+        return self._end
+    def getEnd(self):
+        return self._end
+
 class BaseCheck(object):
     def __init__(self):
-        self._relation=""
-        self._same=""
-        self._same_list=[]
+        self._relation=None
+        self._same=None
+        self._sames=[]
         self._maxLimit=100
         self._minLimit=0
         self._highLimit=100
@@ -543,7 +515,6 @@ class BaseCheck(object):
         self._path=""
         self._node=""
         self._attr=""
-        self._value=0
 
     def setRelation(self,variable):
         self._relation=variable
@@ -557,11 +528,11 @@ class BaseCheck(object):
     def getSame(self):
         return self._same
 
-    def setSameList(self,variable):
-        self._same_list=variable
-        return self._same_list
-    def getSameList(self):
-        return self._same_list
+    def setSames(self,variable):
+        self._sames=variable
+        return self._sames
+    def getSames(self):
+        return self._sames
 
     def setMaxLimit(self,variable):
         self._maxLimit=variable
@@ -610,3 +581,29 @@ class BaseCheck(object):
         return self._attr
     def getAttr(self):
         return self._attr
+
+class TypeCheck(object):
+    def __init__(self):
+        self._variable=None
+        self._relation=None
+        self._instance=None
+
+    def setVariable(self,variable):
+        self._variable=variable
+        return self._variable
+    def getVariable(self):
+        return self._variable
+
+    def setRelation(self,variable):
+        self._relation=variable
+        return self._relation
+    def getRelation(self):
+        return self._relation
+    
+    def setInstance(self,variable):
+        if variable == None:
+            return None
+        self._instance=variable
+        return self._instance
+    def getInstance(self):
+        return self._instance
