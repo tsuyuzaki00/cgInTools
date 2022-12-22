@@ -4,20 +4,22 @@ import maya.cmds as cmds
 import cgInTools as cit
 from . import setBaseLB as sbLB
 from . import jsonLB as jLB
-cit.reloads([jLB])
+cit.reloads([sbLB,jLB])
+
+MENU_DICT=jLB.getJson(cit.menu_path,"mayaMenu")
 
 class Error(sbLB.BaseFile):
     def __init__(self):
         super().__init__()
         json_dict=jLB.getJson(self._path,self._file)
+        self.menu_dict=MENU_DICT
 
     def __loading(self):
         self._value=""
 
     #Single Function
     def menuError_check_func(self):
-        menu_dict=jLB.getJson(cit.menu_path,"mayaMenu")
-        pass
+        return self.menu_dict
 
     #Multi Function
     def _multi_mode_func(self):

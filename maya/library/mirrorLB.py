@@ -35,6 +35,7 @@ class MatrixMirror():
         self.duplicate=variable
         return self.duplicate
 
+    #Public Function
     def translateOnly(self):
         if self.duplicate:
             targetName=self.reversedLeftRight_edit_string(self.sourceNode)

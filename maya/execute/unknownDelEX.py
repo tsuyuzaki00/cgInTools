@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-15 -*-
-from ..library import cleanLB as cl
+import cgInTools as cit
+from ..library import cleanLB as cLB
+cit.reloads([cLB])
 
 def main():
-    cl.delUnknownNode_edit_func()
+    cLB.delUnknownNode_edit_func()

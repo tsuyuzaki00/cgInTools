@@ -6,6 +6,7 @@ from PySide2.QtGui import *
 import os
 import maya.cmds as cmds
 
+import cgInTools as cit
 from ...ui import mainWindowUI as mainUI
 from ...ui import clickSelectUI as UI
 from ..library import windowLB as wLB

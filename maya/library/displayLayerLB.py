@@ -1,6 +1,11 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 
+import cgInTools as cit
+from . import setBaseLB as sbLB
+from . import jsonLB as jLB
+cit.reloads([sbLB,jLB])
+
 class DisplayLayer():
     def __init__(self):
         self._name="layer"

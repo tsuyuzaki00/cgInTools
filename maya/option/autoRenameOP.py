@@ -11,11 +11,14 @@ from ..library import jsonLB as jLB
 from cgInTools.maya.execute import autoRenameEX as EX
 cit.reloads([UI,wLB,jLB,EX])
 
+SETPATH=cit.mayaData_dir
+RESETPATH=cit.mayaSettings_dir
+
 class AutoRenameOP(UI.AutoRenameOPBase):
     def __init__(self,*args,**kwargs):
         super(AutoRenameOP,self).__init__(*args, **kwargs)
-        self.setPath=cit.mayaData_path
-        self.resetPath=cit.mayaSettings_path
+        self.setPath=SETPATH
+        self.resetPath=RESETPATH
         self.fileName="autoRename"
 
         self.__importJson(self.setPath,self.fileName)

@@ -2,9 +2,7 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-import cgInTools as cit
 from ._reference import mainWindowUI as UI
-cit.reloads([UI])
 
 class ObjCornerEdgeOPBase(UI.MainWindowBase):
     def __init__(self,*args,**kwargs):

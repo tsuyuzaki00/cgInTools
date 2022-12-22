@@ -10,7 +10,8 @@ from . import checkLB as chLB
 from . import jsonLB as jLB
 cit.reloads([sbLB,cLB,chLB,jLB])
 
-rules_dict=jLB.getJson(cit.mayaSettings_path,"library")
+RULE_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
+PROJECTFOLDER=cit.mayaDefSetProject_dir
 
 class Path(sbLB.BasePath):
     def __init__(self):
@@ -38,6 +39,7 @@ class Path(sbLB.BasePath):
 class Project(sbLB.BasePath):
     def __init__(self):
         super(Project,self).__init__()
+        self.defSetProjectFolder=PROJECTFOLDER
         self._workPath=cmds.workspace(q=True,rd=True,o=True)
         self._defPath=os.path.abspath(os.path.join(self._workPath,".."))
         self._projectPathName="_newProject"
@@ -61,14 +63,6 @@ class Project(sbLB.BasePath):
         else :
             return path
 
-    def setProject_create_str(self,path,name):
-        workPath=os.path.join(path,name)
-        defSetProjectPath=cit.mayaDefSetProject_path
-        shutil.copytree(defSetProjectPath,workPath)
-        cmds.workspace(workPath,o=True)
-        workPath=cmds.workspace(q=True,rd=True)
-        return workPath
-    
     def setProject_edit_str(self,path,name):
         workPath=os.path.join(path,name)
         cmds.workspace(workPath,o=True)
@@ -76,10 +70,18 @@ class Project(sbLB.BasePath):
         return workPath
 
     #Multi Function
-    def isPathAndSamePath_check_func(self,path,name):
+    def _isPathAndSamePath_check_func(self,path,name):
         checkPath=os.path.join(path,name)
         self.isPath_check_str(checkPath)
         self.notSamePath_check_str(checkPath)
+
+    #Private Function
+    def _setProject_create_str(self,path,name):
+        workPath=os.path.join(path,name)
+        shutil.copytree(self.defSetProjectFolder,workPath)
+        cmds.workspace(workPath,o=True)
+        workPath=cmds.workspace(q=True,rd=True)
+        return workPath
 
     #Public Function
     def queryInDefPath(self,variable):
@@ -87,30 +89,30 @@ class Project(sbLB.BasePath):
         return inDefPath
 
     def createProject(self):
-        self.isPathAndSamePath_check_func(self._path,self._projectName)
-        self._workPath=self.setProject_create_str(self._path,self._projectName)
+        self._isPathAndSamePath_check_func(self._path,self._projectName)
+        self._workPath=self._setProject_create_str(self._path,self._projectName)
         return self._workPath
 
     def editProject(self):
-        self.isPathAndSamePath_check_func(self._path,self._projectName)
+        self._isPathAndSamePath_check_func(self._path,self._projectName)
         self._workPath=self.setProject_edit_str(self._path,self._projectName)
         return self._workPath
 
     def createInProject(self):
         self.__loading()
-        self.isPathAndSamePath_check_func(self._defPath,self._projectName)
-        self._workPath=self.setProject_create_str(self._defPath,self._projectName)
+        self._isPathAndSamePath_check_func(self._defPath,self._projectName)
+        self._workPath=self._setProject_create_str(self._defPath,self._projectName)
         return self._workPath
 
     def editInProject(self):
         self.__loading()
-        self.isPathAndSamePath_check_func(self._defPath,self._projectName)
+        self._isPathAndSamePath_check_func(self._defPath,self._projectName)
         self._workPath=self.setProject_edit_str(self._defPath,self._projectName)
         return self._workPath
  
 class File(sbLB.BaseFile):
     def __init__(self):
-        self._fileType_dict=rules_dict["fileType_dict"]
+        self._fileType_dict=RULE_DICT["fileType_dict"]
         workPath=cmds.workspace(q=True,sn=True)
         self._path=workPath
         self._file=work_path.split("/")[-1]

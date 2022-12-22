@@ -8,8 +8,8 @@ import maya.cmds as cmds
 import cgInTools as cit
 from ...ui import ctrlColorChengeUI as UI
 from ..library import windowLB as wLB
-from ..library import sourceToTargetLB as sttLB
-cit.reloads([UI,wLB,sttLB])
+from ..library import colorLB as cLB
+cit.reloads([UI,wLB,cLB])
 
 class ColorChangeWindow(UI.ColorChengeWindouBase):
     def __init__(self, parent):
@@ -17,93 +17,71 @@ class ColorChangeWindow(UI.ColorChengeWindouBase):
         self.setWindowFlags(Qt.Window)
         self.setWindowTitle("ctrlColorChenge")
 
-    def getSelectDrawingOverrides_query_list(self,objs):
-        drawingOverride_objs=[]
+    #Single Function
+    def changeColor_edit_func(self,value,swicth=0):
+        change=cLB.Color()
+        change.setValue(value)
+        objs=cmds.ls(sl=True)
         for obj in objs:
-            if cmds.nodeType(obj)=="transform":
-                shapes=cmds.listRelatives(objs[0:],type="nurbsCurve")
-                for shape in shapes:
-                    drawingOverride_objs.append(shape)
-            elif cmds.nodeType(obj)=="joint":
-                drawingOverride_objs.append(obj)
-            else :
-                cmds.error("Attribute Drowing Overrides is missing")
-        return drawingOverride_objs
+            change.setObject(obj)
+            if swicth is 0:
+                change.overrideColor()
+            elif swicth is 1:
+                change.wireframeColor()
 
-    def changeCtrlShapes_edit_func(self,objs,indexColor):
-        for obj in objs:
-            cmds.setAttr(obj+".overrideEnabled",1)
-            cmds.setAttr(obj+".overrideColor",indexColor)
-
+    #Public Function
     def buttonRedOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,13)#Red
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(13,id_int)#Red
     def buttonPinkOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,20)#Pink
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(20,id_int)#Pink
     def buttonCrimsonOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,31)#Crimson
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(31,id_int)#Crimson
     def buttonDarkRedOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,4)#DarkRed
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(4,id_int)#DarkRed
     def buttonYellowOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,17)#Yellow
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(17,id_int)#Yellow
     def buttonLimeOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,14)#lime
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(14,id_int)#lime
     def buttonGreenOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,27)#MediumSeaGreen
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(27,id_int)#MediumSeaGreen
     def buttonDarkGreenOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,7)#DarkGreen
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(7,id_int)#DarkGreen
     def buttonBlueOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,6)#Blue
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(6,id_int)#Blue
     def buttonCyanOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,18)#Cyan
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(18,id_int)#Cyan
     def buttonTealOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,28)#SteelBlue
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(28,id_int)#SteelBlue
     def buttonDarkBlueOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,15)#DarkBlue
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(15,id_int)#DarkBlue
     def buttonMagentaOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,9)#Magenta
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(9,id_int)#Magenta
     def buttonPurpleOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,30)#Purple
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(30,id_int)#Purple
     def buttonWhiteOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,16)#White
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(16,id_int)#White
     def buttonBlackOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        self.changeCtrlShapes_edit_func(drowings,1)#Black
-    def buttonNeutralOnClicked(self):
-        objs=cmds.ls(sl=True)
-        drowings=self.getSelectDrawingOverrides_query_list(objs)
-        for drowing in drowings:
-            cmds.setAttr(drowing+".overrideEnabled",0)
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(1,id_int)#Black
+    def buttonOverrideNeutralOnClicked(self):
+        self.changeColor_edit_func(None,0)#OverrideNeutral
+    def buttonWireNeutralOnClicked(self):
+        self.changeColor_edit_func(None,1)#WireFrameNeutral
 
 def main():
     mayaWindow=ColorChangeWindow(parent=wLB.mayaMainWindow_query_widget())

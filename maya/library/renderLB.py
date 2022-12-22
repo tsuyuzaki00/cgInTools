@@ -7,7 +7,7 @@ from . import setBaseLB as sbLB
 from . import jsonLB as jLB
 cit.reloads([sbLB,jLB])
 
-rules_dict=jLB.getJson(cit.mayaSettings_path,"library")
+rules_dict=jLB.getJson(cit.mayaSettings_dir,"library")
 
 class MayaRender(sbLB.BaseRender):
     def __init__(self):

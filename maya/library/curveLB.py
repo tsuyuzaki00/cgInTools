@@ -2,8 +2,10 @@
 import maya.cmds as cmds
 import math
 
+import cgInTools as cit
 from . import setBaseLB as sbLB
-
+from . import jsonLB as jLB
+cit.reloads([sbLB,jLB])
 class SetCurve(sbLB.BaseName):
     def __init__(self):
         self._name="curveName"

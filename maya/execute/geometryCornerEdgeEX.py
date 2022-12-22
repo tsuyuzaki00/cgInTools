@@ -1,7 +1,9 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
+
 import cgInTools as cit
-from ..library import jsonLB as cj
+from ..library import jsonLB as jLB
+cit.reloads([jLB])
 
 def cornerEdge_query_func(obj,lowAngle=30,highAngle=165):
     selEdge_int=cmds.polyEvaluate(e=True)
@@ -13,8 +15,8 @@ def cornerEdge_query_func(obj,lowAngle=30,highAngle=165):
     return edges
 
 def main():
-    setting=cj.Json()
-    setting.setPath(cit.mayaData_path)
+    setting=jLB.Json()
+    setting.setPath(cit.mayaData_dir)
     setting.setFile("geometryCornerEdge")
     data_dict=setting.read()
     

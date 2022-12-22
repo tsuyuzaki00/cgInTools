@@ -1,11 +1,12 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
+
 import cgInTools as cit
-from ..library import cMirror as cm
-cit.verReload(cm)
+from ..library import mirrorLB as mLB
+cit.reloads([mLB])
 
 def main():
-    selMirrorX=cm.MatrixMirror()
+    selMirrorX=mLB.MatrixMirror()
     objs=cmds.ls(sl=True)
     selMirrorX.setSourceNode(objs[0])
     selMirrorX.setTargetNode(objs[1])

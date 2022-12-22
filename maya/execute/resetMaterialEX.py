@@ -1,8 +1,11 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
-from ..library import cleanLB as cl
+
+import cgInTools as cit
+from ..library import cleanLB as cLB
+cit.reloads([cLB])
 
 def main():
     objs = cmds.ls(sl=True)
     for obj in objs:
-        cl.defaultMaterial_edit_func(obj)
+        cLB.defaultMaterial_edit_func(obj)

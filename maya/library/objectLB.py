@@ -6,7 +6,7 @@ import cgInTools as cit
 from . import jsonLB as jLB
 cit.reloads([jLB])
 
-rules_dict=jLB.getJson(cit.mayaSettings_path,"openLibrary")
+rules_dict=jLB.getJson(cit.mayaSettings_dir,"openLibrary")
 
 class TrsObject(object):
     def __init__(self,obj):
@@ -213,12 +213,20 @@ class RenderCamera(TrsObject):
     def __loading(self):
         super(RenderCamera,self).loading()
 
-    def setAnimDicts(self,variable):
-        self._anim_dicts=variable
+    def setAnimDict(self,variable):
+        self._anim_dicts=[variable]
         return self._anim_dicts
-    def addAnimDicts(self,variables):
-        for variable in variables:
-            self._anim_dicts.append(variable)
+    def addAnimDict(self,variable):
+        self._anim_dicts.append(variable)
         return self._anim_dicts
     def getAnimDicts(self):
         return self._anim_dicts
+    
+    def setLightDict(self,variable):
+        self._light_dicts=[variable]
+        return self._light_dicts
+    def addLightDict(self,variable):
+        self._light_dicts.append(variable)
+        return self._light_dicts
+    def getLightDicts(self):
+        return self._light_dicts

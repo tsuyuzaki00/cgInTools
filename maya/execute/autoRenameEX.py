@@ -6,7 +6,7 @@ from ..library import jsonLB as jLB
 cit.reloads([nLB,jLB])
 
 def main():
-    rules_dict=jLB.getJson(cit.mayaData_path,"autoRename")
+    rules_dict=jLB.getJson(cit.mayaData_dir,"autoRename")
     uuidObjs=cmds.ls(sl=True,uuid=True)
     model=nLB.Naming()
     model.setOrders(rules_dict["nameOrders"])

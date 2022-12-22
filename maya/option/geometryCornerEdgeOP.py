@@ -11,11 +11,13 @@ from ..library import jsonLB as jLB
 from cgInTools.maya.execute import geometryCornerEdgeEX as EX
 cit.reloads([UI,wLB,jLB,EX])
 
+SETPATH=cit.mayaData_dir
+RESETPATH=cit.mayaSettings_dir
 class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
     def __init__(self,*args,**kwargs):
         super(ObjCornerEdgeOP,self).__init__(*args, **kwargs)
-        self.setPath=cit.mayaData_path
-        self.resetPath=cit.mayaSettings_path
+        self.setPath=SETPATH
+        self.resetPath=RESETPATH
         self.fileName="geometryCornerEdge"
 
         self.__importJson(self.setPath,self.fileName)

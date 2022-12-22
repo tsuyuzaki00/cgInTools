@@ -14,6 +14,9 @@ from ..library import objectLB as oLB
 from ..library import jsonLB as jLB
 cit.reloads([UI,wLB,sLB,oLB,jLB])
 
+SETPATH=cit.mayaData_dir
+RESETPATH=cit.mayaSettings_dir
+
 class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
     def __init__(self,parent):
         super(SkinWeightByJointWindow,self).__init__(parent)
@@ -26,8 +29,8 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         self.createTableItem()
         print(self.table_QTableWidget.mimeTypes())
 
-        self.setPath=cit.mayaData_path
-        self.resetPath=cit.mayaSettings_path
+        self.setPath=SETPATH
+        self.resetPath=RESETPATH
         self.fileName="skinWeightByJoint"
         self.__importJson(self.setPath,self.fileName)
 

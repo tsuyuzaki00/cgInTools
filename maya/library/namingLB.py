@@ -7,7 +7,7 @@ from . import jsonLB as jLB
 from . import attributeLB as aLB
 cit.reloads([sbLB,jLB,aLB])
 
-rules_dict=jLB.getJson(cit.mayaSettings_path,"library")
+rules_dict=jLB.getJson(cit.mayaSettings_dir,"library")
 
 class Naming(sbLB.BaseName):
     def __init__(self):
