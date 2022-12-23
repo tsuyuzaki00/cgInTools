@@ -4,8 +4,9 @@ import maya.mel as mel
 
 import cgInTools as cit
 from . import setBaseLB as sbLB
+from . import objectLB as oLB
 from . import jsonLB as jLB
-cit.reloads([sbLB,jLB])
+cit.reloads([sbLB,oLB,jLB])
 
 rules_dict=jLB.getJson(cit.mayaSettings_dir,"library")
 
@@ -118,46 +119,59 @@ class MayaRender(sbLB.BaseRender):
     def playblast(self):
         self.batch_create_func(self._exportPath,self._file,self._camera,self._width,self._height,self._start,self._end)
 
-class CameraSettings():
+class EquipmentSettings():
     def __init__(self):
-        self._cameras=[]
+        self._settings=[]
+        self._settingIndex=0
 
-    # カメラorライトを配置する関数
-    def photo_create_obj2(self,typeName="camera",trs=(0,100,500),rot=(0,0,0)):
-        if typeName == "camera":
-            cam = self.camera_create()
-            self.position_setting(cam,trs,rot)
-            return cam
-        if typeName == "light":
-            lit = self.light_create()
-            self.position_setting(lit,trs,rot)
-            return lit
+    #Single Function
+    def matrixLayout_create_func(self,settings):
+        for setting in settings:
+            shapes=setting.getShapeTypes()
+            run=setting.getRunMatrix()
+            normal=setting.getNormalMatrix()
+            world=setting.getWorldMatrix()
+            parent=setting.getParentMatrix()
+            obj=setting.getObject()
+            if not shapes == None:
+                shape=cmds.createNode(shapes[0],ss=True)
+                node=cmds.listRelatives(shape,p=True)[0]
+                create=oLB.MatrixObject(node)
+                create.setRunMatrix(run)
+                create.setNormalMatrix(normal)
+                create.setWorldMatrix(world)
+                create.setParentMatrix(parent)
+                create.runMovement()
+    
+    def matrixLayout_edit_func(self,settings):
+        for setting in settings:
+            setting.runMovement()
 
-    # カメラ自体を作成する関数
-    def camera_create_obj2(self):
-        cam = cmds.camera(name="")
-        return cam
+    #Public Function
+    def setSetting(self,variable):
+        self._settings=[variable]
+        return self._settings
+    def addSetting(self,variable):
+        self._settings.append(variable)
+        return self._settings
+    def getSettings(self):
+        return self._settings
 
-    # ライト自体を作成する関数
-    def light_create_obj2(self):
-        lit = cmds.directionalLight()
-        lit = cmds.pointLight()
-        lit = cmds.spotLight()
-        lit = cmds.ambientLight()
-        return lit
+    def setSettingIndex(self,variable):
+        self._settingIndex=variable
+        return self._settingIndex
+    def getSettingIndex(self):
+        return self._settingIndex
 
-    # カメラかライトの位置を決める関数
-    def position_edit_obj(self,obj,trs=(0,0,5),rot=(0,0,0)):
-        cmds.setAttr(obj+".translate",trs[0],trs[1],trs[2],type="double3")
-        cmds.setAttr(obj+".rotate",rot[0],rot[1],rot[2],type="double3")
+    def querySettingIndex(self):
+        return self._settings[self._settingIndex]
 
-    # viewに存在するカメラを取得する
-    def camera_query_obj():
-        pass
+    def removeSettingIndex(self):
+        self._settings.pop(self._settingIndex)
+        return self._settings
 
-    def renderGlobal_query_func():
-        cmds.select("defaultRenderGlobals")
+    def createLayout(self):
+        self.matrixLayout_create_func(self._settings)
 
-class GetCameraRender():
-    def __init__(self):
-        self._cameras=[]
+    def editLayout(self):
+        self.matrixLayout_edit_func(self._settings)

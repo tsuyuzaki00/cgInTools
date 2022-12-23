@@ -4,6 +4,16 @@ import maya.api.OpenMaya as om2
 from cgInTools.maya.library import cleanLB as cc
 import math
 
+def attributeKey_query_dict(node):
+    node_MSelectionList=om2.MSelectionList().add(node)
+    node_MObject=node_MSelectionList.getDependNode(0)
+    node_MPlugArray=oma2.MAnimUtil.findAnimatedPlugs(node_MObject,True)
+    key_dicts=[]
+    for node_MPlug in node_MPlugArray:
+        attribute_str=node_MPlug.name()
+        attr=attribute_str.split(".")[1]
+        print(attr)
+
 def mirrorAxis_query_tuple(mirrorX=True,mirrorY=False,mirrorZ=False):
     mirror_list=[1,1,1]
     if mirrorX:
