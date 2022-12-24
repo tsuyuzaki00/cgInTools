@@ -32,10 +32,19 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         self.setPath=SETPATH
         self.resetPath=RESETPATH
         self.fileName="skinWeightByJoint"
+        self.extension="byJointWeight"
         self.__importJson(self.setPath,self.fileName)
 
     #Single Function
-    def exportJson_edit_func(self,path,file,weights):
+    def importJson_query_dict(self,path,file,extension):
+        setting=jLB.Json()
+        setting.setPath(path)
+        setting.setFile(file)
+        setting.setExtension(extension)
+        setting_dict=setting.read()
+        return setting_dict
+
+    def exportJson_edit_func(self,path,file,extension,weights):
         write_dict={
             "geometry":self.geometry_QLineEdit.text(),
             "weights":weights
@@ -43,15 +52,9 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         setting=jLB.Json()
         setting.setPath(path)
         setting.setFile(file)
+        setting.setExtension(extension)
         setting.setWriteDict(write_dict)
         setting.write()
-
-    def importJson_query_dict(self,path,file):
-        setting=jLB.Json()
-        setting.setPath(path)
-        setting.setFile(file)
-        setting_dict=setting.read()
-        return setting_dict
 
     #Private Function
     def _getTable_query_lists(self):
@@ -83,8 +86,8 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             weights.append(weight_list)
         return weights
     
-    def __importJson(self,path,file):
-        setting_dict=self.importJson_query_dict(path,file)
+    def __importJson(self,path,file,extension="json"):
+        setting_dict=self.importJson_query_dict(path,file,extension)
         self.geometry_QLineEdit.setText(setting_dict["geometry"])
         self.data_lists=self._replaceListWithUI_edit_func(setting_dict)
         self.createTableItem()
@@ -97,9 +100,9 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             weights.append(weight_dict)
         return weights
 
-    def __exportJson(self,path,file):
+    def __exportJson(self,path,file,extension="json"):
         weights=self._replaceUIWithList_query_list()
-        self.exportJson_edit_func(path,file,weights)
+        self.exportJson_edit_func(path,file,extension,weights)
 
     #Public Function
     def refreshOnClicked(self):
@@ -112,10 +115,12 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         self.__exportJson(self.setPath,self.fileName)
     
     def importOnClicked(self):
-        print("import")
-    
+        path,file=wLB.mayaFileDialog_query_path_file("import setting",1,extension=self.extension)
+        self.__importJson(path,file,self.extension)
+
     def exportOnClicked(self):
-        print("export")
+        path,file=wLB.mayaFileDialog_query_path_file("export setting",0,extension=self.extension)
+        self.__exportJson(path,file,self.extension)
 
     def geometryOnClicked(self):
         geometry=cmds.ls(sl=True,type="transform")

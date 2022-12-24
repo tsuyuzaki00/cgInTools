@@ -110,10 +110,12 @@ class AutoRenameOP(UI.AutoRenameOPBase):
         self.__exportJson(self.setPath,self.fileName)
 
     def importOnClicked(self):
-        print("import")
+        path,file=wLB.mayaFileDialog_query_path_file("import setting",1)
+        self.__importJson(path,file)
 
     def exportOnClicked(self):
-        print("export")
+        path,file=wLB.mayaFileDialog_query_path_file("export setting",0)
+        self.__exportJson(path,file)
 
     def buttonLeftOnClicked(self):
         self.__exportJson(self.setPath,self.fileName)

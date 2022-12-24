@@ -1,13 +1,13 @@
 {
-    "modeSwitch": "fullAuto",
-    "customText": "spine",
-    "nodeText": "cage",
-    "sideText": "C",
+    "nodeText": "cage", 
+    "modeSwitch": "fullAuto", 
+    "sideText": "C", 
+    "customText": "spine", 
     "nameOrders": [
-        "title",
-        "node",
-        "side",
-        "none",
+        "title", 
+        "node", 
+        "side", 
+        "none", 
         "none"
     ]
 }

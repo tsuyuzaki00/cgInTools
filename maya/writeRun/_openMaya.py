@@ -1,6 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
+import maya.api.OpenMayaAnim as oma2
 from cgInTools.maya.library import cleanLB as cc
 import math
 

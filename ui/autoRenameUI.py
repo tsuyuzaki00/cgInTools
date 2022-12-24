@@ -2,7 +2,7 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-from ui._reference import mainWindowUI as UI
+from ._reference import mainWindowUI as UI
 
 class AutoRenameOPBase(UI.MainWindowBase):
     def __init__(self,*args,**kwargs):
