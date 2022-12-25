@@ -6,12 +6,12 @@ from . import setBaseLB as sbLB
 from . import jsonLB as jLB
 cit.reloads([sbLB,jLB])
 
-rules_dict=jLB.getJson(cit.mayaSettings_dir,"library")
+RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
 
 class Color(sbLB.BaseObject):
     def __init__(self):
         super(Color,self).__init__()
-        self._colorIndex_list=rules_dict["rgbToColorIndex_list"]
+        self._colorIndex_list=RULES_DICT["rgbToColorIndex_list"]
 
     def __loading(self):
         self._shapes=cmds.listRelatives(self._object,shapes=True,ni=True,pa=True)

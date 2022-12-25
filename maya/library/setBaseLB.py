@@ -12,7 +12,7 @@ class BaseName(object):
         self._none="none"
         self._custom=""
         self._switch="fullAuto"# fullAuto setAuto mark replace
-        self._orders=[]# title node side num titleNum nodeNum sideNum titleHie scene custom
+        self._order_list=[]# title node side num titleNum nodeNum sideNum titleHie scene custom
         self._find=""
         self._replace=""
 
@@ -64,11 +64,11 @@ class BaseName(object):
     def getCustom(self):
         return self._custom
 
-    def setOrders(self,variable):
-        self._orders=variable
-        return self._orders
-    def getOrders(self):
-        return self._orders
+    def setOrderList(self,variable):
+        self._order_list=variable
+        return self._order_list
+    def getOrderList(self):
+        return self._order_list
 
     def setSwitch(self,variable):
         self._switch=variable
@@ -159,6 +159,97 @@ class BaseObject(object):
         return self._upVector
     def getUpVector(self):
         return self._upVector
+
+class BaseAttr(object):
+    def __init__(self):
+        self._object=""
+        self._attr=""
+        self._value=0
+        self._niceName=""
+        self._attrType="bool"# "bool","int","float","string","enum","vector"
+        self._stringName="string"
+        self._enums=["Green","Blue","Red"]
+        self._useMinMax=False
+        self._lockAndHide=False
+        self._proxy=False
+        self._min=0
+        self._max=1
+
+    def setObject(self,variable):
+        self._object=variable
+        return self._object
+    def getObject(self):
+        return self._object
+    
+    def setAttr(self,variable):
+        self._attr=variable
+        return self._attr
+    def getAttr(self):
+        return self._attr
+    
+    def setValue(self,variable):
+        self._value=variable
+        return self._value
+    def getValue(self):
+        return self._value
+
+    def setNiceName(self,variable):
+        self._niceName=variable
+        return self._niceName
+    def getNiceName(self):
+        return self._niceName
+
+    def setAttrType(self,variable):
+        self._attrType=variable
+        return self._attrType
+    def getAttrType(self):
+        return self._attrType
+
+    def setStringName(self,variable):
+        self._stringName=variable
+        return self._stringName
+    def getStringName(self):
+        return self._stringName
+
+    def setEnums(self,variable):
+        self._enums=variable
+        return self._enums
+    def getEnums(self):
+        return self._enums
+
+    def setUseMinMax(self,variable):
+        self._useMinMax=variable
+        return self._useMinMax
+    def getUseMinMax(self):
+        return self._useMinMax
+    
+    def setLockAndHide(self,variable):
+        self._lockAndHide=variable
+        return self._lockAndHide
+    def getLockAndHide(self):
+        return self._lockAndHide
+
+    def setProxy(self,variable):
+        self._proxy=variable
+        return self._proxy
+    def getProxy(self):
+        return self._proxy
+
+    def setMin(self,variable):
+        self._min=variable
+        return self._min
+    def getMin(self):
+        return self._min
+    
+    def setMax(self,variable):
+        self._max=variable
+        return self._max
+    def getMax(self):
+        return self._max
+    
+    def getObjectAttr(self):
+        return self._object+"."+self._attr
+
 class BasePair(object):
     def __init__(self):
         self._sourceNode="" # string

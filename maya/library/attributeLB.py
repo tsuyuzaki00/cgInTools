@@ -5,189 +5,51 @@ from . import setBaseLB as sbLB
 
 class Attribute(sbLB.BaseObject):
     def __init__(self):
-        self._object=""
-        self._attr=""
-        self._value=0
-        self._attrType="bool"
-        self._stringName="string"
-        self._enums=["Green","Blue","Red"]
-        self._proxy=False
-        self._useMinMax=False
-        self._min=0
-        self._max=1
-        self._attrs=[]
-    
-    def __loading(self):
-        self._haveAttr=""
-        self._lockAndHide=True
-        self._niceName=self._attr.capitalize()
+        super(Attribute,self).__init__()
 
-    def getObjectAttr(self):
-        return self._object+"."+self._haveAttr
+    #Single Function
+    def addAttr_check_bool(self,node,attr):
+        attr_bool=cmds.attributeQuery(attr,node=node,exists=True)
+        return attr_bool
 
-    def setAttrType(self,variable):
-        self._attrType=variable
-        return self._attrType
-
-    def setNiceName(self,variable):
-        self._niceName=variable
-        return self._niceName
-
-    def setStringName(self,variable):
-        self._stringName=variable
-        return self._stringName
-
-    def setEnums(self,variable):
-        self._enums=variable
-        return self._enums
-
-    def setUseMinMax(self,variable):
-        self._useMinMax=variable
-        return self._useMinMax
-
-    def setMin(self,variable):
-        self._min=variable
-        return self._min
-    
-    def setMax(self,variable):
-        self._max=variable
-        return self._max
-    
-    def setProxy(self,variable):
-        self._proxy=variable
-        return self._proxy
-    
-    def setHaveAttr(self,variable):
-        self._haveAttr=variable
-        return self._haveAttr
-    def getHaveAttr(self):
-        return self._haveAttr
-    def editHaveAttr(self,variable):
-        cmds.setAttr(self._object+"."+self._haveAttr,variable)
-    def delHaveAttr(self):
-        cmds.deleteAttr(self._object+"."+self._haveAttr)
-
-    def setHideAttrs(self,variable,lah=True):
-        self._attrs=variable
-        self._lockAndHide=lah
-        return self._attrs
-
-    def getKeyableAttrs(self,find=""):
-        keyable_list=self.keyable_quary_list(self._object,find)
-        return keyable_list
-
-    def getLockAttrs(self,find=""):
-        lock_list=self.lock_quary_list(self._object,find)
-        return lock_list
-
-#Public Function
-    def lockAndHide(self):
-        self.lockAndHide_edit_func(self._object,self._attrs,self._lockAndHide)
-        return self._attrs
-    
-    def hide(self):
-        self.hide_edit_func(self._object,self._attrs,self._lockAndHide)
-        return self._attrs
-
-    def addAttr(self):
-        self.__loading()
-        if self._attrType == "bool":
-            attrName=self.addAttrBool_create_attrName(self._object,self._attr,self._niceName)
-            return attrName
-        elif self._attrType == "int":
-            if self._useMinMax:
-                attrName=self.addAttrIntLimit_create_attrName(self._object,self._attr,self._niceName,self._min,self._max,self._value)
-            else:
-                attrName=self.addAttrInt_create_attrName(self._object,self._attr,self._niceName,self._value)
-            return attrName
-        elif self._attrType == "float":
-            if self._useMinMax:
-                attrName=self.addAttrFloatLimit_create_attrName(self._object,self._attr,self._niceName,self._min,self._max,self._value)
-            else:
-                attrName=self.addAttrFloat_create_attrName(self._object,self._attr,self._niceName,self._value)
-            return attrName
-        elif self._attrType == "string":
-            attrName=self.addAttrString_create_attrName(self._object,self._attr,self._niceName,self._stringName)
-            return attrName
-        elif self._attrType == "enum":
-            attrName=self.addAttrEnum_create_attrName(self._object,self._attr,self._niceName,self._enums,self._value)
-            return attrName
-        elif self._attrType == "vector":
-            attrName=self.addAttrVector_create_attrName(self._object,self._attr,self._niceName)
-            return attrName
-        else:
-            cmds.error('There is no attribute type "'+self._attrType+'".')
-
-    def isProxy(self):
-        nodeAttr=self.isProxy_edit_nodeAttr(self._object,self._attr,self._proxy)
-        return nodeAttr
-
-#Single Function
     def addAttrVector_create_attrName(self,obj,name,niceName=None):
-        attr_bool=self.addAttr_check_bool(obj,name)
         XYZs=["","X","Y","Z"]
-        if not attr_bool:
-            for xyz in XYZs:
-                if xyz=="":
-                    cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double3")
-                else:
-                    cmds.addAttr(obj,ln=name+xyz,nn=name.capitalize()+xyz or niceName+xyz,at="double",p=name)
+        for xyz in XYZs:
+            if xyz=="":
+                cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double3")
+            else:
+                cmds.addAttr(obj,ln=name+xyz,nn=name.capitalize()+xyz or niceName+xyz,at="double",p=name)
         for xyz in XYZs:
             cmds.setAttr(obj+"."+name+xyz,keyable=True)
         return name
 
     def addAttrInt_create_attrName(self,obj,name,niceName=None,defaultValue=0):
-        attr_bool=self.addAttr_check_bool(obj,name)
-        if not attr_bool:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="long",dv=defaultValue)
-        cmds.setAttr(obj+"."+name,keyable=True)
+        cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="long",dv=defaultValue)
         return name
     
     def addAttrFloat_create_attrName(self,obj,name,niceName=None,defaultValue=0):
-        attr_bool=self.addAttr_check_bool(obj,name)
-        if not attr_bool:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double",dv=defaultValue)
-        cmds.setAttr(obj+"."+name,keyable=True)
+        cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double",dv=defaultValue)
         return name
 
     def addAttrIntLimit_create_attrName(self,obj,name,niceName=None,min=0,max=1,defaultValue=0):
-        attr_bool=self.addAttr_check_bool(obj,name)
-        if not attr_bool:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="long",min=min,max=max,dv=defaultValue)
-        cmds.setAttr(obj+"."+name,keyable=True)
+        cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="long",min=min,max=max,dv=defaultValue)
         return name
     
     def addAttrFloatLimit_create_attrName(self,obj,name,niceName=None,min=0,max=1,defaultValue=0):
-        attr_bool=self.addAttr_check_bool(obj,name)
-        if not attr_bool:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double",min=min,max=max,dv=defaultValue)
-        cmds.setAttr(obj+"."+name,keyable=True)
+        cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="double",min=min,max=max,dv=defaultValue)
         return name
     
     def addAttrBool_create_attrName(self,obj,name,niceName=None):
-        attr_bool=self.addAttr_check_bool(obj,name)
-        if not attr_bool:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="bool")
-        cmds.setAttr(obj+"."+name,keyable=True)
+        cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="bool")
         return name
 
-    def addAttrString_create_attrName(self,obj,name,niceName=None,stringName="string"):
-        attr_bool=self.addAttr_check_bool(obj,name)
-        if not attr_bool:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,dt="string")
-        cmds.setAttr(obj+"."+name,stringName,type="string")
+    def addAttrString_create_attrName(self,obj,name,niceName=None):
+        cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,dt="string")
         return name
     
     def addAttrEnum_create_attrName(self,obj,name,niceName=None,enums=["Green","Blue","Red"],defaultValue=0):
-        attr_bool=self.addAttr_check_bool(obj,name)
-        if not attr_bool:
-            cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="enum",en=":".join(enums),dv=defaultValue)
-        cmds.setAttr(obj+"."+name,keyable=True)
+        cmds.addAttr(obj,ln=name,nn=name.capitalize() or niceName,at="enum",en=":".join(enums),dv=defaultValue)
         return name
-
-    def addAttr_check_bool(self,node,attr):
-        attr_bool=cmds.attributeQuery(attr,node=node,exists=True)
-        return attr_bool
 
     def hide_edit_func(self,obj,names,value=True):
         for name in names:
@@ -223,4 +85,55 @@ class Attribute(sbLB.BaseObject):
         nodeAttr_MPlug=nodeAttr_MSelectionList.getPlug(0)
         nodeAttr_MFnAttribute=om2.MFnAttribute(nodeAttr_MPlug.attribute())
         nodeAttr_MFnAttribute.isProxyAttribute=proxy
+        return nodeAttr
+    
+    #Public Function
+    def __loading(self):
+        self._niceName=self._attr.capitalize()
+
+    def getKeyableAttrs(self,find=""):
+        keyable_list=self.keyable_quary_list(self._object,find)
+        return keyable_list
+
+    def getLockAttrs(self,find=""):
+        lock_list=self.lock_quary_list(self._object,find)
+        return lock_list
+
+    def lockAndHide(self):
+        cmds.setAttr(self._object+"."+self._attr,l=self._lockAndHide,k=not self._lockAndHide,cb=not self._lockAndHide)
+        return self._attr
+    
+    def hide(self):
+        cmds.setAttr(self._object+"."+self._attr,k=not self._lockAndHide,cb=not self._lockAndHide)
+        return self._attr
+
+    def addAttr(self):
+        self.__loading()
+        attr_bool=self.addAttr_check_bool(self._object,self._attr)
+        if not attr_bool:
+            if self._attrType == "bool":
+                attrName=self.addAttrBool_create_attrName(self._object,self._attr,self._niceName)
+            elif self._attrType == "int":
+                if self._useMinMax:
+                    attrName=self.addAttrIntLimit_create_attrName(self._object,self._attr,self._niceName,self._min,self._max,self._value)
+                else:
+                    attrName=self.addAttrInt_create_attrName(self._object,self._attr,self._niceName,self._value)
+            elif self._attrType == "float":
+                if self._useMinMax:
+                    attrName=self.addAttrFloatLimit_create_attrName(self._object,self._attr,self._niceName,self._min,self._max,self._value)
+                else:
+                    attrName=self.addAttrFloat_create_attrName(self._object,self._attr,self._niceName,self._value)
+            elif self._attrType == "string":
+                attrName=self.addAttrString_create_attrName(self._object,self._attr,self._niceName,self._stringName)
+            elif self._attrType == "enum":
+                attrName=self.addAttrEnum_create_attrName(self._object,self._attr,self._niceName,self._enums,self._value)
+            elif self._attrType == "vector":
+                attrName=self.addAttrVector_create_attrName(self._object,self._attr,self._niceName)
+            else:
+                cmds.error('There is no attribute type "'+self._attrType+'".')
+        cmds.setAttr(self._object+"."+self._attr,keyable=True)
+        return attrName
+
+    def isProxy(self):
+        nodeAttr=self.isProxy_edit_nodeAttr(self._object,self._attr,self._proxy)
         return nodeAttr

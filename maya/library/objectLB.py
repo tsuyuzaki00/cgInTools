@@ -7,13 +7,13 @@ import cgInTools as cit
 from . import jsonLB as jLB
 cit.reloads([jLB])
 
-rules_dict=jLB.getJson(cit.mayaSettings_dir,"openLibrary")
+RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"openLibrary")
 
 class TrsObject(object):
     def __init__(self,obj):
-        self._transMFn_list=rules_dict["transMFn_list"]
-        self._shapeMFn_list=rules_dict["shapeMFn_list"]
-        self._nodeTypeToMFn_dict=rules_dict["nodeTypeToMFn_dict"]
+        self._transMFn_list=RULES_DICT["transMFn_list"]
+        self._shapeMFn_list=RULES_DICT["shapeMFn_list"]
+        self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
 
         self._fullPath_bool=False
         self._object=obj

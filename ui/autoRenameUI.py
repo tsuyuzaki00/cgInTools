@@ -43,19 +43,19 @@ class AutoRenameOPBase(UI.MainWindowBase):
         nameOrder_QHBoxLayout.addWidget(self.name01_QComboBox)
 
         self.name02_QComboBox=QComboBox()
-        self.name02_QComboBox.addItems(["none","custom","title","node","side","num","titleHie","titleNum","nodeNum","sideNum","scene"])
+        self.name02_QComboBox.addItems(["none","custom","title","node","side","number","titleHie","titleNum","nodeNum","sideNum","scene"])
         nameOrder_QHBoxLayout.addWidget(self.name02_QComboBox)
 
         self.name03_QComboBox=QComboBox()
-        self.name03_QComboBox.addItems(["none","custom","title","node","side","num","titleHie","titleNum","nodeNum","sideNum","scene"])
+        self.name03_QComboBox.addItems(["none","custom","title","node","side","number","titleHie","titleNum","nodeNum","sideNum","scene"])
         nameOrder_QHBoxLayout.addWidget(self.name03_QComboBox)
 
         self.name04_QComboBox=QComboBox()
-        self.name04_QComboBox.addItems(["none","custom","title","node","side","num","titleHie","titleNum","nodeNum","sideNum","scene"])
+        self.name04_QComboBox.addItems(["none","custom","title","node","side","number","titleHie","titleNum","nodeNum","sideNum","scene"])
         nameOrder_QHBoxLayout.addWidget(self.name04_QComboBox)
 
         self.name05_QComboBox=QComboBox()
-        self.name05_QComboBox.addItems(["none","custom","title","node","side","num","titleHie","titleNum","nodeNum","sideNum","scene"])
+        self.name05_QComboBox.addItems(["none","custom","title","node","side","number","titleHie","titleNum","nodeNum","sideNum","scene"])
         nameOrder_QHBoxLayout.addWidget(self.name05_QComboBox)
 
         customPlain_QFormLayout=QFormLayout(self)
@@ -65,6 +65,10 @@ class AutoRenameOPBase(UI.MainWindowBase):
         self.custom_QLineEdit=QLineEdit(self)
         customPlain_QFormLayout.addRow(custom_QLabel,self.custom_QLineEdit)
         
+        title_QLabel=QLabel("title:",self)
+        self.title_QLineEdit=QLineEdit(self)
+        customPlain_QFormLayout.addRow(title_QLabel,self.title_QLineEdit)
+
         node_QLabel=QLabel("node:",self)
         self.node_QLineEdit=QLineEdit(self)
         customPlain_QFormLayout.addRow(node_QLabel,self.node_QLineEdit)

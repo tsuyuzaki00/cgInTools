@@ -1,4 +1,12 @@
 {
+    "markNaming_dicts":
+    [
+        {"attrName":"titleName","attrString":"title"},
+        {"attrName":"nodeName","attrString":"node"},
+        {"attrName":"sideName","attrString":"side"},
+        {"attrName":"numberName","attrString":"number"},
+        {"attrName":"hierarchyName","attrString":"hierarchy"}
+    ],
     "nodeName_dict":
     {
         "none":"null",
