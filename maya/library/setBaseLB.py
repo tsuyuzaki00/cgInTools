@@ -593,6 +593,24 @@ class BaseRender(object):
     def getEnd(self):
         return self._end
 
+class BaseCurve(object):
+    def __init__(self):
+        self._name="curveName"
+        #
+        self._curveType=""
+
+    def setName(self,variable):
+        self._name=variable
+        return self._name
+    def getName(self):
+        return self._name
+    
+    def setCurveType(self,variable):
+        self._curveType=variable
+        return self._curveType
+    def getCurveType(self):
+        return self._curveType
+
 class BaseCheck(object):
     def __init__(self):
         self._relation=None

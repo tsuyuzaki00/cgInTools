@@ -6,13 +6,12 @@ import cgInTools as cit
 from . import setBaseLB as sbLB
 from . import jsonLB as jLB
 cit.reloads([sbLB,jLB])
-class SetCurve(sbLB.BaseName):
+class SetCurve(sbLB.BaseCurve):
     def __init__(self):
-        self._name="curveName"
-        self._curveType="circlePlane"
+        super(SetCurve,self).__init__()
 
     def create(self):
-        curveFunction=eval("self."+self._curveType+"_create_curve")
+        curveFunction=eval("self._"+self._curveType+"_create_curve")
         curveFunction(name=self._name)
 
     def trsSetting(self,ctrl):
@@ -23,10 +22,10 @@ class SetCurve(sbLB.BaseName):
         return trs
 
     def selectPosition(self, sel, trs):
-        cmds.parent(trs, sel)
-        cmds.move(0, 0, 0 ,ls=True)
-        cmds.rotate(0, 0, 0 , os=True)
-        cmds.parent(trs ,w = True)
+        cmds.parent(trs,sel)
+        cmds.move(0,0,0,ls=True)
+        cmds.rotate(0,0,0,os=True)
+        cmds.parent(trs,w=True)
 
     def sameName_check_func(self,check_node):
         if cmds.objExists(check_node):
@@ -34,7 +33,7 @@ class SetCurve(sbLB.BaseName):
         else:
             pass
 
-#Single Function
+    #Single Function
     def degresslinear_create_curve(self,points,name):
         knot=list(range(len(points)))
         previousCurve=cmds.curve(d=1,per=True,p=points,k=knot)
@@ -62,8 +61,9 @@ class SetCurve(sbLB.BaseName):
         curve=cmds.rename(previousCurve,name)
         return curve
 
-    #Plane
-    def circlePlane_create_curve(self,name,stroke=4):
+    #Multi Function
+    #plane
+    def _circlePlane_create_curve(self,name,stroke=4):
         pizza=0.5/stroke
         points=[]
         for i in range(stroke*4):
@@ -73,7 +73,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def circleSmooth_create_curve(self,name,stroke=2):
+    def _circleSmooth_create_curve(self,name,stroke=2):
         pizza=0.5/stroke
         points=[]
         for i in range(stroke*4+3):
@@ -82,7 +82,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def circlePlaneHalf_create_curve(self,name):
+    def _circlePlaneHalf_create_curve(self,name):
         a00=(0,1.07,0)
         a01=(0,0.86,-0.63)
         a02=(0,0.33,-1.02)
@@ -97,7 +97,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def trianglePlane_create_curve(self,name):
+    def _trianglePlane_create_curve(self,name):
         a00=(1,0,0)
         a01=(-1,0,1)
         a02=(-1,0,-1)
@@ -105,7 +105,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def featherPlane_create_curve(self,name):
+    def _featherPlane_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.5,0,0.5)
         a02=(0,0,0.78)
@@ -118,7 +118,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
     
-    def featherSmooth_create_curve(self,name):
+    def _featherSmooth_create_curve(self,name):
         a00=(1.05,0,0)
         a01=(0.8,0,0.2)
         a02=(0,0,0.75)
@@ -135,7 +135,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def squarePlane_create_curve(self,name):
+    def _squarePlane_create_curve(self,name):
         a00=(1,0,1)
         a01=(-1,0,1)
         a02=(-1,0,-1)
@@ -144,7 +144,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def squareSmooth_create_curve(self,name):
+    def _squareSmooth_create_curve(self,name):
         a00=(0.85,0,-1)
         a01=(0.95,0,-0.95)
         a02=(1,0,-0.85)
@@ -161,7 +161,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def crossPlane_create_curve(self,name):
+    def _crossPlane_create_curve(self,name):
         a00=(0.25,0,-1)
         a01=(0.25,0,-0.25)
         a02=(1,0,-0.25)
@@ -178,7 +178,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def crossSmooth_create_curve(self,name):
+    def _crossSmooth_create_curve(self,name):
         a00=(0.35,0,-1)
         a01=(0.4,0,-1)
         a02=(0.4,0,-0.95)
@@ -219,7 +219,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def pentagonPlane_create_curve(self,name):
+    def _pentagonPlane_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.18,0,1)
         a02=(-1,0,0.62)
@@ -229,7 +229,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def hexagonPlane_create_curve(self,name):
+    def _hexagonPlane_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.5,0,0.87)
         a02=(-0.5,0,0.87)
@@ -240,7 +240,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def starPlane_create_curve(self,name):
+    def _starPlane_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.18,0,1)
         a02=(-1,0,0.62)
@@ -250,7 +250,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def starSmooth_create_curve(self,name):
+    def _starSmooth_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.9,0,0.03)
         a02=(0.23,0,0.23)
@@ -285,7 +285,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def pinPlane_create_curve(self,name):
+    def _pinPlane_create_curve(self,name):
         a00=(0,0,0)
         a01=(0,1,0)
         a02=(-0.35,1.15,0)
@@ -299,7 +299,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def antennaPlane_create_curve(self,name):
+    def _antennaPlane_create_curve(self,name):
         a00=(0,0.95,0)
         a01=(-0.4,1.1,0)
         a02=(-0.55,1.5,0)
@@ -322,8 +322,8 @@ class SetCurve(sbLB.BaseName):
         curve=self.parentcurve_create_curve(curves=curves,name=name)
         return curve
 
-    #Solid
-    def cubeSolid_create_curve(self,name):
+    #solid
+    def _cubeSolid_create_curve(self,name):
         a01=(1,1,1)
         a02=(1,1,-1)
         a03=(-1,1,-1)
@@ -336,7 +336,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def ballSolid_create_curve(self,name,stroke=4):
+    def _ballSolid_create_curve(self,name,stroke=4):
         pizza=0.5/stroke
         points=[]
         for i in range(stroke*4):
@@ -355,7 +355,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def ballSmooth_create_curve(self,name,stroke=2):
+    def _ballSmooth_create_curve(self,name,stroke=2):
         pizza=0.5/stroke
         pointZYs=[]
         pointXYs=[]
@@ -376,7 +376,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.parentcurve_create_curve(curves=curves,name=name)
         return curve
 
-    def ballSolidHalf_create_curve(self,name):
+    def _ballSolidHalf_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.92,0,0.38)
         a02=(0.71,0,0.71)
@@ -410,7 +410,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def hexagonSolid_create_curve(self,name):
+    def _hexagonSolid_create_curve(self,name):
         a01=(0,-1,0)
         a02=(0,-0.5,0.87)
         a03=(0,0.5,0.87)
@@ -427,7 +427,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def octagonSolid_create_curve(self,name):
+    def _octagonSolid_create_curve(self,name):
         a01=(0,-1,0)
         a02=(0,-0.71,0.71)
         a03=(0,0,1)
@@ -448,7 +448,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def diamondSolid_create_curve(self,name):
+    def _diamondSolid_create_curve(self,name):
         xu=(1,0,0)
         xd=(-1,0,0)
         yu=(0,1,0)
@@ -459,7 +459,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def pyramidSolid_create_curve(self,name):
+    def _pyramidSolid_create_curve(self,name):
         a00=(2,0,0)
         a01=(0,0,1)
         a02=(0,1,0)
@@ -469,7 +469,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def coneSolid_create_curve(self,name):
+    def _coneSolid_create_curve(self,name):
         a00=(2,0,0)
         a01=(0,0,1)
         a02=(0,0.87,0.5)
@@ -481,7 +481,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def pinSolid_create_curve(self,name):
+    def _pinSolid_create_curve(self,name):
         a00=(0,0,0)
         a01=(0,1,0)
         a02=(-0.35,1.15,0)
@@ -505,7 +505,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def antennaSolid_create_curve(self,name):
+    def _antennaSolid_create_curve(self,name):
         a00=(0,0.95,0)
         a01=(-0.4,1.1,0)
         a02=(-0.55,1.5,0)
@@ -544,7 +544,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.parentcurve_create_curve(curves=curves,name=name)
         return curve
 
-    def circleCurve_create_curve(self,name):
+    def _circleCurve_create_curve(self,name):
         a00=(0.3,1,0)
         a01=(0.25,0.75,-0.78)
         a02=(0,-0.25,-1)
@@ -557,8 +557,8 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    #Arrows
-    def singleArrow_create_curve(self,name):
+    #arrow
+    def _singleArrow_create_curve(self,name):
         a00=(1,0,0)
         a01=(0,0,-1)
         a02=(0,0,-0.5)
@@ -570,7 +570,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def doubleArrow_create_curve(self,name):
+    def _doubleArrow_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.4,0,0.6)
         a02=(0.4,0,0.2)
@@ -591,7 +591,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def fourArrow_create_curve(self,name):
+    def _fourArrow_create_curve(self,name):
         a00=(1,0,0)
         a01=(0.6,0,0.4)
         a02=(0.6,0,0.2)
@@ -620,7 +620,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def smoothFour_create_curve(self,name):
+    def _smoothFour_create_curve(self,name):
         a00=(0,1.03,0)
         a01=(0,0.92,-0.12)
         a02=(0,0.8,-0.23)
@@ -711,7 +711,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def rightAngleArrow_create_curve(self,name):
+    def _rightAngleArrow_create_curve(self,name):
         a00=(0.66,0.58,0)
         a01=(0.15,0.52,0)
         a02=(0.41,0.64,0)
@@ -731,7 +731,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def rotArrow_create_curve(self,name):
+    def _rotArrow_create_curve(self,name):
         points=[
             (-7.45058e-009,0,0.5),
             (0.11126,0,0.487464),
@@ -785,7 +785,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def archArrow_create_curve(self,name):
+    def _archArrow_create_curve(self,name):
         a00=(0,1,0)
         a01=(0.28,0.96,0)
         a02=(0.54,0.85,0)
@@ -818,7 +818,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def ballArrow_create_curve(self,name):
+    def _ballArrow_create_curve(self,name):
         a00=(1,0.35,0)
         a01=(0.75,0.68,0.34)
         a02=(0.75,0.68,0.1)
@@ -855,7 +855,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def solidArrow_create_curve(self,name):
+    def _solidArrow_create_curve(self,name):
         a00=(1,0,0)
         a01=(0,1,1)
         a02=(0,1,-1)
@@ -873,7 +873,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def solidFour_create_curve(self,name):
+    def _solidFour_create_curve(self,name):
         a00=(0,1.03,0)
         a01=(0,0.92,-0.12)
         a02=(0,0.8,-0.23)
@@ -1142,8 +1142,8 @@ class SetCurve(sbLB.BaseName):
         curve=self.parentcurve_create_curve(curves=curves,name=name)
         return curve
 
-    #Other
-    def cog_create_curve(self,name):
+    #other
+    def _cog_create_curve(self,name):
         a00=(0,1.25,0)
         a01=(0,0.47,-0.2)
         a02=(0,0.88,-0.88)
@@ -1164,7 +1164,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresscubic_create_curve(points,name)
         return curve
 
-    def thorns_create_curve(self,name):
+    def _thorns_create_curve(self,name):
         a00=(0,-1,0)
         a01=(0,-0.5,0.2)
         a02=(0,-0.7,0.7)
@@ -1185,7 +1185,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.degresslinear_create_curve(points,name)
         return curve
 
-    def sun_create_curve(self,name):
+    def _sun_create_curve(self,name):
         a00=(0,1.25,0)
         a01=(0,0.47,-0.2)
         a02=(0,0.88,-0.88)
@@ -1216,7 +1216,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.parentcurve_create_curve(curves=curves,name=name)
         return curve
 
-    def gear_create_curve(self,name):
+    def _gear_create_curve(self,name):
         c00=(0,1,-0.09)
         c01=(0,0.95,-0.26)
         c02=(0,0.92,-0.25)
@@ -1303,7 +1303,7 @@ class SetCurve(sbLB.BaseName):
         curve=self.parentcurve_create_curve(curves=curves,name=name)
         return curve
 
-    def lens_create_curve(self,name):
+    def _lens_create_curve(self,name):
         a00=(0,0.35,0)
         a01=(0,0.39,-0.11)
         a02=(0,0.56,-0.5)
@@ -1329,18 +1329,18 @@ class EditCurve(sbLB.BasePair):
         self._sourceNode=""
         self._targetNode=""
 
-#Public Function
+    #Public Function
     def replaceShape(self):
         self.replaceShape_edit_func(self._sourceNode,self._targetNode)
 
-#Multi Function
+    #Multi Function
     def replaceShape_edit_func(self,sourceNode,targetNode):
         shapes=self.getShapes_edit_shapes(targetNode)
         if not shapes == None:
             cmds.delete(shapes)
         self.setShapes_edit_func(sourceNode,targetNode)
 
-#Single Function
+    #Single Function
     def renameShapes_edit_func(self,node):
         shapes=cmds.listRelatives(node,f=True,type='nurbsCurve')
         for shape in shapes:
