@@ -48,7 +48,8 @@
         "quatProd":"qprd",
         "quatToEuler":"qtoe",
         "floatMath":"fltm",
-        "clusterHandle":"clhl"
+        "clusterHandle":"clhl",
+        "proximityPin":"pxmp"
     },
     "vector_dict":
     {

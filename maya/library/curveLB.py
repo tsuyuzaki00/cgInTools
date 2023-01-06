@@ -12,7 +12,8 @@ class SetCurve(sbLB.BaseCurve):
 
     def create(self):
         curveFunction=eval("self._"+self._curveType+"_create_curve")
-        curveFunction(name=self._name)
+        curve=curveFunction(name=self._name)
+        return curve
 
     def trsSetting(self,ctrl):
         createNull=cmds.createNode('transform')
@@ -1326,19 +1327,7 @@ class SetCurve(sbLB.BaseCurve):
 
 class EditCurve(sbLB.BasePair):
     def __init__(self):
-        self._sourceNode=""
-        self._targetNode=""
-
-    #Public Function
-    def replaceShape(self):
-        self.replaceShape_edit_func(self._sourceNode,self._targetNode)
-
-    #Multi Function
-    def replaceShape_edit_func(self,sourceNode,targetNode):
-        shapes=self.getShapes_edit_shapes(targetNode)
-        if not shapes == None:
-            cmds.delete(shapes)
-        self.setShapes_edit_func(sourceNode,targetNode)
+        super(EditCurve,self).__init__()
 
     #Single Function
     def renameShapes_edit_func(self,node):
@@ -1346,14 +1335,21 @@ class EditCurve(sbLB.BasePair):
         for shape in shapes:
             shape=cmds.rename(shape,node+"Shape")
 
-    def getShapes_edit_shapes(self,node):
-        shapes=cmds.listRelatives(node,type='nurbsCurve')
-        return shapes
-
-    def setShapes_edit_func(self,sourceNode,targetNode):
+    def parentShapes_edit_func(self,sourceNode,targetNode):
         copy_list=cmds.duplicate(sourceNode)
         shapes=cmds.listRelatives(copy_list[0],f=True,type='nurbsCurve')
         for shape in shapes:
             shape=cmds.rename(shape,targetNode+"Shape")
             cmds.parent(shape,targetNode,r=True,s=True)
         cmds.delete(copy_list)
+
+    #Multi Function
+    def _replaceShape_edit_func(self,sourceNode,targetNode):
+        shapes=cmds.listRelatives(targetNode,type='nurbsCurve')
+        if not shapes == None:
+            cmds.delete(shapes)
+        self.parentShapes_edit_func(sourceNode,targetNode)
+    
+    #Public Function
+    def replaceShape(self):
+        self._replaceShape_edit_func(self._sourceNode,self._targetNode)

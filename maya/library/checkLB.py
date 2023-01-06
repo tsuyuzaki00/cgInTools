@@ -8,19 +8,9 @@ import cgInTools as cit
 from . import setBaseLB as sbLB
 cit.reloads([sbLB])
 
-class Check(sbLB.BaseCheck):
+class CheckBoolean(sbLB.BaseCheck):
     def __init__(self):
-        self._relation=""
-        self._same=""
-        self._same_list=[]
-        self._maxLimit=100
-        self._minLimit=0
-        self._highLimit=100
-        self._lowLimit=0
-        self._edit=False
-        self._path=""
-        self._node=""
-        self._attr=""
+        super(CheckBoolean,self).__init__()
         self._evaluation_dict={"bool":False}
     
     #Public Function
@@ -166,11 +156,11 @@ class Check(sbLB.BaseCheck):
     
     #same multiple check    
     def andSameRelation(self):
-        judge_dict=self.andSameRelation_check_dict(self._relation,self._same_list)
+        judge_dict=self.andSameRelation_check_dict(self._relation,self._sames)
         return judge_dict
     
     def andMatchRelation(self):
-        judge_dict=self.andMatchRelation_check_dict(self._relation,self._same_list)
+        judge_dict=self.andMatchRelation_check_dict(self._relation,self._sames)
         return judge_dict
 
     #Private Function
@@ -662,7 +652,6 @@ class Check(sbLB.BaseCheck):
             evaluation_dict["bool"]=False
             return evaluation_dict
     
-
 class TypeCheck(sbLB.TypeCheck):
     def __init__(self):
         super(TypeCheck.self).__init__()

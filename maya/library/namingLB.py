@@ -169,7 +169,7 @@ class Naming(sbLB.BaseName):
         if "scene" in order_list:
             self._scene=self.scene_query_str()
 
-    def __loading2(self):
+    def __loadingPlus(self):
         order_list=self.noneDeleteOrder_edit_list(self._order_list)
         if "number" in order_list:
             self._number=self._numberName_query_str(order_list)
@@ -183,13 +183,13 @@ class Naming(sbLB.BaseName):
             self._node=self._nodeName_query_str(self._object)
             self._side=self.sideName_query_str(self._object)
             self.__loading()
-            self.__loading2()
+            self.__loadingPlus()
             noneDel_list=self.noneDeleteOrder_edit_list(self._order_list)
             name=self._orderName_create_str(noneDel_list)
             return name
         elif self._switch=="setAuto":
             self.__loading()
-            self.__loading2()
+            self.__loadingPlus()
             noneDel_list=self.noneDeleteOrder_edit_list(self._order_list)
             name=self._orderName_create_str(noneDel_list)
             return name
@@ -220,13 +220,29 @@ class Naming(sbLB.BaseName):
         rename=cmds.rename(self._object,name)
         return rename
 
+    def titleName(self):
+        name=self._titleName_query_str(self._choise,delAlph=True)
+        return name
+    
+    def titleHieName(self):
+        name=self._titleName_query_str(self._choise,delAlph=False)
+        return name
+    
+    def nodeName(self):
+        name=self._nodeName_query_str(self._choise)
+        return name
+    
+    def sideName(self):
+        name=self.sideName_query_str(self._choise)
+        return name
+
     def markAttr(self):
         if self._switch == "fullAuto":
             self._title=self._titleName_query_str(self._object)
             self._node=self._nodeName_query_str(self._object)
             self._side=self.sideName_query_str(self._object)
         self.__loading()
-        self.__loading2()
+        self.__loadingPlus()
         mark=aLB.Attribute()
         mark.setObject(self._object)
         mark.setAttrType("string")

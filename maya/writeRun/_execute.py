@@ -2,16 +2,16 @@
 import maya.cmds as cmds
 import cgInTools as cit
 #from cgInTools.maya.library import _testPath as TP
-from cgInTools.maya.manager import selectSetCtrlMN as MN
+#from cgInTools.maya.manager import selectSetCtrlMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
 #from cgInTools.maya.library import objectLB as oLB
-#from cgInTools.maya.library import renderLB as LB
+from cgInTools.maya.library import constrainLB as LB
 #from cgInTools.maya.execute import infJntRemoveEditEX as EX
-cit.reloads([MN])
+cit.reloads([LB])
 
 def main():
     #OP.main()
-    MN.main()
+    #MN.main()
     #EX.main()
     #TP.main()
     """
@@ -27,17 +27,15 @@ def main():
         shot.createLayout()
     """
     
-    """
-    fkik=LB.FKIK()
-    fkik.setSourceNode("joint1")
-    fkik.setTargetNode("joint3")
-    fkik.setThirdNode("joint2")
-    fkik.setUI("UIsan")
-    fkik.createThreeJoints()
-    replace=LB.Constrain()
+    sourceNode=cmds.ls(sl=True)[0]
+    targetNode=cmds.ls(sl=True)[1]
+    thirdNode=cmds.ls(sl=True)[2]
+
+    replace=LB.Constrain()  
     replace.setSourceNode(sourceNode)
     replace.setTargetNode(targetNode)
-    replace.proximityPin()
-    """
+    replace.setThirdNode(thirdNode)
+    replace.ikHandleConstraint()
+    
 
 main()

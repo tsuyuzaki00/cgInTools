@@ -8,26 +8,15 @@ from cgInTools.maya.library import namingLB as nLB
 from cgInTools.maya.library import curveLB as cLB
 cit.reloads([sbLB,nLB,cLB])
 
+RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
+
 class CtrlParent(sbLB.BaseObject):
     def __init__(self):
         self._object=""
         self._parent=""
         self._aimVector="+X"
         self._upVector="+Y"
-        self.__vector_dict={
-            "+x":[1,0,0],
-            "+X":[1,0,0],
-            "+y":[0,1,0],
-            "+Y":[0,1,0],
-            "+z":[0,0,1],
-            "+Z":[0,0,1],
-            "-x":[-1,0,0],
-            "-X":[-1,0,0],
-            "-y":[0,-1,0],
-            "-Y":[0,-1,0],
-            "-z":[0,0,-1],
-            "-Z":[0,0,-1],
-        }
+        self._vector_dict=RULES_DICT["vector_dict"]
     
     def __loading(self):
         self._spaceNodeNames=["null","space"]
@@ -124,13 +113,13 @@ class CtrlParent(sbLB.BaseObject):
         self.listHierarchy_edit_obj(hierarchy)
         
         cmds.select(up_obj)
-        cmds.move(self.__vector_dict[self._upVector][0],self.__vector_dict[self._upVector][1],self.__vector_dict[self._upVector][2],r=True,os=True,wd=True)
+        cmds.move(self._vector_dict[self._upVector][0],self._vector_dict[self._upVector][1],self._vector_dict[self._upVector][2],r=True,os=True,wd=True)
 
         # connect pointConstraint and aimConstraint
         self.psConstraint_create_func(trs_obj,self._object,trs_obj,self._pointSwitchName)
         self.psConstraint_create_func(self._parent,offset_obj,offset_obj,self._offsetSwitchName)
         cmds.pointConstraint(self._parent,hold_obj)
-        cmds.aimConstraint(trs_obj,self._parent,aim=self.__vector_dict[self._aimVector],u=self.__vector_dict[self._upVector],wut="object",wuo=up_obj,w=1)
+        cmds.aimConstraint(trs_obj,self._parent,aim=self._vector_dict[self._aimVector],u=self._vector_dict[self._upVector],wut="object",wuo=up_obj,w=1)
         cmds.connectAttr(up_obj+"."+self._offsetSwitchName,offset_obj+"."+self._offsetSwitchName)
 
     #Private Function

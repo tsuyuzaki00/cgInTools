@@ -13,6 +13,7 @@ class BaseName(object):
         self._custom=""
         self._switch="fullAuto"# fullAuto setAuto mark replace
         self._order_list=[]# title node side num titleNum nodeNum sideNum titleHie scene custom
+        self._choise=""
         self._find=""
         self._replace=""
 
@@ -75,6 +76,12 @@ class BaseName(object):
         return self._switch
     def getSwitch(self):
         return self._switch
+
+    def setChoise(self,variable):
+        self._choise=(variable)
+        return self._choise
+    def getChoise(self):
+        return self._choise
 
     def setFind(self,variable):
         self._find=(variable)
@@ -512,6 +519,45 @@ class BasePath(object):
         return self._projectPathName
     def getProjectName(self):
         return self._projectPathName
+
+class BaseHierarchy(object):
+    def __init__(self):
+        self._name="group"
+        self._objs=[]
+        self._choiseNames=[]
+        self._choiseType="transform"
+
+    def setName(self,variable):
+        self._name=variable
+        return self._name
+    def getName(self):
+        return self._name
+
+    def setObjs(self,variables):
+        self._objs=variables
+        return self._objs
+    def addObjs(self,variables):
+        for variable in variables:
+            self._objs.append(variable)
+        return self._objs
+    def getObjs(self):
+        return self._objs
+
+    def setChoisNames(self,variables):
+        self._choiseNames=variables
+        return self._choiseNames
+    def addChoisNames(self,variables):
+        for variable in variables:
+            self._objs.append(variable)
+        return self._objs
+    def getChoisNames(self):
+        return self._choiseNames
+
+    def setSearchType(self,variable):
+        self._choiseType=variable
+        return self._choiseType
+    def getSearchType(self):
+        return self._choiseType
 
 class BaseRender(object):
     def __init__(self):
