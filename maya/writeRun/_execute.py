@@ -2,16 +2,16 @@
 import maya.cmds as cmds
 import cgInTools as cit
 #from cgInTools.maya.library import _testPath as TP
-#from cgInTools.maya.manager import selectSetCtrlMN as MN
+from cgInTools.maya.manager import equipmentSettingsMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
 #from cgInTools.maya.library import objectLB as oLB
-from cgInTools.maya.library import constrainLB as LB
+#from cgInTools.maya.library import constrainLB as LB
 #from cgInTools.maya.execute import infJntRemoveEditEX as EX
-cit.reloads([LB])
+cit.reloads([MN])
 
 def main():
     #OP.main()
-    #MN.main()
+    MN.main()
     #EX.main()
     #TP.main()
     """
@@ -25,7 +25,6 @@ def main():
     for setting in settings:
         shot.addSetting(setting)
         shot.createLayout()
-    """
     
     sourceNode=cmds.ls(sl=True)[0]
     targetNode=cmds.ls(sl=True)[1]
@@ -36,6 +35,7 @@ def main():
     replace.setTargetNode(targetNode)
     replace.setThirdNode(thirdNode)
     replace.ikHandleConstraint()
+    """
     
 
 main()

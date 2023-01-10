@@ -78,19 +78,13 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         else:
             cmds.error("Please select item.")
 
-    def _replaceListWithUI_edit_func(self,setting_dict):
+    def _replaceListWithUI_edit_lists(self,setting_dict):
         weight_dicts=setting_dict["weights"]
         weights=[]
         for weight_dict in weight_dicts:
             weight_list=[str(weight_dict["use"]),str(weight_dict["value"]),str(weight_dict["vertexs"]),str(weight_dict["joint"])]
             weights.append(weight_list)
         return weights
-    
-    def __importJson(self,path,file,extension="json"):
-        setting_dict=self.importJson_query_dict(path,file,extension)
-        self.geometry_QLineEdit.setText(setting_dict["geometry"])
-        self.data_lists=self._replaceListWithUI_edit_func(setting_dict)
-        self.createTableItem()
 
     def _replaceUIWithList_query_list(self):
         self.data_lists=self._getTable_query_lists()
@@ -100,11 +94,17 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             weights.append(weight_dict)
         return weights
 
+    #Public Function
+    def __importJson(self,path,file,extension="json"):
+        setting_dict=self.importJson_query_dict(path,file,extension)
+        self.geometry_QLineEdit.setText(setting_dict["geometry"])
+        self.data_lists=self._replaceListWithUI_edit_lists(setting_dict)
+        self.createTableItem()
+
     def __exportJson(self,path,file,extension="json"):
         weights=self._replaceUIWithList_query_list()
         self.exportJson_edit_func(path,file,extension,weights)
 
-    #Public Function
     def refreshOnClicked(self):
         self.__importJson(self.resetPath,self.fileName)
     

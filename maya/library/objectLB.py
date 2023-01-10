@@ -212,9 +212,9 @@ class MatrixObject(TrsObject):
     def __init__(self,obj):
         super(MatrixObject,self).__init__(obj)
         self._runMatrix_str="normal"# "normal", "world", "parent"
-        self._normal_MMatrix=self.matrix_query_MMatrix(self._object,type="normal")
-        self._world_MMatrix=self.matrix_query_MMatrix(self._object,type="world")
-        self._parent_MMatrix=self.matrix_query_MMatrix(self._object,type="parent")
+        self._normal_MMatrix=None
+        self._world_MMatrix=None
+        self._parent_MMatrix=None
         self._time=oma2.MAnimControl.currentTime()
         self._transKey_bool=False
         self._rotateKey_bool=False
@@ -334,13 +334,13 @@ class MatrixObject(TrsObject):
     def getAttrKeyBool(self):
         return self._otherKey_bool
 
-    def setAttrValueDict(self,variable):
+    def setOtherValueDict(self,variable):
         self._otherValue_dicts=[variable]
         return self._otherValue_dicts
-    def addAttrValueDict(self,variable):
+    def addOtherValueDict(self,variable):
         self._otherValue_dicts.append(variable)
         return self._otherValue_dicts
-    def getAttrValueDicts(self):
+    def getOtherValueDicts(self):
         return self._otherValue_dicts
 
     def loading(self):
@@ -356,7 +356,8 @@ class MatrixObject(TrsObject):
         else:
             cmds.error('please setRunMatrix with the strings "normal" or "world" or "parent".')
         if not self._otherValue_dicts == [] or not self._otherValue_dicts == None:
-            self.attrValueDict_edit_func(self._otherValue_dicts)
+            for _otherValue_dict in self._otherValue_dicts:
+                cmds.setAttr(_otherValue_dict["node"]+"."+_otherValue_dict["attr"],_otherValue_dict["value"])
 
     def normalMovement(self):
         cmds.xform(self._object,m=self._normal_MMatrix)

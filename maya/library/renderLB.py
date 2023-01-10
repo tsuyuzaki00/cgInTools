@@ -15,10 +15,6 @@ class MayaRender(sbLB.BaseRender):
         super(MayaRender,self).__init__()
         self._wrkPath=cmds.workspace(q=True,rd=True)
 
-    def __loading(self):
-        self._imageFormat_dict=rules_dict["imageFormat_dict"]
-        self._exportPath=self._path+"/"+self._exportFolder
-
     #Single Function
     def shotImage_create_func(self,path,file,imageFormat,camera,width,height,isRenderer):
         cameraShape_list=cmds.listRelatives(camera,s=True)
@@ -101,6 +97,10 @@ class MayaRender(sbLB.BaseRender):
         cmds.render(b=True,rep=True)
 
     #Public Function
+    def __loading(self):
+        self._imageFormat_dict=rules_dict["imageFormat_dict"]
+        self._exportPath=self._path+"/"+self._exportFolder
+        
     def shotImage(self):
         self.__loading()
         self._imageFormat=self._imageFormat_dict[self._extension]

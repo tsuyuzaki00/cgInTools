@@ -43,7 +43,9 @@
         "joint":[
             ["Select Position Joint","cgInTools.maya.execute","selectPosJointEX","main()",""]
         ],
-        "curve":[],
+        "curve":[
+            ["Create Ctrl Window","cgInTools.maya.manager","selectSetCtrlMN","main()",""]
+        ],
         "surface":[],
         "guide":[],
         "connect":[

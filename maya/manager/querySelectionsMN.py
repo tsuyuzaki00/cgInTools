@@ -21,6 +21,7 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
 
+    #Private Function
     def _plainText_create_func(self,objs,add=False):
         if add is True:
             getText_str=self.textPlain_QPlainTextEdit.toPlainText()
@@ -41,19 +42,23 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
     #Public Function
     def buttonLeftOnClicked(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()
-        text_list=eval(getText_str)
-        cmds.select(text_list)
+        if not getText_str == "":
+            text_list=eval(getText_str)
+            cmds.select(text_list)
 
     def buttonCenterOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._plainText_create_func(objs)
+        if not objs == []:
+            self._plainText_create_func(objs)
 
     def buttonRightOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._plainText_create_func(objs,add=True)
+        if not objs == []:
+            self._plainText_create_func(objs,add=True)
 
 def main():
     viewWindow=SelectionTextWindow(parent=wLB.mayaMainWindow_query_widget())
     objs=cmds.ls(sl=True)
-    viewWindow._plainText_create_func(objs)
+    if not objs == []:
+        viewWindow._plainText_create_func(objs)
     viewWindow.show()

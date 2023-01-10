@@ -9,7 +9,8 @@ from maya import cmds
 import cgInTools as cit
 from ...ui import tableUI as UI
 from ..library import windowLB as wLB
-cit.reloads([UI,wLB])
+from ..library import checkLB as chLB
+cit.reloads([UI,wLB,chLB])
 
 class LookNodeTypeWindow(UI.TableWindowBase):
     def __init__(self, parent):
@@ -23,6 +24,17 @@ class LookNodeTypeWindow(UI.TableWindowBase):
         self.createHeaderTitle()
 
     #Single Function
+    def sameObjName_check_func(self,objs):
+        check=chLB.CheckBoolean()
+        for obj in objs:
+            check.setNode(obj)
+            judge_dict=check.sameObjName()
+            if judge_dict["bool"]:
+                #print("OK:"+" node:"+str(judge_dict["node"]))
+                pass
+            else:
+                cmds.error("NG:"+"sameObjName node:"+str(judge_dict["node"]))
+
     def addChilds_query_list(self,objs):
         nodes=[]
         for obj in objs:
@@ -49,14 +61,17 @@ class LookNodeTypeWindow(UI.TableWindowBase):
 
     def buttonCenterOnClicked(self):
         objs=cmds.ls(sl=True)
+        self.sameObjName_check_func(objs)
         self._tableList_create_func(objs)
 
     def buttonRightOnClicked(self):
         objs=cmds.ls(sl=True)
+        self.sameObjName_check_func(objs)
         self._tableList_create_func(objs,add=True)
 
 def main():
     viewWindow=LookNodeTypeWindow(parent=wLB.mayaMainWindow_query_widget())
     objs=cmds.ls(sl=True)
+    viewWindow.sameObjName_check_func(objs)
     viewWindow._tableList_create_func(objs)
     viewWindow.show()

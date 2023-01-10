@@ -18,6 +18,7 @@ def mayaMixinWindow_query_widget():
     ptr=omui.MQtUtil.mainWindow()
     omui.MQtUtil.addWidgetToMayaLayout(int(ptr),int(restored_control))
 
+# fileMode 0=Export 1=Import
 def mayaFileDialog_query_path_file(text,fileMode,extension="json"):
     workPath=cmds.workspace(q=True,rd=True)
     pathFile_list=cmds.fileDialog2(fileFilter=text+" ."+extension+"(*."+extension+")",ds=2,fm=fileMode,dir=workPath)

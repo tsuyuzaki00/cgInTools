@@ -7,7 +7,7 @@ cit.reloads([chLB])
 import os
 
 def fileUnderCount_check_func(maxLimit=6):
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     check.setMaxLimit(maxLimit)
     judge_dict=check.fileUnderCount()
     if judge_dict["bool"]:
@@ -17,7 +17,7 @@ def fileUnderCount_check_func(maxLimit=6):
         print("NG:"+"fileUnderCount relation:"+str(judge_dict["relation"])+" max:"+str(judge_dict["maxLimit"]))
     
 def pathUnderCount_check_func(maxLimit=10):
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     check.setMaxLimit(maxLimit)
     judge_dict=check.pathUnderCount()
     if judge_dict["bool"]:
@@ -38,7 +38,7 @@ def samePathAndSceneName_check_func(same_dicts=[{"relation":"","same":""}]):
         {"relation":nameParts_list[3],"same":pathParts_list[7].lower()},
     ]
 
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     for same_dict in same_dicts:
         check.setRelation(same_dict["relation"])
         check.setSame(same_dict["same"])
@@ -50,7 +50,7 @@ def samePathAndSceneName_check_func(same_dicts=[{"relation":"","same":""}]):
             print("NG:"+"samePathAndSceneName relation:"+str(judge_dict["relation"])+" same:"+str(judge_dict["same"]))
 
 def sameObjName_check_func():
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     dagNodes=cmds.ls(dag=True)
     for dagNode in dagNodes:
         check.setNode(dagNode)
@@ -85,7 +85,7 @@ def trashReferences_check_func():
     file_path=cmds.file(q=True,sn=True)
     ma_file = os.path.basename(file_path)
     
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     refs=cmds.ls(type='reference')
     for ref in refs:
         check.setNode(ref)
@@ -98,7 +98,7 @@ def trashReferences_check_func():
             print("NG:"+"trashReferences reference:"+str(judge_dict["reference"])+" scene:"+str(judge_dict["scene"]))
 
 def nodeUnLocked_check_func(node="initialShadingGroup"):
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     check.setNode(node)
     judge_dict=check.nodeUnLocked()
     judge_dict["node"]=node
@@ -109,7 +109,7 @@ def nodeUnLocked_check_func(node="initialShadingGroup"):
         print("NG:"+"nodeUnLocked node:"+str(judge_dict["node"]))
  
 def arnoldSetting_check_func(chackAttr_dicts=[{"attr":"","same":""}]):
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     mesh_shapes=cmds.ls(type="mesh")
     geos=cmds.ls(cmds.listRelatives(mesh_shapes,parent=True),l=True)
     chackAttr_dicts=[
@@ -133,7 +133,7 @@ def arnoldSetting_check_func(chackAttr_dicts=[{"attr":"","same":""}]):
 def inheritances_check_func():
     shapes=cmds.ls(type='mesh')
     geos=cmds.ls(cmds.listRelatives(shapes,parent=True))
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     check.setSame(0)
     for geo in geos:
         ancestrals=cmds.ls(geo,long=True)[0].split('|')[1:-1]
@@ -148,7 +148,7 @@ def inheritances_check_func():
 
 def readPath_check_func(absolute_paths=["N:\\GMR\\source\\pub\\assets\\Shd","N:/GMR/source/pub/assets/Chr/operatorMob1/Maps"]):
     file_paths=cmds.filePathEditor(q=True,listDirectories="")
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     normpath_paths=[]
     for absolute_path in absolute_paths:
         normpath_paths.append(os.path.normpath(absolute_path))
@@ -164,7 +164,7 @@ def readPath_check_func(absolute_paths=["N:\\GMR\\source\\pub\\assets\\Shd","N:/
             print("NG:"+"readPath relation:"+str(judge_dict["relation"])+" sameList:"+str(judge_dict["sameList"]))
 
 def readFile_check_func():
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     file_paths=cmds.filePathEditor(q=True,listDirectories="")
     for file_path in file_paths:
         file_names=cmds.filePathEditor(q=True,listFiles=file_path,withAttribute=True)
@@ -190,7 +190,7 @@ def imagesUsed_check_func(image_path="N:/GMR/source/pub/assets/Chr/operatorMob1/
         same_list.append(file_name)
 
     relations=os.listdir(image_path)
-    check=chLB.Check()
+    check=chLB.CheckBoolean()
     check.setSameList(same_list)
     for relation in relations:
         check.setRelation(relation)
