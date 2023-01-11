@@ -303,7 +303,7 @@ class MatrixObject(TrsObject):
         return self._time
     def setCurrentTime(self):
         MTime=oma2.MAnimControl.currentTime()
-        self._time=Mtime
+        self._time=MTime
         return self._time
     def getTime(self,unit=None):
         fpsUnitType_int=unit or om2.MTime.uiUnit()
@@ -334,11 +334,12 @@ class MatrixObject(TrsObject):
     def getAttrKeyBool(self):
         return self._otherKey_bool
 
-    def setOtherValueDict(self,variable):
-        self._otherValue_dicts=[variable]
+    def setOtherValueDicts(self,variables):
+        self._otherValue_dicts=variables
         return self._otherValue_dicts
-    def addOtherValueDict(self,variable):
-        self._otherValue_dicts.append(variable)
+    def addOtherValueDicts(self,variables):
+        for variable in variables:
+            self._otherValue_dicts.append(variable)
         return self._otherValue_dicts
     def getOtherValueDicts(self):
         return self._otherValue_dicts
