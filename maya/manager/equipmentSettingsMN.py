@@ -6,21 +6,31 @@ import os
 import maya.cmds as cmds
 
 import cgInTools as cit
-from ...ui import equipmentSettingsUI as UI
+from ...ui import treeUI as UI
 from ..library import windowLB as wLB
 from ..library import renderLB as rLB
 from ..library import jsonLB as jLB
 from ..library import objectLB as oLB
 cit.reloads([UI,wLB,rLB,jLB,oLB])
 
-class EquipmentWindow(UI.EquipmentWindowBase):
+class EquipmentWindow(UI.TreeWindowBase):
     def __init__(self,*args,**kwargs):
         super(EquipmentWindow,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
+        self.buttonLeft_QPushButton.setText("Create")
+        self.buttonCenter_QPushButton.setText("SetTree")
+        self.buttonRight_QPushButton.setText("DeleteTree")
+
+        self.equipment_CTreeWidget=UI.CTreeWidget()
+        self.custom_QGridLayout.addWidget(self.equipment_CTreeWidget)
+        self.equipment_CTreeWidget.setHeaderLabelList(["Name","Value"])
+        self.equipment_CTreeWidget.createBase()
+        """
         self.equipment_QTreeWidget.clear()
         self.equipment_dicts=[]
         for equipment_dict in self.equipment_dicts:
             self.treeWidgetItem_create_func(equipment_dict["name"],equipment_dict["value"],equipment_dict["parent"])
+        """
     
     #Single Function
     def getModifiedAttr_query_dicts(self,obj):
@@ -63,19 +73,27 @@ class EquipmentWindow(UI.EquipmentWindowBase):
             cmds.delete(defTrs)
         return edit_dicts
 
-    def stringToMatrix_convert_matrix(self,matrix_str):
-        matrix_strs=list(matrix_str)
-        matrix_floats=[]
-        for matrix_str in matrix_strs:
-            matrix_floats.append(float(matrix_str))
-        return matrix_floats
+    #Private Function
+    def _getTopLevelItems_query_list(self):
+        self._topItems=[]
+        itemCount_int=self.topLevelItemCount()
+        for num in range(itemCount_int):
+            topItem_QTreeWidgetItem=self.topLevelItem(num)
+            topItem_CTreeWidgetItem=CTreeWidgetItem(topItem_QTreeWidgetItem)
+            self._topItems.append(topItem_CTreeWidgetItem)
+        return self._topItems
+
+        obj=topItem_QTreeWidgetItem.text(0)
 
     #Public Function
     def buttonLeftOnClicked(self):
-        topItem_QTreeWidgetItem=self.equipment_QTreeWidget.takeTopLevelItem(0)
-        obj=topItem_QTreeWidgetItem.text(0)
+        itemCount_int=self.equipment_QTreeWidget.topLevelItemCount()
+        for num in range(itemCount_int):
+            topItem_QTreeWidgetItem=self.equipment_QTreeWidget.topLevelItem(num)
+            obj=topItem_QTreeWidgetItem.text(0)
         
-        objectItem_list=topItem_QTreeWidgetItem.takeChildren()
+        itemCount_int=topItem_QTreeWidgetItem.childCount()
+        objectItem_list=topItem_QTreeWidgetItem.child()
         matrix=objectItem_list[0].text(1)
         time=objectItem_list[1].text(1)
         nodeType=objectItem_list[2].text(1)
@@ -91,8 +109,10 @@ class EquipmentWindow(UI.EquipmentWindowBase):
 
         newNode=cmds.createNode(nodeType,n=shape)
 
-        matrixNode=oLB.MatrixObject(newNode)
-        matrixNode.setWorldMatrix(list(matrix))
+        matrixNode=oLB.MatrixObject(newNode.replace("Shape",""))
+        print(matrixNode.getObject())
+        matrixNode.setWorldMatrix(eval(matrix))
+        print(matrixNode.getWorldMatrix())
         matrixNode.setTime(float(time))
         #matrixNode.setOtherValueDicts(otherValueDicts)
         matrixNode.worldMovement()

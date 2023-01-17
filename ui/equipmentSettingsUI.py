@@ -9,10 +9,6 @@ class EquipmentWindowBase(UI.MainWindowBase):
         super(EquipmentWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
 
-        self.buttonLeft_QPushButton.setText("Create")
-        self.buttonCenter_QPushButton.setText("SetTree")
-        self.buttonRight_QPushButton.setText("DeleteTree")
-
         self.equipment_QTreeWidget=QTreeWidget()
         self.custom_QGridLayout.addWidget(self.equipment_QTreeWidget)
         headerLabel_list=["Name","Value"]
