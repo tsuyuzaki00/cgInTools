@@ -58,8 +58,8 @@ class CTreeWidget(QTreeWidget):
         itemCount_int=self.topLevelItemCount()
         for num in range(itemCount_int):
             topItem_QTreeWidgetItem=self.topLevelItem(num)
-            topItem_CTreeWidgetItem=CTreeWidgetItem(topItem_QTreeWidgetItem)
-            self._topItems.append(topItem_CTreeWidgetItem)
+            #topItem_CTreeWidgetItem=CTreeWidgetItem(topItem_QTreeWidgetItem)
+            self._topItems.append(topItem_QTreeWidgetItem)
         return self._topItems
 
     #Public Function
@@ -69,8 +69,12 @@ class CTreeWidget(QTreeWidget):
     def getHeaderLabelList(self):
         return self._headerLabel_list
 
-    def setTreeParamDicts(self,validate):
-        self._treeParam_dicts=validate
+    def setTreeParamDicts(self,validates):
+        self._treeParam_dicts=validates
+        return self._treeParam_dicts
+    def addTreeParamDicts(self,validates):
+        for validate in validates:
+            self._treeParam_dicts.append(validate)
         return self._treeParam_dicts
     def getTreeParamDicts(self):
         return self._treeParam_dicts
