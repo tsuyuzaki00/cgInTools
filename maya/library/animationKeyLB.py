@@ -1,34 +1,10 @@
-import pymel.core as pm
 import maya.cmds as cmds
 
 from . import jsonLB as jLB
 
-anim_dict={
-    "sleeveChain_L0_fk0_ctl":[
-        {"attr":"rotateZ","value":0,"time":0},
-        {"attr":"rotateZ","value":-60,"time":6},
-        {"attr":"rotateZ","value":-60,"time":12},
-        {"attr":"rotateZ","value":0,"time":24},
-        ],
-    "sleeveChain_L0_fk1_ctl":[
-        {"attr":"rotateZ","value":0,"time":0},
-        {"attr":"rotateZ","value":-60,"time":6},
-        {"attr":"rotateZ","value":-60,"time":12},
-        {"attr":"rotateZ","value":0,"time":24},
-        ]
-    }
-
-param_dicts=[
-        {"attr":"rotateZ","value":0,"time":0},
-        {"attr":"rotateZ","value":-60,"time":6},
-        {"attr":"rotateZ","value":-60,"time":12},
-        {"attr":"rotateZ","value":0,"time":24},
-    ]
-
-
 class MatrixKey():
     def __init__(self):
-        self.
+        pass
 
 class KeyObject():
     def __init__(self):
@@ -80,8 +56,78 @@ class KeyObject():
 
 class EditKey():
     def __init__(self):
+        self._path=""
+        self._file=""
         self._object=""
-        self._param_dicts=[]
+        self._keyObject_dicts=[]
+
+    def getKeyObject_query_dicts(self,obj):
+        keyAttrs=cmds.listAttr(obj,k=True)
+        name=obj.split(":")[-1]
+        keys_dict={"keys":[]}
+        for keyAttr in keyAttrs:
+            times=cmds.keyframe(q=True,at=keyAttr)
+            if not times == None:
+                for time in times:
+                    value=cmds.getAttr(obj+"."+keyAttr,t=time)
+                    inType=cmds.keyTangent(obj,q=True,at=keyAttr,itt=True,t=(time,time))
+                    outType=cmds.keyTangent(obj,q=True,at=keyAttr,ott=True,t=(time,time))
+                    keyObject_dict={"object":name,"attr":keyAttr,"time":time,"value":value,"inTangentType":inType[0],"outTangentType":outType[0]}
+                    keys_dict["keys"].append(keyObject_dict)
+        return keys_dict
+
+    def importJson_query_dict(self,path,file,extension):
+        setting=jLB.Json()
+        setting.setPath(path)
+        setting.setFile(file)
+        setting_dict=setting.read()
+        return setting_dict
+
+    def exportJson_edit_func(self,path,file,extension,keyObject_dicts):
+        setting=jLB.Json()
+        setting.setPath(path)
+        setting.setFile(file)
+        setting.setExtension(extension)
+        for keyObject_dict in keyObject_dicts:
+            write_dict={
+                "object":keyObject_dict.getObject(),
+                "attr":keyObject_dict.getAttr(),
+                "time":keyObject_dict.getTime(),
+                "value":keyObject_dict.getValue(),
+                "inTangentType":keyObject_dict.getInTangentType(),
+                "outTangentType":keyObject_dict.getOutTangentType()
+            }
+            setting.setWritePackDict(write_dict,keyObject_dict.getObject())
+        setting.writePacks()
+
+    def setObject(self,variable):
+        self._object=variable
+        return self._object
+    def getObject(self):
+        return self._object
+
+    def setKeyObjectDicts(self,validates):
+        self._keyObject_dicts=validates
+        return self._keyObject_dicts
+    def addKeyObjectDicts(self,validates):
+        for validate in validates:
+            self._keyObject_dicts.append(validate)
+        return self._keyObject_dicts
+    def getOutTangentType(self):
+        return self._keyObject_dicts
+
+    def __import(self):
+        pass
+
+    def __export(self):
+        self.exportJson_edit_func(self._path,self._file,extension="anim",keyObject_dicts=self._keyObject_dicts)
+
+    def getKeyObjectDicts(self):
+        keyObject_dicts=self.getKeyObject_query_dicts(self._object)
+        return keyObject_dicts
+
+    def export(self):
+        self.__export()
 
 
 def setObjectKey(obj,params):
@@ -102,7 +148,6 @@ def readKey(anim_dict):
             keyObj.setValue(param_dict["value"])
             keyObj.setTime(param_dict["time"])
             keyObj.setKeyFrame()
-            #print(anim[0],param)
 
 
 class CAnimKey():

@@ -25,7 +25,7 @@ class Json(sbLB.BaseJson):
             return read_dict
             
     def writeJson_create_func(self,exPath,write_dict):
-        with open(exPath, 'w') as f:
+        with open(exPath,'w') as f:
             json.dump(write_dict,f,indent=4,ensure_ascii=False)
 
     #Multi Function
