@@ -21,6 +21,7 @@
         ["multi","face"],
         ["multi","cv"],
         ["multi","skin"],
+        ["multi","animation"],
         ["single","Query"],
         ["multi","inquiry"],
         ["single","Mgear"],
@@ -85,6 +86,12 @@
             ["Remove From InfluenceUI","cgInTools.maya.execute","infJntRemoveEX","main()",""],
             ["Paint Weight Value","cgInTools.maya.manager","paintWeightValueMN","main()","skinPaintValue.png"],
             ["Weight By Joint","cgInTools.maya.manager","skinWeightByJointMN","main()",""]
+        ],
+        "animation":[
+            ["Import Anim","cgInTools.maya.execute","importAnimEX","main()",""],
+            ["Import Anim Pack","cgInTools.maya.execute","importAnimPackEX","main()",""],
+            ["Export Anim","cgInTools.maya.execute","exportAnimEX","main()",""],
+            ["Export Anim Pack","cgInTools.maya.execute","exportAnimPackEX","main()",""]
         ],
         "inquiry":
         [

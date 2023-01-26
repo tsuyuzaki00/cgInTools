@@ -1,5 +1,6 @@
 import maya.cmds as cmds
 
+from . import objectLB as oLB
 from . import jsonLB as jLB
 
 class MatrixKey():
@@ -54,19 +55,17 @@ class KeyObject():
     def setKeyFrame(self):
         cmds.setKeyframe(self._object,at=self._attr,v=self._value,t=[self._time],itt=self._inTangentType,ott=self._outTangentType)
 
-class EditKey():
+class KeyObjects():
     def __init__(self):
-        self._path=""
-        self._file=""
         self._object=""
         self._keyObject_dicts=[]
 
-    def getKeyObject_query_dicts(self,obj):
+    def keyObject_create_dicts(self,obj):
         keyAttrs=cmds.listAttr(obj,k=True)
         name=obj.split(":")[-1]
         keys_dict={"keys":[]}
         for keyAttr in keyAttrs:
-            times=cmds.keyframe(q=True,at=keyAttr)
+            times=cmds.keyframe(obj,q=True,at=keyAttr)
             if not times == None:
                 for time in times:
                     value=cmds.getAttr(obj+"."+keyAttr,t=time)
@@ -75,31 +74,44 @@ class EditKey():
                     keyObject_dict={"object":name,"attr":keyAttr,"time":time,"value":value,"inTangentType":inType[0],"outTangentType":outType[0]}
                     keys_dict["keys"].append(keyObject_dict)
         return keys_dict
+    #Single Function
+    def getKeyAttr_query_dicts(self,obj):
+        keyObject_dicts=[]
+        keyAttrs=cmds.listAttr(obj,k=True)
+        for keyAttr in keyAttrs:
+            times=cmds.keyframe(obj,q=True,at=keyAttr)
+            if not times == None:
+                for time in times:
+                    keyObject_dict={"object":obj,"attr":keyAttr,"time":time}
+                    keyObject_dicts.append(keyObject_dict)
+        return keyObject_dicts
 
-    def importJson_query_dict(self,path,file,extension):
-        setting=jLB.Json()
-        setting.setPath(path)
-        setting.setFile(file)
-        setting_dict=setting.read()
-        return setting_dict
+    #Multi Function
+    def _getObjectKeys_query_dict(self,obj):
+        keyObject_dicts=self.getKeyAttr_query_dicts(obj)
 
-    def exportJson_edit_func(self,path,file,extension,keyObject_dicts):
-        setting=jLB.Json()
-        setting.setPath(path)
-        setting.setFile(file)
-        setting.setExtension(extension)
+        keys_dict={"keys":[]}
         for keyObject_dict in keyObject_dicts:
-            write_dict={
-                "object":keyObject_dict.getObject(),
-                "attr":keyObject_dict.getAttr(),
-                "time":keyObject_dict.getTime(),
-                "value":keyObject_dict.getValue(),
-                "inTangentType":keyObject_dict.getInTangentType(),
-                "outTangentType":keyObject_dict.getOutTangentType()
-            }
-            setting.setWritePackDict(write_dict,keyObject_dict.getObject())
-        setting.writePacks()
+            keyObject=oLB.KeyObject(keyObject_dict["object"])
+            keyObject.setAttr(keyObject_dict["attr"])
+            keyObject.setTime(keyObject_dict["time"])
+            keyObject.loading()
+            noNameSpace=keyObject.getObject().split(":")[-1]
 
+            keyObject_dict={
+                "object":noNameSpace,
+                "attr":keyObject.getAttr(),
+                "time":keyObject.getTime(),
+                "value":keyObject.getValue(),
+                "inTangentType":keyObject.getInType(),
+                "outTangentType":keyObject.getOutType(),
+                "inAngle":keyObject.getInAngle(),
+                "outAngle":keyObject.getOutAngle()
+            }
+            keys_dict["keys"].append(keyObject_dict)
+        return keys_dict
+
+    #Public Function
     def setObject(self,variable):
         self._object=variable
         return self._object
@@ -113,21 +125,12 @@ class EditKey():
         for validate in validates:
             self._keyObject_dicts.append(validate)
         return self._keyObject_dicts
-    def getOutTangentType(self):
+    def getKeyObjectDicts(self):
         return self._keyObject_dicts
 
-    def __import(self):
-        pass
-
-    def __export(self):
-        self.exportJson_edit_func(self._path,self._file,extension="anim",keyObject_dicts=self._keyObject_dicts)
-
-    def getKeyObjectDicts(self):
-        keyObject_dicts=self.getKeyObject_query_dicts(self._object)
-        return keyObject_dicts
-
-    def export(self):
-        self.__export()
+    def createKeyObjectDict(self):
+        keyObject_dict=self._getObjectKeys_query_dict(self._object)
+        return keyObject_dict
 
 
 def setObjectKey(obj,params):

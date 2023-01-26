@@ -384,7 +384,7 @@ class BaseJson(object):
         self._read_dict={}
         self._readPack_dicts=[]
         self._write_dict={}
-        self._writePack_dicts=[]# {"dataDict":{},"fileName":""}
+        self._writePack_dicts=[]# {"dataDict":{},"file":""}
 
     def setPath(self,variable):
         self._path=variable
@@ -418,11 +418,11 @@ class BaseJson(object):
 
     def setWritePackDict(self,variable,file=None):
         file=file or self._file
-        self._writePack_dicts=[{"fileName":file,"dataDict":variable}]
+        self._writePack_dicts=[{"file":file,"extension":self._extension,"dataDict":variable}]
         return self._writePack_dicts
     def addWritePackDict(self,variable,file=None):
         file=file or self._file
-        self._writePack_dicts.append({"fileName":file,"dataDict":variable})
+        self._writePack_dicts.append({"file":file,"extension":self._extension,"dataDict":variable})
         return self._writePack_dicts
     def getWritePackDicts(self):
         return self._writePack_dicts

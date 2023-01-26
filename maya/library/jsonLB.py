@@ -31,15 +31,18 @@ class Json(sbLB.BaseJson):
     #Multi Function
     def _thisPack_check_func(self,path,file,extension):
         try:
-            self.readJson_quary_dict(path,file,extension+"Pack")
+            imPath=self.pathSetting_create_str(path,file,extension+"Pack")
+            self.readJson_quary_dict(imPath)
         except:
             cmds.error("setFile is No packFiles.")
 
     def _readPack_quary_list(self,path,file,extension):
-        pack_dict=self.readJson_quary_dict(path,file,extension+"Pack")
+        imPackPath=self.pathSetting_create_str(path,file,extension+"Pack")
+        pack_dict=self.readJson_quary_dict(imPackPath)
         data_dicts=[]
-        for data_str in pack_dict["packFiles"]:
-            data_dict=self.readJson_quary_dict(path,data_str,extension)
+        for fileEX_dict in pack_dict["packFiles"]:
+            imPath=self.pathSetting_create_str(path,fileEX_dict["file"],fileEX_dict["extension"])
+            data_dict=self.readJson_quary_dict(imPath)
             data_dicts.append(data_dict)
         return data_dicts
 
@@ -47,11 +50,11 @@ class Json(sbLB.BaseJson):
         packPath=self.pathSetting_create_str(path,file,extension+"Pack")
         packFiles=[]
         for pack_dict in pack_dicts:
-            packFiles.append(pack_dict["fileName"])
-            exPath=os.path.join(path,pack_dict["fileName"]+"."+extension)
-            self.writeJson_create_func(exPath,pack_dict["dataDict"])
+            packFiles.append({"file":pack_dict["file"],"extension":pack_dict["extension"]})
+            exPath=os.path.join(path,pack_dict["file"]+"."+pack_dict["extension"])
+            self.writeJson_create_func(exPath,pack_dict["dataDict"])#create a normal json file
         write_dict={"packFiles":packFiles}
-        self.writeJson_create_func(packPath,write_dict)
+        self.writeJson_create_func(packPath,write_dict)#create a pack json file
     
     #Public Function
     def read(self):
@@ -64,7 +67,7 @@ class Json(sbLB.BaseJson):
         self.writeJson_create_func(exPath,self._write_dict)
 
     def readPacks(self):
-        self._thisPack_check_func(self._path,self._file,self._extension,"packFiles")
+        self._thisPack_check_func(self._path,self._file,self._extension)
         self._readPack_dicts=self._readPack_quary_list(self._path,self._file,self._extension)
         return self._readPack_dicts
 

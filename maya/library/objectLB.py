@@ -26,19 +26,6 @@ class TrsObject(object):
         
         self._subject=None
 
-    def __loading(self):
-        self._objectType=cmds.nodeType(self._object)
-        self._shapes=self.childs_query_list(self._object,self._fullPath_bool,self._shapeMFn_list)
-        self._shapeTypes=self.nodeTypes_query_list(self._shapes)
-        self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._childs=self.childs_query_list(self._object,self._fullPath_bool,self._transMFn_list)
-
-        self._subjectType=cmds.nodeType(self._subject)
-        self._subShape_list=self.childs_query_list(self._subject,self._fullPath_bool,self._shapeMFn_list)
-        self._subShapeType_list=self.nodeTypes_query_list(self._shapes)
-        self._subParent_str=self.parent_query_str(self._subject,fullPath=self._fullPath_bool)
-        self._subChild_list=self.childs_query_list(self._subject,self._fullPath_bool,self._transMFn_list)
-
     #Single Function
     def parent_query_str(self,node,fullPath=False):
         if node == None:
@@ -116,6 +103,19 @@ class TrsObject(object):
         return self._nodeTypeToMFn_dict[nodeType]
 
     #Public Function
+    def __loading(self):
+        self._objectType=cmds.nodeType(self._object)
+        self._shapes=self.childs_query_list(self._object,self._fullPath_bool,self._shapeMFn_list)
+        self._shapeTypes=self.nodeTypes_query_list(self._shapes)
+        self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
+        self._childs=self.childs_query_list(self._object,self._fullPath_bool,self._transMFn_list)
+
+        self._subjectType=cmds.nodeType(self._subject)
+        self._subShape_list=self.childs_query_list(self._subject,self._fullPath_bool,self._shapeMFn_list)
+        self._subShapeType_list=self.nodeTypes_query_list(self._shapes)
+        self._subParent_str=self.parent_query_str(self._subject,fullPath=self._fullPath_bool)
+        self._subChild_list=self.childs_query_list(self._subject,self._fullPath_bool,self._transMFn_list)
+
     def setFullPathSwitch(self,variable):
         self._fullPath_bool=variable
         return self._fullPath_bool
@@ -176,12 +176,12 @@ class JointWeight(TrsObject):
         self._vertexs=[]#{}
         self._value=0
 
+    #Public Function
     def __loading(self):
         super(JointWeight,self).loading()
         mFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
         self._skinCluster_list=self.findConnect_query_list(self._subShape_list[0],mFnID=mFn_int)
-    
-    #Public Function
+
     def setUseJoint(self,variable):
         self._useJoint=variable
         return self._useJoint
@@ -221,11 +221,6 @@ class MatrixObject(TrsObject):
         self._scaleKey_bool=False
         self._otherKey_bool=False
         self._otherValue_dicts=[]# {"node":"","attr":"","value":0}
-
-    def __loading(self):
-        self._normal_MMatrix=self.matrix_query_MMatrix(self._object,type="normal")
-        self._world_MMatrix=self.matrix_query_MMatrix(self._object,type="world")
-        self._parent_MMatrix=self.matrix_query_MMatrix(self._object,type="parent")
 
     #Single Function
     def matrix_query_MMatrix(self,node,type="normal"):
@@ -272,6 +267,11 @@ class MatrixObject(TrsObject):
                     cmds.setKeyframe(_otherValue_dict["node"],at=_otherValue_dict["attr"],v=_otherValue_dict["value"])
 
     #Public Function
+    def __loading(self):
+        self._normal_MMatrix=self.matrix_query_MMatrix(self._object,type="normal")
+        self._world_MMatrix=self.matrix_query_MMatrix(self._object,type="world")
+        self._parent_MMatrix=self.matrix_query_MMatrix(self._object,type="parent")
+
     def setRunMatrix(self,variable):
         self._runMatrix_str=variable
         return self._runMatrix_str
@@ -344,9 +344,6 @@ class MatrixObject(TrsObject):
     def getOtherValueDicts(self):
         return self._otherValue_dicts
 
-    def loading(self):
-        self.__loading()
-
     def runMovement(self):
         if self._runMatrix_str == "normal":
             cmds.xform(self._object,m=self._normal_MMatrix)
@@ -378,23 +375,50 @@ class MatrixObject(TrsObject):
     def currentKeyFrame(self):
         self._trsKey_edit_func()
 
+    def loading(self):
+        self.__loading()
+
 class KeyObject(TrsObject):
     def __init__(self,obj):
         super(KeyObject,self).__init__(obj)
         self._time=0
         self._attr=""
         self._value=0
-        self._inAngle=""
-        self._outAngle=""
-        self._inType=""
-        self._outType=""
+        self._inAngle=None
+        self._outAngle=None
+        self._inType=None
+        self._outType=None
 
+    #Public Function
     def __loading(self):
-        self._value=cmds.getAttr(self._object+"."+self._attr)
-        self._inAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),ia=True)
-        self._outAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),oa=True)
-        self._inType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),itt=True)
-        self._outType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),ott=True)
+        fpsUnitType_int=om2.MTime.uiUnit()
+        time=self._time.asUnits(fpsUnitType_int)
+
+        self._value=cmds.getAttr(self._object+"."+self._attr,t=time)
+        
+        self._inAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ia=True)
+        if not self._inAngle == None:
+            self._inAngle=self._inAngle[0]
+            if self._inAngle == "fixed":
+                self._inAngle="auto"
+
+        self._outAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),oa=True)
+        if not self._outAngle == None:
+            self._outAngle=self._outAngle[0]
+            if self._outAngle == "fixed":
+                self._outAngle="auto"
+        
+        self._inType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),itt=True)
+        if not self._inType == None:
+            self._inType=self._inType[0]
+            if self._inType == "fixed":
+                self._inType="auto"
+        
+        self._outType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ott=True)
+        if not self._outType == None:
+            self._outType=self._outType[0]
+            if self._outType == "fixed":
+                self._outType="auto"
 
     def setAttr(self,variable):
         self._attr=variable
@@ -420,7 +444,8 @@ class KeyObject(TrsObject):
         self._value=variable
         return self._value
     def setCurrentValue(self):
-        self._value=cmds.getAttr(self._object+"."+self._attr)
+        time=cmds.currentTime(q=True)
+        self._value=cmds.getAttr(self._object+"."+self._attr,t=time)
         return self._value
     def getValue(self):
         return self._value
@@ -429,7 +454,10 @@ class KeyObject(TrsObject):
         self._inAngle=variable
         return self._inAngle
     def setCurrentInAngle(self):
-        self._inAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),ia=True)
+        time=cmds.currentTime(q=True)
+        self._inAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ia=True)
+        if not self._inAngle == None:
+            self._inAngle=self._inAngle[0]
         return self._inAngle
     def getInAngle(self):
         return self._inAngle
@@ -438,7 +466,10 @@ class KeyObject(TrsObject):
         self._outAngle=variable
         return self._outAngle
     def setCurrentOutAngle(self):
-        self._outAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),oa=True)
+        time=cmds.currentTime(q=True)
+        self._outAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),oa=True)
+        if not self._outAngle == None:
+            self._outAngle=self._outAngle[0]
         return self._outAngle
     def getOutAngle(self):
         return self._outAngle
@@ -447,7 +478,10 @@ class KeyObject(TrsObject):
         self._inType=variable
         return self._inType
     def setCurrentInType(self):
-        self._inType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),itt=True)
+        time=cmds.currentTime(q=True)
+        self._inType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),itt=True)
+        if not self._inType == None:
+            self._inType=self._inType[0]
         return self._inType
     def getInType(self):
         return self._inType
@@ -456,7 +490,22 @@ class KeyObject(TrsObject):
         self._outType=variable
         return self._outType
     def setCurrentOutType(self):
-        self._outType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(self._time,self._time),ott=True)
+        time=cmds.currentTime(q=True)
+        self._outType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ott=True)
+        if not self._outType == None:
+            self._outType=self._outType[0]
         return self._outType
     def getOutType(self):
         return self._outType
+
+    def loading(self):
+        self.__loading()
+
+    def setKey(self):
+        fpsUnitType_int=om2.MTime.uiUnit()
+        time=self._time.asUnits(fpsUnitType_int)
+        try:
+            cmds.setKeyframe(self._object,at=self._attr,v=self._value,t=[time],itt=self._inType,ott=self._outType)
+            cmds.keyTangent(self._object,at=self._attr,time=(time,time),inAngle=self._inAngle,outAngle=self._outAngle)
+        except ValueError as e:
+            print(e)
