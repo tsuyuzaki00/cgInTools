@@ -384,41 +384,71 @@ class KeyObject(TrsObject):
         self._time=0
         self._attr=""
         self._value=0
-        self._inAngle=None
-        self._outAngle=None
-        self._inType=None
-        self._outType=None
+        self._inType=""
+        self._inTangentType=11
+        self._outTangentType=11
+        self._animCurve=8
+
+        self._animTangentReplaceID_dict=RULES_DICT["animTangentReplaceID_dict"]
+        self._animTangentReplaceType_list=RULES_DICT["animTangentReplaceType_list"]
+        self._animCurveReplaceID_dict=RULES_DICT["animCurveReplaceID_dict"]
+        self._animCurveReplaceType_list=RULES_DICT["animCurveReplaceType_list"]
+
+    #Single Function
+    def objAttr_query_MFnAnimCurve(self,obj,attr,MTime):
+        obj_MSelectionList=om2.MSelectionList().add(obj)
+        obj_MObject=obj_MSelectionList.getDependNode(0)
+        obj_MFnDependencyNode=om2.MFnDependencyNode(obj_MObject)
+        objAttr_MPlug=obj_MFnDependencyNode.findPlug(attr,False)
+        objAttr_MPlug.setMTime(MTime)
+        objAttr_MFnAnimCurve=oma2.MFnAnimCurve(objAttr_MPlug)
+        return objAttr_MFnAnimCurve
+
+    def currentTime_query_MTime(self):
+        MTime=oma2.MAnimControl.currentTime()
+        fpsUnitType_int=om2.MTime.uiUnit()
+        time=MTime.asUnits(fpsUnitType_int)
+        return MTime
+
+    #Multi Function
+    def _inTangentType_query_int(self,obj,attr,MTime):
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(obj,attr,MTime)
+        inTangentTypeID_int=objAttr_MFnAnimCurve.inTangentType(0)
+        return inTangentTypeID_int
+
+    def _outTangentType_query_int(self,obj,attr,MTime):
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(obj,attr,MTime)
+        outTangentTypeID_int=objAttr_MFnAnimCurve.outTangentType(0)
+        return outTangentTypeID_int
+
+    def _keyFrame_create_func(self,obj,attr,value,MTime,inTangentTypeID,outTangentTypeID,animCurve):
+        obj_MSelectionList=om2.MSelectionList().add(obj)
+        obj_MObject=obj_MSelectionList.getDependNode(0)
+        obj_MFnDependencyNode=om2.MFnDependencyNode(obj_MObject)
+        objAttr_MPlug=obj_MFnDependencyNode.findPlug(attr,False)
+        
+        if not objAttr_MPlug.isConnected:
+            animCurve_MFnAnimCurve=oma2.MFnAnimCurve()
+            animCurve_MObject=animCurve_MFnAnimCurve.create(animCurve)
+            animCurve_MFnDependencyNode=om2.MFnDependencyNode(animCurve_MObject)
+            animCurve_MFnDependencyNode.setName(obj+"_"+attr)
+            animCurve_MPlug=animCurve_MFnDependencyNode.findPlug("output",False)
+
+            keyConnect_MDGModifier=om2.MDGModifier()
+            keyConnect_MDGModifier.connect(animCurve_MPlug,objAttr_MPlug)
+            keyConnect_MDGModifier.doIt()
+        
+        objAttr_MFnAnimCurve=oma2.MFnAnimCurve(objAttr_MPlug)
+        objAttr_MFnAnimCurve.addKey(MTime,value,inTangentTypeID,outTangentTypeID)
 
     #Public Function
     def __loading(self):
         fpsUnitType_int=om2.MTime.uiUnit()
         time=self._time.asUnits(fpsUnitType_int)
-
         self._value=cmds.getAttr(self._object+"."+self._attr,t=time)
-        
-        self._inAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ia=True)
-        if not self._inAngle == None:
-            self._inAngle=self._inAngle[0]
-            if self._inAngle == "fixed":
-                self._inAngle="auto"
-
-        self._outAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),oa=True)
-        if not self._outAngle == None:
-            self._outAngle=self._outAngle[0]
-            if self._outAngle == "fixed":
-                self._outAngle="auto"
-        
-        self._inType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),itt=True)
-        if not self._inType == None:
-            self._inType=self._inType[0]
-            if self._inType == "fixed":
-                self._inType="auto"
-        
-        self._outType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ott=True)
-        if not self._outType == None:
-            self._outType=self._outType[0]
-            if self._outType == "fixed":
-                self._outType="auto"
+        self._inTangentType=self._inTangentType_query_int(self._object,self._attr,self._time)
+        self._outTangentType=self._outTangentType_query_int(self._object,self._attr,self._time)
+        self.setCurrentAnimCurve()
 
     def setAttr(self,variable):
         self._attr=variable
@@ -443,69 +473,50 @@ class KeyObject(TrsObject):
     def setValue(self,variable):
         self._value=variable
         return self._value
-    def setCurrentValue(self):
-        time=cmds.currentTime(q=True)
+    def setCurrentValue(self,unit=None):
+        MTime=self.currentTime_query_MTime()
+        fpsUnitType_int=unit or om2.MTime.uiUnit()
+        time=MTime.asUnits(fpsUnitType_int)
         self._value=cmds.getAttr(self._object+"."+self._attr,t=time)
         return self._value
     def getValue(self):
         return self._value
-    
-    def setInAngle(self,variable):
-        self._inAngle=variable
-        return self._inAngle
-    def setCurrentInAngle(self):
-        time=cmds.currentTime(q=True)
-        self._inAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ia=True)
-        if not self._inAngle == None:
-            self._inAngle=self._inAngle[0]
-        return self._inAngle
-    def getInAngle(self):
-        return self._inAngle
-    
-    def setOutAngle(self,variable):
-        self._outAngle=variable
-        return self._outAngle
-    def setCurrentOutAngle(self):
-        time=cmds.currentTime(q=True)
-        self._outAngle=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),oa=True)
-        if not self._outAngle == None:
-            self._outAngle=self._outAngle[0]
-        return self._outAngle
-    def getOutAngle(self):
-        return self._outAngle
 
-    def setInType(self,variable):
-        self._inType=variable
-        return self._inType
-    def setCurrentInType(self):
-        time=cmds.currentTime(q=True)
-        self._inType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),itt=True)
-        if not self._inType == None:
-            self._inType=self._inType[0]
-        return self._inType
-    def getInType(self):
-        return self._inType
+    def setInTangentType(self,variable):
+        self._inTangentType=self._animTangentReplaceID_dict[variable]
+        return self._inTangentType
+    def setCurrentInTangentType(self):
+        MTime=self.currentTime_query_MTime()
+        self._inTangentType=self._inTangentType_query_int(self._object,self._attr,MTime)
+        return self._inTangentType
+    def getInTangentType(self):
+        inTangentType=self._animTangentReplaceType_list[self._inTangentType]
+        return inTangentType
     
-    def setOutType(self,variable):
-        self._outType=variable
-        return self._outType
-    def setCurrentOutType(self):
-        time=cmds.currentTime(q=True)
-        self._outType=cmds.keyTangent(self._object,q=True,at=self._attr,t=(time,time),ott=True)
-        if not self._outType == None:
-            self._outType=self._outType[0]
-        return self._outType
-    def getOutType(self):
-        return self._outType
+    def setOutTangentType(self,variable):
+        self._outTangentType=self._animTangentReplaceID_dict[variable]
+        return self._outTangentType
+    def setCurrentOutTangentType(self):
+        MTime=self.currentTime_query_MTime()
+        self._outTangentType=self._outTangentType_query_int(self._object,self._attr,MTime)
+        return self._outTangentType
+    def getOutTangentType(self):
+        outTangentType=self._animTangentReplaceType_list[self._outTangentType]
+        return outTangentType
+    
+    def setAnimCurve(self,variable):
+        self._animCurve=self._animCurveReplaceID_dict[variable]
+        return self._animCurve
+    def setCurrentAnimCurve(self):
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(self._object,self._attr,self._time)
+        self._animCurve=objAttr_MFnAnimCurve.animCurveType
+        return self._animCurve
+    def getAnimCurve(self):
+        animCurve=self._animCurveReplaceType_list[self._animCurve]
+        return animCurve
 
     def loading(self):
         self.__loading()
 
     def setKey(self):
-        fpsUnitType_int=om2.MTime.uiUnit()
-        time=self._time.asUnits(fpsUnitType_int)
-        try:
-            cmds.setKeyframe(self._object,at=self._attr,v=self._value,t=[time],itt=self._inType,ott=self._outType)
-            cmds.keyTangent(self._object,at=self._attr,time=(time,time),inAngle=self._inAngle,outAngle=self._outAngle)
-        except ValueError as e:
-            print(e)
+        self._keyFrame_create_func(self._object,self._attr,self._value,self._time,self._inTangentType,self._outTangentType,self._animCurve)

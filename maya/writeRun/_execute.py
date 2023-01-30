@@ -4,16 +4,25 @@ import cgInTools as cit
 #from cgInTools.maya.library import _testPath as TP
 #from cgInTools.maya.manager import equipmentSettingsMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
-#from cgInTools.maya.library import objectLB as oLB
+from cgInTools.maya.library import objectLB as oLB
 #from cgInTools.maya.library import constrainLB as LB
-from cgInTools.maya.execute import exportAnimPackEX as EX
-cit.reloads([EX])
+#from cgInTools.maya.execute import exportAnimPackEX as EX
+cit.reloads([oLB])
 
 def main():
     #OP.main()
     #MN.main()
-    EX.main()
+    #EX.main()
     #TP.main()
+
+    test=oLB.KeyObject(cmds.ls(sl=True)[0])
+    test.setAttr("translateX")
+    test.setTime(1)
+    test.setValue(5)
+    test.setInTangentType("auto")
+    test.setOutTangentType("auto")
+    test.setAnimCurve("animCurveTL")
+    test.createKey()
     """
     objs=cmds.ls(sl=True)
     settings=[]
