@@ -5,6 +5,7 @@ from PySide2.QtGui import *
 
 import os
 from maya import cmds
+import maya.api.OpenMaya as om2
 
 import cgInTools as cit
 from ...ui import tableUI as UI
@@ -20,7 +21,7 @@ class LookNodeTypeWindow(UI.TableWindowBase):
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
-        self.headerTitle_list=["ObjectName","NodeType"]
+        self.headerTitle_list=["ObjectName","NodeType","MFnType","MFnTypeID"]
         self.createHeaderTitle()
 
     #Single Function
@@ -45,6 +46,14 @@ class LookNodeTypeWindow(UI.TableWindowBase):
                     nodes.append(shape)
         return nodes
 
+    def MFuType_query_str_int(self,node):
+        if node == None:
+            return None
+        node_MSelectionList=om2.MSelectionList()
+        node_MSelectionList.add(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        return node_MObject.apiTypeStr,node_MObject.apiType()
+
     #Private Function
     def _tableList_create_func(self,nodes,add=False):
         if not add:
@@ -52,7 +61,8 @@ class LookNodeTypeWindow(UI.TableWindowBase):
         nodes=self.addChilds_query_list(nodes)
         for node in nodes:
             nodeType=cmds.nodeType(node)
-            self.data_lists.append([node,nodeType])
+            MFnType,MFnTypeID=self.MFuType_query_str_int(node)
+            self.data_lists.append([node,nodeType,MFnType,str(MFnTypeID)])
             self.createTableItem()
 
     #Public Function

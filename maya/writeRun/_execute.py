@@ -14,37 +14,19 @@ def main():
     #MN.main()
     #EX.main()
     #TP.main()
-
-    test=oLB.KeyObject(cmds.ls(sl=True)[0])
-    test.setAttr("translateX")
-    test.setTime(1)
-    test.setValue(5)
-    test.setInTangentType("auto")
-    test.setOutTangentType("auto")
-    test.setAnimCurve("animCurveTL")
-    test.createKey()
-    """
-    objs=cmds.ls(sl=True)
-    settings=[]
-    for obj in objs:
-        nm=oLB.MatrixObject(obj)
-        settings=[nm]
-
-    shot=LB.EquipmentSettings()
-    for setting in settings:
-        shot.addSetting(setting)
-        shot.createLayout()
     
-    sourceNode=cmds.ls(sl=True)[0]
-    targetNode=cmds.ls(sl=True)[1]
-    thirdNode=cmds.ls(sl=True)[2]
-
-    replace=LB.Constrain()  
-    replace.setSourceNode(sourceNode)
-    replace.setTargetNode(targetNode)
-    replace.setThirdNode(thirdNode)
-    replace.ikHandleConstraint()
-    """
-    
+    obj=cmds.ls(sl=True)[0]
+    test=oLB.JointWeight("joint1")
+    test.setSubject(obj)
+    #test.setFullPathSwitch(True)
+    print(test.getSubject())
+    print(test.getSubShapes())
+    print(test.getSubShapes(True))
+    print(test.getSubShapeTypes())
+    print(test.getSubShapeTypes(True))
+    print(test.getSubParent())
+    print(test.getSubChilds())
+    print(test.getSubChilds(True))
+    print(test.getSkinClusters())
 
 main()

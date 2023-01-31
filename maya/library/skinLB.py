@@ -341,7 +341,7 @@ class SkinWeightByJoint():
             if not weight.getUseJoint() == True:
                 return 0
             else:
-                cmds.skinPercent(weight.getSkinClusters()[0],weight.getVertexs(),transformValue=[(weight.getObject(),weight.getValue())],nrm=True)
+                cmds.skinPercent(weight.getSkinClusters(),weight.getVertexs(),transformValue=[(weight.getObject(),weight.getValue())],nrm=True)
 
     def importWeights(self):
         self._readDict=super().read()

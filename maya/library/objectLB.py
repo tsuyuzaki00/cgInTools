@@ -16,87 +16,88 @@ class TrsObject(object):
         self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
 
         self._fullPath_bool=False
-        self._object=obj
-        self._objectType=cmds.nodeType(self._object)
-        self._shapes=self.childs_query_list(self._object,self._fullPath_bool,self._shapeMFn_list)
-        self._shapeTypes=self.nodeTypes_query_list(self._shapes)
+
+        self._object_MObject,self._object_MDagPath=self.selectOpenMaya_create_MObject_MDagPath(obj)
+        self._objectType_str=self.nodeType_query_str(self._object_MObject)
+
+        self._shape_MObjects=self.child_query_MObjects(self._object_MDagPath,self._shapeMFn_list)
+        self._shapeType_strs=self.nodeType_query_strs(self._shape_MObjects)
         
-        self._parent_str=self.parent_query_str(self._object,self._fullPath_bool)
-        self._childs=self.childs_query_list(self._object,self._fullPath_bool,self._transMFn_list)
+        self._parent_MObject=self.parent_query_MObject(self._object_MDagPath)
+        self._child_MObjects=self.child_query_MObjects(self._object_MDagPath,self._transMFn_list)
         
-        self._subject=None
+        self._subject_bool=False
+        self._subject_MObject=None
+        self._subject_MDagPath=None
 
     #Single Function
-    def parent_query_str(self,node,fullPath=False):
+    def selectOpenMaya_create_MObject_MDagPath(self,node):
         if node == None:
             return None
-        node_MSelectionList=om2.MSelectionList().add(node)
+        node_MSelectionList=om2.MSelectionList()
+        node_MSelectionList.add(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
         node_MDagPath=node_MSelectionList.getDagPath(0)
-        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
-        parent_MObject=node_MFnDagNode.parent(0)
-        parent_MFnDagNode=om2.MFnDagNode(parent_MObject)
-        if parent_MFnDagNode.name() == "world":
-            return None
-        if fullPath:
-            return parent_MFnDagNode.fullPathName()
-        else:
-            return parent_MFnDagNode.name()
+        return node_MObject,node_MDagPath
 
-    def childs_query_list(self,node,fullPath=False,childMFn_list=[]):
-        if node == None:
+    def nodeType_query_str(self,MObject):
+        MFnDependencyNode=om2.MFnDependencyNode(MObject)
+        nodeType_str=MFnDependencyNode.typeName
+        return nodeType_str
+
+    def nodeType_query_strs(self,MObjects):
+        if MObjects == None:
             return None
-        node_MSelectionList=om2.MSelectionList().add(node)
-        node_MDagPath=node_MSelectionList.getDagPath(0)
-        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        nodeType_strs=[]
+        for MObject in MObjects:
+            MFnDependencyNode=om2.MFnDependencyNode(MObject)
+            nodeType_str=MFnDependencyNode.typeName
+            nodeType_strs.append(nodeType_str)
+        if nodeType_strs == []:
+            return None
+        else:
+            return nodeType_strs
+
+    def parent_query_MObject(self,MDagPath):
+        node_MFnDagNode=om2.MFnDagNode(MDagPath)
+        parent_MObject=node_MFnDagNode.parent(0)
+        return parent_MObject
+
+    def child_query_MObjects(self,MDagPath,childMFn_list=[110,121]):
+        node_MFnDagNode=om2.MFnDagNode(MDagPath)
         childs=[]
         for num in range(node_MFnDagNode.childCount()):
             child_MObject=node_MFnDagNode.child(num)
-            #print(child_MObject.apiType())
             if child_MObject.apiType() in childMFn_list:
-                child_MFnDagNode=om2.MFnDagNode(child_MObject)
-                if fullPath:
-                    child_str=child_MFnDagNode.fullPathName()
-                    childs.append(child_str)
-                else:
-                    child_str=child_MFnDagNode.name()
-                    childs.append(child_str)
+                childs.append(child_MObject)
         if childs == []:
-           return None
+            return None
         else:
             return childs
 
-    def findConnect_query_list(self,node,source=True,target=True,mFnID=0):
-        if node == None:
-            return None
-        findConnectedTo_list=[]
-        node_MSelectionList=om2.MSelectionList().add(node)
-        node_MObject=node_MSelectionList.getDependNode(0)
-        node_MFnDagNode=om2.MFnDagNode(node_MObject)
-        connections_MPlugArray=node_MFnDagNode.getConnections()
+    def findMFnConnect_query_MObjects(self,MObject,source=True,target=True,MFnID=0):
+        findConnectedTo_MObjects=[]
+        node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
+        connections_MPlugArray=node_MFnDependencyNode.getConnections()
         for connection_MPlug in connections_MPlugArray:
             targets_MPlugArray=connection_MPlug.connectedTo(source,target)
             for target_MPlug in targets_MPlugArray:
                 target_MObject=target_MPlug.node()
-                #print(target_MObject.apiType())
-                if target_MObject.hasFn(mFnID):
-                    skc_MFnDependencyNode=om2.MFnDependencyNode(target_MObject)
-                    findConnectedTo_list.append(skc_MFnDependencyNode.name())
-        findNodes=list(set(findConnectedTo_list))
-        if findNodes == []:
+                if target_MObject.hasFn(MFnID):
+                    findConnectedTo_MObjects.append(target_MObject)
+        if findConnectedTo_MObjects == []:
             return None
         else:
-            return findNodes
+            return findConnectedTo_MObjects
 
-    def nodeTypes_query_list(self,nodes):
-        if nodes == None:
-            return nodes
-        nodeTypes=[]
-        for node in nodes:
-            nodeTypes.append(cmds.nodeType(node))
-        if nodeTypes == []:
-            return None
+    def fullPath_query_str(self,MObject,fullPath=False):
+        if fullPath:
+            replace_MDagPath=om2.MDagPath.getAPathTo(MObject)
+            name_str=replace_MDagPath.fullPathName()
+            return name_str
         else:
-            return nodeTypes
+            name_str=om2.MFnDependencyNode(MObject).name()
+            return name_str
     
     #Private Function
     def nodeTypeToMFnConverter_query_int(self,nodeType):
@@ -104,17 +105,18 @@ class TrsObject(object):
 
     #Public Function
     def __loading(self):
-        self._objectType=cmds.nodeType(self._object)
-        self._shapes=self.childs_query_list(self._object,self._fullPath_bool,self._shapeMFn_list)
-        self._shapeTypes=self.nodeTypes_query_list(self._shapes)
-        self._parent_str=self.parent_query_str(self._object,fullPath=self._fullPath_bool)
-        self._childs=self.childs_query_list(self._object,self._fullPath_bool,self._transMFn_list)
+        self._objectType_str=self.nodeType_query_str(self._object_MObject)
+        self._shape_MObjects=self.child_query_MObjects(self._object_MDagPath,self._shapeMFn_list)
+        self._shapeType_strs=self.nodeType_query_strs(self._shape_MObjects)
+        self._parent_MObject=self.parent_query_MObject(self._object_MDagPath)
+        self._child_MObjects=self.child_query_MObjects(self._object_MDagPath,self._transMFn_list)
 
-        self._subjectType=cmds.nodeType(self._subject)
-        self._subShape_list=self.childs_query_list(self._subject,self._fullPath_bool,self._shapeMFn_list)
-        self._subShapeType_list=self.nodeTypes_query_list(self._shapes)
-        self._subParent_str=self.parent_query_str(self._subject,fullPath=self._fullPath_bool)
-        self._subChild_list=self.childs_query_list(self._subject,self._fullPath_bool,self._transMFn_list)
+        if self._subject_bool:
+            self._subjectType_str=self.nodeType_query_str(self._subject_MObject)
+            self._subShape_MObjects=self.child_query_MObjects(self._subject_MDagPath,self._shapeMFn_list)
+            self._subShapeType_strs=self.nodeType_query_strs(self._subShape_MObjects)
+            self._subParent_MObject=self.parent_query_MObject(self._subject_MDagPath)
+            self._subChild_MObjects=self.child_query_MObjects(self._subject_MDagPath,self._transMFn_list)
 
     def setFullPathSwitch(self,variable):
         self._fullPath_bool=variable
@@ -123,48 +125,111 @@ class TrsObject(object):
         return self._fullPath_bool
 
     def setObject(self,variable):
-        self._object=variable
-        return self._object
+        self._object_MObject,self._object_MDagPath=self.selectOpenMaya_create_MObject_MDagPath(variable)
+        return self._object_MObject
     def getObject(self):
-        return self._object
+        object_str=self.fullPath_query_str(self._object_MObject,self._fullPath_bool)
+        return object_str
     def getObjectType(self):
-        return self._objectType
+        return self._objectType_str
 
-    def getShapes(self):
+    def getShapes(self,only=False):
         self.__loading()
-        return self._shapes
-    def getShapeTypes(self):
+        if self._shape_MObjects == None:
+            return None
+        if only:
+            shape_str=self.fullPath_query_str(self._shape_MObjects[0],self._fullPath_bool)
+            return shape_str
+        else:
+            shape_strs=[]
+            for _shape_MObject in self._shape_MObjects:
+                shape_str=self.fullPath_query_str(_shape_MObject,self._fullPath_bool)
+                shape_strs.append(shape_str)
+            return shape_strs
+    def getShapeTypes(self,only=False):
         self.__loading()
-        return self._shapeTypes
+        if self._shape_MObjects == None:
+            return None
+        if only:
+            return self._shapeType_strs[0]
+        else:
+            return self._shapeType_strs
 
     def getParent(self):
         self.__loading()
-        return self._parent_str
+        parent_str=self.fullPath_query_str(self._parent_MObject,self._fullPath_bool)
+        if parent_str == "world" or parent_str == "":
+            return None
+        else:
+            return parent_str
 
-    def getChilds(self):
+    def getChilds(self,only=False):
         self.__loading()
-        return self._childs
+        if self._child_MObjects == None:
+            return None
+        if only:
+            shape_str=self.fullPath_query_str(self._child_MObjects[0],self._fullPath_bool)
+            return shape_str
+        else:
+            child_strs=[]
+            for _child_MObject in self._child_MObjects:
+                child_str=self.fullPath_query_str(_child_MObject,self._fullPath_bool)
+                child_strs.append(child_str)
+            return child_strs
 
     def setSubject(self,variable):
-        self._subject=variable
-        return self._subject
+        self._subject_MObject,self._subject_MDagPath=self.selectOpenMaya_create_MObject_MDagPath(variable)
+        self._subject_bool=True
+        return self._subject_MObject
     def getSubject(self):
-        return self._subject
+        subject_str=self.fullPath_query_str(self._subject_MObject,self._fullPath_bool)
+        return subject_str
+    def getSubjectType(self):
+        return self._subjectType_str
 
-    def getSubShapes(self):
+    def getSubShapes(self,only=False):
         self.__loading()
-        return self._subShape_list
-    def getSubShapeTypes(self):
+        if self._subShape_MObjects == None:
+            return None
+        if only:
+            shape_str=self.fullPath_query_str(self._subShape_MObjects[0],self._fullPath_bool)
+            return shape_str
+        else:
+            shape_strs=[]
+            for _shape_MObject in self._subShape_MObjects:
+                shape_str=self.fullPath_query_str(_shape_MObject,self._fullPath_bool)
+                shape_strs.append(shape_str)
+            return shape_strs
+    def getSubShapeTypes(self,only=False):
         self.__loading()
-        return self._subShapeType_list
+        if self._subShape_MObjects == None:
+            return None
+        if only:
+            return self._subShapeType_strs[0]
+        else:
+            return self._subShapeType_strs
 
     def getSubParent(self):
         self.__loading()
-        return self._subParent_str
+        subParent_str=self.fullPath_query_str(self._subParent_MObject,self._fullPath_bool)
+        if subParent_str == "world" or subParent_str == "":
+            return None
+        else:
+            return subParent_str
 
-    def getSubChilds(self):
+    def getSubChilds(self,only=False):
         self.__loading()
-        return self._subChild_list
+        if self._subChild_MObjects == None:
+            return None
+        if only:
+            shape_str=self.fullPath_query_str(self._subChild_MObjects[0],self._fullPath_bool)
+            return shape_str
+        else:
+            child_strs=[]
+            for _child_MObject in self._subChild_MObjects:
+                child_str=self.fullPath_query_str(_child_MObject,self._fullPath_bool)
+                child_strs.append(child_str)
+            return child_strs
 
     def loading(self):
         self.__loading()
@@ -179,8 +244,8 @@ class JointWeight(TrsObject):
     #Public Function
     def __loading(self):
         super(JointWeight,self).loading()
-        mFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
-        self._skinCluster_list=self.findConnect_query_list(self._subShape_list[0],mFnID=mFn_int)
+        MFn_int=self.nodeTypeToMFnConverter_query_int("skinCluster")
+        self._skinCluster_MObjects=self.findMFnConnect_query_MObjects(self._subShape_MObjects[0],MFnID=MFn_int)
 
     def setUseJoint(self,variable):
         self._useJoint=variable
@@ -206,7 +271,8 @@ class JointWeight(TrsObject):
 
     def getSkinClusters(self):
         self.__loading()
-        return self._skinCluster_list
+        skinCluster_str=om2.MFnDependencyNode(self._skinCluster_MObjects[0]).name()
+        return skinCluster_str
 
 class MatrixObject(TrsObject):
     def __init__(self,obj):
@@ -384,9 +450,8 @@ class KeyObject(TrsObject):
         self._time=0
         self._attr=""
         self._value=0
-        self._inType=""
-        self._inTangentType=11
-        self._outTangentType=11
+        self._inTangentType=0
+        self._outTangentType=0
         self._animCurve=8
 
         self._animTangentReplaceID_dict=RULES_DICT["animTangentReplaceID_dict"]
@@ -395,10 +460,8 @@ class KeyObject(TrsObject):
         self._animCurveReplaceType_list=RULES_DICT["animCurveReplaceType_list"]
 
     #Single Function
-    def objAttr_query_MFnAnimCurve(self,obj,attr,MTime):
-        obj_MSelectionList=om2.MSelectionList().add(obj)
-        obj_MObject=obj_MSelectionList.getDependNode(0)
-        obj_MFnDependencyNode=om2.MFnDependencyNode(obj_MObject)
+    def objAttr_query_MFnAnimCurve(self,MObject,attr,MTime):
+        obj_MFnDependencyNode=om2.MFnDependencyNode(MObject)
         objAttr_MPlug=obj_MFnDependencyNode.findPlug(attr,False)
         objAttr_MPlug.setMTime(MTime)
         objAttr_MFnAnimCurve=oma2.MFnAnimCurve(objAttr_MPlug)
@@ -411,22 +474,20 @@ class KeyObject(TrsObject):
         return MTime
 
     #Multi Function
-    def _inTangentType_query_int(self,obj,attr,MTime):
-        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(obj,attr,MTime)
+    def _inTangentType_query_int(self,MObject,attr,MTime):
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(MObject,attr,MTime)
         inTangentTypeID_int=objAttr_MFnAnimCurve.inTangentType(0)
         return inTangentTypeID_int
 
-    def _outTangentType_query_int(self,obj,attr,MTime):
-        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(obj,attr,MTime)
+    def _outTangentType_query_int(self,MObject,attr,MTime):
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(MObject,attr,MTime)
         outTangentTypeID_int=objAttr_MFnAnimCurve.outTangentType(0)
         return outTangentTypeID_int
 
-    def _keyFrame_create_func(self,obj,attr,value,MTime,inTangentTypeID,outTangentTypeID,animCurve):
-        obj_MSelectionList=om2.MSelectionList().add(obj)
-        obj_MObject=obj_MSelectionList.getDependNode(0)
-        obj_MFnDependencyNode=om2.MFnDependencyNode(obj_MObject)
+    def _keyFrame_create_func(self,MObject,attr,value,MTime,inTangentTypeID,outTangentTypeID,animCurve):
+        obj_MFnDependencyNode=om2.MFnDependencyNode(MObject)
         objAttr_MPlug=obj_MFnDependencyNode.findPlug(attr,False)
-        
+
         if not objAttr_MPlug.isConnected:
             animCurve_MFnAnimCurve=oma2.MFnAnimCurve()
             animCurve_MObject=animCurve_MFnAnimCurve.create(animCurve)
@@ -445,6 +506,7 @@ class KeyObject(TrsObject):
     def __loading(self):
         fpsUnitType_int=om2.MTime.uiUnit()
         time=self._time.asUnits(fpsUnitType_int)
+        
         self._value=cmds.getAttr(self._object+"."+self._attr,t=time)
         self._inTangentType=self._inTangentType_query_int(self._object,self._attr,self._time)
         self._outTangentType=self._outTangentType_query_int(self._object,self._attr,self._time)
