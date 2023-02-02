@@ -289,20 +289,15 @@ class MatrixObject(TrsObject):
         self._otherValue_dicts=[]# {"node":"","attr":"","value":0}
 
     #Single Function
-    def matrix_query_MMatrix(self,node,type="normal"):
-        # type=normal or world or parent
-        if node == None:
-            return None
-        node_MSelectionList=om2.MSelectionList().add(node)
-        node_MDagPath=node_MSelectionList.getDagPath(0)
+    def matrix_query_MMatrix(self,MDagPath,type="normal"):
         if type == "normal":
-            normal_MMatrix=om2.MFnDagNode(node_MDagPath).transformationMatrix()
+            normal_MMatrix=om2.MFnDagNode(MDagPath).transformationMatrix()
             return normal_MMatrix
         elif type == "world":
-            world_MMatrix=node_MDagPath.inclusiveMatrix()
+            world_MMatrix=MDagPath.inclusiveMatrix()
             return world_MMatrix
         elif type == "parent":
-            parent_MMatrix=node_MDagPath.exclusiveMatrix()
+            parent_MMatrix=MDagPath.exclusiveMatrix()
             return parent_MMatrix
         else:
             #cmds.error("Please set the type name to normal, world or parent.")
@@ -334,9 +329,9 @@ class MatrixObject(TrsObject):
 
     #Public Function
     def __loading(self):
-        self._normal_MMatrix=self.matrix_query_MMatrix(self._object,type="normal")
-        self._world_MMatrix=self.matrix_query_MMatrix(self._object,type="world")
-        self._parent_MMatrix=self.matrix_query_MMatrix(self._object,type="parent")
+        self._normal_MMatrix=self.matrix_query_MMatrix(self._object_MDagPath,type="normal")
+        self._world_MMatrix=self.matrix_query_MMatrix(self._object_MDagPath,type="world")
+        self._parent_MMatrix=self.matrix_query_MMatrix(self._object_MDagPath,type="parent")
 
     def setRunMatrix(self,variable):
         self._runMatrix_str=variable
@@ -447,9 +442,9 @@ class MatrixObject(TrsObject):
 class KeyObject(TrsObject):
     def __init__(self,obj):
         super(KeyObject,self).__init__(obj)
-        self._time=0
+        self._time=oma2.MAnimControl.currentTime()
         self._attr=""
-        self._value=0
+        self._value=0.0 #Float. Rotation values are in radians.
         self._inTangentType=0
         self._outTangentType=0
         self._animCurve=8
@@ -460,39 +455,40 @@ class KeyObject(TrsObject):
         self._animCurveReplaceType_list=RULES_DICT["animCurveReplaceType_list"]
 
     #Single Function
-    def objAttr_query_MFnAnimCurve(self,MObject,attr,MTime):
+    def objAttr_query_MFnAnimCurve(self,MObject,attr):
         obj_MFnDependencyNode=om2.MFnDependencyNode(MObject)
         objAttr_MPlug=obj_MFnDependencyNode.findPlug(attr,False)
-        objAttr_MPlug.setMTime(MTime)
         objAttr_MFnAnimCurve=oma2.MFnAnimCurve(objAttr_MPlug)
         return objAttr_MFnAnimCurve
 
-    def currentTime_query_MTime(self):
-        MTime=oma2.MAnimControl.currentTime()
-        fpsUnitType_int=om2.MTime.uiUnit()
-        time=MTime.asUnits(fpsUnitType_int)
-        return MTime
-
     #Multi Function
+    def _attrValue_query_float(self,MObject,attr,MTime):
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(MObject,attr)
+        value=objAttr_MFnAnimCurve.evaluate(MTime)
+        return value
+
     def _inTangentType_query_int(self,MObject,attr,MTime):
-        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(MObject,attr,MTime)
-        inTangentTypeID_int=objAttr_MFnAnimCurve.inTangentType(0)
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(MObject,attr)
+        index=objAttr_MFnAnimCurve.find(MTime)
+        inTangentTypeID_int=objAttr_MFnAnimCurve.inTangentType(index)
         return inTangentTypeID_int
 
     def _outTangentType_query_int(self,MObject,attr,MTime):
-        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(MObject,attr,MTime)
-        outTangentTypeID_int=objAttr_MFnAnimCurve.outTangentType(0)
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(MObject,attr)
+        index=objAttr_MFnAnimCurve.find(MTime)
+        outTangentTypeID_int=objAttr_MFnAnimCurve.outTangentType(index)
         return outTangentTypeID_int
 
     def _keyFrame_create_func(self,MObject,attr,value,MTime,inTangentTypeID,outTangentTypeID,animCurve):
         obj_MFnDependencyNode=om2.MFnDependencyNode(MObject)
         objAttr_MPlug=obj_MFnDependencyNode.findPlug(attr,False)
+        object_str=obj_MFnDependencyNode.name()
 
         if not objAttr_MPlug.isConnected:
             animCurve_MFnAnimCurve=oma2.MFnAnimCurve()
             animCurve_MObject=animCurve_MFnAnimCurve.create(animCurve)
             animCurve_MFnDependencyNode=om2.MFnDependencyNode(animCurve_MObject)
-            animCurve_MFnDependencyNode.setName(obj+"_"+attr)
+            animCurve_MFnDependencyNode.setName(object_str+"_"+attr)
             animCurve_MPlug=animCurve_MFnDependencyNode.findPlug("output",False)
 
             keyConnect_MDGModifier=om2.MDGModifier()
@@ -504,12 +500,9 @@ class KeyObject(TrsObject):
 
     #Public Function
     def __loading(self):
-        fpsUnitType_int=om2.MTime.uiUnit()
-        time=self._time.asUnits(fpsUnitType_int)
-        
-        self._value=cmds.getAttr(self._object+"."+self._attr,t=time)
-        self._inTangentType=self._inTangentType_query_int(self._object,self._attr,self._time)
-        self._outTangentType=self._outTangentType_query_int(self._object,self._attr,self._time)
+        self._value=self._attrValue_query_float(self._object_MObject,self._attr,self._time)
+        self._inTangentType=self._inTangentType_query_int(self._object_MObject,self._attr,self._time)
+        self._outTangentType=self._outTangentType_query_int(self._object_MObject,self._attr,self._time)
         self.setCurrentAnimCurve()
 
     def setAttr(self,variable):
@@ -524,8 +517,7 @@ class KeyObject(TrsObject):
         self._time=MTime
         return self._time
     def setCurrentTime(self):
-        MTime=oma2.MAnimControl.currentTime()
-        self._time=Mtime
+        self._time=oma2.MAnimControl.currentTime()
         return self._time
     def getTime(self,unit=None):
         fpsUnitType_int=unit or om2.MTime.uiUnit()
@@ -536,10 +528,8 @@ class KeyObject(TrsObject):
         self._value=variable
         return self._value
     def setCurrentValue(self,unit=None):
-        MTime=self.currentTime_query_MTime()
-        fpsUnitType_int=unit or om2.MTime.uiUnit()
-        time=MTime.asUnits(fpsUnitType_int)
-        self._value=cmds.getAttr(self._object+"."+self._attr,t=time)
+        MTime=oma2.MAnimControl.currentTime()
+        self._value=self._attrValue_query_float(self._object_MObject,attr,MTime)
         return self._value
     def getValue(self):
         return self._value
@@ -548,8 +538,8 @@ class KeyObject(TrsObject):
         self._inTangentType=self._animTangentReplaceID_dict[variable]
         return self._inTangentType
     def setCurrentInTangentType(self):
-        MTime=self.currentTime_query_MTime()
-        self._inTangentType=self._inTangentType_query_int(self._object,self._attr,MTime)
+        MTime=oma2.MAnimControl.currentTime()
+        self._inTangentType=self._inTangentType_query_int(self._object_MObject,self._attr,MTime)
         return self._inTangentType
     def getInTangentType(self):
         inTangentType=self._animTangentReplaceType_list[self._inTangentType]
@@ -559,8 +549,8 @@ class KeyObject(TrsObject):
         self._outTangentType=self._animTangentReplaceID_dict[variable]
         return self._outTangentType
     def setCurrentOutTangentType(self):
-        MTime=self.currentTime_query_MTime()
-        self._outTangentType=self._outTangentType_query_int(self._object,self._attr,MTime)
+        MTime=oma2.MAnimControl.currentTime()
+        self._outTangentType=self._outTangentType_query_int(self._object_MObject,self._attr,MTime)
         return self._outTangentType
     def getOutTangentType(self):
         outTangentType=self._animTangentReplaceType_list[self._outTangentType]
@@ -570,7 +560,7 @@ class KeyObject(TrsObject):
         self._animCurve=self._animCurveReplaceID_dict[variable]
         return self._animCurve
     def setCurrentAnimCurve(self):
-        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(self._object,self._attr,self._time)
+        objAttr_MFnAnimCurve=self.objAttr_query_MFnAnimCurve(self._object_MObject,self._attr)
         self._animCurve=objAttr_MFnAnimCurve.animCurveType
         return self._animCurve
     def getAnimCurve(self):
@@ -581,4 +571,4 @@ class KeyObject(TrsObject):
         self.__loading()
 
     def setKey(self):
-        self._keyFrame_create_func(self._object,self._attr,self._value,self._time,self._inTangentType,self._outTangentType,self._animCurve)
+        self._keyFrame_create_func(self._object_MObject,self._attr,self._value,self._time,self._inTangentType,self._outTangentType,self._animCurve)
