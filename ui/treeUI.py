@@ -10,13 +10,13 @@ class TreeWindowBase(UI.MainWindowBase):
         self.setWindowFlags(Qt.Window)
         #self.__sample()
     
-    #Public Function
+    #Summary Function
     def __sample(self):
-        self.equipment_CTreeWidget=CTreeWidget()
-        self.custom_QGridLayout.addWidget(self.equipment_CTreeWidget)
-        self.equipment_CTreeWidget.setHeaderLabelList(["Name","Value"])
+        self.sample_CTreeWidget=CTreeWidget()
+        self.custom_QGridLayout.addWidget(self.sample_CTreeWidget,0,0)
+        self.sample_CTreeWidget.setHeaderLabelList(["Name","Value"])
 
-        self.equipment_CTreeWidget.setTreeParamDicts([
+        self.sample_CTreeWidget.setTreeParamDicts([
             {"parent":None,"nameParams":["sample0",None]},
             {"parent":"sample0","nameParams":["matrix",str([1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1])]},
             {"parent":"sample0","nameParams":["time",str(1)]},
@@ -24,28 +24,27 @@ class TreeWindowBase(UI.MainWindowBase):
             {"parent":"sample0","nameParams":["sampleShape0",None]},
             {"parent":"sampleShape0","nameParams":["sampleAttr0",str(10)]}
         ])
-        #self.equipment_CTreeWidget.createBase()
-        self.equipment_CTreeWidget.createTree()
+        #self.sample_CTreeWidget.createBase()
+        self.sample_CTreeWidget.createTree()
 
 class CTreeWidget(QTreeWidget):
     def __init__(self,*args,**kwargs):
         super(CTreeWidget,self).__init__(*args,**kwargs)
-        self._topItems=[]
         self._headerLabel_list=[]
         self._treeParam_dicts=[]#{"parent":None,"nameParams":["sample0",None]},
     
     #Single Function
-    def headerCount_check_func(self,header,nameParams):
-        if not len(header) == len(nameParams):
+    def headerCount_check_func(self,header,relationList):
+        if not len(header) == len(relationList):
             cmds.error("count Error")
 
     #Private Function
-    def _header_create_list(self):
-        self.setColumnCount(len(self._headerLabel_list))
-        self.setHeaderLabels(self._headerLabel_list)
-        return self._headerLabel_list
+    def __header_create_list(self,headerLabel_list):
+        self.setColumnCount(len(headerLabel_list))
+        self.setHeaderLabels(headerLabel_list)
+        return headerLabel_list
 
-    def _treeWidgetItem_create_func(self,parent,nameParams):
+    def __treeWidgetItem_create_func(self,parent,nameParams):
         if parent == None:
             topItem_QTreeWidgetItem=QTreeWidgetItem(nameParams)
             self.addTopLevelItem(topItem_QTreeWidgetItem)
@@ -53,14 +52,13 @@ class CTreeWidget(QTreeWidget):
             parentItem_QTreeWidgetItems=self.findItems(parent,Qt.MatchRecursive)
             childItem_QTreeWidgetItem=QTreeWidgetItem(parentItem_QTreeWidgetItems[-1],nameParams)
 
-    def _getTopLevelItems_query_list(self):
-        self._topItems=[]
+    def __getTopLevelItems_query_QTreeWidgetItems(self):
         itemCount_int=self.topLevelItemCount()
         for num in range(itemCount_int):
             topItem_QTreeWidgetItem=self.topLevelItem(num)
             #topItem_CTreeWidgetItem=CTreeWidgetItem(topItem_QTreeWidgetItem)
-            self._topItems.append(topItem_QTreeWidgetItem)
-        return self._topItems
+            topItems.append(topItem_QTreeWidgetItem)
+        return topItems
 
     #Public Function
     def setHeaderLabelList(self,validate):
@@ -80,18 +78,17 @@ class CTreeWidget(QTreeWidget):
         return self._treeParam_dicts
 
     def getTopItems(self):
-        self._getTopLevelItems_query_list()
-        return self._topItems
+        topItems=self.__getTopLevelItems_query_QTreeWidgetItems()
+        return topItems
 
     def createBase(self):
-        self._header_create_list()
+        self.__header_create_list(self._headerLabel_list)
 
     def createTree(self):
-        header_list=self._header_create_list()
+        header_list=self.__header_create_list(self._headerLabel_list)
         for _treeParam_dict in self._treeParam_dicts:
             self.headerCount_check_func(header_list,_treeParam_dict["nameParams"])
-            self._treeWidgetItem_create_func(_treeParam_dict["parent"],_treeParam_dict["nameParams"])
-
+            self.__treeWidgetItem_create_func(_treeParam_dict["parent"],_treeParam_dict["nameParams"])
 
 class CTreeWidgetItem(QTreeWidgetItem):
     def __init__(self,*args,**kwargs):

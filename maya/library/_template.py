@@ -22,10 +22,19 @@ class Template():
         pass
 
     #Private Function
-    def _private_mode_func(self):
-        print(self._value)
-        self._multi_mode_func()
+    def __private_mode_func(self):
         self.single_mode_func()
+        self._multi_mode_func()
+        self.external_func()
+        self._value
+        pass
+
+    #Summary Function
+    def __summary(self):
+        self.single_mode_func()
+        self._multi_mode_func()
+        self.__private_mode_func()
+        self._value
         pass
 
     #Public Function

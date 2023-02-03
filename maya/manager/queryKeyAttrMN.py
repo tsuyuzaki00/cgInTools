@@ -19,7 +19,9 @@ class LookKeyWindow(UI.TableWindowBase):
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
-        self.headerAsix="Vertical"
+
+        self.queryNodeType_CTableWidget=UI.CTableWidget()
+        self.custom_QGridLayout.addWidget(self.queryNodeType_CTableWidget)
 
     #Private Function
     def _getKeyAttrs_query_list(self,obj):
@@ -29,18 +31,20 @@ class LookKeyWindow(UI.TableWindowBase):
         self.headerTitle_list=["ObjectName"]
         for keyAttr in keyAttrs:
             self.headerTitle_list.append(str(keyAttr))
-            self.createHeaderTitle()
             attrValue=cmds.getAttr(obj+"."+keyAttr)
             attrValues.append(str(attrValue))
+        self.queryNodeType_CTableWidget.setHeaderLabelList([self.headerTitle_list])
+        self.queryNodeType_CTableWidget.createBase()
         return attrValues
 
     def _tableList_create_func(self,objs,add=False):
         if not add:
-            self.data_lists=[]
+            self._table_lists=[]
         for obj in objs:
             keyAttr_list=self._getKeyAttrs_query_list(obj)
-            self.data_lists.append(keyAttr_list)
-            self.createTableItem()
+            self._table_lists.append(keyAttr_list)
+            self.queryNodeType_CTableWidget.setTableParamLists(self._table_lists)
+            self.queryNodeType_CTableWidget.createTable()
 
     #Public Function
     def buttonLeftOnClicked(self):

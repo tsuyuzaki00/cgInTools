@@ -18,43 +18,22 @@ class LookMatrixWindow(UI.TableWindowBase):
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
-        self.headerAsix="Vertical"
-        self.headerTitle_list=[
+
+        self.queryMatrix_CTableWidget=UI.CTableWidget()
+        self.custom_QGridLayout.addWidget(self.queryMatrix_CTableWidget)
+        self.queryMatrix_CTableWidget.setHeaderLabelList([
             "ObjectName",
-            "NormalMatrixX",
-            "NormalMatrixY",
-            "NormalMatrixZ",
-            "NormalMatrixT",
-            "worldMatrixX",
-            "worldMatrixY",
-            "worldMatrixZ",
-            "worldMatrixT",
-            "ParentMatrixX",
-            "ParentMatrixY",
-            "ParentMatrixZ",
-            "ParentMatrixT",
-            "XformMatrixX",
-            "XformMatrixY",
-            "XformMatrixZ",
-            "XformMatrixT",
-            "InverseMatrixX",
-            "InverseMatrixY",
-            "InverseMatrixZ",
-            "InverseMatrixT",
-            "InverseWorldMatrixX",
-            "InverseWorldMatrixY",
-            "InverseWorldMatrixZ",
-            "InverseWorldMatrixT",
-            "InverseParentMatrixX",
-            "InverseParentMatrixY",
-            "InverseParentMatrixZ",
-            "InverseParentMatrixT",
-            "OffsetParentMatrixX",
-            "OffsetParentMatrixY",
-            "OffsetParentMatrixZ",
-            "OffsetParentMatrixT",
-        ]
-        self.createHeaderTitle()
+            "NormalMatrixX","NormalMatrixY","NormalMatrixZ","NormalMatrixT",
+            "worldMatrixX","worldMatrixY","worldMatrixZ","worldMatrixT",
+            "ParentMatrixX","ParentMatrixY","ParentMatrixZ","ParentMatrixT",
+            "XformMatrixX","XformMatrixY","XformMatrixZ","XformMatrixT",
+            "InverseMatrixX","InverseMatrixY","InverseMatrixZ","InverseMatrixT",
+            "InverseWorldMatrixX","InverseWorldMatrixY","InverseWorldMatrixZ","InverseWorldMatrixT",
+            "InverseParentMatrixX","InverseParentMatrixY","InverseParentMatrixZ","InverseParentMatrixT",
+            "OffsetParentMatrixX","OffsetParentMatrixY","OffsetParentMatrixZ","OffsetParentMatrixT"
+            ])
+        #self.queryMatrix_CTableWidget.setHeaderAsixStr("Horizontal")# Horizontal or Vertical
+        self.queryMatrix_CTableWidget.createBase()
 
     #Single Function
     def getMatrix_query_list(self,obj):
@@ -79,11 +58,12 @@ class LookMatrixWindow(UI.TableWindowBase):
     #Private Function
     def _tableList_create_func(self,objs,add=False):
         if not add:
-            self.data_lists=[]
+            self._table_lists=[]
         for obj in objs:
             matrix_list=self.getMatrix_query_list(obj)
-            self.data_lists.append(matrix_list)
-            self.createTableItem()
+            self._table_lists.append(matrix_list)
+            self.queryMatrix_CTableWidget.setTableParamLists(self._table_lists)
+            self.queryMatrix_CTableWidget.createTable()
 
     #Public Function
     def buttonLeftOnClicked(self):

@@ -11,58 +11,22 @@ from ..library import jsonLB as jLB
 from cgInTools.maya.execute import geometryCornerEdgeEX as EX
 cit.reloads([UI,wLB,jLB,EX])
 
-SETPATH=cit.mayaData_dir
-RESETPATH=cit.mayaSettings_dir
+PATHSET=cit.mayaData_dir
+PATHRESET=cit.mayaSettings_dir
+FILE="geometryCornerEdge"
 class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
     def __init__(self,*args,**kwargs):
         super(ObjCornerEdgeOP,self).__init__(*args, **kwargs)
-        self.setPath=SETPATH
-        self.resetPath=RESETPATH
-        self.fileName="geometryCornerEdge"
+        self._pathSet=PATHSET
+        self._pathReset=PATHRESET
+        self._file=FILE
+        self.__importJson(self._pathSet,self._file)
 
-        self.__importJson(self.setPath,self.fileName)
-
-    def buttonLeftOnClicked(self):
-        self.__exportJson(self.setPath,self.fileName)
-        EX.main()
-        self.close()
-
-    def buttonCenterOnClicked(self):
-        self.__exportJson(self.setPath,self.fileName)
-        EX.main()
-
-    def buttonRightOnClicked(self):
-        self.close()
-
-    def refreshOnClicked(self):
-        self.__importJson(self.resetPath,self.fileName)
-
-    def restoreOnClicked(self):
-        self.__importJson(self.setPath,self.fileName)
-
-    def saveOnClicked(self):
-        self.__exportJson(self.setPath,self.fileName)
-
-    def importOnClicked(self):
-        print("nanimonashi")
-
-    def exportOnClicked(self):
-        print("nanimonashi")
-
-    def __exportJson(self,path,file):
-        lowAngle_int=self.lowAngle_QSpinBox.value()
-        highAngle_int=self.highAngle_QSpinBox.value()
-        self.exportJson_edit_func(path,file,lowAngle_int,highAngle_int)
-
-    def __importJson(self,path,file):
-        settings_dict=self.importJson_query_dict(path,file)
-        self.lowAngle_QSpinBox.setValue(settings_dict["lowAngle"])
-        self.highAngle_QSpinBox.setValue(settings_dict["highAngle"])
-
+    #Single Function
     def exportJson_edit_func(self,path,file,lowAngle,highAngle):
         write_dict={
-        "lowAngle":lowAngle,
-        "highAngle":highAngle
+            "lowAngle":lowAngle,
+            "highAngle":highAngle
         }
         setting=jLB.Json()
         setting.setPath(path)
@@ -76,6 +40,55 @@ class ObjCornerEdgeOP(UI.ObjCornerEdgeOPBase):
         setting.setFile(file)
         settings_dict=setting.read()
         return settings_dict
+
+    #Private Function
+    def __replaceListWithUI_edit_func(self,settings_dict):
+        self.lowAngle_QSpinBox.setValue(settings_dict["lowAngle"])
+        self.highAngle_QSpinBox.setValue(settings_dict["highAngle"])
+
+    def __replaceCheckBox_query_int_int(self):
+        lowAngle_int=self.lowAngle_QSpinBox.value()
+        highAngle_int=self.highAngle_QSpinBox.value()
+        return lowAngle_int,highAngle_int
+
+    #Summary Function
+    def __importJson(self,path,file):
+        settings_dict=self.importJson_query_dict(path,file)
+        self.__replaceListWithUI_edit_func(settings_dict)
+
+    def __exportJson(self,path,file):
+        lowAngle,highAngle=self.__replaceCheckBox_query_int_int()
+        self.exportJson_edit_func(path,file,lowAngle,highAngle)
+
+    #Public Function
+    def refreshOnClicked(self):
+        self.__importJson(self._pathReset,self._file)
+
+    def restoreOnClicked(self):
+        self.__importJson(self._pathSet,self._file)
+
+    def saveOnClicked(self):
+        self.__exportJson(self._pathSet,self._file)
+
+    def importOnClicked(self):
+        path,file=wLB.mayaFileDialog_query_path_file("import setting",1)
+        self.__importJson(path,file)
+
+    def exportOnClicked(self):
+        path,file=wLB.mayaFileDialog_query_path_file("export setting",0)
+        self.__exportJson(path,file)
+
+    def buttonLeftOnClicked(self):
+        self.__exportJson(self._pathSet,self._file)
+        EX.main()
+        self.close()
+
+    def buttonCenterOnClicked(self):
+        self.__exportJson(self._pathSet,self._file)
+        EX.main()
+
+    def buttonRightOnClicked(self):
+        self.close()
 
 def main():
     viewWindow=ObjCornerEdgeOP(parent=wLB.mayaMainWindow_query_widget())

@@ -1,14 +1,14 @@
 {
-    "nodeText": "cage", 
+    "nodeText": "", 
     "sideText": "C", 
-    "customText": "", 
+    "customText": "jnt", 
     "nameOrderList": [
         "title", 
-        "node", 
+        "custom", 
         "side", 
-        "none", 
+        "node", 
         "none"
     ], 
-    "modeSwitch": "fullAuto", 
-    "titleText": ""
+    "modeSwitch": "setAuto", 
+    "titleText": "hip"
 }

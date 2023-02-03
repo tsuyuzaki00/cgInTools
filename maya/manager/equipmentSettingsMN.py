@@ -15,7 +15,7 @@ cit.reloads([UI,wLB,rLB,jLB,oLB])
 
 SETPATH=cit.mayaData_dir
 RESETPATH=cit.mayaSettings_dir
-
+FILE="equipmentSettings"
 class EquipmentWindow(UI.TreeWindowBase):
     def __init__(self,*args,**kwargs):
         super(EquipmentWindow,self).__init__(*args,**kwargs)
@@ -31,7 +31,7 @@ class EquipmentWindow(UI.TreeWindowBase):
 
         self.setPath=SETPATH
         self.resetPath=RESETPATH
-        self.fileName="equipmentSettings"
+        self.fileName=FILE
         self.__importJson(self.setPath,self.fileName)
     
     #Single Function

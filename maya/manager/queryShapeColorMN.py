@@ -19,9 +19,12 @@ class LookShapeColorWindow(UI.TableWindowBase):
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
-        self.headerAsix="Vertical"
-        self.headerTitle_list=["ObjectName","OverrideColor","OverrideColorR","OverrideColorG","OverrideColorB","WireFrameColor","WireFrameColorR","WireFrameColorG","WireFrameColorB"]
-        self.createHeaderTitle()
+
+        self.queryShapeColor_CTableWidget=UI.CTableWidget()
+        self.custom_QGridLayout.addWidget(self.queryShapeColor_CTableWidget)
+        self.queryShapeColor_CTableWidget.setHeaderLabelList(["ObjectName","OverrideColor","OverrideColorR","OverrideColorG","OverrideColorB","WireFrameColor","WireFrameColorR","WireFrameColorG","WireFrameColorB"])
+        #self.queryShapeColor_CTableWidget.setHeaderAsixStr("Vertical")# Horizontal or Vertical
+        self.queryShapeColor_CTableWidget.createBase()
 
     #Single Function
     def nurbsCurves_check_bool(self,obj):
@@ -35,7 +38,7 @@ class LookShapeColorWindow(UI.TableWindowBase):
     def _tableList_create_func(self,objs,add=False):
         getAttrs=["overrideColor","overrideColorR","overrideColorG","overrideColorB","objectColor","objectColorR","objectColorG","objectColorB"]
         if not add:
-            self.data_lists=[]
+            self._table_lists=[]
         for obj in objs:
             check=self.nurbsCurves_check_bool(obj)
             if not check:
@@ -46,8 +49,9 @@ class LookShapeColorWindow(UI.TableWindowBase):
                 for getAttr in getAttrs:
                     getColor=cmds.getAttr(shape+"."+getAttr)
                     shapeValue_list.append(str(getColor))
-                self.data_lists.append(shapeValue_list)
-                self.createTableItem()
+                self._table_lists.append(shapeValue_list)
+                self.queryShapeColor_CTableWidget.setTableParamLists(self._table_lists)
+                self.queryShapeColor_CTableWidget.createTable()
 
     #Public Function
     def buttonLeftOnClicked(self):

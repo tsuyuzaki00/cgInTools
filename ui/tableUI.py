@@ -2,48 +2,94 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
+from maya import cmds
+
 from ._reference import mainWindowUI as UI
 
 class TableWindowBase(UI.MainWindowBase):
     def __init__(self,*args,**kwargs):
         super(TableWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
+        #self.__sample()
 
-        self.table_QTableWidget=QTableWidget()
-        self.custom_QGridLayout.addWidget(self.table_QTableWidget,0,0)
-        self.headerAsix="Horizontal"
-        self.headerTitle_list=["Select","Subject"]
-        self.data_lists=[["",""],["",""]]
+    #Summary Function
+    def __sample(self):
+        self.sample_CTableWidget=CTableWidget()
+        self.custom_QGridLayout.addWidget(self.sample_CTableWidget)
+        self.sample_CTableWidget.setHeaderLabelList(["Name","Value"])
+        self.sample_CTableWidget.setHeaderAsixStr("Vertical")# Horizontal or Vertical
+        self.sample_CTableWidget.setTableParamLists([["A","B"]])
+        #self.sample_CTableWidget.addTableParamLists([["A","B"],["C","D"]])
+        #self.sample_CTableWidget.createBase()
+        self.sample_CTableWidget.createTable()
+
+class CTableWidget(QTableWidget):
+    def __init__(self,*args,**kwargs):
+        super(CTableWidget,self).__init__(*args,**kwargs)
+        self._headerAsix_str="Horizontal"
+        self._headerLabel_list=[]
+        self._tableParam_lists=[]#[[str(0,0),str(0,1)],[str(1,0),str(1,1)]],
     
     #Single Function
-    def headerTitle_create_func(self,headerTitle_list,QTableWidget,headerAsix="Horizontal"):
-        if headerAsix is "Horizontal":
-            QTableWidget.setColumnCount(len(headerTitle_list))
-            QTableWidget.setHorizontalHeaderLabels(headerTitle_list)
-        elif headerAsix is "Vertical":
-            QTableWidget.setRowCount(len(headerTitle_list))
-            QTableWidget.setVerticalHeaderLabels(headerTitle_list)
-        
-    def tableItem_create_func(self,data_lists,QTableWidget,headerAsix="Horizontal"):   
-        if headerAsix is "Horizontal":
-            QTableWidget.setRowCount(len(data_lists))
-        elif headerAsix is "Vertical":
-            QTableWidget.setColumnCount(len(data_lists))
+    def headerCount_check_func(self,header,relationList):
+        if not len(header) == len(relationList):
+            cmds.error("count Error")
 
-        for row,colData in enumerate(data_lists):
+    #Private Function
+    def __header_create_list(self,headerLabel_list,headerAsix="Horizontal"):
+        if headerAsix is "Horizontal":
+            self.setColumnCount(len(headerLabel_list))
+            self.setHorizontalHeaderLabels(headerLabel_list)
+        elif headerAsix is "Vertical":
+            self.setRowCount(len(headerLabel_list))
+            self.setVerticalHeaderLabels(headerLabel_list)
+        return headerLabel_list
+
+    def __tableItem_create_func(self,tableParam_lists,headerAsix="Horizontal"):   
+        if headerAsix is "Horizontal":
+            self.setRowCount(len(tableParam_lists))
+        elif headerAsix is "Vertical":
+            self.setColumnCount(len(tableParam_lists))
+
+        for row,colData in enumerate(tableParam_lists):
             for col,value in enumerate(colData):
                 item_QTableWidgetItem=QTableWidgetItem(value)
                 if headerAsix is "Horizontal":
-                    QTableWidget.setItem(row,col,item_QTableWidgetItem)
+                    self.setItem(row,col,item_QTableWidgetItem)
                 elif headerAsix is "Vertical":
-                    QTableWidget.setItem(col,row,item_QTableWidgetItem)
+                    self.setItem(col,row,item_QTableWidgetItem)
 
     #Public Function
-    def createHeaderTitle(self):
-        self.headerTitle_create_func(self.headerTitle_list,self.table_QTableWidget,self.headerAsix)
+    def setHeaderLabelList(self,validate):
+        self._headerLabel_list=validate
+        return self._headerLabel_list
+    def getHeaderLabelList(self):
+        return self._headerLabel_list
 
-    def createTableItem(self):
-        self.tableItem_create_func(self.data_lists,self.table_QTableWidget,self.headerAsix)
+    def setHeaderAsixStr(self,validate):
+        self._headerAsix_str=validate
+        return self._headerAsix_str
+    def getHeaderAsixStr(self):
+        return self._headerAsix_str
+
+    def setTableParamLists(self,validates):
+        self._tableParam_lists=validates
+        return self._tableParam_lists
+    def addTableParamLists(self,validates):
+        for validate in validates:
+            self._tableParam_lists.append(validate)
+        return self._tableParam_lists
+    def getTableParamLists(self):
+        return self._tableParam_lists
+
+    def createBase(self):
+        self.__header_create_list(self._headerLabel_list)
+
+    def createTable(self):
+        header_list=self.__header_create_list(self._headerLabel_list)
+        for _tableParam_list in self._tableParam_lists:
+            self.headerCount_check_func(header_list,_tableParam_list)
+        self.__tableItem_create_func(self._tableParam_lists,self._headerAsix_str)
 
 #viewWindow=TableWindowBase()
 #viewWindow.show()
