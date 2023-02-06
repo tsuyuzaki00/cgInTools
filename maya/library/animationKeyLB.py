@@ -31,10 +31,12 @@ class KeyObjects():
         keyObject.setAttr(attr)
         keyObject.setTime(time)
         keyObject.loading()
-        noNameSpace=keyObject.getObject().split(":")[-1]
+        nameSpace=keyObject.getObject().split(":")[0]
+        objectName=keyObject.getObject().split(":")[-1]
 
         keyObject_dict={
-            "object":noNameSpace,
+            "nameSpace":nameSpace,
+            "object":objectName,
             "attr":keyObject.getAttr(),
             "time":keyObject.getTime(),
             "value":keyObject.getValue(),

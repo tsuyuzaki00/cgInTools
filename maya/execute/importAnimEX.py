@@ -17,7 +17,10 @@ def main():
     anim_dict=importJson.read()
 
     for keyObject_dict in anim_dict["keys"]:
-        keyObject=oLB.KeyObject(keyObject_dict["object"])
+        if keyObject_dict["nameSpace"] == keyObject_dict["object"]:
+            keyObject=oLB.KeyObject(keyObject_dict["object"])
+        else:
+            keyObject=oLB.KeyObject(keyObject_dict["nameSpace"]+":"+keyObject_dict["object"])
         keyObject.setAttr(keyObject_dict["attr"])
         keyObject.setValue(keyObject_dict["value"])
         keyObject.setTime(keyObject_dict["time"])

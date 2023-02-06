@@ -16,7 +16,7 @@ def main():
     exportJson.setExtension(EXTENSION)
     objs=cmds.ls(sl=True)
     for obj in objs:
-        name=obj.split(":")[-1]
+        name=obj.replace(":","_")
         keyObj=akLB.KeyObjects()
         keyObj.setObject(obj)
         key_dict=keyObj.createKeyObjectDict()
