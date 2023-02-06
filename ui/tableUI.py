@@ -33,7 +33,7 @@ class CTableWidget(QTableWidget):
     #Single Function
     def headerCount_check_func(self,header,relationList):
         if not len(header) == len(relationList):
-            cmds.error("count Error")
+            cmds.error("count Error headerList:"+len(header)+" TableList:"+len(relationList))
 
     #Private Function
     def __header_create_list(self,headerLabel_list,headerAsix="Horizontal"):

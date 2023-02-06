@@ -1,7 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
-from cgInTools.maya.library import cleanLB as cc
+from cgInTools.maya.library import cleanLB as cLB
 
 class QuadPosSurface():
     def __init__(self):
@@ -100,7 +100,7 @@ class QuadPosSurface():
             createPointArrays.append(mPoint)
         nurbsSurface_mFnNurbsSurface=om2.MFnNurbsSurface()
         nurbsSurface_mFnNurbsSurface.create(createPointArrays,[0.0,1.0],[0.0,1.0],1,1,1,1,True)
-        cc.defaultMaterial_edit_func(nurbsSurface_mFnNurbsSurface.name())
+        cLB.defaultMaterial_edit_func(nurbsSurface_mFnNurbsSurface.name())
 
     def editNurbsSurface_edit_mFnNurbsSurface(self,surface,cvs=(0,0),pos=(0,0,0,0)):
         mPoint=om2.MPoint(pos)
