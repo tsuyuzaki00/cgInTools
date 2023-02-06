@@ -9,6 +9,7 @@
         ["multi","joint"],
         ["multi","curve"],
         ["multi","surface"],
+        ["multi","render"],
         ["multi","guide"], 
         ["multi","connect"], 
         ["single","Edit"],
@@ -48,6 +49,9 @@
             ["Create Ctrl Window","cgInTools.maya.manager","selectSetCtrlMN","main()",""]
         ],
         "surface":[],
+        "render":[
+            ["Equipment Setting","cgInTools.maya.manager","equipmentSettingsMN","main()",""]
+        ],
         "guide":[],
         "connect":[
             ["Joint Offset Ctrl","cgInTools.maya.execute","connectOffsetCtrlEX","main()",""],

@@ -32,6 +32,7 @@ class CTreeWidget(QTreeWidget):
         super(CTreeWidget,self).__init__(*args,**kwargs)
         self._headerLabel_list=[]
         self._treeParam_dicts=[]#{"parent":None,"nameParams":["sample0",None]},
+        self._topItems=[]
     
     #Single Function
     def headerCount_check_func(self,header,relationList):
@@ -54,11 +55,13 @@ class CTreeWidget(QTreeWidget):
 
     def __getTopLevelItems_query_QTreeWidgetItems(self):
         itemCount_int=self.topLevelItemCount()
+        topItems=[]
         for num in range(itemCount_int):
             topItem_QTreeWidgetItem=self.topLevelItem(num)
             #topItem_CTreeWidgetItem=CTreeWidgetItem(topItem_QTreeWidgetItem)
             topItems.append(topItem_QTreeWidgetItem)
-        return topItems
+        self._topItems=topItems
+        return self._topItems
 
     #Public Function
     def setHeaderLabelList(self,validate):

@@ -78,7 +78,6 @@ class EquipmentWindow(UI.TreeWindowBase):
     def _selectParams_create_dicts(self,obj):
         matrixNode=oLB.MatrixObject(obj)
         matrixNode.loading()
-        matrixNode.setCurrentTime()
         if not matrixNode.getShapes() == None:
             nodeType=matrixNode.getShapeTypes()[0]
         else:
@@ -86,7 +85,6 @@ class EquipmentWindow(UI.TreeWindowBase):
         select_dicts=[
             {"parent":None,"nameParams":[obj,None]},
             {"parent":obj,"nameParams":["matrix",str(list(matrixNode.getWorldMatrix()))]},
-            {"parent":obj,"nameParams":["time",str(matrixNode.getTime())]},
             {"parent":obj,"nameParams":["nodeType",str(nodeType)]}
         ]
         attr_dicts=self.getWidgetAttr_query_dicts(obj)
@@ -133,6 +131,7 @@ class EquipmentWindow(UI.TreeWindowBase):
         self.__exportJson(path,file)
 
     def buttonLeftOnClicked(self):
+        topItem_QTreeWidgetItems=[]
         topItem_QTreeWidgetItems=self.equipment_CTreeWidget.getTopItems()
         for topItem_QTreeWidgetItem in topItem_QTreeWidgetItems:
             itemCount_int=topItem_QTreeWidgetItem.childCount()
@@ -141,8 +140,7 @@ class EquipmentWindow(UI.TreeWindowBase):
                 childItem_QTreeWidgetItem=topItem_QTreeWidgetItem.child(num)
                 objectItem_list.append(childItem_QTreeWidgetItem)
             matrix=objectItem_list[0].text(1)
-            time=objectItem_list[1].text(1)
-            nodeType=objectItem_list[2].text(1)
+            nodeType=objectItem_list[1].text(1)
             shape=objectItem_list[-1].text(0)
         
             otherValueDicts=[]
@@ -159,7 +157,6 @@ class EquipmentWindow(UI.TreeWindowBase):
 
             matrixNode=oLB.MatrixObject(parentNode[0])
             matrixNode.setWorldMatrix(eval(matrix))
-            matrixNode.setTime(float(time))
             matrixNode.setOtherValueDicts(otherValueDicts)
             matrixNode.worldMovement()
 

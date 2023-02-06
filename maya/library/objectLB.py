@@ -281,11 +281,6 @@ class MatrixObject(TrsObject):
         self._normal_MMatrix=None
         self._world_MMatrix=None
         self._parent_MMatrix=None
-        self._time=oma2.MAnimControl.currentTime()
-        self._transKey_bool=False
-        self._rotateKey_bool=False
-        self._scaleKey_bool=False
-        self._otherKey_bool=False
         self._otherValue_dicts=[]# {"node":"","attr":"","value":0}
 
     #Single Function
@@ -308,31 +303,18 @@ class MatrixObject(TrsObject):
             for setAttr_dict in setAttr_dicts:
                 cmds.setAttr(setAttr_dict["node"]+"."+setAttr_dict["attr"],setAttr_dict["value"])
 
-    #Private Function
-    def _trsKey_edit_func(self):
-        if self._transKey_bool:
-            translates=["translateX","translateY","translateZ"]
-            for translate in translates:
-                cmds.setKeyframe(self._object,at=translate)
-        if self._rotateKey_bool:
-            rotates=["rotateX","rotateY","rotateZ"]
-            for rotate in rotates:
-                cmds.setKeyframe(self._object,at=rotate)
-        if self._scaleKey_bool:
-            scales=["scaleX","scaleY","scaleZ"]
-            for scale in scales:
-                cmds.setKeyframe(self._object,at=scale)
-        if self._otherKey_bool:
-            if not self._otherValue_dicts == [] or not self._otherValue_dicts == None:
-                for _otherValue_dict in self._otherValue_dicts:
-                    cmds.setKeyframe(_otherValue_dict["node"],at=_otherValue_dict["attr"],v=_otherValue_dict["value"])
+    def matrixToTransform_edit_func(self,MObject,MMatrix):
+        matrix_MTransformationMatrix=om2.MTransformationMatrix(MMatrix)
+        transform_MFnTransform=om2.MFnTransform(MObject)
+        transform_MFnTransform.setTransformation(matrix_MTransformationMatrix)
 
-    #Public Function
+    #Summary Function
     def __loading(self):
         self._normal_MMatrix=self.matrix_query_MMatrix(self._object_MDagPath,type="normal")
         self._world_MMatrix=self.matrix_query_MMatrix(self._object_MDagPath,type="world")
         self._parent_MMatrix=self.matrix_query_MMatrix(self._object_MDagPath,type="parent")
 
+    #Public Function
     def setRunMatrix(self,variable):
         self._runMatrix_str=variable
         return self._runMatrix_str
@@ -340,60 +322,25 @@ class MatrixObject(TrsObject):
         return self._runMatrix_str
 
     def setNormalMatrix(self,variable):
-        self._normal_MMatrix=variable
+        self._normal_MMatrix=om2.MMatrix(variable)
         return self._normal_MMatrix
     def getNormalMatrix(self):
         return self._normal_MMatrix
     
     def setWorldMatrix(self,variable):
-        self._world_MMatrix=variable
+        self._world_MMatrix=om2.MMatrix(variable)
         return self._world_MMatrix
     def getWorldMatrix(self):
         return self._world_MMatrix
     
     def setParentMatrix(self,variable):
-        self._parent_MMatrix=variable
+        self._parent_MMatrix=om2.MMatrix(variable)
         return self._parent_MMatrix
     def getParentMatrix(self):
         return self._parent_MMatrix
-
-    def setTime(self,variable):
-        fpsUnitType_int=om2.MTime.uiUnit()
-        MTime=om2.MTime(variable,fpsUnitType_int)
-        self._time=MTime
-        return self._time
-    def setCurrentTime(self):
-        MTime=oma2.MAnimControl.currentTime()
-        self._time=MTime
-        return self._time
-    def getTime(self,unit=None):
         fpsUnitType_int=unit or om2.MTime.uiUnit()
         time=self._time.asUnits(fpsUnitType_int)
         return time
-    
-    def setTransKeyBool(self,variable):
-        self._transKey_bool=variable
-        return self._transKey_bool
-    def getTransKeyBool(self):
-        return self._transKey_bool
-
-    def setRotateKeyBool(self,variable):
-        self._rotateKey_bool=variable
-        return self._rotateKey_bool
-    def getRotateKeyBool(self):
-        return self._rotateKey_bool
-
-    def setScaleKeyBool(self,variable):
-        self._scaleKey_bool=variable
-        return self._scaleKey_bool
-    def getScaleKeyBool(self):
-        return self._scaleKey_bool
-    
-    def setAttrKeyBool(self,variable):
-        self._otherKey_bool=variable
-        return self._otherKey_bool
-    def getAttrKeyBool(self):
-        return self._otherKey_bool
 
     def setOtherValueDicts(self,variables):
         self._otherValue_dicts=variables
@@ -407,11 +354,14 @@ class MatrixObject(TrsObject):
 
     def runMovement(self):
         if self._runMatrix_str == "normal":
-            cmds.xform(self._object,m=self._normal_MMatrix)
+            self.matrixToTransform_edit_func(self._object_MObject,self._normal_MMatrix)
+            #cmds.xform(self._object,m=self._normal_MMatrix)
         elif self._runMatrix_str == "world":
-            cmds.xform(self._object,m=self._world_MMatrix)
+            self.matrixToTransform_edit_func(self._object_MObject,self._world_MMatrix)
+            #cmds.xform(self._object,m=self._world_MMatrix)
         elif self._runMatrix_str == "parent":
-            cmds.xform(self._object,m=self._parent_MMatrix)
+            self.matrixToTransform_edit_func(self._object_MObject,self._parent_MMatrix)
+            #cmds.xform(self._object,m=self._parent_MMatrix)
         else:
             cmds.error('please setRunMatrix with the strings "normal" or "world" or "parent".')
         if not self._otherValue_dicts == [] or not self._otherValue_dicts == None:
@@ -419,26 +369,22 @@ class MatrixObject(TrsObject):
                 cmds.setAttr(_otherValue_dict["node"]+"."+_otherValue_dict["attr"],_otherValue_dict["value"])
 
     def normalMovement(self):
-        cmds.xform(self._object,m=self._normal_MMatrix)
+        self.matrixToTransform_edit_func(self._object_MObject,self._normal_MMatrix)
         if not self._otherValue_dicts == [] or not self._otherValue_dicts == None:
             self.setAttrDict_edit_func(self._otherValue_dicts)
 
     def worldMovement(self):
-        cmds.xform(self._object,m=self._world_MMatrix)
+        self.matrixToTransform_edit_func(self._object_MObject,self._world_MMatrix)
         if not self._otherValue_dicts == [] or not self._otherValue_dicts == None:
             self.setAttrDict_edit_func(self._otherValue_dicts)
     
     def parentMovement(self):
-        cmds.xform(self._object,m=self._parent_MMatrix)
+        self.matrixToTransform_edit_func(self._object_MObject,self._parent_MMatrix)
         if not self._otherValue_dicts == [] or not self._otherValue_dicts == None:
             self.setAttrDict_edit_func(self._otherValue_dicts)
 
-    def currentKeyFrame(self):
-        self._trsKey_edit_func()
-
     def loading(self):
         self.__loading()
-
 class KeyObject(TrsObject):
     def __init__(self,obj):
         super(KeyObject,self).__init__(obj)
