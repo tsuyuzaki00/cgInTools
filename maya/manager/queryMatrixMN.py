@@ -13,8 +13,9 @@ cit.reloads([UI,wLB])
 class LookMatrixWindow(UI.TableWindowBase):
     def __init__(self,parent):
         super(LookMatrixWindow,self).__init__(parent)
-        self.setObjectName("selectView_list")
-        self.setWindowTitle("selectView_list")
+        windowTitle="queryMatrix_lists"
+        self.setObjectName(windowTitle)
+        self.setWindowTitle(windowTitle)
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
@@ -32,7 +33,7 @@ class LookMatrixWindow(UI.TableWindowBase):
             "InverseParentMatrixX","InverseParentMatrixY","InverseParentMatrixZ","InverseParentMatrixT",
             "OffsetParentMatrixX","OffsetParentMatrixY","OffsetParentMatrixZ","OffsetParentMatrixT"
             ])
-        #self.queryMatrix_CTableWidget.setHeaderAsixStr("Horizontal")# Horizontal or Vertical
+        self.queryMatrix_CTableWidget.setHeaderAsixStr("Vertical")# Horizontal or Vertical
         self.queryMatrix_CTableWidget.createBase()
 
     #Single Function
@@ -56,7 +57,7 @@ class LookMatrixWindow(UI.TableWindowBase):
         return matrix_list
 
     #Private Function
-    def _tableList_create_func(self,objs,add=False):
+    def __tableList_create_func(self,objs,add=False):
         if not add:
             self._table_lists=[]
         for obj in objs:
@@ -71,14 +72,13 @@ class LookMatrixWindow(UI.TableWindowBase):
 
     def buttonCenterOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._tableList_create_func(objs)
+        self.__tableList_create_func(objs)
 
     def buttonRightOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._tableList_create_func(objs,add=True)
+        self.__tableList_create_func(objs,add=True)
 
 def main():
     viewWindow=LookMatrixWindow(parent=wLB.mayaMainWindow_query_widget())
-    objs=cmds.ls(sl=True)
-    viewWindow._tableList_create_func(objs)
+    viewWindow.buttonCenterOnClicked()
     viewWindow.show()

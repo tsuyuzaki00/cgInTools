@@ -13,10 +13,6 @@ class Color(sbLB.BaseObject):
         super(Color,self).__init__()
         self._colorIndex_list=RULES_DICT["rgbToColorIndex_list"]
 
-    def __loading(self):
-        self._shapes=cmds.listRelatives(self._object,shapes=True,ni=True,pa=True)
-        self.wireObjs=[self._object]+self._shapes
-
     #Single Function
     def getDrawingOverrides_query_list(self,obj):
         if cmds.nodeType(obj)=="transform":
@@ -59,6 +55,11 @@ class Color(sbLB.BaseObject):
         for obj in objs:
             cmds.setAttr(obj+'.useObjectColor',use)
             cmds.setAttr(obj+'.wireColorRGB',*color)
+
+    #Summary Function
+    def __loading(self):
+        self._shapes=cmds.listRelatives(self._object,shapes=True,ni=True,pa=True)
+        self.wireObjs=[self._object]+self._shapes
 
     #Public Function
     def overrideColor(self):

@@ -14,8 +14,9 @@ cit.reloads([UI,wLB])
 class LookShapeColorWindow(UI.TableWindowBase):
     def __init__(self, parent):
         super(LookShapeColorWindow, self).__init__(parent)
-        self.setObjectName("selectView_list")
-        self.setWindowTitle("selectView_list")
+        windowTitle="queryShapeColor_lists"
+        self.setObjectName(windowTitle)
+        self.setWindowTitle(windowTitle)
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
@@ -23,8 +24,10 @@ class LookShapeColorWindow(UI.TableWindowBase):
         self.queryShapeColor_CTableWidget=UI.CTableWidget()
         self.custom_QGridLayout.addWidget(self.queryShapeColor_CTableWidget)
         self.queryShapeColor_CTableWidget.setHeaderLabelList(["ObjectName","OverrideColor","OverrideColorR","OverrideColorG","OverrideColorB","WireFrameColor","WireFrameColorR","WireFrameColorG","WireFrameColorB"])
-        #self.queryShapeColor_CTableWidget.setHeaderAsixStr("Vertical")# Horizontal or Vertical
+        self.queryShapeColor_CTableWidget.setHeaderAsixStr("Vertical")# Horizontal or Vertical
         self.queryShapeColor_CTableWidget.createBase()
+        geometry=self.queryShapeColor_CTableWidget.geometry()
+        self.setGeometry(geometry)
 
     #Single Function
     def nurbsCurves_check_bool(self,obj):
@@ -35,8 +38,8 @@ class LookShapeColorWindow(UI.TableWindowBase):
             return True
 
     #Private Function
-    def _tableList_create_func(self,objs,add=False):
-        getAttrs=["overrideColor","overrideColorR","overrideColorG","overrideColorB","objectColor","objectColorR","objectColorG","objectColorB"]
+    def __tableList_create_func(self,objs,add=False):
+        getAttrs=["overrideColor","overrideColorR","overrideColorG","overrideColorB","objectColor","wireColorR","wireColorG","wireColorB"]
         if not add:
             self._table_lists=[]
         for obj in objs:
@@ -59,14 +62,13 @@ class LookShapeColorWindow(UI.TableWindowBase):
 
     def buttonCenterOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._tableList_create_func(objs)
+        self.__tableList_create_func(objs)
 
     def buttonRightOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._tableList_create_func(objs,add=True)
+        self.__tableList_create_func(objs,add=True)
 
 def main():
     viewWindow=LookShapeColorWindow(parent=wLB.mayaMainWindow_query_widget())
-    objs=cmds.ls(sl=True)
-    viewWindow._tableList_create_func(objs)
+    viewWindow.buttonCenterOnClicked()
     viewWindow.show()

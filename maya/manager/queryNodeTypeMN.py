@@ -21,8 +21,9 @@ FILE="queryNodeType"
 class LookNodeTypeWindow(UI.TableWindowBase):
     def __init__(self, parent):
         super(LookNodeTypeWindow, self).__init__(parent)
-        self.setObjectName("selectView_list")
-        self.setWindowTitle("selectView_list")
+        windowTitle="queryNodeType_lists"
+        self.setObjectName(windowTitle)
+        self.setWindowTitle(windowTitle)
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
@@ -31,6 +32,8 @@ class LookNodeTypeWindow(UI.TableWindowBase):
         self.custom_QGridLayout.addWidget(self.queryNodeType_CTableWidget)
         self.queryNodeType_CTableWidget.setHeaderLabelList(["ObjectName","NodeType","MFnType","MFnTypeID"])
         self.queryNodeType_CTableWidget.createBase()
+        geometry=self.queryNodeType_CTableWidget.geometry()
+        self.setGeometry(geometry)
 
         self._pathSet=PATHSET
         self._pathReset=PATHRESET
@@ -142,7 +145,5 @@ class LookNodeTypeWindow(UI.TableWindowBase):
 
 def main():
     viewWindow=LookNodeTypeWindow(parent=wLB.mayaMainWindow_query_widget())
-    objs=cmds.ls(sl=True)
-    viewWindow.sameObjName_check_func(objs)
-    viewWindow.__tableList_create_func(objs)
+    viewWindow.buttonCenterOnClicked()
     viewWindow.show()

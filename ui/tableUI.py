@@ -37,18 +37,19 @@ class CTableWidget(QTableWidget):
 
     #Private Function
     def __header_create_list(self,headerLabel_list,headerAsix="Horizontal"):
-        if headerAsix is "Horizontal":
+        if headerAsix == "Horizontal":
             self.setColumnCount(len(headerLabel_list))
             self.setHorizontalHeaderLabels(headerLabel_list)
-        elif headerAsix is "Vertical":
+        elif headerAsix == "Vertical":
             self.setRowCount(len(headerLabel_list))
             self.setVerticalHeaderLabels(headerLabel_list)
+            print("test")
         return headerLabel_list
 
     def __tableItem_create_func(self,tableParam_lists,headerAsix="Horizontal"):   
-        if headerAsix is "Horizontal":
+        if headerAsix == "Horizontal":
             self.setRowCount(len(tableParam_lists))
-        elif headerAsix is "Vertical":
+        elif headerAsix == "Vertical":
             self.setColumnCount(len(tableParam_lists))
 
         for row,colData in enumerate(tableParam_lists):
@@ -83,10 +84,10 @@ class CTableWidget(QTableWidget):
         return self._tableParam_lists
 
     def createBase(self):
-        self.__header_create_list(self._headerLabel_list)
+        self.__header_create_list(self._headerLabel_list,self._headerAsix_str)
 
     def createTable(self):
-        header_list=self.__header_create_list(self._headerLabel_list)
+        header_list=self.__header_create_list(self._headerLabel_list,self._headerAsix_str)
         for _tableParam_list in self._tableParam_lists:
             self.headerCount_check_func(header_list,_tableParam_list)
         self.__tableItem_create_func(self._tableParam_lists,self._headerAsix_str)

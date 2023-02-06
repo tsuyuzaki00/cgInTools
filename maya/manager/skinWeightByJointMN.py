@@ -14,8 +14,8 @@ from ..library import objectLB as oLB
 from ..library import jsonLB as jLB
 cit.reloads([UI,wLB,sLB,oLB,jLB])
 
-SETPATH=cit.mayaData_dir
-RESETPATH=cit.mayaSettings_dir
+PATHSET=cit.mayaData_dir
+PATHRESET=cit.mayaSettings_dir
 
 class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
     def __init__(self,parent):
@@ -29,8 +29,8 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         self.createTableItem()
         print(self.table_QTableWidget.mimeTypes())
 
-        self.setPath=SETPATH
-        self.resetPath=RESETPATH
+        self.setPath=PATHSET
+        self.resetPath=PATHRESET
         self.fileName="skinWeightByJoint"
         self.extension="byJointWeight"
         self.__importJson(self.setPath,self.fileName)
@@ -57,7 +57,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         setting.write()
 
     #Private Function
-    def _getTable_query_lists(self):
+    def __getTable_query_lists(self):
         table_list=[]
         for colNum in range(len(self.data_lists)):
             table_list.append([])
@@ -68,8 +68,8 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
                 table_list[colNum].append(text_str)
         return table_list
 
-    def _getColumnIntItem_query_str(self,column_int):
-        self.data_lists=self._getTable_query_lists()
+    def __getColumnIntItem_query_str(self,column_int):
+        self.data_lists=self.__getTable_query_lists()
         selectItem_QTableWidgetItem=self.table_QTableWidget.currentItem()
         if not selectItem_QTableWidgetItem == None:
             row_int=selectItem_QTableWidgetItem.row()
@@ -78,7 +78,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         else:
             cmds.error("Please select item.")
 
-    def _replaceListWithUI_edit_lists(self,setting_dict):
+    def __replaceListWithUI_edit_lists(self,setting_dict):
         weight_dicts=setting_dict["weights"]
         weights=[]
         for weight_dict in weight_dicts:
@@ -86,8 +86,8 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             weights.append(weight_list)
         return weights
 
-    def _replaceUIWithList_query_list(self):
-        self.data_lists=self._getTable_query_lists()
+    def __replaceUIWithList_query_list(self):
+        self.data_lists=self.__getTable_query_lists()
         weights=[]
         for data_list in self.data_lists:
             weight_dict={"use":int(data_list[0]),"value":float(data_list[1]),"vertexs":eval(data_list[2]),"joint":data_list[3],"geometry":self.geometry_QLineEdit.text()}
@@ -98,11 +98,11 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
     def __importJson(self,path,file,extension="json"):
         setting_dict=self.importJson_query_dict(path,file,extension)
         self.geometry_QLineEdit.setText(setting_dict["geometry"])
-        self.data_lists=self._replaceListWithUI_edit_lists(setting_dict)
+        self.data_lists=self.__replaceListWithUI_edit_lists(setting_dict)
         self.createTableItem()
 
     def __exportJson(self,path,file,extension="json"):
-        weights=self._replaceUIWithList_query_list()
+        weights=self.__replaceUIWithList_query_list()
         self.exportJson_edit_func(path,file,extension,weights)
 
     def refreshOnClicked(self):
@@ -129,7 +129,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             self.geometry_QLineEdit.setText(geometry[0])
 
     def weightsOnClicked(self):
-        joint_str=self._getColumnIntItem_query_str(3)
+        joint_str=self.__getColumnIntItem_query_str(3)
         geometry_str=self.geometry_QLineEdit.text()
 
         paint_SkinWeightByJoint=sLB.SkinWeightByJoint()
@@ -147,7 +147,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         print("mark")
 
     def useSwitchOnClicked(self):
-        self.data_lists=self._getTable_query_lists()
+        self.data_lists=self.__getTable_query_lists()
         selectItem_QTableWidgetItem=self.table_QTableWidget.currentItem()
         if not selectItem_QTableWidgetItem == None:
             row_int=selectItem_QTableWidgetItem.row()
@@ -155,7 +155,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             self.createTableItem()
     
     def vertexsOnClicked(self):
-        self.data_lists=self._getTable_query_lists()
+        self.data_lists=self.__getTable_query_lists()
         selectItem_QTableWidgetItem=self.table_QTableWidget.currentItem()
         if not selectItem_QTableWidgetItem == None:
             row_int=selectItem_QTableWidgetItem.row()
@@ -164,7 +164,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             self.createTableItem()
 
     def jointOnClicked(self):
-        self.data_lists=self._getTable_query_lists()
+        self.data_lists=self.__getTable_query_lists()
         selectItem_QTableWidgetItem=self.table_QTableWidget.currentItem()
         if not selectItem_QTableWidgetItem == None:
             row_int=selectItem_QTableWidgetItem.row()
@@ -174,7 +174,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
                 self.createTableItem()
 
     def buttonLeftOnClicked(self):
-        self.data_lists=self._getTable_query_lists()
+        self.data_lists=self.__getTable_query_lists()
         jointWeights=[]
         for data_list in self.data_lists:
             jointWeight=oLB.JointWeight(data_list[3])
@@ -188,7 +188,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
         skinWeightByJoint.run()
 
     def buttonCenterOnClicked(self):
-        self.data_lists=self._getTable_query_lists()
+        self.data_lists=self.__getTable_query_lists()
         selectItem_QTableWidgetItem=self.table_QTableWidget.currentItem()
         if not selectItem_QTableWidgetItem == None:
             row_int=selectItem_QTableWidgetItem.row()
@@ -201,7 +201,7 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             self.createTableItem()
 
     def buttonRightOnClicked(self):
-        self.data_lists=self._getTable_query_lists()
+        self.data_lists=self.__getTable_query_lists()
         selectItem_QTableWidgetItems=self.table_QTableWidget.selectedItems()
         if not selectItem_QTableWidgetItems == None:
             row_ints=[]

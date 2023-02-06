@@ -14,37 +14,39 @@ cit.reloads([UI,wLB])
 class LookKeyWindow(UI.TableWindowBase):
     def __init__(self,parent):
         super(LookKeyWindow, self).__init__(parent)
-        self.setObjectName("selectView_list")
-        self.setWindowTitle("selectView_list")
+        windowTitle="queryKeyAttr_lists"
+        self.setObjectName(windowTitle)
+        self.setWindowTitle(windowTitle)
         self.buttonLeft_QPushButton.setText("print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
 
-        self.queryNodeType_CTableWidget=UI.CTableWidget()
-        self.custom_QGridLayout.addWidget(self.queryNodeType_CTableWidget)
+        self.queryKeyAttr_CTableWidget=UI.CTableWidget()
+        self.custom_QGridLayout.addWidget(self.queryKeyAttr_CTableWidget)
+        self.queryKeyAttr_CTableWidget.setHeaderAsixStr("Vertical")# Horizontal or Vertical
 
-    #Private Function
-    def _getKeyAttrs_query_list(self,obj):
-        attrValues=[]
-        attrValues.append(obj)
+    #Single Function
+    def getKeyAttrs_query_list_list(self,obj):
+        attrValue_list=[]
+        attrValue_list.append(obj)
         keyAttrs=cmds.listAttr(obj,k=True)
-        self.headerTitle_list=["ObjectName"]
+        headerLabel_list=["ObjectName"]
         for keyAttr in keyAttrs:
-            self.headerTitle_list.append(str(keyAttr))
+            headerLabel_list.append(str(keyAttr))
             attrValue=cmds.getAttr(obj+"."+keyAttr)
-            attrValues.append(str(attrValue))
-        self.queryNodeType_CTableWidget.setHeaderLabelList([self.headerTitle_list])
-        self.queryNodeType_CTableWidget.createBase()
-        return attrValues
-
-    def _tableList_create_func(self,objs,add=False):
+            attrValue_list.append(str(attrValue))
+        return headerLabel_list,attrValue_list
+    
+    #Private Function
+    def __tableList_create_func(self,objs,add=False):
         if not add:
             self._table_lists=[]
         for obj in objs:
-            keyAttr_list=self._getKeyAttrs_query_list(obj)
-            self._table_lists.append(keyAttr_list)
-            self.queryNodeType_CTableWidget.setTableParamLists(self._table_lists)
-            self.queryNodeType_CTableWidget.createTable()
+            self._headerLabel_list,attrValue_list=self.getKeyAttrs_query_list_list(obj)
+            self._table_lists.append(attrValue_list)
+            self.queryKeyAttr_CTableWidget.setHeaderLabelList(self._headerLabel_list)
+            self.queryKeyAttr_CTableWidget.setTableParamLists(self._table_lists)
+            self.queryKeyAttr_CTableWidget.createTable()
 
     #Public Function
     def buttonLeftOnClicked(self):
@@ -52,14 +54,13 @@ class LookKeyWindow(UI.TableWindowBase):
 
     def buttonCenterOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._tableList_create_func(objs)
+        self.__tableList_create_func(objs)
 
     def buttonRightOnClicked(self):
         objs=cmds.ls(sl=True)
-        self._tableList_create_func(objs,add=True)
+        self.__tableList_create_func(objs,add=True)
 
 def main():
     viewWindow=LookKeyWindow(parent=wLB.mayaMainWindow_query_widget())
-    objs=cmds.ls(sl=True)
-    viewWindow._tableList_create_func(objs)
+    viewWindow.buttonCenterOnClicked()
     viewWindow.show()
