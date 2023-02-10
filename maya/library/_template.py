@@ -8,6 +8,7 @@ cit.reloads([sbLB])
 class Template():
     def __init__(self):
         self._value=""
+        self._setting=[]
 
     def __loading(self):
         self._value=""
@@ -36,6 +37,19 @@ class Template():
         self.__private_mode_func()
         self._value
         pass
+
+    #Setting Function
+    def setSetting(self,variable):
+        self._setting=variable
+        return self._setting
+    def addSetting(self,variable):
+        self._setting.append(variable)
+        return self._setting
+    def currentSetting(self):
+        self._setting=self.single_mode_func()
+        return self._setting
+    def getSetting(self):
+        return self._setting
 
     #Public Function
     def public(self):

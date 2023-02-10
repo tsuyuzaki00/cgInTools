@@ -7,9 +7,7 @@ import math
 
 def test():
     name="surface"
-    control_vertices = [
-        (-0.5,0.0,-0.5),(0.5,0.0,-0.5),(-0.5,0.0,0.5),(0.5,0.0,0.5)
-    ]
+    control_vertices = [(-0.5,0.0,-0.5),(0.5,0.0,-0.5),(-0.5,0.0,0.5),(0.5,0.0,0.5)]
     surface_MObject=om2.MFnDagNode().create("transform",name)
     surface_MFnNurbsSurface=om2.MFnNurbsSurface()
     surface_MFnNurbsSurface.create(control_vertices,[0.0,1.0],[0.0,1.0],1,1,1,1,False,surface_MObject)
@@ -33,9 +31,6 @@ def test():
     connect_MDGModifier=om2.MDGModifier()
     connect_MDGModifier.connect(makeNurb_MPlug,surface_MPlug)
     connect_MDGModifier.doIt()
-
-
-    
 
 def main():
     test()
