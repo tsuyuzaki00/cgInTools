@@ -18,4 +18,5 @@ def main():
     copy.setSourceNode(source)
     for target in targets:
         copy.setTargetNode(target)
-        copy.copyBindAndSkinWeights()
+        copy.copyBind()
+        copy.copySkinWeights()

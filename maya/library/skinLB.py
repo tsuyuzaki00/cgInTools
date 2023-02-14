@@ -19,18 +19,6 @@ class CopySkinWeight(sbLB.BasePair):
         self._targetNode=""
 
     #Single Function
-    def geoSkinCluster_check_bool(self,geo):
-        shape_list=cmds.listRelatives(geo,c=True,f=True)
-        histories=cmds.listHistory(shape_list[0],pruneDagObjects=True,interestLevel=2)
-        if not histories == None:
-            for historie in histories:
-                if cmds.nodeType(historie) == "skinCluster":
-                    return True
-                else:
-                    cmds.error("No skin cluster in this "+geo+".")
-        else:
-            return False
-
     def clusterRename_create_str(self,obj):
         __renamers = [
             {"source":"Geo","rename":"Skc"},
@@ -44,82 +32,95 @@ class CopySkinWeight(sbLB.BasePair):
         fixName_str=obj+"_skc"
         return fixName_str
 
-    #Multi Function
-    def _geoSkinCluster_query_node(self,geo):
-        skc_bool=self.geoSkinCluster_check_bool(geo)
-        if skc_bool:
-            shape_list=cmds.listRelatives(geo,c=True,f=True)
-            histories=cmds.listHistory(shape_list[0],pruneDagObjects=True,interestLevel=2)
-            skinCluster_node=cmds.ls(histories,type="skinCluster")[0]
-            return skinCluster_node
-
-    def _geoBindJoints_check_bool(self,geo):
-        skc_node=self._geoSkinCluster_query_node(geo)
-        influences=cmds.skinCluster(skc_node,q=True,influence=True)
-        if not influences is None:
-            return True
+    def geoSkinCluster_query_str(self,geo):
+        shape_list=cmds.listRelatives(geo,c=True,f=True)
+        histories=cmds.listHistory(shape_list[0],pruneDagObjects=True,interestLevel=2)
+        skinCluster_node=cmds.ls(histories,type="skinCluster")
+        if not skinCluster_node == []:
+            return skinCluster_node[0]
         else:
-            return False
-        
-    def _geoBindJoints_query_joints(self,geo):
-        influences_bool=self._geoBindJoints_check_bool(geo)
-        if influences_bool:
-            skc_node=self._geoSkinCluster_query_node(geo)
-            joints=cmds.skinCluster(skc_node,q=True,influence=True)
+            return None
+
+    def skcBindJoints_query_list(self,skc):
+        joints=cmds.skinCluster(skc,q=True,influence=True)
+        if not joints is None:
             return joints
         else:
-            cmds.error('There is no'+ geo +'of bind joints.')
+            return None
 
-    def _jointDifference_query_joints(self,geoSource,geoTarget):
+    def jointDifference_query_joints(self,sourceJoints,targetJoints):
         new_targetJoints=[]
-        sourceJoints=self._geoBindJoints_query_joints(geoSource)
-        targetJoints=self._geoBindJoints_query_joints(geoTarget)
         for sourceJoint in sourceJoints:
             if sourceJoint in targetJoints:
                 new_targetJoints.append(sourceJoint)
         diffJoints=set(new_targetJoints) ^ set(sourceJoints)
         return diffJoints
+
+    #Multi Function
+    def _jointDifference_query_joints(self,geoSource,geoTarget):
+        skcSource=self.geoSkinCluster_query_str(geoSource)
+        skcTarget=self.geoSkinCluster_query_str(geoTarget)
+        if skcSource is None or skcTarget is None:
+            cmds.error("No skin cluster in this "+skcSource+" or "+skcTarget+".")
+        sourceJoints=self.skcBindJoints_query_list(skcSource)
+        targetJoints=self.skcBindJoints_query_list(skcTarget)
+
+        diffJoints=self.jointDifference_query_joints(sourceJoints,targetJoints)
+        return diffJoints
         
     def _copyBindJoint_edit_func(self,geoSource,geoTarget):
-        joints=self._geoBindJoints_query_joints(geoSource)
+        skcSource=self.geoSkinCluster_query_str(geoSource)
+        if skcSource is None:
+            cmds.error("No skin cluster in this "+skcSource+".")
+        sourceJoints=self.skcBindJoints_query_list(skcSource)
         skcName_str=self.clusterRename_create_str(geoTarget)
         skcPart_str=skcName_str.split("|") # parent1|child1|child2
-        cmds.skinCluster(geoTarget,joints,n=skcPart_str[-1],tsb=True)
+        cmds.skinCluster(geoTarget,sourceJoints,n=skcPart_str[-1],tsb=True)
 
     def _copySkinWeights_edit_func(self,geoSource,geoTarget,sa="closestPoint",ia="closestJoint"):
-        sourceSkc_node=self._geoSkinCluster_query_node(geoSource)
-        targteSkc_node=self._geoSkinCluster_query_node(geoTarget)
-        cmds.copySkinWeights(ss=sourceSkc_node,ds=targteSkc_node,sa=sa,ia=ia,noMirror=True)
+        skcSource=self.geoSkinCluster_query_str(geoSource)
+        if skcSource is None:
+            cmds.error("No skin cluster in this "+skcSource+".")
+        skcTarget=self.geoSkinCluster_query_str(geoTarget)
+        if skcSource is None:
+            cmds.error("No skin cluster in this "+skcTarget+".")
+        cmds.copySkinWeights(ss=skcSource,ds=skcTarget,sa=sa,ia=ia,noMirror=True)
     
     def _addInfluences_edit_func(self,geo,joints):
-        skc_node=self._geoSkinCluster_query_node(geo)
+        skc=self.geoSkinCluster_query_str(geo)
+        if skc is None:
+            cmds.error("No skin cluster in this "+skc+".")
         for joint in joints:
-            cmds.skinCluster(skc_node,ai=joint,e=True,ug=False,dr=4,ps=0,ns=10,lw=True,wt=0)
+            cmds.skinCluster(skc,ai=joint,e=True,ug=False,dr=4,ps=0,ns=10,lw=True,wt=0)
 
     def _removeInfluences_edit_func(self,geo,joints):
-        skc_node=self._geoSkinCluster_query_node(geo)
+        skc=self.geoSkinCluster_query_str(geo)
+        if skc is None:
+            cmds.error("No skin cluster in this "+skc+".")
         for joint in joints:
-            cmds.skinCluster(skc_node,ri=joint,e=True)
+            cmds.skinCluster(skc,ri=joint,e=True)
 
     #Public Function
-    def copyBindAndSkinWeights(self):
-        targetSkc_bool=self.geoSkinCluster_check_bool(self._targetNode)
-        if targetSkc_bool:
-            diffJoints=self._jointDifference_query_joints(self._sourceNode,self._targetNode)
-            if not diffJoints == None:
-                self._addInfluences_edit_func(self._targetNode,diffJoints)
-            self._copySkinWeights_edit_func(self._sourceNode,self._targetNode)
-        else:
-            self._copyBindJoint_edit_func(self._sourceNode,self._targetNode)
-            self._copySkinWeights_edit_func(self._sourceNode,self._targetNode)
+    def copyBind(self):
+        self._copyBindJoint_edit_func(self._sourceNode,self._targetNode)
+        self._copySkinWeights_edit_func(self._sourceNode,self._targetNode)
+
+    def copySkinWeights(self):
+        diffJoints=self._jointDifference_query_joints(self._sourceNode,self._targetNode)
+        if not diffJoints == None:
+            self._addInfluences_edit_func(self._targetNode,diffJoints)
+        self._copySkinWeights_edit_func(self._sourceNode,self._targetNode)
 
     def targetRemoveJoints(self):
-        targetSkc_bool=self.geoSkinCluster_check_bool(self._targetNode)
-        if targetSkc_bool:
-            diffJoints=self._jointDifference_query_joints(self._targetNode,self._sourceNode)
-            self._removeInfluences_edit_func(self._targetNode,diffJoints)
-        else:
-            cmds.error('There is no'+ self._targetNode +'of bind joints.')
+        diffJoints=self._jointDifference_query_joints(self._targetNode,self._sourceNode)
+        self._removeInfluences_edit_func(self._targetNode,diffJoints)
+
+    def removeInfluenceJoint(self):
+        curCtx=cmds.currentCtx()
+        if(curCtx=='artAttrSkinContext'):
+            infJnt=cmds.artAttrSkinPaintCtx(curCtx,q=True,inf=True)
+            self._removeInfluences_edit_func(self._sourceNode,[infJnt])
+
 
 class CopyVertexSkinWeights(sbLB.BasePair):
     def __init__(self):
