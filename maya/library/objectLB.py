@@ -430,7 +430,7 @@ class KeyObject(TrsObject):
         objAttr_MPlug=obj_MFnDependencyNode.findPlug(attr,False)
         object_str=obj_MFnDependencyNode.name()
 
-        if not objAttr_MPlug.isConnected:
+        if not objAttr_MPlug.isDestination:
             animCurve_MFnAnimCurve=oma2.MFnAnimCurve()
             animCurve_MObject=animCurve_MFnAnimCurve.create(animCurve)
             animCurve_MFnDependencyNode=om2.MFnDependencyNode(animCurve_MObject)
