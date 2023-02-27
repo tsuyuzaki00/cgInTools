@@ -25,10 +25,10 @@ class TargetPosWindow(UI.TargetPosWindowBase):
         target_str=self.target_QLineEdit.text()
         position_id=self.position_QButtonGroup.checkedId()
         sources=eval(source_str)
-        target_list=eval(target_str)
+        targets=eval(target_str)
         targetSet=sttLB.SourceToTarget()
         targetSet.setPos(position_id)
-        targetSet.setTargetNode(target_list[0])
+        targetSet.setTargetNode(targets)
         for source in sources:
             targetSet.setSourceNode(source)
             targetSet.moveToTarget()
