@@ -20,8 +20,8 @@ FILE="querySelections"
 class SelectionTextWindow(UI.PlainTextWindowBase):
     def __init__(self,parent):
         super(SelectionTextWindow, self).__init__(parent)
-        self.setObjectName("selectView_list")
-        self.setWindowTitle("selectView_list")
+        self.setObjectName("SelectionsQuery")
+        self.setWindowTitle("SelectionsQuery")
         self.buttonLeft_QPushButton.setText("Selection")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
@@ -31,15 +31,31 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         self._file=FILE
 
     #Single Function
-    def exportJson_edit_func(self,path,file,planeText_str):
-        write_dict={
-            "selections":planeText_str,
-        }
-        setting=jLB.Json()
-        setting.setPath(path)
-        setting.setFile(file)
-        setting.setWriteDict(write_dict)
-        setting.write()
+    def convertListToString_edit_str(self,texts):
+        text_str=""
+        if not texts is []:
+            for num,text in enumerate(texts):
+                if num == 0:
+                    text_str="[\n"
+                text_str+='    "'+text+'",\n'
+                if num == len(texts)-1:
+                    text_str=text_str.rstrip(",\n")
+                    text_str+="\n]"
+        return text_str
+
+    def convertStringToList_edit_list(self,listText_str):
+        text_list=[]
+        if not listText_str is "":
+            text_list=eval(listText_str)
+        return text_list
+
+    def organizeList_edit_list(self,text_lists=[[],[]]):
+        texts=[]
+        for text_list in text_lists:
+            texts.extend(text_list)
+            texts=list(set(texts))
+            texts.sort()
+        return texts
 
     def importJson_query_dict(self,path,file):
         setting=jLB.Json()
@@ -48,39 +64,39 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         settings_dict=setting.read()
         return settings_dict
 
+    def exportJson_edit_func(self,path,file,selectText_list):
+        write_dict={
+            "selections":selectText_list,
+        }
+        setting=jLB.Json()
+        setting.setPath(path)
+        setting.setFile(file)
+        setting.setWriteDict(write_dict)
+        setting.write()
+
     #Private Function
-    def __selectPlainText_create_func(self,objs,add=False):
-        if add is True:
+    def __setPlainText_create_func(self,objs,add=False):
+        organizeTexts=objs
+        if add:
             getText_str=self.textPlain_QPlainTextEdit.toPlainText()
-            texts=eval(getText_str)
-            texts.extend(objs)
-            texts=list(set(texts))
-        else:
-            texts=objs
-        for num,text in enumerate(texts):
-            if num == 0:
-                text_str="[\n"
-            text_str += '    "'+text+'",\n'
-            if num == len(texts) - 1:
-                text_str=text_str.rstrip(",\n")
-                text_str += "\n]"
+            addTexts=self.convertStringToList_edit_list(getText_str)
+            organizeTexts=self.organizeList_edit_list([addTexts,objs])
+        text_str=self.convertListToString_edit_str(organizeTexts)
         self.textPlain_QPlainTextEdit.setPlainText(text_str)
 
-    def __setPlaneText_edit_func(self,select_dict):
-        text_str=select_dict["selections"]
-        self.textPlain_QPlainTextEdit.setPlainText(text_str)
-
-    def __getPlaneText_query_str(self):
-        return self.textPlain_QPlainTextEdit.toPlainText()
+    def __getSelectText_query_list(self):
+        getText_str=self.textPlain_QPlainTextEdit.toPlainText()
+        texts=self.convertStringToList_edit_list(getText_str)
+        return texts
 
     #Summary Function
     def __importJson(self,path,file):
         settings_dict=self.importJson_query_dict(path,file)
-        self.__setPlaneText_edit_func(settings_dict)
+        self.__setPlainText_create_func(settings_dict["selections"])
 
     def __exportJson(self,path,file):
-        planeText_str=self.__getPlaneText_query_str()
-        self.exportJson_edit_func(path,file,planeText_str)
+        selectText_list=self.__getSelectText_query_list()
+        self.exportJson_edit_func(path,file,selectText_list)
 
     #Public Function
     def refreshOnClicked(self):
@@ -111,16 +127,16 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
     def buttonCenterOnClicked(self):
         objs=cmds.ls(sl=True)
         if not objs == []:
-            self.__selectPlainText_create_func(objs)
+            self.__setPlainText_create_func(objs)
 
     def buttonRightOnClicked(self):
         objs=cmds.ls(sl=True)
         if not objs == []:
-            self.__selectPlainText_create_func(objs,add=True)
+            self.__setPlainText_create_func(objs,add=True)
 
 def main():
     viewWindow=SelectionTextWindow(parent=wLB.mayaMainWindow_query_widget())
     objs=cmds.ls(sl=True)
     if not objs == []:
-        viewWindow.__selectPlainText_create_func(objs)
+        viewWindow.__setPlainText_create_func(objs)
     viewWindow.show()
