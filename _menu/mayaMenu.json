@@ -11,7 +11,7 @@
         ["multi","surface"],
         ["multi","render"],
         ["multi","guide"], 
-        ["multi","connect"], 
+        ["multi","build"], 
         ["single","Edit"],
         ["multi","object rename"],
         ["multi","object position"],
@@ -21,10 +21,11 @@
         ["multi","edge"],
         ["multi","face"],
         ["multi","cv"],
+        ["multi","connect"], 
         ["multi","skin"],
-        ["multi","animation"],
         ["single","Query"],
-        ["multi","inquiry"],
+        ["multi","inquery"],
+        ["multi","animation"],
         ["single","Mgear"],
         ["multi","facial ctrl export"]
     ],
@@ -97,7 +98,7 @@
             ["Export Anim","cgInTools.maya.execute","exportAnimEX","main()",""],
             ["Export Anim Pack","cgInTools.maya.execute","exportAnimPackEX","main()",""]
         ],
-        "inquiry":
+        "inquery":
         [
             ["Selections Query","cgInTools.maya.manager","querySelectionsMN","main()",""],
             ["NodeType Query","cgInTools.maya.manager","queryNodeTypeMN","main()",""],
@@ -110,6 +111,10 @@
             ["LipCtrls","cgInTools.mgear.execute","lipCtrlsExport","main()",""],
             ["EyeCtrls","cgInTools.mgear.execute","eyeCtrlsExport","main()",""],
             ["EyebrowCtrls","cgInTools.mgear.execute","eyebrowCtrlsExport","main()",""]
+        ],
+        "build":
+        [
+            ["Loaded 3DCONNEXION","cgInTools.maya.execute","threeDconnexionLoadEX","main()",""]
         ]
     }
 }
