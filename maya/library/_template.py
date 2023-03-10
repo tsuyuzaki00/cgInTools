@@ -36,7 +36,7 @@ class Template():
         self._multi_mode_func()
         self.__private_mode_func()
         self._value
-        pass
+        #No return
 
     #Setting Function
     def setSetting(self,variable):

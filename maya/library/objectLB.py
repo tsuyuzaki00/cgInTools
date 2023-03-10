@@ -9,6 +9,314 @@ cit.reloads([jLB])
 
 RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"openLibrary")
 
+class SelfNode(object):
+    def __init__(self,node):
+        self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
+        self._node_MObject=self.selectOpenMaya_create_MObject(node)
+        self._connect_dicts=[{"connectNode":"","outputAttr":"","inputAttr":""}]
+        self._connections=[]
+        self._findConnectNodeType_str=""
+    
+    #Single Function
+    def selectOpenMaya_create_MObject(self,node):
+        if not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            return None
+        node_MSelectionList=om2.MSelectionList()
+        node_MSelectionList.add(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        return node_MObject
+
+    def convertMObject_create_MDagPath(self,MObject):
+        MDagPath=om2.MDagPath().getAPathTo(MObject)
+        return MDagPath
+
+    def nodeType_query_str(self,MObject):
+        MFnDependencyNode=om2.MFnDependencyNode(MObject)
+        nodeType_str=MFnDependencyNode.typeName
+        return nodeType_str
+
+    def nodeTypes_query_strs(self,MObjects):
+        if MObjects == None:
+            return None
+        nodeType_strs=[]
+        for MObject in MObjects:
+            MFnDependencyNode=om2.MFnDependencyNode(MObject)
+            nodeType_str=MFnDependencyNode.typeName
+            nodeType_strs.append(nodeType_str)
+        if nodeType_strs == []:
+            return None
+        else:
+            return nodeType_strs
+
+    def shape_query_MObject(self,MDagPath):
+        shape_MDagPath=MDagPath.extendToShape()
+        shape_MObject=shape_MDagPath.node()
+        return shape_MObject
+
+    def parent_query_MObject(self,MDagPath):
+        node_MFnDagNode=om2.MFnDagNode(MDagPath)
+        parent_MObject=node_MFnDagNode.parent(0)
+        return parent_MObject
+
+    def child_query_MObjects(self,MDagPath,shapeOnly=False):
+        childs=[]
+        for num in range(MDagPath.childCount()):
+            child_MObject=MDagPath.child(num)
+            if shapeOnly:
+                if child_MObject.hasFn(om2.MFn.kShape):
+                    childs.append(child_MObject)
+            else:
+                if not child_MObject.hasFn(om2.MFn.kShape):
+                    childs.append(child_MObject)
+        if childs == []:
+            return None
+        else:
+            return childs
+
+    def fullPath_query_str(self,MDagPath):
+        name_str=MDagPath.fullPathName()
+        return name_str
+
+    def findMFnConnect_query_MObjects(self,MObject,source=True,target=True,MFnID=0):
+        findConnectedTo_MObjects=[]
+        node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
+        connections_MPlugArray=node_MFnDependencyNode.getConnections()
+        for connection_MPlug in connections_MPlugArray:
+            targets_MPlugArray=connection_MPlug.connectedTo(source,target)
+            for target_MPlug in targets_MPlugArray:
+                target_MObject=target_MPlug.node()
+                if target_MObject.hasFn(MFnID):
+                    findConnectedTo_MObjects.append(target_MObject)
+        if findConnectedTo_MObjects == []:
+            return None
+        else:
+            return findConnectedTo_MObjects
+    
+    #Private Function
+    def _parentFullPath_query_str(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        parent_MObject=self.parent_query_MObject(node_MDagPath)
+        parentFullPath_str=self.fullPath_query_str(parent_MObject)
+        return parentFullPath_str
+    
+    def _childFullPath_query_strs(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        child_MObjects=self.child_query_MObjects(node_MDagPath)
+        childFullPath_strs=[]
+        for child_MObject in child_MObjects:
+            childFullPath_str=self.fullPath_query_str(child_MObject)
+            childFullPath_strs.append(childFullPath_str)
+        return childFullPath_strs
+
+    def _shapeFullPath_query_strs(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        shapeFullPath_strs=[]
+        for shape_MObject in shape_MObjects:
+            shapeFullPath_str=self.fullPath_query_str(shape_MObject)
+            shapeFullPath_strs.append(shapeFullPath_str)
+        return shapeFullPath_strs
+
+    def _shapeFullPath_query_str(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        shape_MObject=self.shape_query_MObject(node_MDagPath)
+        shapeFullPath_str=self.fullPath_query_str(shape_MObject)
+        return shapeFullPath_str
+
+    def _nodeTypeToMFnConverter_query_int(self,nodeType):
+        return self._nodeTypeToMFn_dict[nodeType]
+
+    #Setting Function
+    def setNode(self,variable):
+        self._node_MObject=self.selectOpenMaya_create_MObject(variable)
+        return self._node_MObject
+    def getNode(self,fullPath=False):
+        if fullPath:
+            node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+            object_str=self.fullPath_query_str(node_MDagPath)
+        else:
+            node_MFnDependencyNode=om2.MFnDependencyNode(self._node_MObject)
+            object_str=node_MFnDependencyNode.name()
+        return object_str
+    def getNodeType(self):
+        objectType_str=self.nodeType_query_str(self._node_MObject)
+        return objectType_str
+
+    def getShape(self,fullPath=False):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        shape_MObject=self.shape_query_MObject(node_MDagPath)
+        if fullPath:
+            shape_MDagPath=self.convertMObject_create_MDagPath(shape_MObject)
+            shape_str=fullPath_query_str(shape_MDagPath)
+        else:
+            shape_MFnDependencyNode=om2.MFnDependencyNode(shape_MObject)
+            shape_str=shape_MFnDependencyNode.name()
+        return shape_str
+    def getShapeType(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        shape_MObject=self.shape_query_MObject(node_MDagPath)
+        shapeType_str=self.nodeType_query_str(shape_MObject)
+        return shapeType_str
+    def getShapes(self,fullPath=False,firstOnly=False):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        if shape_MObjects == None:
+            return None
+        if firstOnly:
+            if fullPath:
+                shape_MDagPath=self.convertMObject_create_MDagPath(shape_MObjects[0])
+                shape_str=self.fullPath_query_str(shape_MDagPath)
+            else:
+                shape_MFnDependencyNode=om2.MFnDependencyNode(shape_MObjects[0])
+                shape_str=shape_MFnDependencyNode.name()
+            return shape_str
+        else:
+            shape_strs=[]
+            for shape_MObject in shape_MObjects:
+                if fullPath:
+                    shape_MDagPath=self.convertMObject_create_MDagPath(shape_MObject)
+                    shape_str=self.fullPath_query_str(shape_MDagPath)
+                    shape_strs.append(shape_str)
+                else:
+                    shape_MFnDependencyNode=om2.MFnDependencyNode(shape_MObject)
+                    shape_str=shape_MFnDependencyNode.name()
+                    shape_strs.append(shape_str)
+            return shape_strs
+    def getShapeTypes(self,firstOnly=False):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        if shape_MObjects == None:
+            return None
+        if firstOnly:
+            shapeType_str=self.nodeType_query_str(shape_MObjects[0])
+            return shapeType_str
+        else:
+            shapeType_strs=[]
+            for shape_MObject in shape_MObjects:
+                shapeType_str=self.nodeType_query_str(shape_MObject)
+                shapeType_strs.append(shapeType_str)
+            return shapeType_strs
+
+    def getParent(self,fullPath=False):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        parent_MObject=self.parent_query_MObject(node_MDagPath)
+        if fullPath:
+            parent_MDagPath=self.convertMObject_create_MDagPath(parent_MObject)
+            parent_str=self.fullPath_query_str(parent_MDagPath)
+        else:
+            parent_MFnDependencyNode=om2.MFnDependencyNode(parent_MObject)
+            parent_str=parent_MFnDependencyNode.name()
+        if parent_str == "world" or parent_str == "":
+            return None
+        else:
+            return parent_str
+
+    def getChilds(self,fullPath=False,firstOnly=False):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        child_MObjects=self.child_query_MObjects(node_MDagPath)
+        if child_MObjects == None:
+            return None
+        if firstOnly:
+            if fullPath:
+                child_MDagPath=self.convertMObject_create_MDagPath(child_MObjects[0])
+                child_str=self.fullPath_query_str(child_MDagPath)
+            else:
+                child_MFnDependencyNode=om2.MFnDependencyNode(child_MObjects[0])
+                child_str=child_MFnDependencyNode.name()
+            return child_str
+        else:
+            child_strs=[]
+            for child_MObject in child_MObjects:
+                if fullPath:
+                    child_MDagPath=self.convertMObject_create_MDagPath(child_MObject)
+                    child_str=self.fullPath_query_str(child_MDagPath)
+                    child_strs.append(child_str)
+                else:
+                    child_MFnDependencyNode=om2.MFnDependencyNode(child_MObject)
+                    child_str=child_MFnDependencyNode.name()
+                    child_strs.append(child_str)
+            return child_strs
+
+    def setConnectDicts(self,variables):
+        self._connect_dicts=variables
+        return self._connect_dicts
+    def addConnectDicts(self,variables):
+        for variable in variables:
+            self._connect_dicts.append(variable)
+        return self._connect_dicts
+    def getConnectDicts(self):
+        return self._connect_dicts
+
+    def setConnectionNodeTypeToFind(self,variable):
+        self._findConnectNodeType_str=variable
+        return self._findConnectNodeType_str
+    def getConnectionNodeTypeToFind(self,source=True,target=True):
+        MFn_int=self._nodeTypeToMFnConverter_query_int(self._findConnectNodeType_str)
+        connectNode_MObjects=self.findMFnConnect_query_MObjects(self._node_MObject,source,target,MFnID=MFn_int)
+        connectNode_strs=[]
+        if connectNode_MObjects == None:
+            return None
+        for connectNode_MObject in connectNode_MObjects:
+            connectNode_MFnDependencyNode=om2.MFnDependencyNode(connectNode_MObject)
+            connectNode_str=connectNode_MFnDependencyNode.name()
+            connectNode_strs.append(connectNode_str)
+        return connectNode_strs
+
+    #Public Function
+    def standAloneConnection(self):
+        for _connection in self._connections:
+            _connection.connectAttr()
+
+class SelfConnect(SelfNode):
+    def __init__(self,node):
+        super(SelfConnect,self).__init__(node)
+        self._connectNode_MObject=None
+        self._outputAttr_str=None
+        self._inputAttr_str=None
+
+    #Single Function
+    def nodeAttr_create_MPlug(self,node_MObject,attr):
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
+        return node_MPlug
+
+    #Summary Function
+    def __connectAttr(self):
+        node_MPlug=self.nodeAttr_create_MPlug(self._node_MObject,self._inputAttr_str)
+        connectNode_MPlug=self.nodeAttr_create_MPlug(self._connectNode_MObject,self._outputAttr_str)
+        om2.MDGModifier.connect(connectNode_MPlug,node_MPlug)
+
+    #Setting Function
+    def setConnectNode(self,variable):
+        self._connectNode_MObject=self.selectOpenMaya_create_MObject(variable)
+        return self._connectNode_MObject
+    def getConnectNode(self,fullPath=False):
+        if fullPath:
+            node_MDagPath=self.convertMObject_create_MDagPath(self._connectNode_MObject)
+            connectNode_str=self.fullPath_query_str(node_MDagPath)
+        else:
+            connectNode_MFnDependencyNode=om2.MFnDependencyNode(self._connectNode_MObject)
+            connectNode_str=connectNode_MFnDependencyNode.name()
+        return connectNode_str
+
+    def setOutputAttr(self,variable):
+        self._outputAttr_str=variable
+        return self._outputAttr_str
+    def getOutputAttr(self):
+        return self._outputAttr_str
+
+    def setInputAttr(self,variable):
+        self._inputAttr_str=variable
+        return self._inputAttr_str
+    def getInputAttr(self):
+        return self._inputAttr_str
+
+    #Public Function
+    def connectAttr(self):
+        self.__connectAttr()
+
+
 class TrsObject(object):
     def __init__(self,obj):
         self._transMFn_list=RULES_DICT["transMFn_list"]
