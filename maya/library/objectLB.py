@@ -251,6 +251,29 @@ class SelfNode(object):
             print(_selfConnect.getInputAttr())
             _selfConnect.connectAttr()
 
+class SelfDagNode(SelfNode):
+    def __init__(self,node):
+        super(SelfDagNode,self).__init__(node)
+
+class SelfConnectNode(SelfDagNode):
+    def __init__(self,node):
+        super(SelfConnectNode,self).__init__(node)
+
+class SelfMatrixNode(SelfDagNode):
+    def __init__(self,node):
+        super(SelfWeightJoint,self).__init__(node)
+
+class SelfAnimNode(SelfMatrixNode):
+    def __init__(self,node):
+        super(SelfAnimNode,self).__init__(node)
+
+class SelfWeightJoint(SelfMatrixNode):
+    def __init__(self,node):
+        super(SelfWeightJoint,self).__init__(node)
+
+class SelfLocationNode(SelfMatrixNode):
+    def __init__(self,node):
+        super(SelfLocationNode,self).__init__(node)
 
 class TrsObject(object):
     def __init__(self,obj):
