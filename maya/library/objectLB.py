@@ -13,11 +13,8 @@ class SelfNode(object):
     def __init__(self,node):
         self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
         self._node_MObject=self.selectOpenMaya_create_MObject(node)
-        self._inputAttr_str=None
-        self._sourceNode_MObject=None
-        self._outputAttr_str=None
-        self._selfConnects=[]
-        self._findConnectNodeType_str=""
+        self._attr_str=None
+        self._value=None
     
     #Single Function
     def selectOpenMaya_create_MObject(self,node):
@@ -29,27 +26,68 @@ class SelfNode(object):
         node_MObject=node_MSelectionList.getDependNode(0)
         return node_MObject
 
-    def convertMObject_create_MDagPath(self,MObject):
-        MDagPath=om2.MDagPath().getAPathTo(MObject)
-        return MDagPath
-
     def nodeType_query_str(self,MObject):
         MFnDependencyNode=om2.MFnDependencyNode(MObject)
         nodeType_str=MFnDependencyNode.typeName
         return nodeType_str
 
-    def nodeTypes_query_strs(self,MObjects):
-        if MObjects == None:
-            return None
-        nodeType_strs=[]
-        for MObject in MObjects:
-            MFnDependencyNode=om2.MFnDependencyNode(MObject)
-            nodeType_str=MFnDependencyNode.typeName
-            nodeType_strs.append(nodeType_str)
-        if nodeType_strs == []:
-            return None
+    def fullPath_query_str(self,MDagPath):
+        name_str=MDagPath.fullPathName()
+        return name_str
+    
+    def nodeAttr_create_MPlug(self,node_MObject,attr):
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
+        return node_MPlug
+
+    #Private Function
+    def _fullPathSwitch_query_str(self,MObject,fullPath=False):
+        if fullPath:
+            MDagPath=self.convertMObject_create_MDagPath(MObject)
+            name_str=self.fullPath_query_str(MDagPath)
         else:
-            return nodeType_strs
+            MFnDependencyNode=om2.MFnDependencyNode(MObject)
+            name_str=MFnDependencyNode.name()
+        return name_str
+
+    #Setting Function
+    def setNode(self,variable):
+        self._node_MObject=self.selectOpenMaya_create_MObject(variable)
+        return self._node_MObject
+    def getNode(self,fullPath=False):
+        object_str=self._fullPathSwitch_query_str(self._node_MObject,fullPath)
+        return object_str
+    def getNodeType(self):
+        objectType_str=self.nodeType_query_str(self._node_MObject)
+        return objectType_str
+
+    def setAttr(self,variable):
+        self._attr_str=variable
+        return self._attr_str
+    def getAttr(self):
+        return self._attr_str
+
+    def setValue(self,variable):
+        self._value=variable
+        return self._value
+    def getValue(self):
+        return self._value
+
+    #Public Function
+    def editAttr(self):
+        pass
+
+    def queryAttr(self):
+        pass
+
+class SelfDagNode(SelfNode):
+    def __init__(self,node):
+        super(SelfDagNode,self).__init__(node)
+    
+    #Single Function
+    def convertMObject_create_MDagPath(self,MObject):
+        MDagPath=om2.MDagPath().getAPathTo(MObject)
+        return MDagPath
 
     def shape_query_MObject(self,MDagPath):
         shape_MDagPath=MDagPath.extendToShape()
@@ -76,40 +114,20 @@ class SelfNode(object):
         else:
             return childs
 
-    def fullPath_query_str(self,MDagPath):
-        name_str=MDagPath.fullPathName()
-        return name_str
-
-    def findMFnConnect_query_MObjects(self,MObject,source=True,target=True,MFnID=0):
-        findConnectedTo_MObjects=[]
-        node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
-        connections_MPlugArray=node_MFnDependencyNode.getConnections()
-        for connection_MPlug in connections_MPlugArray:
-            targets_MPlugArray=connection_MPlug.connectedTo(source,target)
-            for target_MPlug in targets_MPlugArray:
-                target_MObject=target_MPlug.node()
-                if target_MObject.hasFn(MFnID):
-                    findConnectedTo_MObjects.append(target_MObject)
-        if findConnectedTo_MObjects == []:
+    def nodeTypes_query_strs(self,MObjects):
+        if MObjects == None:
+            return None
+        nodeType_strs=[]
+        for MObject in MObjects:
+            MFnDependencyNode=om2.MFnDependencyNode(MObject)
+            nodeType_str=MFnDependencyNode.typeName
+            nodeType_strs.append(nodeType_str)
+        if nodeType_strs == []:
             return None
         else:
-            return findConnectedTo_MObjects
-    
-    def nodeAttr_create_MPlug(self,node_MObject,attr):
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
-        return node_MPlug
+            return nodeType_strs
 
     #Private Function
-    def _fullPathSwitch_query_str(self,MObject,fullPath=False):
-        if fullPath:
-            MDagPath=self.convertMObject_create_MDagPath(MObject)
-            name_str=self.fullPath_query_str(MDagPath)
-        else:
-            MFnDependencyNode=om2.MFnDependencyNode(MObject)
-            name_str=MFnDependencyNode.name()
-        return name_str
-
     def _fullPathsSwitch_query_strs(self,MObjects,fullPath=False):
         name_strs=[]
         for MObject in MObjects:
@@ -123,20 +141,7 @@ class SelfNode(object):
                 name_strs.append(name_str)
         return name_strs
 
-    def _nodeTypeToMFnConverter_query_int(self,nodeType):
-        return self._nodeTypeToMFn_dict[nodeType]
-
     #Setting Function
-    def setNode(self,variable):
-        self._node_MObject=self.selectOpenMaya_create_MObject(variable)
-        return self._node_MObject
-    def getNode(self,fullPath=False):
-        object_str=self._fullPathSwitch_query_str(self._node_MObject,fullPath)
-        return object_str
-    def getNodeType(self):
-        objectType_str=self.nodeType_query_str(self._node_MObject)
-        return objectType_str
-
     def getShape(self,fullPath=False):
         node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
         shape_MObject=self.shape_query_MObject(node_MDagPath)
@@ -194,31 +199,36 @@ class SelfNode(object):
             child_strs=self._fullPathsSwitch_query_strs(child_MObjects,fullPath)
             return child_strs
 
-    def setSelfConnects(self,variables):
-        self._selfConnects=variables
-        return self._selfConnects
-    def addSelfConnects(self,variables):
-        for variable in variables:
-            self._selfConnects.append(variable)
-        return self._selfConnects
-    def getSelfConnects(self):
-        return self._selfConnects
+class SelfConnectNode(SelfDagNode):
+    def __init__(self,node):
+        super(SelfConnectNode,self).__init__(node)
+        self._inputAttr_str=None
+        self._sourceNode_MObject=None
+        self._outputAttr_str=None
+        self._findConnectNodeType_str=""
+        self._selfConnects=[]
 
-    def setConnectionNodeTypeToFind(self,variable):
-        self._findConnectNodeType_str=variable
-        return self._findConnectNodeType_str
-    def getConnectionNodeTypeToFind(self,source=True,target=True):
-        MFn_int=self._nodeTypeToMFnConverter_query_int(self._findConnectNodeType_str)
-        connectNode_MObjects=self.findMFnConnect_query_MObjects(self._node_MObject,source,target,MFnID=MFn_int)
-        connectNode_strs=[]
-        if connectNode_MObjects == None:
+    #Single Function
+    def findMFnConnect_query_MObjects(self,MObject,source=True,target=True,MFnID=0):
+        findConnectedTo_MObjects=[]
+        node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
+        connections_MPlugArray=node_MFnDependencyNode.getConnections()
+        for connection_MPlug in connections_MPlugArray:
+            targets_MPlugArray=connection_MPlug.connectedTo(source,target)
+            for target_MPlug in targets_MPlugArray:
+                target_MObject=target_MPlug.node()
+                if target_MObject.hasFn(MFnID):
+                    findConnectedTo_MObjects.append(target_MObject)
+        if findConnectedTo_MObjects == []:
             return None
-        for connectNode_MObject in connectNode_MObjects:
-            connectNode_MFnDependencyNode=om2.MFnDependencyNode(connectNode_MObject)
-            connectNode_str=connectNode_MFnDependencyNode.name()
-            connectNode_strs.append(connectNode_str)
-        return connectNode_strs
+        else:
+            return findConnectedTo_MObjects
 
+    #Private Function
+    def _nodeTypeToMFnConverter_query_int(self,nodeType):
+        return self._nodeTypeToMFn_dict[nodeType]
+    
+    #Setting Function
     def setInputAttr(self,variable):
         self._inputAttr_str=variable
         return self._inputAttr_str
@@ -238,26 +248,43 @@ class SelfNode(object):
     def getOutputAttr(self):
         return self._outputAttr_str
 
+    def setConnectionNodeTypeToFind(self,variable):
+        self._findConnectNodeType_str=variable
+        return self._findConnectNodeType_str
+    def getConnectionNodeTypeToFind(self,source=True,target=True):
+        MFn_int=self._nodeTypeToMFnConverter_query_int(self._findConnectNodeType_str)
+        connectNode_MObjects=self.findMFnConnect_query_MObjects(self._node_MObject,source,target,MFnID=MFn_int)
+        connectNode_strs=[]
+        if connectNode_MObjects == None:
+            return None
+        for connectNode_MObject in connectNode_MObjects:
+            connectNode_MFnDependencyNode=om2.MFnDependencyNode(connectNode_MObject)
+            connectNode_str=connectNode_MFnDependencyNode.name()
+            connectNode_strs.append(connectNode_str)
+        return connectNode_strs
+
+    def setSelfConnects(self,variables):
+        self._selfConnects=variables
+        return self._selfConnects
+    def addSelfConnects(self,variables):
+        for variable in variables:
+            self._selfConnects.append(variable)
+        return self._selfConnects
+    def getSelfConnects(self):
+        return self._selfConnects
+
     #Public Function
+    def standAloneConnection(self):
+        for _selfConnect in self._selfConnects:
+            print(_selfConnect.getInputAttr())
+            _selfConnect.connectAttr()
+    
     def connectAttr(self):
         node_MPlug=self.nodeAttr_create_MPlug(self._node_MObject,self._inputAttr_str)
         sourceNode_MPlug=self.nodeAttr_create_MPlug(self._sourceNode_MObject,self._outputAttr_str)
         MDGModifier=om2.MDGModifier()
         MDGModifier.connect(sourceNode_MPlug,node_MPlug)
         MDGModifier.doIt()
-
-    def standAloneConnection(self):
-        for _selfConnect in self._selfConnects:
-            print(_selfConnect.getInputAttr())
-            _selfConnect.connectAttr()
-
-class SelfDagNode(SelfNode):
-    def __init__(self,node):
-        super(SelfDagNode,self).__init__(node)
-
-class SelfConnectNode(SelfDagNode):
-    def __init__(self,node):
-        super(SelfConnectNode,self).__init__(node)
 
 class SelfMatrixNode(SelfDagNode):
     def __init__(self,node):
