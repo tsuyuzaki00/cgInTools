@@ -11,7 +11,7 @@ RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
 class Color(sbLB.BaseObject):
     def __init__(self):
         super(Color,self).__init__()
-        self._colorIndex_list=RULES_DICT["rgbToColorIndex_list"]
+        self._colorIndex_lists=RULES_DICT["rgbToColorIndex_lists"]
 
     #Single Function
     def getDrawingOverrides_query_list(self,obj):
@@ -68,4 +68,4 @@ class Color(sbLB.BaseObject):
     
     def wireframeColor(self):
         self.__loading()
-        self.wireframeColor_edit_func(self.wireObjs,self._value,ruleData=self._colorIndex_list)
+        self.wireframeColor_edit_func(self.wireObjs,self._value,ruleData=self._colorIndex_lists)

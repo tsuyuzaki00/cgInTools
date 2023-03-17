@@ -108,7 +108,7 @@
         "svg":62,
         "swft":63
     },
-    "rgbToColorIndex_list":[
+    "rgbToColorIndex_lists":[
         [0.184474080801, 0.184474080801, 0.184474080801],
         [0.0, 0.0, 0.0],
         [0.0481716692448, 0.0481716692448, 0.0481716692448],
@@ -141,5 +141,16 @@
         [0.0284263640642, 0.135635942221, 0.351537019014],
         [0.158960610628, 0.0284263640642, 0.351537019014],
         [0.351537019014, 0.0284263640642, 0.141265928745]
+    ],
+    "arnoldVisibility_list":[
+        "visibility",
+        "primaryVisibility",
+        "castsShadows",
+        "aiVisibleInDiffuseReflection",
+        "aiVisibleInSpecularReflection",
+        "aiVisibleInDiffuseTransmission",
+        "aiVisibleInSpecularTransmission",
+        "aiVisibleInVolume",
+        "aiSelfShadows"
     ]
 }
