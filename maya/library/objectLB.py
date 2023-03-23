@@ -5,7 +5,7 @@ import maya.api.OpenMayaAnim as oma2
 import sys
 
 import cgInTools as cit
-from . import jsonLB as jLB
+from ...library import jsonLB as jLB
 cit.reloads([jLB])
 
 RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"openLibrary")

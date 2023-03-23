@@ -1,13 +1,24 @@
 # -*- coding: iso-8859-15 -*-
-import os,sys
+import os,sys,inspect
 
-def reloads(ps):
+def reloads(ps=[]):
+    if ps == [] or ps == None:
+        return None
     for p in ps:
         if sys.version.startswith("2"):
             reload(p)
         elif sys.version.startswith("3"):
             import importlib
             importlib.reload(p)
+
+def printFunction(function):
+    signature=inspect.signature(function)
+    args=[]
+    for name,value in signature.parameters.items():
+        valueType=str(type(value.default))
+        args.append(f"{name}={valueType}")
+    output=f"{function.__name__}({','.join(args)})"
+    print(output)
 
 root_dir=os.path.dirname(__file__) #.../cgInTools/
 ui_dir=os.path.join(root_dir,"ui")
