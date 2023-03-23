@@ -1,5 +1,7 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
+import maya.api.OpenMaya as om2
+
 import cgInTools as cit
 #from cgInTools.maya.library import _testPath as TP
 #from cgInTools.maya.manager import equipmentSettingsMN as MN
@@ -15,43 +17,11 @@ def main():
     #EX.main()
     #TP.main()
 
-    selfConnect_dicts=[
-        {
-            "inputAttr":"translate",
-            "sourceNode":"pCube2",
-            "outputAttr":"translate",
-        },
-        {
-            "inputAttr":"rotate",
-            "sourceNode":"pCube2",
-            "outputAttr":"rotate",
-        },
-        {
-            "inputAttr":"scale",
-            "sourceNode":"pCube2",
-            "outputAttr":"scale",
-        }
-    ]
-    
-    selfNode=oLB.SelfNode("null1")
-    for selfConnect_dict in selfConnect_dicts:
-        selfConnect=oLB.SelfNode("pCube1")
-        selfConnect.setInputAttr(selfConnect_dict["inputAttr"])
-        selfConnect.setSourceNode(selfConnect_dict["sourceNode"])
-        selfConnect.setOutputAttr(selfConnect_dict["outputAttr"])
-        selfNode.addSelfConnects([selfConnect])
-    selfNode.standAloneConnection()
-    for selfConnect in selfNode.getSelfConnects():
-        print(selfConnect.getInputAttr())
-        print(selfConnect.getSourceNode())
-        print(selfConnect.getOutputAttr())
-
-    """
     obj=cmds.ls(sl=True)[0]
-    pCube=oLB.SelfNode("pCube1")
+    pCube=oLB.SelfConnectNode("pCube1")
     pCube.setNode(obj)
-    pCube.setConnectionNodeTypeToFind("skinCluster")
-    print(pCube.getConnectionNodeTypeToFind())
-    """
+    pCube.setAttr("rotate")
+    pCube.connectAttr("pCube2","translate")
+    #print()
 
 main()

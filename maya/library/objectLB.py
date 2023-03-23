@@ -2,6 +2,7 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 import maya.api.OpenMayaAnim as oma2
+import sys
 
 import cgInTools as cit
 from . import jsonLB as jLB
@@ -18,9 +19,11 @@ class SelfNode(object):
     
     #Single Function
     def selectOpenMaya_create_MObject(self,node):
-        if not isinstance(node,str):
-            om2.MGlobal.displayError("Please insert one string in value")
+        if node == None:
             return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
         node_MSelectionList=om2.MSelectionList()
         node_MSelectionList.add(node)
         node_MObject=node_MSelectionList.getDependNode(0)
@@ -39,6 +42,37 @@ class SelfNode(object):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
         return node_MPlug
+
+    def editAttr_edit_func(self,MPlug,value):
+        if isinstance(value,int):
+            MPlug.setInt(value)
+        elif isinstance(value,float):
+            MPlug.setFloat(value)
+        elif isinstance(value,str):
+            MPlug.setString(value)
+        elif isinstance(value,bool):
+            MPlug.setBool(value)
+        else:
+            pass
+
+    def queryAttr_query_value(self,MPlug,type="double"):
+        if type == "double" or type == "Double":
+            value=MPlug.asDouble()
+            return value
+        elif type == "int" or type == "Int":
+            value=MPlug.asInt()
+            return value
+        elif type == "float" or type == "Float":
+            value=MPlug.asFloat()
+            return value
+        elif type == "str" or type == "Str" or type == "string" or type == "String":
+            value=MPlug.asString()
+            return value
+        elif type == "bool" or type == "Bool" or type == "boolean" or type == "Boolean":
+            value=MPlug.asBool()
+            return value
+        else:
+            pass
 
     #Private Function
     def _fullPathSwitch_query_str(self,MObject,fullPath=False):
@@ -74,11 +108,19 @@ class SelfNode(object):
         return self._value
 
     #Public Function
-    def editAttr(self):
-        pass
+    def editAttr(self,attr_str=None,value=None):
+        attr_str=attr_str or self._attr_str
+        value=value or self._value
+        if not attr_str == None or not value == None:
+            MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
+            self.editAttr_edit_func(MPlug,value)
 
-    def queryAttr(self):
-        pass
+    def queryAttr(self,attr_str=None,variableType_str="double"):
+        attr_str=attr_str or self._attr_str
+        if not attr_str == None:
+            MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
+            value=self.queryAttr_query_value(MPlug,variableType_str)
+            return value
 
 class SelfDagNode(SelfNode):
     def __init__(self,node):
@@ -199,14 +241,31 @@ class SelfDagNode(SelfNode):
             child_strs=self._fullPathsSwitch_query_strs(child_MObjects,fullPath)
             return child_strs
 
+    #Public Function
+    def replaceByParent(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        parent_MObject=self.parent_query_MObject(node_MDagPath)
+        self._node_MObject=parent_MObject
+        return self._node_MObject
+
+    def replaceByChild(self,address_int=0):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        child_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=False)
+        self._node_MObject=child_MObjects[address_int]
+        return self._node_MObject
+        
+    def replaceByShape(self,address_int=0):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        self._node_MObject=shape_MObjects[address_int]
+        return self._node_MObject
+
 class SelfConnectNode(SelfDagNode):
     def __init__(self,node):
         super(SelfConnectNode,self).__init__(node)
-        self._inputAttr_str=None
-        self._sourceNode_MObject=None
-        self._outputAttr_str=None
+        self._operationNode_MObject=None
+        self._operationAttr_str=None
         self._findConnectNodeType_str=""
-        self._selfConnects=[]
 
     #Single Function
     def findMFnConnect_query_MObjects(self,MObject,source=True,target=True,MFnID=0):
@@ -229,24 +288,18 @@ class SelfConnectNode(SelfDagNode):
         return self._nodeTypeToMFn_dict[nodeType]
     
     #Setting Function
-    def setInputAttr(self,variable):
-        self._inputAttr_str=variable
-        return self._inputAttr_str
-    def getInputAttr(self):
-        return self._inputAttr_str
+    def setOperationNode(self,variable):
+        self._operationNode_MObject=self.selectOpenMaya_create_MObject(variable)
+        return self._operationNode_MObject
+    def getOperationNode(self,fullPath=False):
+        operationNode_str=self._fullPathSwitch_query_str(self._operationNode_MObject,fullPath)
+        return operationNode_str
 
-    def setSourceNode(self,variable):
-        self._sourceNode_MObject=self.selectOpenMaya_create_MObject(variable)
-        return self._sourceNode_MObject
-    def getSourceNode(self,fullPath=False):
-        sourceNode_str=self._fullPathSwitch_query_str(self._sourceNode_MObject,fullPath)
-        return sourceNode_str
-
-    def setOutputAttr(self,variable):
-        self._outputAttr_str=variable
-        return self._outputAttr_str
-    def getOutputAttr(self):
-        return self._outputAttr_str
+    def setOperationAttr(self,variable):
+        self._operationAttr_str=variable
+        return self._operationAttr_str
+    def getOperationAttr(self):
+        return self._operationAttr_str
 
     def setConnectionNodeTypeToFind(self,variable):
         self._findConnectNodeType_str=variable
@@ -263,25 +316,15 @@ class SelfConnectNode(SelfDagNode):
             connectNode_strs.append(connectNode_str)
         return connectNode_strs
 
-    def setSelfConnects(self,variables):
-        self._selfConnects=variables
-        return self._selfConnects
-    def addSelfConnects(self,variables):
-        for variable in variables:
-            self._selfConnects.append(variable)
-        return self._selfConnects
-    def getSelfConnects(self):
-        return self._selfConnects
-
     #Public Function
-    def standAloneConnection(self):
-        for _selfConnect in self._selfConnects:
-            print(_selfConnect.getInputAttr())
-            _selfConnect.connectAttr()
-    
-    def connectAttr(self):
-        node_MPlug=self.nodeAttr_create_MPlug(self._node_MObject,self._inputAttr_str)
-        sourceNode_MPlug=self.nodeAttr_create_MPlug(self._sourceNode_MObject,self._outputAttr_str)
+    def connectAttr(self,operationNode_str=None,operationAttr_str=None,attr_str=None):        
+        attr_str=attr_str or self._attr_str
+        operationNode_MObject=self.selectOpenMaya_create_MObject(operationNode_str) or self._operationNode_MObject
+        operationAttr_str=operationAttr_str or self._operationAttr_str
+
+        node_MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
+        sourceNode_MPlug=self.nodeAttr_create_MPlug(operationNode_MObject,operationAttr_str)
+        
         MDGModifier=om2.MDGModifier()
         MDGModifier.connect(sourceNode_MPlug,node_MPlug)
         MDGModifier.doIt()
@@ -290,6 +333,17 @@ class SelfMatrixNode(SelfDagNode):
     def __init__(self,node):
         super(SelfWeightJoint,self).__init__(node)
 
+class SelfLocationNode(SelfMatrixNode):
+    def __init__(self,node):
+        super(SelfLocationNode,self).__init__(node)
+
+    #Public Function
+    def addParentNull(self):
+        pass
+
+    def addOffsetNull(self):
+        pass
+
 class SelfAnimNode(SelfMatrixNode):
     def __init__(self,node):
         super(SelfAnimNode,self).__init__(node)
@@ -297,10 +351,6 @@ class SelfAnimNode(SelfMatrixNode):
 class SelfWeightJoint(SelfMatrixNode):
     def __init__(self,node):
         super(SelfWeightJoint,self).__init__(node)
-
-class SelfLocationNode(SelfMatrixNode):
-    def __init__(self,node):
-        super(SelfLocationNode,self).__init__(node)
 
 class TrsObject(object):
     def __init__(self,obj):
