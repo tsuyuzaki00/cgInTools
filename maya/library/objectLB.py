@@ -331,7 +331,7 @@ class SelfConnectNode(SelfDagNode):
 
 class SelfMatrixNode(SelfDagNode):
     def __init__(self,node):
-        super(SelfWeightJoint,self).__init__(node)
+        super(SelfMatrixNode,self).__init__(node)
 
 class SelfLocationNode(SelfMatrixNode):
     def __init__(self,node):
@@ -351,6 +351,27 @@ class SelfAnimNode(SelfMatrixNode):
 class SelfWeightJoint(SelfMatrixNode):
     def __init__(self,node):
         super(SelfWeightJoint,self).__init__(node)
+
+class SelfPolygon(SelfMatrixNode):
+    def __init__(self,node):
+        super(SelfPolygon,self).__init__(node)
+
+    def getVertexIDFromPos_query_int(self,MDagPath,pos=(0,0,0,1)):
+        mesh_MFnMesh=om2.MFnMesh(MDagPath)
+        point=om2.MPoint(pos)
+        minDistance=float('inf')
+
+        for i in range(mesh_MFnMesh.numVertices):
+            distance=(mesh_MFnMesh.getPoint(i)-point).length()
+            if distance < minDistance:
+                vertexID=i
+                minDistance=distance
+        return vertexID
+
+class SelfSurface(SelfMatrixNode):
+    def __init__(self,node):
+        super(SelfSurface,self).__init__(node)
+
 
 class TrsObject(object):
     def __init__(self,obj):
