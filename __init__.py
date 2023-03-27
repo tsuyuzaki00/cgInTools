@@ -11,15 +11,6 @@ def reloads(ps=[]):
             import importlib
             importlib.reload(p)
 
-def printFunction(function):
-    signature=inspect.signature(function)
-    args=[]
-    for name,value in signature.parameters.items():
-        valueType=str(type(value.default))
-        args.append(f"{name}={valueType}")
-    output=f"{function.__name__}({','.join(args)})"
-    print(output)
-
 root_dir=os.path.dirname(__file__) #.../cgInTools/
 ui_dir=os.path.join(root_dir,"ui")
 menu_dir=os.path.join(root_dir,"_menu")

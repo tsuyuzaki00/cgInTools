@@ -20,8 +20,17 @@ def main():
     obj=cmds.ls(sl=True)[0]
     pCube=oLB.SelfConnectNode("pCube1")
     pCube.setNode(obj)
-    pCube.setAttr("rotate")
-    pCube.connectAttr("pCube2","translate")
-    #print()
+    pCube.replaceByShape()
+    pCube.setAttr("inMesh")
+    print(pCube.getConnectionNodeAttrToFind())
 
 main()
+
+def printFunction(function):
+    signature=inspect.signature(function)
+    args=[]
+    for name,value in signature.parameters.items():
+        valueType=str(type(value.default))
+        args.append(f"{name}={valueType}")
+    output=f"{function.__name__}({','.join(args)})"
+    print(output)

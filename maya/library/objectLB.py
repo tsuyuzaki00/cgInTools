@@ -38,6 +38,10 @@ class SelfNode(object):
         name_str=MDagPath.fullPathName()
         return name_str
     
+    def convertMObject_create_MDagPath(self,MObject):
+        MDagPath=om2.MDagPath().getAPathTo(MObject)
+        return MDagPath
+
     def nodeAttr_create_MPlug(self,node_MObject,attr):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
@@ -74,7 +78,7 @@ class SelfNode(object):
         else:
             pass
 
-    #Private Function
+    #Multi Function
     def _fullPathSwitch_query_str(self,MObject,fullPath=False):
         if fullPath:
             MDagPath=self.convertMObject_create_MDagPath(MObject)
@@ -91,6 +95,7 @@ class SelfNode(object):
     def getNode(self,fullPath=False):
         object_str=self._fullPathSwitch_query_str(self._node_MObject,fullPath)
         return object_str
+    
     def getNodeType(self):
         objectType_str=self.nodeType_query_str(self._node_MObject)
         return objectType_str
@@ -127,10 +132,6 @@ class SelfDagNode(SelfNode):
         super(SelfDagNode,self).__init__(node)
     
     #Single Function
-    def convertMObject_create_MDagPath(self,MObject):
-        MDagPath=om2.MDagPath().getAPathTo(MObject)
-        return MDagPath
-
     def shape_query_MObject(self,MDagPath):
         shape_MDagPath=MDagPath.extendToShape()
         shape_MObject=shape_MDagPath.node()
@@ -268,7 +269,33 @@ class SelfConnectNode(SelfDagNode):
         self._findConnectNodeType_str=""
 
     #Single Function
-    def findMFnConnect_query_MObjects(self,MObject,source=True,target=True,MFnID=0):
+    def connectionNode_query_MObjects(self,MObject,source=True,target=True):
+        findConnectedTo_MObjects=[]
+        node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
+        connections_MPlugArray=node_MFnDependencyNode.getConnections()
+        for connection_MPlug in connections_MPlugArray:
+            targets_MPlugArray=connection_MPlug.connectedTo(source,target)
+            for target_MPlug in targets_MPlugArray:
+                target_MObject=target_MPlug.node()
+                findConnectedTo_MObjects.append(target_MObject)
+        if findConnectedTo_MObjects == []:
+            return None
+        else:
+            return findConnectedTo_MObjects
+
+    def findAttrConect_query_MObjects(self,MObject,attr,source=True,target=True):
+        findConnectedTo_MObjects=[]
+        find_MPlug=self.nodeAttr_create_MPlug(MObject,attr)
+        targets_MPlugArray=find_MPlug.connectedTo(source,target)
+        for target_MPlug in targets_MPlugArray:
+                target_MObject=target_MPlug.node()
+                findConnectedTo_MObjects.append(target_MObject)
+        if findConnectedTo_MObjects == []:
+            return None
+        else:
+            return findConnectedTo_MObjects
+
+    def findMFnConnect_query_MObjects(self,MObject,MFnID=0,source=True,target=True):
         findConnectedTo_MObjects=[]
         node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
         connections_MPlugArray=node_MFnDependencyNode.getConnections()
@@ -282,6 +309,16 @@ class SelfConnectNode(SelfDagNode):
             return None
         else:
             return findConnectedTo_MObjects
+
+    def replaceMObject_query_strs(self,MObjects):
+        connectNode_strs=[]
+        if MObjects == None:
+            return None
+        for connectNode_MObject in MObjects:
+            connectNode_MFnDependencyNode=om2.MFnDependencyNode(connectNode_MObject)
+            connectNode_str=connectNode_MFnDependencyNode.name()
+            connectNode_strs.append(connectNode_str)
+        return connectNode_strs
 
     #Private Function
     def _nodeTypeToMFnConverter_query_int(self,nodeType):
@@ -301,20 +338,25 @@ class SelfConnectNode(SelfDagNode):
     def getOperationAttr(self):
         return self._operationAttr_str
 
+    def getConnectionNodes(self,source=True,target=True):
+        connectNode_MObjects=self.connectionNode_query_MObjects(self._node_MObject,source,target)
+        connectNodes=self.replaceMObject_query_strs(connectNode_MObjects)
+        return connectNodes
+
+    def getConnectionNodeAttrToFind(self,attr_str=None,source=True,target=True):
+        attr_str=attr_str or self._attr_str
+        connectNode_MObjects=self.findAttrConect_query_MObjects(self._node_MObject,attr_str,source,target)
+        connectNodes=self.replaceMObject_query_strs(connectNode_MObjects)
+        return connectNodes
+
     def setConnectionNodeTypeToFind(self,variable):
         self._findConnectNodeType_str=variable
         return self._findConnectNodeType_str
     def getConnectionNodeTypeToFind(self,source=True,target=True):
         MFn_int=self._nodeTypeToMFnConverter_query_int(self._findConnectNodeType_str)
-        connectNode_MObjects=self.findMFnConnect_query_MObjects(self._node_MObject,source,target,MFnID=MFn_int)
-        connectNode_strs=[]
-        if connectNode_MObjects == None:
-            return None
-        for connectNode_MObject in connectNode_MObjects:
-            connectNode_MFnDependencyNode=om2.MFnDependencyNode(connectNode_MObject)
-            connectNode_str=connectNode_MFnDependencyNode.name()
-            connectNode_strs.append(connectNode_str)
-        return connectNode_strs
+        connectNode_MObjects=self.findMFnConnect_query_MObjects(self._node_MObject,MFn_int,source,target)
+        connectNodes=self.replaceMObject_query_strs(connectNode_MObjects)
+        return connectNodes
 
     #Public Function
     def connectAttr(self,operationNode_str=None,operationAttr_str=None,attr_str=None):        
@@ -371,6 +413,10 @@ class SelfPolygon(SelfMatrixNode):
 class SelfSurface(SelfMatrixNode):
     def __init__(self,node):
         super(SelfSurface,self).__init__(node)
+
+class SelfCreateNode(object):
+    def __init__(self,node):
+        pass
 
 
 class TrsObject(object):

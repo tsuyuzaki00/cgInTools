@@ -10,6 +10,8 @@
 
 ### Operating Class
 
+[objectLB](/maya/library/_document/objectLB.md)
+
 [attributeLB](/maya/library/_document/attributeLB.md)
 
 [blendshapeLB](/maya/library/_document/blendshapeLB.md)
