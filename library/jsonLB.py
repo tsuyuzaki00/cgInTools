@@ -1,5 +1,5 @@
 # -*- coding: iso-8859-15 -*-
-import json,os,sys
+import json,os
 
 import cgInTools as cit
 cit.reloads([])
@@ -38,8 +38,7 @@ class Json(object):
             imPath=self.pathSetting_create_str(path,file,extension+"Pack")
             self.readJson_quary_dict(imPath)
         except:
-            print('setFile is No packFiles.',file=sys.stderr)
-            sys.exit()
+            print('setFile is No packFiles.')
 
     def _readPack_quary_list(self,path,file,extension):
         imPackPath=self.pathSetting_create_str(path,file,extension+"Pack")
