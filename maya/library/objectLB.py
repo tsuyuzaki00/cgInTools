@@ -120,11 +120,11 @@ class SelfNode(object):
             MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
             self.editAttr_edit_func(MPlug,value)
 
-    def queryAttr(self,attr_str=None,variableType_str="double"):
+    def queryAttr(self,attr_str=None,valueType_str="double"):
         attr_str=attr_str or self._attr_str
         if not attr_str == None:
             MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
-            value=self.queryAttr_query_value(MPlug,variableType_str)
+            value=self.queryAttr_query_value(MPlug,valueType_str)
             return value
 
 class SelfDagNode(SelfNode):
@@ -171,7 +171,7 @@ class SelfDagNode(SelfNode):
             return nodeType_strs
 
     #Private Function
-    def _fullPathsSwitch_query_strs(self,MObjects,fullPath=False):
+    def __fullPathsSwitch_query_strs(self,MObjects,fullPath=False):
         name_strs=[]
         for MObject in MObjects:
             if fullPath:
@@ -204,7 +204,7 @@ class SelfDagNode(SelfNode):
             shape_str=self._fullPathSwitch_query_str(shape_MObjects[0],fullPath)
             return shape_str
         else:
-            shape_strs=self._fullPathsSwitch_query_strs(shape_MObjects,fullPath)
+            shape_strs=self.__fullPathsSwitch_query_strs(shape_MObjects,fullPath)
             return shape_strs
     def getShapeTypes(self,firstOnly=False):
         node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
@@ -239,7 +239,7 @@ class SelfDagNode(SelfNode):
             child_str=self._fullPathSwitch_query_str(child_MObjects[0],fullPath)
             return child_str
         else:
-            child_strs=self._fullPathsSwitch_query_strs(child_MObjects,fullPath)
+            child_strs=self.__fullPathsSwitch_query_strs(child_MObjects,fullPath)
             return child_strs
 
     #Public Function
@@ -321,7 +321,7 @@ class SelfConnectNode(SelfDagNode):
         return connectNode_strs
 
     #Private Function
-    def _nodeTypeToMFnConverter_query_int(self,nodeType):
+    def __nodeTypeToMFnConverter_query_int(self,nodeType):
         return self._nodeTypeToMFn_dict[nodeType]
     
     #Setting Function
@@ -353,7 +353,7 @@ class SelfConnectNode(SelfDagNode):
         self._findConnectNodeType_str=variable
         return self._findConnectNodeType_str
     def getConnectionNodeTypeToFind(self,source=True,target=True):
-        MFn_int=self._nodeTypeToMFnConverter_query_int(self._findConnectNodeType_str)
+        MFn_int=self.__nodeTypeToMFnConverter_query_int(self._findConnectNodeType_str)
         connectNode_MObjects=self.findMFnConnect_query_MObjects(self._node_MObject,MFn_int,source,target)
         connectNodes=self.replaceMObject_query_strs(connectNode_MObjects)
         return connectNodes
@@ -374,12 +374,122 @@ class SelfConnectNode(SelfDagNode):
 class SelfMatrixNode(SelfDagNode):
     def __init__(self,node):
         super(SelfMatrixNode,self).__init__(node)
+        self._MSpace=1
+        self._MMatrix=None
+
+    #Single Function
+    def vector3_check_vector3(self,variable):
+        if isinstance(variable,tuple) and len(variable) == 3 or isinstance(variable,list) and len(variable) == 3:
+            return variable
+        else:
+            return None
+
+    #Setting Function
+    def setMSpace(self,variable):
+        self._MSapce=variable
+        return self._MSpace
+    def getMSpace(self):
+        return self._MSpace
+
+    def setMMatrix(self,variable):
+        self._MMatrix=om2.MMatrix(variable)
+        return self._MMatrix
+    def getMMatrix(self):
+        return self._MMatrix
+
+    def currentNormalMMatrix(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        normal_MMatrix=node_MFnDagNode.transformationMatrix()
+        return normal_MMatrix
+    def currentWorldMMatrix(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        world_MMatrix=node_MDagPath.inclusiveMatrix()
+        return world_MMatrix
+    def currentParentMMatrix(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        parent_MMatrix=node_MDagPath.exclusiveMatrix()
+        return parent_MMatrix
+    def currentInverseNormalMMatrix(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        normal_MMatrix=node_MFnDagNode.transformationMatrix()
+        normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
+        inverseNormal_MMatrix=normal_MTransformationMatrix.asMatrixInverse()
+        return inverseNormal_MMatrix
+    def currentInverseWorldMMatrix(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        world_MMatrix=node_MDagPath.inclusiveMatrix()
+        world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
+        inverseWorld_MMatrix=world_MTransformationMatrix.asMatrixInverse()
+        return inverseWorld_MMatrix
+    def currentInverseParentMMatrix(self):
+        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+        parent_MMatrix=node_MDagPath.exclusiveMatrix()
+        parent_MTransformationMatrix=om2.MTransformationMatrix(parent_MMatrix)
+        inverseParent_MMatrix=parent_MTransformationMatrix.asMatrixInverse()
+        return inverseParent_MMatrix
+
+    def setTranslateMMatrix(self,variable):
+        MVector=om2.MVector(variable)
+        om2.MTransformationMatrix()
+        return self._MMatrix
+    def addTranslateMMatrix(self,variable):
+        MVector=om2.MVector(variable)
+        om2.MTransformationMatrix()
+        return self._MMatrix
+    def getTranslate(self):
+        pass
+
+    def setRotateMMatrix(self,variable):
+        self._MMatrix=om2.MMatrix(variable)
+        return self._MMatrix
+    def addRotateMMatrix(self):
+        return self._MMatrix
+    def getRotate(self):
+        pass
+    
+    def setQuaternionMMatrix(self,variable):
+        self._MMatrix=om2.MMatrix(variable)
+        return self._MMatrix
+    def addQuaternionMMatrix(self):
+        return self._MMatrix
+    def getQuaternion(self):
+        pass
+
+    def setScaleMMatrix(self,variable):
+        self._MMatrix=om2.MMatrix(variable)
+        return self._MMatrix
+    def addScaleMMatrix(self):
+        return self._MMatrix
+    def getScale(self):
+        pass
+        
 
 class SelfLocationNode(SelfMatrixNode):
     def __init__(self,node):
         super(SelfLocationNode,self).__init__(node)
 
+    #Setting Function
+    
+
     #Public Function
+    def translate(self,vector3=None):
+        translate_vector3=self.vector3_check_vector3(vector3)
+        node_MFnTransform=om2.MFnTransform(self._node_MObject)
+        if translate_vector3 == None:
+            MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+        else:
+            translate_MVector=om2.MVector(translate_vector3)
+        node_MFnTransform.translateBy(translate_MVector,self._MSpace)
+
+    def rotate(self,vector3=None):
+        pass
+
+    def scale(self,vector3=None):
+        pass
+
     def addParentNull(self):
         pass
 

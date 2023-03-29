@@ -4,6 +4,10 @@
 
 ## 各フォルダーの定義
 
+[definition](/document/definition.md)
+
+用語の定義をまとめているファイル
+
 [_menu](/_menu/README.md)
 
 上部メニューに表示させるフォルダー

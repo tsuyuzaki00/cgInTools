@@ -18,11 +18,11 @@ def main():
     #TP.main()
 
     obj=cmds.ls(sl=True)[0]
-    pCube=oLB.SelfConnectNode("pCube1")
+    pCube=oLB.SelfLocationNode("pCube1")
     pCube.setNode(obj)
-    pCube.replaceByShape()
-    pCube.setAttr("inMesh")
-    print(pCube.getConnectionNodeAttrToFind())
+    pCube.setMSpace(0)
+    pCube.translate((0,1,0))
+    
 
 main()
 
