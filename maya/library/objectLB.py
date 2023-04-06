@@ -13,12 +13,12 @@ RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"openLibrary")
 class SelfNode(object):
     def __init__(self,node):
         self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
-        self._node_MObject=self.selectOpenMaya_create_MObject(node)
+        self._node_MObject=self.selectNode_create_MObject(node)
         self._attr_str=None
         self._value=None
     
     #Single Function
-    def selectOpenMaya_create_MObject(self,node):
+    def selectNode_create_MObject(self,node):
         if node == None:
             return None
         elif not isinstance(node,str):
@@ -90,7 +90,7 @@ class SelfNode(object):
 
     #Setting Function
     def setNode(self,variable):
-        self._node_MObject=self.selectOpenMaya_create_MObject(variable)
+        self._node_MObject=self.selectNode_create_MObject(variable)
         return self._node_MObject
     def getNode(self,fullPath=False):
         object_str=self._fullPathSwitch_query_str(self._node_MObject,fullPath)
@@ -130,6 +130,7 @@ class SelfNode(object):
 class SelfDagNode(SelfNode):
     def __init__(self,node):
         super(SelfDagNode,self).__init__(node)
+        self._parent=None
     
     #Single Function
     def shape_query_MObject(self,MDagPath):
@@ -242,7 +243,21 @@ class SelfDagNode(SelfNode):
             child_strs=self.__fullPathsSwitch_query_strs(child_MObjects,fullPath)
             return child_strs
 
+    #Setting Function
+    def setParent(self,variable):
+        self._parent=self.selectNode_create_MObject(variable)
+        return self._parent
+    def getParent(self,fullPath=False):
+        object_str=self._fullPathSwitch_query_str(self._parent,fullPath)
+        return object_str
+
     #Public Function
+    def parent(self,parent=None):
+        parent=self.selectNode_create_MObject(parent) or self._parent
+        parent_MDagModifier=om2.MDagModifier()
+        parent_MDagModifier.reparentNode(self._node_MObject,parent)
+        parent_MDagModifier.doIt()
+
     def replaceByParent(self):
         node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
         parent_MObject=self.parent_query_MObject(node_MDagPath)
@@ -326,7 +341,7 @@ class SelfConnectNode(SelfDagNode):
     
     #Setting Function
     def setOperationNode(self,variable):
-        self._operationNode_MObject=self.selectOpenMaya_create_MObject(variable)
+        self._operationNode_MObject=self.selectNode_create_MObject(variable)
         return self._operationNode_MObject
     def getOperationNode(self,fullPath=False):
         operationNode_str=self._fullPathSwitch_query_str(self._operationNode_MObject,fullPath)
@@ -361,7 +376,7 @@ class SelfConnectNode(SelfDagNode):
     #Public Function
     def connectAttr(self,operationNode_str=None,operationAttr_str=None,attr_str=None):        
         attr_str=attr_str or self._attr_str
-        operationNode_MObject=self.selectOpenMaya_create_MObject(operationNode_str) or self._operationNode_MObject
+        operationNode_MObject=self.selectNode_create_MObject(operationNode_str) or self._operationNode_MObject
         operationAttr_str=operationAttr_str or self._operationAttr_str
 
         node_MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
@@ -464,7 +479,6 @@ class SelfMatrixNode(SelfDagNode):
         return self._MMatrix
     def getScale(self):
         pass
-        
 
 class SelfLocationNode(SelfMatrixNode):
     def __init__(self,node):
@@ -500,9 +514,75 @@ class SelfAnimNode(SelfMatrixNode):
     def __init__(self,node):
         super(SelfAnimNode,self).__init__(node)
 
-class SelfWeightJoint(SelfMatrixNode):
+class SelfWeightJoint(SelfConnectNode):
     def __init__(self,node):
         super(SelfWeightJoint,self).__init__(node)
+
+class SelfComponents(object):
+    def __init__(self,components):
+        self._node_MDagPath,self._components_MObject=self.selectComponents_create_MDagPath_MObject(components)
+
+    #Single Function
+    def selectComponents_create_MDagPath_MObject(self,components):
+        if components == None:
+            return None
+        elif not isinstance(components,list):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        components_MSelectionList=om2.MSelectionList()
+        for component in components:
+            components_MSelectionList.add(component)
+        node_MDagPath,components_MObject=components_MSelectionList.getComponent(0)
+        return node_MDagPath,components_MObject
+
+    def componentID_query_ints(self,MObject):
+        compo_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent(MObject)
+        ids=compo_MFnSingleIndexedComponent.getElements()
+        return ids
+
+    def nodeType_query_str(self,MDagPath):
+        MFnDagNode=om2.MFnDagNode(MDagPath)
+        nodeType_str=MFnDagNode.typeName
+        return nodeType_str
+
+    def fullPath_query_str(self,MDagPath):
+        name_str=MDagPath.fullPathName()
+        return name_str
+
+    #Multi Function
+    def _fullPathSwitch_query_str(self,MDagPath,fullPath=False):
+        if fullPath:
+            name_str=self.fullPath_query_str(MDagPath)
+        else:
+            MFnDagNode=om2.MFnDagNode(MDagPath)
+            name_str=MFnDagNode.name()
+        return name_str
+
+    #Setting Function
+    def setComponents(self,variables):
+        self._components_MObject=self.selectComponents_create_MDagPath_MObject(variables)[1]
+        return self._components_MObject
+    def getComponents(self):
+        component_ints=self.componentID_query_ints(self._components_MObject)
+        return component_ints
+    def getNode(self,fullPath=False):
+        object_str=self._fullPathSwitch_query_str(self._node_MDagPath,fullPath)
+        return object_str
+    def getNodeType(self):
+        objectType_str=self.nodeType_query_str(self._node_MDagPath)
+        return objectType_str
+
+class SelfMeshVertex(SelfComponents):
+    def __init__(self,components):
+        super(SelfMeshVertex,self).__init__(components)
+
+class SelfSurfaceVertex(SelfComponents):
+    def __init__(self,components):
+        super(SelfSurfaceVertex,self).__init__(components)
+
+class SelfCurveVertex(SelfComponents):
+    def __init__(self,components):
+        super(SelfCurveVertex,self).__init__(components)
 
 class SelfPolygon(SelfMatrixNode):
     def __init__(self,node):
@@ -528,7 +608,6 @@ class SelfCreateNode(object):
     def __init__(self,node):
         pass
 
-
 class TrsObject(object):
     def __init__(self,obj):
         self._transMFn_list=RULES_DICT["transMFn_list"]
@@ -537,7 +616,7 @@ class TrsObject(object):
 
         self._fullPath_bool=False
 
-        self._object_MObject,self._object_MDagPath=self.selectOpenMaya_create_MObject_MDagPath(obj)
+        self._object_MObject,self._object_MDagPath=self.selectNode_create_MObject_MDagPath(obj)
         self._objectType_str=self.nodeType_query_str(self._object_MObject)
 
         self._shape_MObjects=self.child_query_MObjects(self._object_MDagPath,self._shapeMFn_list)
@@ -551,7 +630,7 @@ class TrsObject(object):
         self._subject_MDagPath=None
 
     #Single Function
-    def selectOpenMaya_create_MObject_MDagPath(self,node):
+    def selectNode_create_MObject_MDagPath(self,node):
         if node == None:
             return None
         node_MSelectionList=om2.MSelectionList()
@@ -645,7 +724,7 @@ class TrsObject(object):
         return self._fullPath_bool
 
     def setObject(self,variable):
-        self._object_MObject,self._object_MDagPath=self.selectOpenMaya_create_MObject_MDagPath(variable)
+        self._object_MObject,self._object_MDagPath=self.selectNode_create_MObject_MDagPath(variable)
         return self._object_MObject
     def getObject(self):
         object_str=self.fullPath_query_str(self._object_MObject,self._fullPath_bool)
@@ -698,7 +777,7 @@ class TrsObject(object):
             return child_strs
 
     def setSubject(self,variable):
-        self._subject_MObject,self._subject_MDagPath=self.selectOpenMaya_create_MObject_MDagPath(variable)
+        self._subject_MObject,self._subject_MDagPath=self.selectNode_create_MObject_MDagPath(variable)
         self._subject_bool=True
         return self._subject_MObject
     def getSubject(self):

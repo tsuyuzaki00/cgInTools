@@ -17,11 +17,15 @@ def main():
     #EX.main()
     #TP.main()
 
-    obj=cmds.ls(sl=True)[0]
-    pCube=oLB.SelfLocationNode("pCube1")
-    pCube.setNode(obj)
-    pCube.setMSpace(0)
-    pCube.translate((0,1,0))
+    #node=cmds.ls(sl=True)[0]
+    nodeM=oLB.SelfMatrixNode("pCube1")
+    nodeM.currentParentMMatrix()
+    
+    
+    nodeM2=oLB.SelfMatrixNode("group1")
+    print(nodeM2.currentInverseWorldMMatrix())
+    print(nodeM2.currentInverseNormalMMatrix())
+    #pCube.translate((0,1,0))
     
 
 main()
