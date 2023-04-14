@@ -23,7 +23,7 @@ class Template():
         pass
 
     #Private Function
-    def __private_mode_func(self):
+    def _private_mode_func(self):
         self.single_mode_func()
         self._multi_mode_func()
         self.inheritance_func()

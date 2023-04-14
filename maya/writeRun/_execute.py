@@ -18,15 +18,10 @@ def main():
     #TP.main()
 
     #node=cmds.ls(sl=True)[0]
-    nodeM=oLB.SelfMatrixNode("pCube1")
-    nodeM.currentParentMMatrix()
-    
-    
-    nodeM2=oLB.SelfMatrixNode("group1")
-    print(nodeM2.currentInverseWorldMMatrix())
-    print(nodeM2.currentInverseNormalMMatrix())
-    #pCube.translate((0,1,0))
-    
+    nodeM=oLB.SelfLocationNode("pCone1")
+    nodeM.setTransformNode("pCylinder1")
+    nodeM.nodeTranslate()
+    #print(nodeM.addQuaternionMMatrix(variable=(-0.005,-0.221,0.104,0.970)))
 
 main()
 
