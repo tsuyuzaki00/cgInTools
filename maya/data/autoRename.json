@@ -1,14 +1,14 @@
 {
     "nodeText": "", 
     "sideText": "C", 
-    "customText": "jnt", 
+    "customText": "", 
     "nameOrderList": [
-        "title", 
-        "custom", 
-        "side", 
+        "titleHie", 
         "node", 
+        "side", 
+        "none", 
         "none"
     ], 
     "modeSwitch": "setAuto", 
-    "titleText": "hip"
+    "titleText": "tire"
 }

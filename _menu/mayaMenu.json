@@ -3,6 +3,7 @@
     "orderMenu":
     [
         ["single","Chack"],
+        ["multi","setting"],
         ["multi","cleaning"],
         ["single","Create"],
         ["multi","geometry"],
@@ -36,6 +37,10 @@
         "Edit":[],
         "Query":[],
         "Mgear":[],
+        "setting":[
+            ["Loaded 3DCONNEXION","cgInTools.maya.execute","threeDconnexionLoadEX","main()",""],
+            ["MayaPort","cgInTools.maya.execute","mayaPortEX","main()",""]
+        ],
         "cleaning":[
             ["Geometry Reset","cgInTools.maya.execute","freezeResetHisDelEX","main()",""],
             ["UnKnown Delete","cgInTools.maya.execute","unknownDelEX","main()",""],
@@ -113,8 +118,6 @@
             ["EyebrowCtrls","cgInTools.mgear.execute","eyebrowCtrlsExport","main()",""]
         ],
         "build":
-        [
-            ["Loaded 3DCONNEXION","cgInTools.maya.execute","threeDconnexionLoadEX","main()",""]
-        ]
+        []
     }
 }

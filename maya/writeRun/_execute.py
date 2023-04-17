@@ -24,12 +24,3 @@ def main():
     #print(nodeM.addQuaternionMMatrix(variable=(-0.005,-0.221,0.104,0.970)))
 
 main()
-
-def printFunction(function):
-    signature=inspect.signature(function)
-    args=[]
-    for name,value in signature.parameters.items():
-        valueType=str(type(value.default))
-        args.append(f"{name}={valueType}")
-    output=f"{function.__name__}({','.join(args)})"
-    print(output)

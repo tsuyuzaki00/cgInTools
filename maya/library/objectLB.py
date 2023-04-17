@@ -605,12 +605,16 @@ class SelfLocationNode(SelfMatrixNode):
         transformNode=node or self._transformNode
         if transformNode == None:
             return
+            
         node_MObject=self.selectNode_create_MObject(transformNode)
         worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(node_MObject)
         myInverseWorld_MMatrix=self.currentInverseWorldMMatrix()
+
         transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
         self.setMMatrix(transform_MMatrix)
+
         worldTranslate_MVector=self.getTranslate()
+        
         node_MFnTransform=om2.MFnTransform(self._node_MObject)
         node_MFnTransform.translateBy(worldTranslate_MVector,self._MSpace)
 
