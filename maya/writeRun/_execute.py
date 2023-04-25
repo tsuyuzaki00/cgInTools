@@ -17,10 +17,12 @@ def main():
     #EX.main()
     #TP.main()
 
-    #node=cmds.ls(sl=True)[0]
-    nodeM=oLB.SelfLocationNode("pCone1")
-    nodeM.setTransformNode("pCylinder1")
-    nodeM.nodeTranslate()
+    node=cmds.ls(sl=True)[0]
+    nodeM=oLB.SelfNode(node)
+    print(nodeM.getNode())
+    #nodeM.setAttr("translateX")
+    #nodeM.setValue(1)
+    #nodeM.doIt("editAttr")
     #print(nodeM.addQuaternionMMatrix(variable=(-0.005,-0.221,0.104,0.970)))
 
 main()
