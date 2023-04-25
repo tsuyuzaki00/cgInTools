@@ -433,6 +433,24 @@ class SelfComponent(SelfNode):
         nodeType_str=node_MFnDagNode.typeName
         return nodeType_str
 
+    def meshVertex_query_MPoint(self,node_MDagPath,id_int):
+        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
+        vertex_MPoint=mesh_MFnMesh.getPoint(id_int)
+        return vertex_MPoint
+
+    def vertexRelativeMove_edit_func(self,node_MDagPath,id_int,move):
+        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
+        vertex_MPoint=mesh_MFnMesh.getPoint(id_int)
+
+        move_MVector=om2.MVector(move)
+        newVertice_MPoint=vertex_MPoint+move_MVector
+        mesh_MFnMesh.setPoint(id_int,newVertice_MPoint)
+
+    def vertexAbsoluteMove_edit_func(node_MDagPath,id_int,move):
+        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
+        move_MPoint=om2.MPoint(move)
+        mesh_MFnMesh.setPoint(id_int,move_MPoint)
+
     #Setting Function
     def setComponent(self,variable):
         self._node_MDagPath,self._node_MObject=self.selectComponent_create_MDagPath_MObject(variable)
