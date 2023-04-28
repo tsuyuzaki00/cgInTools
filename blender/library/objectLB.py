@@ -2,6 +2,122 @@ import bpy
 import math
 import bmesh
 
+class SelfModifiersMesh(object):
+    def __init__(self):
+        self._mesh_str=None
+        self._subject_str=None
+        self._modifier_str=None
+        self._modifierType_str=None
+
+    #Single Function
+    def selectModifiersMesh_query_ObjectModifiers(self,meshName):
+        mesh_Object=bpy.data.objects[meshName]
+        bpy.context.view_layer.objects.active=mesh_Object
+        bpy.ops.object.mode_set(mode='OBJECT')
+        mesh_ObjectModifiers=mesh_Object.modifiers
+        return mesh_ObjectModifiers
+
+    def modifierTypeDefName_create_str(self,modifier_str):
+        if not modifier_str == None:
+            modifierSplit_strs=modifier_str.split("_")
+            modifierCapitalizes=[modifierSplit_str.capitalize() for modifierSplit_str in modifierSplit_strs]
+            modifier_str="".join(modifierCapitalizes)
+        return modifier_str
+
+    def modifierApply_edit_func(self,mesh_ObjectModifiers,modifier_str):
+        mod=mesh_ObjectModifiers[modifier_str]
+        bpy.ops.object.modifier_apply(modifier=mod.name,single_user=True)
+
+    def bakeDataTransfar_edit_func(self,bake_DataTransfarModifier,cage):
+        bake_DataTransfarModifier.object=bpy.data.objects[cage]
+        bake_DataTransfarModifier.use_vert_data=True
+        bake_DataTransfarModifier.data_types_verts={'VGROUP_WEIGHTS'}
+        bake_DataTransfarModifier.vert_mapping='POLYINTERP_NEAREST'
+        if bake_DataTransfarModifier.name == "DataTransfar_body":
+            bake_DataTransfarModifier.vertex_group="mod_fingerAll"
+            bake_DataTransfarModifier.invert_vertex_group=True
+
+    def isModifier_query_bool(self,mesh_ObjectModifiers,modifier_str):
+        try:
+            mesh_ObjectModifiers[modifier_str]
+            return True
+        except KeyError:
+            return False
+
+    #Multi Function
+    def _modifierAdd_create_Modifier(self,mesh_ObjectModifiers,modifierType,name):
+        modifierDefName_str=self.modifierTypeDefName_create_str(modifierType)
+        modifier=name or modifierDefName_str
+        mesh_ObjectModifiers.new(name=modifier,type=modifierType)
+        return mesh_ObjectModifiers[modifier]
+
+    #Setting Function
+    def setMesh(self,variable):
+        setattr(self,"_mesh_str",variable)
+    def getMesh(self):
+        return self._mesh_str
+    
+    def setSubject(self,variable):
+        setattr(self,"_subject_str",variable)
+    def getSubject(self):
+        return self._subject_str
+    
+    def setModifier(self,variable):
+        setattr(self,"_modifier_str",variable)
+    def getModifier(self):
+        return self._modifier_str
+    
+    def setModifierType(self,variable):
+        setattr(self,"_modifierType_str",variable)
+    def getModifierType(self):
+        return self._modifierType_str
+
+    #Public Function
+    def modifierApply(self,meshName=None,modifierName=None):
+        _mesh_str=meshName or self._mesh_str
+        _modifier_str=modifierName or self._modifier_str
+
+        mesh_ObjectModifiers=self.selectModifiersMesh_query_ObjectModifiers(_mesh_str)
+        self.modifierApply_edit_func(mesh_ObjectModifiers,_modifier_str)
+
+    def addModifier(self,meshName=None,modifierName=None,modifierType=None):
+        _mesh_str=meshName or self._mesh_str
+        _modifier_str=modifierName or self._modifier_str
+        _modifierType_str=modifierType or self._modifierType_str
+
+        mesh_ObjectModifiers=self.selectModifiersMesh_query_ObjectModifiers(_mesh_str)
+        mesh_Modifier=self._modifierAdd_create_Modifier(mesh_ObjectModifiers,_modifierType_str,_modifier_str)
+        return mesh_Modifier.name
+
+    def editBakeDataTransfer(self,meshName=None,modifierName=None,cage=None):
+        _mesh_str=meshName or self._mesh_str
+        _modifier_str=modifierName or self._modifier_str
+        _subject_str=cage or self._subject_str
+
+        mesh_ObjectModifiers=self.selectModifiersMesh_query_ObjectModifiers(_mesh_str)
+        bake_DataTransfarModifier=mesh_ObjectModifiers[_modifier_str]
+        self.bakeDataTransfar_edit_func(bake_DataTransfarModifier,_subject_str)
+
+    def editArmature(self,armatureName=None,meshName=None,modifierName=None):
+        _mesh_str=meshName or self._mesh_str
+        _modifier_str=modifierName or self._modifier_str
+        _armature_str=armatureName or self._subject_str
+
+        mesh_ObjectModifiers=self.selectModifiersMesh_query_ObjectModifiers(_mesh_str)
+        if self.isModifier_query_bool(mesh_ObjectModifiers,_modifier_str):
+            mesh_ArmatureModifier=mesh_ObjectModifiers[_modifier_str]
+        else:
+            mesh_ArmatureModifier=self._modifierAdd_create_Modifier(mesh_ObjectModifiers,"ARMATURE",_modifier_str)
+        mesh_ArmatureModifier.object=bpy.data.objects[_armature_str]
+
+    def isModifier(self,meshName=None,modifierName=None):
+        _mesh_str=meshName or self._mesh_str
+        _modifier_str=modifierName or self._modifier_str
+
+        mesh_ObjectModifiers=self.selectModifiersMesh_query_ObjectModifiers(_mesh_str)
+        isModifier_bool=self.isModifier_query_bool(mesh_ObjectModifiers,_modifier_str)
+        return isModifier_bool
+
 class SelfEditArmature(object):
     def __init__(self):
         self._armature_str=None
@@ -147,6 +263,7 @@ class SelfEditArmature(object):
         _roll_float=value or self._roll_float
         bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
         self.roll_edit_func(bone_EditBone,_roll_float)
+
 class SelfPoseArmature(object):
     def __init__(self):
         self._armature_str=None
@@ -154,6 +271,7 @@ class SelfPoseArmature(object):
         self._property_str=None
         self._translation_list=None
         self._rotation_list=None
+        self._rotationMode_str=None
         self._scale_list=None
         self._translationShape_list=None
         self._scaleShape_list=None
@@ -192,14 +310,18 @@ class SelfPoseArmature(object):
         translation_list=[translation_vector[0],translation_vector[1],translation_vector[2]]
         return translation_list
     
-    def rotation_edit_func(self,bone_PoseBone,rotation):
-        for i in range(len(rotation)):
-            bone_PoseBone.rotation_euler[i]=math.radians(rotation[i])
+    def rotation_edit_func(self,bone_PoseBone,rotation,mode):
+        bone_PoseBone.rotation_euler=rotation
+        bone_PoseBone.rotation_mode=mode
     
     def rotation_query_list(self,bone_PoseBone):
         rotation_vector=bone_PoseBone.rotation_euler
-        rotation_list=[math.degrees(math.pi/rotation_vector[i]) for i in range(len(rotation))]
+        rotation_list=[rotation_vector[0],rotation_vector[1],rotation_vector[2]]
         return rotation_list
+
+    def rotationMode_query_list(self,bone_PoseBone):
+        rotationMode_str=bone_PoseBone.rotation_mode
+        return rotationMode_str
 
     def scale_edit_func(self,bone_PoseBone,scale):
         bone_PoseBone.scale=scale
@@ -246,6 +368,9 @@ class SelfPoseArmature(object):
         curveOut_list=[bone_PoseBone.bbone_curveoutx,bone_PoseBone.bbone_curveoutz]
         return curveIn_list,curveOut_list
 
+    def constraint_edit_func(self,bone_PoseBone,constraint,fromTomMinMax,vector):
+        constraint_PoseBoneConstraints=bone_PoseBone.constraints[constraint]
+
     #Setting Function
     def setInitChoice(self,variable):
         self._initChoices=variable
@@ -290,6 +415,16 @@ class SelfPoseArmature(object):
         return self._rotation_list
     def getRotation(self):
         return self._rotation_list
+    
+    def setRotationMode(self,variable):
+        self._rotationMode_str=variable
+        return self._rotationMode_str
+    def currentRotationMode(self):
+        bone_PoseBone=self.selectPoseBone_query_PoseBone(self._armature_str,self._bone_str)
+        self._rotationMode_str=self.rotationMode_query_list(bone_PoseBone)
+        return self._rotationMode_str
+    def getRotationMode(self):
+        return self._rotationMode_str
     
     def setScale(self,variable):
         self._scale_list=variable
@@ -372,12 +507,13 @@ class SelfPoseArmature(object):
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.translation_edit_func(bone_PoseBone,_translation_list)
     
-    def editRotation(self,vector=None,boneName=None,armatureName=None):
+    def editRotation(self,vector=None,mode=None,boneName=None,armatureName=None):
         _armature_str=armatureName or self._armature_str
         _bone_str=boneName or self._bone_str
         _rotation_list=vector or self._rotation_list
+        _mode_str=mode or self._rotationMode_str
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
-        self.rotation_edit_func(bone_PoseBone,_rotation_list)
+        self.rotation_edit_func(bone_PoseBone,_rotation_list,_mode_str)
     
     def editScale(self,vector=None,boneName=None,armatureName=None):
         _armature_str=armatureName or self._armature_str
