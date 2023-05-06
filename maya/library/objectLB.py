@@ -10,15 +10,81 @@ cit.reloads([jLB])
 
 RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"openLibrary")
 
-class SelfNode(object):
-    def __init__(self,node):
+class SelfOrigin(object):
+    def __init__(self):
         self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
-        self._node_MDagPath,self._node_MObject=self.selectNode_create_MDagPath_MObject(node)
+        self._read_dict={}
+        self._setChoices=[]
+        self._doIts=[]
+    
+    #Setting Function
+    def setReadDict(self,variable):
+        setattr(self,"_read_dict",variable)
+    def getReadDict(self):
+        return self._read_dict
+    
+    def setSetChoices(self,variables):
+        setattr(self,"_setChoices",variables)
+    def getSetChoices(self):
+        return self._setChoices
+    
+    def setDoIts(self,variables):
+        setattr(self,"_doIts",variables)
+    def getDoIts(self):
+        return self._doIts
+    
+    #Public Function
+    def writeDict(self,setChoices=None):
+        _setChoices=setChoices or self._setChoices
+
+        write_dict={}
+        for _selfChoice in _setChoices:
+            #print(_selfChoice)
+            variable=eval('self.get'+_selfChoice+'()')
+            write_dict[_selfChoice]=variable
+        return write_dict
+
+    def readDict(self,read_dict=None):
+        _read_dict=read_dict or self._read_dict
+
+        setFunctions=list(_read_dict.keys())
+        for setFunction in setFunctions:
+            #print(_read_dict[setFunction])
+            if isinstance(_read_dict[setFunction],str):
+                variable='"'+_read_dict[setFunction]+'"'
+            else:
+                variable=str(_read_dict[setFunction])
+            eval('self.set'+setFunction+'('+variable+')')
+
+    def doIt(self,doIts=None):
+        _doIts=doIts or self._doIts
+
+        if _doIts == None:
+            return
+        else:
+            for _doIt in _doIts:
+                eval("self."+_doIt+"()")
+
+class SelfNode(SelfOrigin):
+    def __init__(self):
+        super(SelfNode,self).__init__()
+        self._node_MObject=None
         self._attr_str=None
         self._value=None
+        self._valueType="double"
+        self._setChoices+=[
+            "Node",
+            "Attr",
+            "Value",
+            "ValueType"
+        ]
+        self._doIts+=[
+            "editAttr",
+            "queryAttr"
+        ]
     
     #Single Function
-    def selectNode_create_MDagPath_MObject(self,node):
+    def selectNode_create_MObject(self,node):
         if node == None:
             return None
         elif not isinstance(node,str):
@@ -27,11 +93,7 @@ class SelfNode(object):
         node_MSelectionList=om2.MSelectionList()
         node_MSelectionList.add(node)
         node_MObject=node_MSelectionList.getDependNode(0)
-        if node_MObject.hasFn(om2.MFn.kDagNode):
-            node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
-            return node_MDagPath,node_MObject
-        else:
-            return None,node_MObject
+        return node_MObject
 
     def nodeType_query_str(self,node_MObject):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
@@ -43,224 +105,351 @@ class SelfNode(object):
         node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
         return node_MPlug
 
-    def editAttr_edit_func(self,MPlug,value):
+    def editAttr_edit_func(self,node_MPlug,value):
         if isinstance(value,int):
-            MPlug.setInt(value)
+            node_MPlug.setInt(value)
         elif isinstance(value,float):
-            MPlug.setFloat(value)
+            node_MPlug.setFloat(value)
         elif isinstance(value,str):
-            MPlug.setString(value)
+            node_MPlug.setString(value)
         elif isinstance(value,bool):
-            MPlug.setBool(value)
+            node_MPlug.setBool(value)
         else:
             pass
 
-    def queryAttr_query_value(self,MPlug,type="double"):
-        if type == "double" or type == "Double":
-            value=MPlug.asDouble()
+    def queryAttr_query_value(self,node_MPlug,valueType="double"):
+        if valueType == "double" or valueType == "Double":
+            value=node_MPlug.asDouble()
             return value
-        elif type == "int" or type == "Int":
-            value=MPlug.asInt()
+        elif valueType == "int" or valueType == "Int":
+            value=node_MPlug.asInt()
             return value
-        elif type == "float" or type == "Float":
-            value=MPlug.asFloat()
+        elif valueType == "float" or valueType == "Float":
+            value=node_MPlug.asFloat()
             return value
-        elif type == "str" or type == "Str" or type == "string" or type == "String":
-            value=MPlug.asString()
+        elif valueType == "str" or valueType == "Str" or valueType == "string" or valueType == "String":
+            value=node_MPlug.asString()
             return value
-        elif type == "bool" or type == "Bool" or type == "boolean" or type == "Boolean":
-            value=MPlug.asBool()
+        elif valueType == "bool" or valueType == "Bool" or valueType == "boolean" or valueType == "Boolean":
+            value=node_MPlug.asBool()
             return value
         else:
             pass
     
-    def convertMObject_create_MDagPath(self,node_MObject):
-        node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
-        return node_MDagPath
-
-    def fullPath_query_str(self,node_MDagPath):
-        name_str=node_MDagPath.fullPathName()
-        return name_str
-    
-    #Multi Function
-    def _fullPathSwitch_query_str(self,node_MDagPath,node_MObject,fullPath=False):
-        if not isinstance(node_MDagPath,om2.MDagPath):
-            MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-            name_str=MFnDependencyNode.name()
-        elif fullPath:
-            name_str=self.fullPath_query_str(node_MDagPath)
-        else:
-            node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
-            name_str=node_MFnDagNode.name()
-        return name_str
-
     #Setting Function
     def setNode(self,variable):
-        self._node_MDagPath,self._node_MObject=self.selectNode_create_MDagPath_MObject(variable)
-        return self._node_MDagPath,self._node_MObject
-    def getNode(self,fullPath=False):
-        name_str=self._fullPathSwitch_query_str(self._node_MDagPath,self._node_MObject,fullPath)
+        setattr(self,"_node_MObject",self.selectNode_create_MObject(variable))
+    def getNode(self):
+        node_MFnDependencyNode=om2.MFnDependencyNode(self._node_MObject)
+        name_str=node_MFnDependencyNode.name()
         return name_str
     
-    def getNodeType(self):
-        objectType_str=self.nodeType_query_str(self._node_MObject)
+    def getNodeType(self,node=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        objectType_str=self.nodeType_query_str(_node_MObject)
         return objectType_str
 
     def setAttr(self,variable):
-        self._attr_str=variable
-        return self._attr_str
+        setattr(self,"_attr_str",variable)
     def getAttr(self):
         return self._attr_str
 
     def setValue(self,variable):
-        self._value=variable
-        return self._value
+        setattr(self,"_value",variable)
     def getValue(self):
         return self._value
     
+    def setValueType(self,variable):
+        setattr(self,"_valueType",variable)
+    def getValueType(self):
+        return self._valueType
+    
     #Public Function
-    def editAttr(self,attr_str=None,value=None):
-        attr_str=attr_str or self._attr_str
-        value=value or self._value
-        if not attr_str == None or not value == None:
-            MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
-            self.editAttr_edit_func(MPlug,value)
+    def editAttr(self,node=None,attr=None,value=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _attr_str=attr or self._attr_str
+        _value=value or self._value
+        if not _attr_str == None or not _value == None:
+            node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
+            self.editAttr_edit_func(node_MPlug,_value)
 
-    def queryAttr(self,attr_str=None,valueType_str="double"):
-        attr_str=attr_str or self._attr_str
-        if not attr_str == None:
-            MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
-            value=self.queryAttr_query_value(MPlug,valueType_str)
+    def queryAttr(self,node=None,attr=None,valueType=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _attr_str=attr or self._attr_str
+        _valueType=valueType or self._valueType
+        if not _attr_str == None:
+            node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
+            value=self.queryAttr_query_value(node_MPlug,_valueType)
             return value
+
+class SelfComponent(SelfOrigin):
+    def __init__(self):
+        super(SelfComponent,self).__init__()
+        self._MFn_int=None
+        self._shape_MDagPath=None
+        self._component_MObject=None
+        self._setChoices+=[]
+        self._doIts+=[]
         
-    def setting(self,setting_str,setting_value):
-        if setting_str == None or setting_value == None:
-            return
-        else:
-            exec("self.set"+setting_str.capitalize()+"("+str(setting_value)+")")
+    #Single Function
+    def selectComponent_create_MDagPath_MObject(self,node):
+        if node == None:
+            return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        component_MSelectionList=om2.MSelectionList()
+        component_MSelectionList.add(node)
+        shape_MDagPath,components_MObject=component_MSelectionList.getComponent(0)
+        return shape_MDagPath,components_MObject
+    
+    def shape_create_MDagPath(self,shape):
+        if shape == None:
+            return None
+        elif not isinstance(shape,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        component_MSelectionList=om2.MSelectionList()
+        component_MSelectionList.add(shape)
+        shape_MDagPath=component_MSelectionList.getDagPath(0)
+        shape_MDagPath.extendToShape()
+        return shape_MDagPath
+    
+    def convertToInt_create_MObject(self,componentID_int,MFn_int):
+        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent()
+        components_MObject=component_MFnSingleIndexedComponent.create(MFn_int)
+        component_MFnSingleIndexedComponent.addElement(componentID_int)
+        return components_MObject
 
-    def doIt(self,doIt_str):
-        if doIt_str == None:
-            return
-        else:
-            exec("self."+doIt_str+"()")
+    def componentID_query_int(self,components_MObject):
+        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent(components_MObject)
+        componentID_int=component_MFnSingleIndexedComponent.getElements()[0]
+        return componentID_int
 
+    def shapeType_query_str(self,shape_MDagPath):
+        node_MFnDagNode=om2.MFnDagNode(shape_MDagPath)
+        nodeType_str=node_MFnDagNode.typeName
+        return nodeType_str
+
+    #Setting Function
+    def setMFn(self,variable):
+        setattr(self,"_MFn_int",variable)
+    def getMFn(self):
+        return self._MFn_int
+
+    def setComponent(self,variable):
+        shape_MDagPath,components_MObject=self.selectComponent_create_MDagPath_MObject(variable)
+        setattr(self,"_shape_MDagPath",shape_MDagPath)
+        setattr(self,"_component_MObject",components_MObject)
+        setattr(self,"_MFn_int",components_MObject.apiType())
+
+    def setShape(self,variable):
+        shape_MDagPath=self.shape_create_MDagPath(variable)
+        setattr(self,"_shape_MDagPath",shape_MDagPath)
+    def getShape(self):
+        shape_MFnDagNode=om2.MFnDagNode(self._shape_MDagPath)
+        shape_str=shape_MFnDagNode.name()
+        return shape_str
+    
+    def getShapeType(self):
+        objectType_str=self.shapeType_query_str(self._shape_MDagPath)
+        return objectType_str
+
+    def setComponentID(self,variable,MFn=None):
+        _MFn_int=MFn or self._MFn_int
+        component_MObject=self.convertToInt_create_MObject(variable,_MFn_int)
+        setattr(self,"_component_MObject",component_MObject)
+    def getComponentID(self):
+        componentID_int=self.componentID_query_int(self._component_MObject)
+        return componentID_int
+    
 class SelfConnectNode(SelfNode):
     def __init__(self,node):
         super(SelfConnectNode,self).__init__(node)
         self._operationNode_MObject=None
         self._operationAttr_str=None
-        self._findConnectNodeType_str=""
+        self._findConnect_str=None
+        self._findEnum_str="NodeType"
+        self._findSource_bool=True
+        self._findTarget_bool=True
+        self._setChoices+=[
+            "OperationNode",
+            "OperationAttr",
+            "FindConnect",
+            "FindEnum",
+            "FindSource",
+            "FindTarget"
+        ]
+        self._doIts+=[
+            "connectAttr"
+        ]
 
     #Single Function
-    def connectionNode_query_MObjects(self,MObject,source=True,target=True):
-        findConnectedTo_MObjects=[]
-        node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
-        connections_MPlugArray=node_MFnDependencyNode.getConnections()
-        for connection_MPlug in connections_MPlugArray:
-            targets_MPlugArray=connection_MPlug.connectedTo(source,target)
-            for target_MPlug in targets_MPlugArray:
-                target_MObject=target_MPlug.node()
-                findConnectedTo_MObjects.append(target_MObject)
-        if findConnectedTo_MObjects == []:
+    def replaceMObjectToNode_query_strs(self,connectNode_MObjects):
+        if connectNode_MObjects == None or connectNode_MObjects == []:
             return None
-        else:
-            return findConnectedTo_MObjects
-
-    def findAttrConect_query_MObjects(self,MObject,attr,source=True,target=True):
-        findConnectedTo_MObjects=[]
-        find_MPlug=self.nodeAttr_create_MPlug(MObject,attr)
-        targets_MPlugArray=find_MPlug.connectedTo(source,target)
-        for target_MPlug in targets_MPlugArray:
-                target_MObject=target_MPlug.node()
-                findConnectedTo_MObjects.append(target_MObject)
-        if findConnectedTo_MObjects == []:
-            return None
-        else:
-            return findConnectedTo_MObjects
-
-    def findMFnConnect_query_MObjects(self,MObject,MFnID=0,source=True,target=True):
-        findConnectedTo_MObjects=[]
-        node_MFnDependencyNode=om2.MFnDependencyNode(MObject)
-        connections_MPlugArray=node_MFnDependencyNode.getConnections()
-        for connection_MPlug in connections_MPlugArray:
-            targets_MPlugArray=connection_MPlug.connectedTo(source,target)
-            for target_MPlug in targets_MPlugArray:
-                target_MObject=target_MPlug.node()
-                if target_MObject.hasFn(MFnID):
-                    findConnectedTo_MObjects.append(target_MObject)
-        if findConnectedTo_MObjects == []:
-            return None
-        else:
-            return findConnectedTo_MObjects
-
-    def replaceMObject_query_strs(self,MObjects):
         connectNode_strs=[]
-        if MObjects == None:
-            return None
-        for connectNode_MObject in MObjects:
+        for connectNode_MObject in connectNode_MObjects:
             connectNode_MFnDependencyNode=om2.MFnDependencyNode(connectNode_MObject)
             connectNode_str=connectNode_MFnDependencyNode.name()
             connectNode_strs.append(connectNode_str)
         return connectNode_strs
+    
+    def connectionNode_query_MPlugs(self,node_MObject,source=True,target=True):
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        connections_MPlugArray=node_MFnDependencyNode.getConnections()
+        
+        connectedTo_MPlugs=[]
+        for connection_MPlug in connections_MPlugArray:
+            connectedTo_MPlugArray=connection_MPlug.connectedTo(source,target)
+            for connectedTo_MPlug in connectedTo_MPlugArray:
+                connectedTo_MPlugs.append(connectedTo_MPlug)
+        if connectedTo_MPlugs == []:
+            return None
+        else:
+            return connectedTo_MPlugs
+    
+    #Multi Function
+    def _findConnect_query_MObjects(self,node_MObject,find,findEnum="NodeType",source=True,target=True):
+        #findEnum="MFn" or "NodeType"
+        connectedTo_MPlugs=self.connectionNode_query_MPlugs(node_MObject,source,target)
+        findConnectedTo_MObjects=[]
+        for connectedTo_MPlug in connectedTo_MPlugs:
+            connectedTo_MObject=connectedTo_MPlug.node()
+            if findEnum == "NodeType":
+                if om2.MFnDependencyNode(connectedTo_MObject).typeName == find:
+                    findConnectedTo_MObjects.append(connectedTo_MObject)
+            elif findEnum == "MFn":
+                if connectedTo_MObject.hasFn(find):
+                    findConnectedTo_MObjects.append(connectedTo_MObject)
+            else:
+                om2.MGlobal.displayError('Please set "findEnum" to "MFn" or "NodeType".')
+                sys.exit()
+        if findConnectedTo_MObjects == []:
+            return None
+        else:
+            return findConnectedTo_MObjects
 
     #Private Function
-    def __nodeTypeToMFnConverter_query_int(self,nodeType):
+    def _findAttrConect_query_MObjects(self,node_MObject,attr,source=True,target=True):
+        find_MPlug=self.nodeAttr_create_MPlug(node_MObject,attr)
+        
+        targets_MPlugArray=find_MPlug.connectedTo(source,target)
+        findConnectedTo_MObjects=[target_MPlug.node() for target_MPlug in targets_MPlugArray]
+        if findConnectedTo_MObjects == []:
+            return None
+        else:
+            return findConnectedTo_MObjects
+
+    def _nodeTypeToMFnConverter_query_int(self,nodeType):
         return self._nodeTypeToMFn_dict[nodeType]
     
     #Setting Function
     def setOperationNode(self,variable):
-        self._operationNode_MObject=self.selectNode_create_MObject(variable)
-        return self._operationNode_MObject
-    def getOperationNode(self,fullPath=False):
-        operationNode_str=self._fullPathSwitch_query_str(self._operationNode_MObject,fullPath)
+        setattr(self,"_operationNode_MObject",self.selectNode_create_MObject(variable))
+    def getOperationNode(self):
+        node_MFnDependencyNode=om2.MFnDependencyNode(self._operationNode_MObject)
+        operationNode_str=node_MFnDependencyNode.name()
         return operationNode_str
 
     def setOperationAttr(self,variable):
-        self._operationAttr_str=variable
-        return self._operationAttr_str
+        setattr(self,"_operationAttr_str",variable)
     def getOperationAttr(self):
         return self._operationAttr_str
+    
+    def setFindConnect(self,variable):
+        setattr(self,"_findConnect_str",variable)
+    def getFindConnect(self):
+        return self._findConnect_str
+    
+    def setFindEnum(self,variable):
+        setattr(self,"_findEnum_str",variable)
+    def getFindEnum(self):
+        return self._findEnum_str
 
-    def getConnectionNodes(self,source=True,target=True):
-        connectNode_MObjects=self.connectionNode_query_MObjects(self._node_MObject,source,target)
-        connectNodes=self.replaceMObject_query_strs(connectNode_MObjects)
+    def setFindSource(self,variable):
+        setattr(self,"_findSource_bool",variable)
+    def getFindSource(self):
+        return self._findSource_bool
+
+    def setFindTarget(self,variable):
+        setattr(self,"_findTarget_bool",variable)
+    def getFindTarget(self):
+        return self._findTarget_bool
+
+    def getConnectionNodes(self,node=None,source=None,target=None):
+        _node_MObject=node or self._node_MObject
+        _findSource_bool=source or self._findSource_bool
+        _findTarget_bool=target or self._findTarget_bool
+
+        connectedTo_MPlugs=self.connectionNode_query_MPlugs(_node_MObject,_findSource_bool,_findTarget_bool)
+        connectNode_MObjects=[connectedTo_MPlug.node() for connectedTo_MPlug in connectedTo_MPlugs]
+        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
         return connectNodes
 
-    def getConnectionNodeAttrToFind(self,attr_str=None,source=True,target=True):
-        attr_str=attr_str or self._attr_str
-        connectNode_MObjects=self.findAttrConect_query_MObjects(self._node_MObject,attr_str,source,target)
-        connectNodes=self.replaceMObject_query_strs(connectNode_MObjects)
+    def getConnectionNodeAttrToFind(self,node=None,attr=None,source=None,target=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _attr_str=attr or self._attr_str
+        _findSource_bool=source or self._findSource_bool
+        _findTarget_bool=target or self._findTarget_bool
+
+        connectNode_MObjects=self._findAttrConect_query_MObjects(_node_MObject,_attr_str,_findSource_bool,_findTarget_bool)
+        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
         return connectNodes
 
-    def setConnectionNodeTypeToFind(self,variable):
-        self._findConnectNodeType_str=variable
-        return self._findConnectNodeType_str
-    def getConnectionNodeTypeToFind(self,source=True,target=True):
-        MFn_int=self.__nodeTypeToMFnConverter_query_int(self._findConnectNodeType_str)
-        connectNode_MObjects=self.findMFnConnect_query_MObjects(self._node_MObject,MFn_int,source,target)
-        connectNodes=self.replaceMObject_query_strs(connectNode_MObjects)
+    def getConnectionNodeTypeOrMFnToFind(self,node=None,find=None,findEnum=None,source=None,target=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _findConnect_str=find or self._findConnect_str
+        _findEnum_str=findEnum or self._findEnum_str
+        _findSource_bool=source or self._findSource_bool
+        _findTarget_bool=target or self._findTarget_bool
+
+        connectNode_MObjects=self._findConnect_query_MObjects(_node_MObject,_findConnect_str,_findEnum_str,_findSource_bool,_findTarget_bool)
+        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
         return connectNodes
 
     #Public Function
-    def connectAttr(self,operationNode_str=None,operationAttr_str=None,attr_str=None):        
-        attr_str=attr_str or self._attr_str
-        operationNode_MObject=self.selectNode_create_MObject(operationNode_str) or self._operationNode_MObject
-        operationAttr_str=operationAttr_str or self._operationAttr_str
+    def connectAttr(self,node=None,attr=None,operationNode=None,operationAttr=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _attr_str=attr or self._attr_str
+        _operationNode_MObject=self.selectNode_create_MObject(operationNode) or self._operationNode_MObject
+        _operationAttr_str=operationAttr or self._operationAttr_str
 
-        node_MPlug=self.nodeAttr_create_MPlug(self._node_MObject,attr_str)
-        sourceNode_MPlug=self.nodeAttr_create_MPlug(operationNode_MObject,operationAttr_str)
+        node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
+        sourceNode_MPlug=self.nodeAttr_create_MPlug(_operationNode_MObject,_operationAttr_str)
         
         MDGModifier=om2.MDGModifier()
         MDGModifier.connect(sourceNode_MPlug,node_MPlug)
         MDGModifier.doIt()
 
 class SelfDagNode(SelfNode):
-    def __init__(self,node):
-        super(SelfDagNode,self).__init__(node)
-        self._parent_MDapPath=None
+    def __init__(self):
+        super(SelfDagNode,self).__init__()
+        self._parent_MObject=None
+        self._fullPath_bool=False
+        self._firstOnly_bool=False
+        self._firstAddress_int=0
+        self._setChoices+=[
+            "FullPath",
+            "FirstOnly",
+            "FirstAddress",
+        ]
+        self._doIts+=[
+            "parent",
+            "replaceByParent",
+            "replaceByChild",
+            "replaceByShape"
+        ]
     
     #Single Function
+    def convertMObject_create_MDagPath(self,node_MObject):
+        node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
+        return node_MDagPath
+    
+    def fullPath_query_str(self,node_MDagPath):
+        name_str=node_MDagPath.fullPathName()
+        return name_str
+    
     def shape_query_MObject(self,node_MDagPath):
         shape_MDagPath=node_MDagPath.extendToShape()
         shape_MObject=shape_MDagPath.node()
@@ -289,59 +478,90 @@ class SelfDagNode(SelfNode):
     def nodeTypes_query_strs(self,node_MObjects):
         if node_MObjects == None:
             return None
-        nodeType_strs=[]
-        for node_MObject in node_MObjects:
-            MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-            nodeType_str=MFnDependencyNode.typeName
-            nodeType_strs.append(nodeType_str)
+        nodeType_strs=[om2.MFnDependencyNode(node_MObject).typeName for node_MObject in node_MObjects]
         if nodeType_strs == []:
             return None
         else:
             return nodeType_strs
+    
+    #Multi Function
+    def _fullPathSwitch_query_str(self,node_MObject,fullPath=False):
+        if fullPath:
+            node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+            name_str=self.fullPath_query_str(node_MDagPath)
+        else:
+            node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+            name_str=node_MFnDependencyNode.name()
+        return name_str
 
-    #Private Function
-    def _fullPathsSwitch_query_strs(self,node_MObjects,fullPath=False):
-        name_strs=[]
-        for node_MObject in node_MObjects:
-            if fullPath:
-                MDagPath=self.convertMObject_create_MDagPath(node_MObject)
-                name_str=self.fullPath_query_str(MDagPath)
-                name_strs.append(name_str)
-            else:
-                MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-                name_str=MFnDependencyNode.name()
-                name_strs.append(name_str)
+    def _fullPathSwitch_query_strs(self,node_MObjects,fullPath=False):
+        name_strs=[self._fullPathSwitch_query_str(node_MObject,fullPath) for node_MObject in node_MObjects]
         return name_strs
 
     #Setting Function
-    def getShape(self,fullPath=False):
-        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+    def setDoParent(self,variable):
+        setattr(self,"_parent_MObject",self.selectNode_create_MObject(variable))
+    def getDoParent(self,fullPath=None):
+        _fullPath_bool=fullPath or self._fullPath_bool
+        node_str=self._fullPathSwitch_query_str(self._parent_MObject,_fullPath_bool)
+        return node_str
+
+    def setFullPath(self,variable):
+        setattr(self,"_fullPath_bool",variable)
+    def getFullPath(self):
+        return self._fullPath_bool
+    
+    def setFirstOnly(self,variable):
+        setattr(self,"_firstOnly_bool",variable)
+    def getFirstOnly(self):
+        return self._firstOnly_bool
+    
+    def setFirstAddress(self,variable):
+        setattr(self,"_firstAddress_int",variable)
+    def getFirstAddress(self):
+        return self._firstAddress_int
+    
+    def getShape(self,node=None,fullPath=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
         shape_MObject=self.shape_query_MObject(node_MDagPath)
-        shape_str=self._fullPathSwitch_query_str(shape_MObject,fullPath)
+        shape_str=self._fullPathSwitch_query_str(shape_MObject,_fullPath_bool)
         return shape_str
-    def getShapeType(self):
-        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+    def getShapes(self,node=None,fullPath=None,firstOnly=None,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        _firstOnly_bool=firstOnly or self._firstOnly_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        if shape_MObjects == None:
+            return None
+        if _firstOnly_bool:
+            shape_str=self._fullPathSwitch_query_str(shape_MObjects[_firstAddress_int],_fullPath_bool)
+            return shape_str
+        else:
+            shape_strs=self._fullPathSwitch_query_strs(shape_MObjects,_fullPath_bool)
+            return shape_strs
+    def getShapeType(self,node=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
         shape_MObject=self.shape_query_MObject(node_MDagPath)
         shapeType_str=self.nodeType_query_str(shape_MObject)
         return shapeType_str
-    def getShapes(self,fullPath=False,firstOnly=False):
-        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+    def getShapeTypes(self,node=None,firstOnly=None,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _firstOnly_bool=firstOnly or self._firstOnly_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
         shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
         if shape_MObjects == None:
             return None
-        if firstOnly:
-            shape_str=self._fullPathSwitch_query_str(shape_MObjects[0],fullPath)
-            return shape_str
-        else:
-            shape_strs=self.__fullPathsSwitch_query_strs(shape_MObjects,fullPath)
-            return shape_strs
-    def getShapeTypes(self,firstOnly=False):
-        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
-        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
-        if shape_MObjects == None:
-            return None
-        if firstOnly:
-            shapeType_str=self.nodeType_query_str(shape_MObjects[0])
+        if _firstOnly_bool:
+            shapeType_str=self.nodeType_query_str(shape_MObjects[_firstAddress_int])
             return shapeType_str
         else:
             shapeType_strs=[]
@@ -350,125 +570,93 @@ class SelfDagNode(SelfNode):
                 shapeType_strs.append(shapeType_str)
             return shapeType_strs
 
-    def getParent(self,fullPath=False):
-        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+    def getParent(self,node=None,fullPath=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
         parent_MObject=self.parent_query_MObject(node_MDagPath)
-        parent_str=self._fullPathSwitch_query_str(parent_MObject,fullPath)
+        parent_str=self._fullPathSwitch_query_str(parent_MObject,_fullPath_bool)
         if parent_str == "world" or parent_str == "":
             return None
         else:
             return parent_str
 
-    def getChilds(self,fullPath=False,firstOnly=False):
-        node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
+    def getChilds(self,node=None,fullPath=False,firstOnly=None,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        _firstOnly_bool=firstOnly or self._firstOnly_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
         child_MObjects=self.child_query_MObjects(node_MDagPath)
         if child_MObjects == None:
             return None
-        if firstOnly:
-            child_str=self._fullPathSwitch_query_str(child_MObjects[0],fullPath)
+        if _firstOnly_bool:
+            child_str=self._fullPathSwitch_query_str(child_MObjects[_firstAddress_int],_fullPath_bool)
             return child_str
         else:
-            child_strs=self._fullPathsSwitch_query_strs(child_MObjects,fullPath)
+            child_strs=self._fullPathSwitch_query_strs(child_MObjects,_fullPath_bool)
             return child_strs
 
-    #Setting Function
-    def setParent(self,variable):
-        self._parent_MDapPath=self.selectNode_create_MDagPath_MObject(variable)[0]
-        return self._parent_MDapPath
-    def getParent(self,fullPath=False):
-        node_str=self._fullPathSwitch_query_str(self._parent_MDapPath,None,fullPath)
-        return node_str
-
     #Public Function
-    def parent(self,parent=None):
-        parent_MDagPath=self.selectNode_create_MDagPath_MObject(parent)[0] or self._parent_MDapPath
+    def parent(self,node=None,parent=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _parent_MObject=self.selectNode_create_MObject(parent) or self._parent_MObject
+        
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        parent_MDagPath=self.convertMObject_create_MDagPath(_parent_MObject)
+        
         parent_MDagModifier=om2.MDagModifier()
-        parent_MDagModifier.reparentNode(self._node_MDagPath,parent_MDagPath)
+        parent_MDagModifier.reparentNode(node_MDagPath,parent_MDagPath)
         parent_MDagModifier.doIt()
 
-    def replaceByParent(self,fullPath=False):
-        self._node_MObject=self.parent_query_MObject(self._node_MDagPath)
-        self._node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
-        node_str=self._fullPathSwitch_query_str(self._node_MDagPath,None,fullPath)
+    def replaceByParent(self,node=None,fullPath=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+
+        self._node_MObject=self.parent_query_MObject(node_MDagPath)
+        node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
         return node_str
     
-    def replaceByChild(self,fullPath=False,address_int=0):
-        child_MObjects=self.child_query_MObjects(self._node_MDagPath,shapeOnly=False)
-        self._node_MObject=child_MObjects[address_int]
-        self._node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
-        node_str=self._fullPathSwitch_query_str(self._node_MDagPath,None,fullPath)
+    def replaceByChild(self,node=None,fullPath=False,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+
+        child_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=False)
+        self._node_MObject=child_MObjects[_firstAddress_int]
+        node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
         return node_str
         
-    def replaceByShape(self,fullPath=False,address_int=0):
-        shape_MObjects=self.child_query_MObjects(self._node_MDagPath,shapeOnly=True)
-        self._node_MObject=shape_MObjects[address_int]
-        self._node_MDagPath=self.convertMObject_create_MDagPath(self._node_MObject)
-        node_str=self._fullPathSwitch_query_str(self._node_MDagPath,None,fullPath)
+    def replaceByShape(self,node=None,fullPath=False,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        self._node_MObject=shape_MObjects[_firstAddress_int]
+        node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
         return node_str
 
-class SelfComponent(SelfNode):
-    def __init__(self,node):
-        self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
-        self._node_MDagPath,self._node_MObject=self.selectComponent_create_MDagPath_MObject(node)
-        
-    #Single Function
-    def selectComponent_create_MDagPath_MObject(self,node):
-        if node == None:
-            return None
-        elif not isinstance(node,str):
-            om2.MGlobal.displayError("Please insert one string in value")
-            sys.exit()
-        component_MSelectionList=om2.MSelectionList()
-        component_MSelectionList.add(node)
-        node_MDagPath,components_MObject=component_MSelectionList.getComponent(0)
-        return node_MDagPath,components_MObject
-
-    def componentID_query_int(self,node_MObject):
-        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent(node_MObject)
-        id_int=component_MFnSingleIndexedComponent.getElements()[0]
-        return id_int
-
-    def nodeType_query_str(self,node_MDagPath):
-        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
-        nodeType_str=node_MFnDagNode.typeName
-        return nodeType_str
-
-    def meshVertex_query_MPoint(self,node_MDagPath,id_int):
-        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
-        vertex_MPoint=mesh_MFnMesh.getPoint(id_int)
-        return vertex_MPoint
-
-    def vertexRelativeMove_edit_func(self,node_MDagPath,id_int,move):
-        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
-        vertex_MPoint=mesh_MFnMesh.getPoint(id_int)
-
-        move_MVector=om2.MVector(move)
-        newVertice_MPoint=vertex_MPoint+move_MVector
-        mesh_MFnMesh.setPoint(id_int,newVertice_MPoint)
-
-    def vertexAbsoluteMove_edit_func(node_MDagPath,id_int,move):
-        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
-        move_MPoint=om2.MPoint(move)
-        mesh_MFnMesh.setPoint(id_int,move_MPoint)
-
-    #Setting Function
-    def setComponent(self,variable):
-        self._node_MDagPath,self._node_MObject=self.selectComponent_create_MDagPath_MObject(variable)
-        return self._node_MDagPath,self._node_MObject
-    def getComponent(self):
-        component_int=self.componentID_query_int(self._node_MObject)
-        return component_int
-    
-    def getNodeType(self):
-        objectType_str=self.nodeType_query_str(self._node_MDagPath)
-        return objectType_str
-    
 class SelfMatrixNode(SelfDagNode):
-    def __init__(self,node):
-        super(SelfMatrixNode,self).__init__(node)
+    def __init__(self):
+        super(SelfMatrixNode,self).__init__()
+        self._MMatrix=None
         self._MSpace=om2.MSpace.kTransform #1
         self._rotateOrder=om2.MEulerRotation.kXYZ #0
-        self._MMatrix=None
+        self._setChoices+=[
+            "Matrix",
+            "MSpace",
+            "RotateOrder"
+        ]
+        self._doIts+=[]
 
     #Single Function
     def vector3_check_vector3(self,variable):
@@ -481,64 +669,68 @@ class SelfMatrixNode(SelfDagNode):
         if isinstance(MMatrix,om2.MMatrix):
             return MMatrix
         elif MMatrix == None:
-            MMatrix=om2.MMatrix(((1, 0, 0, 0), (0, 1, 0, 0), (0, 0, 1, 0), (0, 0, 0, 1)))
+            MMatrix=om2.MMatrix([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1])
             return MMatrix
         else:
             MMatrix = None
             return MMatrix
 
     #Private Function
-    def _nodeToNormalMMatrix_query_MMatrix(self,node):
-        node_MDagPath=self.convertMObject_create_MDagPath(node)
+    def _nodeToNormalMMatrix_query_MMatrix(self,node_MObject):
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         MMatrix=node_MFnDagNode.transformationMatrix()
         return MMatrix
-    def _nodeToWorldMMatrix_query_MMatrix(self,node):
-        node_MDagPath=self.convertMObject_create_MDagPath(node)
+    def _nodeToWorldMMatrix_query_MMatrix(self,node_MObject):
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         MMatrix=node_MDagPath.inclusiveMatrix()
         return MMatrix
-    def _nodeToParentMMatrix_query_MMatrix(self,node):
-        node_MDagPath=self.convertMObject_create_MDagPath(node)
+    def _nodeToParentMMatrix_query_MMatrix(self,node_MObject):
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         MMatrix=node_MDagPath.exclusiveMatrix()
         return MMatrix
-    def _nodeToInverseNormalMMatrix_query_MMatrix(self,node):
-        node_MDagPath=self.convertMObject_create_MDagPath(node)
+    def _nodeToInverseNormalMMatrix_query_MMatrix(self,node_MObject):
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         normal_MMatrix=node_MFnDagNode.transformationMatrix()
         normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
         MMatrix=normal_MTransformationMatrix.asMatrixInverse()
         return MMatrix
-    def _nodeToInverseWorldMMatrix_query_MMatrix(self,node):
-        node_MDagPath=self.convertMObject_create_MDagPath(node)
+    def _nodeToInverseWorldMMatrix_query_MMatrix(self,node_MObject):
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         world_MMatrix=node_MDagPath.inclusiveMatrix()
         world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
         MMatrix=world_MTransformationMatrix.asMatrixInverse()
         return MMatrix
-    def _nodeToInverseParentMMatrix_query_MMatrix(self,node):
-        node_MDagPath=self.convertMObject_create_MDagPath(node)
+    def _nodeToInverseParentMMatrix_query_MMatrix(self,node_MObject):
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         parent_MMatrix=node_MDagPath.exclusiveMatrix()
         parent_MTransformationMatrix=om2.MTransformationMatrix(parent_MMatrix)
         MMatrix=parent_MTransformationMatrix.asMatrixInverse()
         return MMatrix
 
     #Setting Function
+    def setNode(self,variable):
+        super(SelfMatrixNode,self).setNode(variable)
+        node_MObject=getattr(self,"_node_MObject")
+        setattr(self,"_MMatrix",self._nodeToNormalMMatrix_query_MMatrix(node_MObject))
+
+    def setMatrix(self,variable):
+        node_MMatrix=om2.MMatrix(variable)
+        setattr(self,"_MMatrix",node_MMatrix)
+    def getMatrix(self):
+        matrix=list(self._MMatrix)
+        return matrix
+    
     def setMSpace(self,variable):
-        self._MSpace=variable
-        return self._MSpace
+        setattr(self,"_MSpace",variable)
     def getMSpace(self):
         return self._MSpace
 
     def setRotateOrder(self,variable):
-        self._rotateOrder=variable
-        return self._rotateOrder
+        setattr(self,"_rotateOrder",variable)
     def getRotateOrder(self):
         return self._rotateOrder
-
-    def setMMatrix(self,variable):
-        self._MMatrix=om2.MMatrix(variable)
-        return self._MMatrix
-    def getMMatrix(self):
-        return self._MMatrix
 
     def currentNormalMMatrix(self):
         self._MMatrix=self._nodeToNormalMMatrix_query_MMatrix(self._node_MObject)
@@ -572,7 +764,7 @@ class SelfMatrixNode(SelfDagNode):
         add_MMatrix.setElement(3,0,MVector.x)
         add_MMatrix.setElement(3,1,MVector.y)
         add_MMatrix.setElement(3,2,MVector.z)
-        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
     def getTranslate(self):
@@ -589,7 +781,7 @@ class SelfMatrixNode(SelfDagNode):
         radian=[math.radians(variable[0]),math.radians(variable[1]),math.radians(variable[2])]
         MEulerRotation=om2.MEulerRotation(radian,self._rotateOrder)
         add_MMatrix=MEulerRotation.asMatrix()
-        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
     def getRotate(self,radian=False):
@@ -608,7 +800,7 @@ class SelfMatrixNode(SelfDagNode):
     def addQuaternionMMatrix(self,variable):
         MQuaternion=om2.MQuaternion(variable)
         add_MMatrix=MQuaternion.asMatrix()
-        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix) or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
     def getQuaternion(self):
@@ -647,7 +839,7 @@ class SelfMatrixNode(SelfDagNode):
         MTransformationMatrix=om2.MTransformationMatrix()
         MTransformationMatrix.setScale(scale_MVector,self._MSpace)
         add_MMatrix=MTransformationMatrix.asMatrix()
-        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix) or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
     def getScale(self):
@@ -668,32 +860,72 @@ class SelfMatrixNode(SelfDagNode):
 class SelfLocationNode(SelfMatrixNode):
     def __init__(self,node):
         super(SelfLocationNode,self).__init__(node)
-        self._transformNode=None
+        self._matchNode_MObject=None
+        self._setChoices+=[
+            "TransformNode",
+        ]
+        self._doIts+=[
+            "nodeTranslate",
+            "translate"
+        ]
 
     #Setting Function
-    def setTransformNode(self,variable):
-        self._transformNode=variable
-        return self._transformNode
-    def getTransformNode(self):
-        return self._transformNode
+    def setMatchNode(self,variable):
+        setattr(self,"_matchNode_MObject",variable)
+    def getMatchNode(self):
+        return self._matchNode_MObject
 
     #Public Function
-    def nodeTranslate(self,node=None):
-        transformNode=node or self._transformNode
-        if transformNode == None:
-            return
-            
-        node_MObject=self.selectNode_create_MObject(transformNode)
-        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(node_MObject)
-        myInverseWorld_MMatrix=self.currentInverseWorldMMatrix()
+    def matchToTranslateNode(self,node=None,matchNode=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
+        
+        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
+        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
 
         transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
-        self.setMMatrix(transform_MMatrix)
 
+        self.setMatrix(transform_MMatrix)
         worldTranslate_MVector=self.getTranslate()
-        
-        node_MFnTransform=om2.MFnTransform(self._node_MObject)
+
+        node_MFnTransform=om2.MFnTransform(_node_MObject)
         node_MFnTransform.translateBy(worldTranslate_MVector,self._MSpace)
+
+    def matchToRotateNode(self,node=None,matchNode=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
+        
+        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
+        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
+
+        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+
+        self.setMatrix(transform_MMatrix)
+        worldRotate_MEulerRotation=self.getRotate()
+
+    def matchToQuaternionNode(self,node=None,matchNode=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
+        
+        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
+        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
+
+        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+
+        self.setMatrix(transform_MMatrix)
+        worldQuaternion_MQuaternion=self.getQuaternion()
+
+    def matchToScaleNode(self,node=None,matchNode=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
+        
+        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
+        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
+
+        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+
+        self.setMatrix(transform_MMatrix)
+        worldScale_list=self.getScale()
 
     def translate(self,vector3=None):
         translate_vector3=self.vector3_check_vector3(vector3)
@@ -707,10 +939,37 @@ class SelfLocationNode(SelfMatrixNode):
         node_MFnTransform.translateBy(translate_MVector,self._MSpace)
 
     def rotate(self,vector3=None):
-        pass
+        translate_vector3=self.vector3_check_vector3(vector3)
+        node_MFnTransform=om2.MFnTransform(self._node_MObject)
+        if translate_vector3 == None:
+            MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+        else:
+            self.setTranslateMMatrix(vector3)
+            translate_MVector=self.getTranslate()
+        node_MFnTransform.rotateBy(translate_MVector,self._MSpace)
+
+    def quaternion(self,vector3=None):
+        translate_vector4=[0,0,0,1]
+        node_MFnTransform=om2.MFnTransform(self._node_MObject)
+        if translate_vector4 == None:
+            MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+        else:
+            self.setTranslateMMatrix(vector3)
+            translate_MVector=self.getTranslate()
+        node_MFnTransform.rotateBy(translate_MVector,self._MSpace)
 
     def scale(self,vector3=None):
-        pass
+        translate_vector3=self.vector3_check_vector3(vector3)
+        node_MFnTransform=om2.MFnTransform(self._node_MObject)
+        if translate_vector3 == None:
+            MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+        else:
+            self.setTranslateMMatrix(vector3)
+            translate_MVector=self.getTranslate()
+        node_MFnTransform.scaleBy(translate_MVector,self._MSpace)
 
     def addParentNull(self):
         pass
@@ -727,8 +986,26 @@ class SelfWeightJoint(SelfConnectNode):
         super(SelfWeightJoint,self).__init__(node)
 
 class SelfMeshVertex(SelfComponent):
-    def __init__(self,components):
-        super(SelfMeshVertex,self).__init__(components)
+    def __init__(self):
+        super(SelfMeshVertex,self).__init__()
+
+    def meshVertex_query_MPoint(self,node_MDagPath,id_int):
+        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
+        vertex_MPoint=mesh_MFnMesh.getPoint(id_int)
+        return vertex_MPoint
+
+    def vertexRelativeMove_edit_func(self,node_MDagPath,id_int,move):
+        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
+        vertex_MPoint=mesh_MFnMesh.getPoint(id_int)
+
+        move_MVector=om2.MVector(move)
+        newVertice_MPoint=vertex_MPoint+move_MVector
+        mesh_MFnMesh.setPoint(id_int,newVertice_MPoint)
+
+    def vertexAbsoluteMove_edit_func(node_MDagPath,id_int,move):
+        mesh_MFnMesh=om2.MFnMesh(node_MDagPath)
+        move_MPoint=om2.MPoint(move)
+        mesh_MFnMesh.setPoint(id_int,move_MPoint)
 
 class SelfSurfaceVertex(SelfComponent):
     def __init__(self,components):
@@ -758,8 +1035,9 @@ class SelfSurface(SelfMatrixNode):
     def __init__(self,node):
         super(SelfSurface,self).__init__(node)
 
-class SelfCreateNode(object):
-    def __init__(self,node):
+class SelfCreateNode(SelfOrigin):
+    def __init__(self):
+
         pass
 
 class TrsObject(object):

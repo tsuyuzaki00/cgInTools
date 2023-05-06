@@ -6,9 +6,11 @@
 
 [SelfNode(object)](#selfnode)
 
+[SelfConnectNode(SelfDagNode)](#selfconnectnode)
+
 [SelfDagNode(SelfNode)](#selfdagnode)
 
-[SelfConnectNode(SelfDagNode)](#selfconnectnode)
+[SelfComponent(SelfNode)](#selfcomponent)
 
 [SelfMatrixNode(SelfDagNode)](#selfmatrixnode)
 
