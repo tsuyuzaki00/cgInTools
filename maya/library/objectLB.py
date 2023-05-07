@@ -14,22 +14,22 @@ class SelfOrigin(object):
     def __init__(self):
         self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
         self._read_dict={}
-        self._setChoices=[]
+        self._setChoices=["DoIts"]
         self._doIts=[]
     
     #Setting Function
     def setReadDict(self,variable):
-        setattr(self,"_read_dict",variable)
+        self._read_dict=variable
     def getReadDict(self):
         return self._read_dict
     
     def setSetChoices(self,variables):
-        setattr(self,"_setChoices",variables)
+        self._setChoices=variables
     def getSetChoices(self):
         return self._setChoices
     
     def setDoIts(self,variables):
-        setattr(self,"_doIts",variables)
+        self._doIts=variables
     def getDoIts(self):
         return self._doIts
     
@@ -138,29 +138,24 @@ class SelfNode(SelfOrigin):
     
     #Setting Function
     def setNode(self,variable):
-        setattr(self,"_node_MObject",self.selectNode_create_MObject(variable))
+        self._node_MObject=self.selectNode_create_MObject(variable)
     def getNode(self):
         node_MFnDependencyNode=om2.MFnDependencyNode(self._node_MObject)
         name_str=node_MFnDependencyNode.name()
         return name_str
-    
-    def getNodeType(self,node=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        objectType_str=self.nodeType_query_str(_node_MObject)
-        return objectType_str
 
     def setAttr(self,variable):
-        setattr(self,"_attr_str",variable)
+        self._attr_str=variable
     def getAttr(self):
         return self._attr_str
 
     def setValue(self,variable):
-        setattr(self,"_value",variable)
+        self._value=variable
     def getValue(self):
         return self._value
     
     def setValueType(self,variable):
-        setattr(self,"_valueType",variable)
+        self._valueType=variable
     def getValueType(self):
         return self._valueType
     
@@ -181,6 +176,11 @@ class SelfNode(SelfOrigin):
             node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
             value=self.queryAttr_query_value(node_MPlug,_valueType)
             return value
+        
+    def queryNodeType(self,node=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        objectType_str=self.nodeType_query_str(_node_MObject)
+        return objectType_str
 
 class SelfComponent(SelfOrigin):
     def __init__(self):
@@ -232,50 +232,47 @@ class SelfComponent(SelfOrigin):
         return nodeType_str
 
     #Setting Function
+    def setComponent(self,variable):
+        self._shape_MDagPath,self._components_MObject=self.selectComponent_create_MDagPath_MObject(variable)
+        self._MFn_int=self._components_MObject.apiType()
+
     def setMFn(self,variable):
-        setattr(self,"_MFn_int",variable)
+        self._MFn_int=variable
     def getMFn(self):
         return self._MFn_int
 
-    def setComponent(self,variable):
-        shape_MDagPath,components_MObject=self.selectComponent_create_MDagPath_MObject(variable)
-        setattr(self,"_shape_MDagPath",shape_MDagPath)
-        setattr(self,"_component_MObject",components_MObject)
-        setattr(self,"_MFn_int",components_MObject.apiType())
-
     def setShape(self,variable):
-        shape_MDagPath=self.shape_create_MDagPath(variable)
-        setattr(self,"_shape_MDagPath",shape_MDagPath)
+        self._shape_MDagPath=self.shape_create_MDagPath(variable)
     def getShape(self):
         shape_MFnDagNode=om2.MFnDagNode(self._shape_MDagPath)
         shape_str=shape_MFnDagNode.name()
         return shape_str
     
-    def getShapeType(self):
-        objectType_str=self.shapeType_query_str(self._shape_MDagPath)
-        return objectType_str
-
     def setComponentID(self,variable,MFn=None):
         _MFn_int=MFn or self._MFn_int
-        component_MObject=self.convertToInt_create_MObject(variable,_MFn_int)
-        setattr(self,"_component_MObject",component_MObject)
+        self._component_MObject=self.convertToInt_create_MObject(variable,_MFn_int)
     def getComponentID(self):
         componentID_int=self.componentID_query_int(self._component_MObject)
         return componentID_int
     
+    #Public Function
+    def queryShapeType(self):
+        objectType_str=self.shapeType_query_str(self._shape_MDagPath)
+        return objectType_str
+    
 class SelfConnectNode(SelfNode):
-    def __init__(self,node):
-        super(SelfConnectNode,self).__init__(node)
+    def __init__(self):
+        super(SelfConnectNode,self).__init__()
         self._operationNode_MObject=None
         self._operationAttr_str=None
-        self._findConnect_str=None
-        self._findEnum_str="NodeType"
+        self._findType_str=None
+        self._findEnum_str="NodeType" # or MFn
         self._findSource_bool=True
         self._findTarget_bool=True
         self._setChoices+=[
             "OperationNode",
             "OperationAttr",
-            "FindConnect",
+            "FindType",
             "FindEnum",
             "FindSource",
             "FindTarget"
@@ -310,7 +307,7 @@ class SelfConnectNode(SelfNode):
             return connectedTo_MPlugs
     
     #Multi Function
-    def _findConnect_query_MObjects(self,node_MObject,find,findEnum="NodeType",source=True,target=True):
+    def _findType_query_MObjects(self,node_MObject,find,findEnum="NodeType",source=True,target=True):
         #findEnum="MFn" or "NodeType"
         connectedTo_MPlugs=self.connectionNode_query_MPlugs(node_MObject,source,target)
         findConnectedTo_MObjects=[]
@@ -346,67 +343,36 @@ class SelfConnectNode(SelfNode):
     
     #Setting Function
     def setOperationNode(self,variable):
-        setattr(self,"_operationNode_MObject",self.selectNode_create_MObject(variable))
+        self._operationNode_MObject=self.selectNode_create_MObject(variable)
     def getOperationNode(self):
         node_MFnDependencyNode=om2.MFnDependencyNode(self._operationNode_MObject)
         operationNode_str=node_MFnDependencyNode.name()
         return operationNode_str
 
     def setOperationAttr(self,variable):
-        setattr(self,"_operationAttr_str",variable)
+        self._operationAttr_str=variable
     def getOperationAttr(self):
         return self._operationAttr_str
     
-    def setFindConnect(self,variable):
-        setattr(self,"_findConnect_str",variable)
-    def getFindConnect(self):
-        return self._findConnect_str
+    def setFindType(self,variable):
+        self._findType_str=variable
+    def getFindType(self):
+        return self._findType_str
     
     def setFindEnum(self,variable):
-        setattr(self,"_findEnum_str",variable)
+        self._findEnum_str=variable
     def getFindEnum(self):
         return self._findEnum_str
 
     def setFindSource(self,variable):
-        setattr(self,"_findSource_bool",variable)
+        self._findSource_bool=variable
     def getFindSource(self):
         return self._findSource_bool
 
     def setFindTarget(self,variable):
-        setattr(self,"_findTarget_bool",variable)
+        self._findTarget_bool=variable
     def getFindTarget(self):
         return self._findTarget_bool
-
-    def getConnectionNodes(self,node=None,source=None,target=None):
-        _node_MObject=node or self._node_MObject
-        _findSource_bool=source or self._findSource_bool
-        _findTarget_bool=target or self._findTarget_bool
-
-        connectedTo_MPlugs=self.connectionNode_query_MPlugs(_node_MObject,_findSource_bool,_findTarget_bool)
-        connectNode_MObjects=[connectedTo_MPlug.node() for connectedTo_MPlug in connectedTo_MPlugs]
-        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
-        return connectNodes
-
-    def getConnectionNodeAttrToFind(self,node=None,attr=None,source=None,target=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _attr_str=attr or self._attr_str
-        _findSource_bool=source or self._findSource_bool
-        _findTarget_bool=target or self._findTarget_bool
-
-        connectNode_MObjects=self._findAttrConect_query_MObjects(_node_MObject,_attr_str,_findSource_bool,_findTarget_bool)
-        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
-        return connectNodes
-
-    def getConnectionNodeTypeOrMFnToFind(self,node=None,find=None,findEnum=None,source=None,target=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _findConnect_str=find or self._findConnect_str
-        _findEnum_str=findEnum or self._findEnum_str
-        _findSource_bool=source or self._findSource_bool
-        _findTarget_bool=target or self._findTarget_bool
-
-        connectNode_MObjects=self._findConnect_query_MObjects(_node_MObject,_findConnect_str,_findEnum_str,_findSource_bool,_findTarget_bool)
-        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
-        return connectNodes
 
     #Public Function
     def connectAttr(self,node=None,attr=None,operationNode=None,operationAttr=None):
@@ -421,6 +387,37 @@ class SelfConnectNode(SelfNode):
         MDGModifier=om2.MDGModifier()
         MDGModifier.connect(sourceNode_MPlug,node_MPlug)
         MDGModifier.doIt()
+
+    def queryConnectionNodes(self,node=None,source=None,target=None):
+        _node_MObject=node or self._node_MObject
+        _findSource_bool=source or self._findSource_bool
+        _findTarget_bool=target or self._findTarget_bool
+
+        connectedTo_MPlugs=self.connectionNode_query_MPlugs(_node_MObject,_findSource_bool,_findTarget_bool)
+        connectNode_MObjects=[connectedTo_MPlug.node() for connectedTo_MPlug in connectedTo_MPlugs]
+        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
+        return connectNodes
+
+    def queryConnectionNodeAttrToFind(self,node=None,attr=None,source=None,target=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _attr_str=attr or self._attr_str
+        _findSource_bool=source or self._findSource_bool
+        _findTarget_bool=target or self._findTarget_bool
+
+        connectNode_MObjects=self._findAttrConect_query_MObjects(_node_MObject,_attr_str,_findSource_bool,_findTarget_bool)
+        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
+        return connectNodes
+
+    def queryConnectionNodeTypeOrMFnToFind(self,node=None,findType=None,findEnum=None,source=None,target=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _findType_str=findType or self._findType_str
+        _findEnum_str=findEnum or self._findEnum_str
+        _findSource_bool=source or self._findSource_bool
+        _findTarget_bool=target or self._findTarget_bool
+
+        connectNode_MObjects=self._findType_query_MObjects(_node_MObject,_findType_str,_findEnum_str,_findSource_bool,_findTarget_bool)
+        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
+        return connectNodes
 
 class SelfDagNode(SelfNode):
     def __init__(self):
@@ -494,111 +491,39 @@ class SelfDagNode(SelfNode):
             name_str=node_MFnDependencyNode.name()
         return name_str
 
+    #Private Function
     def _fullPathSwitch_query_strs(self,node_MObjects,fullPath=False):
         name_strs=[self._fullPathSwitch_query_str(node_MObject,fullPath) for node_MObject in node_MObjects]
         return name_strs
 
     #Setting Function
-    def setDoParent(self,variable):
-        setattr(self,"_parent_MObject",self.selectNode_create_MObject(variable))
-    def getDoParent(self,fullPath=None):
-        _fullPath_bool=fullPath or self._fullPath_bool
-        node_str=self._fullPathSwitch_query_str(self._parent_MObject,_fullPath_bool)
-        return node_str
-
     def setFullPath(self,variable):
-        setattr(self,"_fullPath_bool",variable)
+        self._fullPath_bool=variable
     def getFullPath(self):
         return self._fullPath_bool
     
     def setFirstOnly(self,variable):
-        setattr(self,"_firstOnly_bool",variable)
+        self._firstOnly_bool=variable
     def getFirstOnly(self):
         return self._firstOnly_bool
     
     def setFirstAddress(self,variable):
-        setattr(self,"_firstAddress_int",variable)
+        self._firstAddress_int=variable
     def getFirstAddress(self):
         return self._firstAddress_int
     
-    def getShape(self,node=None,fullPath=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+    def getNode(self,fullPath=None):
         _fullPath_bool=fullPath or self._fullPath_bool
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObject=self.shape_query_MObject(node_MDagPath)
-        shape_str=self._fullPathSwitch_query_str(shape_MObject,_fullPath_bool)
-        return shape_str
-    def getShapes(self,node=None,fullPath=None,firstOnly=None,firstAddress=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
+        return node_str
+
+    def setDoParent(self,variable):
+        self._parent_MObject=self.selectNode_create_MObject(variable)
+    def getDoParent(self,fullPath=None):
         _fullPath_bool=fullPath or self._fullPath_bool
-        _firstOnly_bool=firstOnly or self._firstOnly_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
-        if shape_MObjects == None:
-            return None
-        if _firstOnly_bool:
-            shape_str=self._fullPathSwitch_query_str(shape_MObjects[_firstAddress_int],_fullPath_bool)
-            return shape_str
-        else:
-            shape_strs=self._fullPathSwitch_query_strs(shape_MObjects,_fullPath_bool)
-            return shape_strs
-    def getShapeType(self,node=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObject=self.shape_query_MObject(node_MDagPath)
-        shapeType_str=self.nodeType_query_str(shape_MObject)
-        return shapeType_str
-    def getShapeTypes(self,node=None,firstOnly=None,firstAddress=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _firstOnly_bool=firstOnly or self._firstOnly_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
-        if shape_MObjects == None:
-            return None
-        if _firstOnly_bool:
-            shapeType_str=self.nodeType_query_str(shape_MObjects[_firstAddress_int])
-            return shapeType_str
-        else:
-            shapeType_strs=[]
-            for shape_MObject in shape_MObjects:
-                shapeType_str=self.nodeType_query_str(shape_MObject)
-                shapeType_strs.append(shapeType_str)
-            return shapeType_strs
-
-    def getParent(self,node=None,fullPath=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        parent_MObject=self.parent_query_MObject(node_MDagPath)
-        parent_str=self._fullPathSwitch_query_str(parent_MObject,_fullPath_bool)
-        if parent_str == "world" or parent_str == "":
-            return None
-        else:
-            return parent_str
-
-    def getChilds(self,node=None,fullPath=False,firstOnly=None,firstAddress=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
-        _firstOnly_bool=firstOnly or self._firstOnly_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        child_MObjects=self.child_query_MObjects(node_MDagPath)
-        if child_MObjects == None:
-            return None
-        if _firstOnly_bool:
-            child_str=self._fullPathSwitch_query_str(child_MObjects[_firstAddress_int],_fullPath_bool)
-            return child_str
-        else:
-            child_strs=self._fullPathSwitch_query_strs(child_MObjects,_fullPath_bool)
-            return child_strs
-
+        node_str=self._fullPathSwitch_query_str(self._parent_MObject,_fullPath_bool)
+        return node_str
+    
     #Public Function
     def parent(self,node=None,parent=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
@@ -645,6 +570,87 @@ class SelfDagNode(SelfNode):
         node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
         return node_str
 
+    def queryShape(self,node=None,fullPath=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        shape_MObject=self.shape_query_MObject(node_MDagPath)
+        shape_str=self._fullPathSwitch_query_str(shape_MObject,_fullPath_bool)
+        return shape_str
+    
+    def queryShapes(self,node=None,fullPath=None,firstOnly=None,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        _firstOnly_bool=firstOnly or self._firstOnly_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        if shape_MObjects == None:
+            return None
+        if _firstOnly_bool:
+            shape_str=self._fullPathSwitch_query_str(shape_MObjects[_firstAddress_int],_fullPath_bool)
+            return shape_str
+        else:
+            shape_strs=self._fullPathSwitch_query_strs(shape_MObjects,_fullPath_bool)
+            return shape_strs
+    
+    def queryShapeType(self,node=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        shape_MObject=self.shape_query_MObject(node_MDagPath)
+        shapeType_str=self.nodeType_query_str(shape_MObject)
+        return shapeType_str
+    
+    def queryShapeTypes(self,node=None,firstOnly=None,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _firstOnly_bool=firstOnly or self._firstOnly_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
+        if shape_MObjects == None:
+            return None
+        if _firstOnly_bool:
+            shapeType_str=self.nodeType_query_str(shape_MObjects[_firstAddress_int])
+            return shapeType_str
+        else:
+            shapeType_strs=[]
+            for shape_MObject in shape_MObjects:
+                shapeType_str=self.nodeType_query_str(shape_MObject)
+                shapeType_strs.append(shapeType_str)
+            return shapeType_strs
+
+    def queryParent(self,node=None,fullPath=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        parent_MObject=self.parent_query_MObject(node_MDagPath)
+        parent_str=self._fullPathSwitch_query_str(parent_MObject,_fullPath_bool)
+        if parent_str == "world" or parent_str == "":
+            return None
+        else:
+            return parent_str
+
+    def queryChilds(self,node=None,fullPath=False,firstOnly=None,firstAddress=None):
+        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
+        _fullPath_bool=fullPath or self._fullPath_bool
+        _firstOnly_bool=firstOnly or self._firstOnly_bool
+        _firstAddress_int=firstAddress or self._firstAddress_int
+
+        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
+        child_MObjects=self.child_query_MObjects(node_MDagPath)
+        if child_MObjects == None:
+            return None
+        if _firstOnly_bool:
+            child_str=self._fullPathSwitch_query_str(child_MObjects[_firstAddress_int],_fullPath_bool)
+            return child_str
+        else:
+            child_strs=self._fullPathSwitch_query_strs(child_MObjects,_fullPath_bool)
+            return child_strs
+
 class SelfMatrixNode(SelfDagNode):
     def __init__(self):
         super(SelfMatrixNode,self).__init__()
@@ -654,7 +660,12 @@ class SelfMatrixNode(SelfDagNode):
         self._setChoices+=[
             "Matrix",
             "MSpace",
-            "RotateOrder"
+            "RotateOrder",
+            "TranslateMMatrix",
+            "RotateMMatrix",
+            "QuaternionMMatrix",
+            "AxisAngleMMatrix",
+            "ScaleMMatrix"
         ]
         self._doIts+=[]
 
@@ -681,14 +692,17 @@ class SelfMatrixNode(SelfDagNode):
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         MMatrix=node_MFnDagNode.transformationMatrix()
         return MMatrix
+    
     def _nodeToWorldMMatrix_query_MMatrix(self,node_MObject):
         node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         MMatrix=node_MDagPath.inclusiveMatrix()
         return MMatrix
+    
     def _nodeToParentMMatrix_query_MMatrix(self,node_MObject):
         node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         MMatrix=node_MDagPath.exclusiveMatrix()
         return MMatrix
+    
     def _nodeToInverseNormalMMatrix_query_MMatrix(self,node_MObject):
         node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
@@ -696,12 +710,14 @@ class SelfMatrixNode(SelfDagNode):
         normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
         MMatrix=normal_MTransformationMatrix.asMatrixInverse()
         return MMatrix
+    
     def _nodeToInverseWorldMMatrix_query_MMatrix(self,node_MObject):
         node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         world_MMatrix=node_MDagPath.inclusiveMatrix()
         world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
         MMatrix=world_MTransformationMatrix.asMatrixInverse()
         return MMatrix
+    
     def _nodeToInverseParentMMatrix_query_MMatrix(self,node_MObject):
         node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         parent_MMatrix=node_MDagPath.exclusiveMatrix()
@@ -712,23 +728,22 @@ class SelfMatrixNode(SelfDagNode):
     #Setting Function
     def setNode(self,variable):
         super(SelfMatrixNode,self).setNode(variable)
-        node_MObject=getattr(self,"_node_MObject")
-        setattr(self,"_MMatrix",self._nodeToNormalMMatrix_query_MMatrix(node_MObject))
+        self._MMatrix=self._nodeToNormalMMatrix_query_MMatrix(self._node_MObject)
 
     def setMatrix(self,variable):
         node_MMatrix=om2.MMatrix(variable)
-        setattr(self,"_MMatrix",node_MMatrix)
+        self._MMatrix=node_MMatrix
     def getMatrix(self):
         matrix=list(self._MMatrix)
         return matrix
     
     def setMSpace(self,variable):
-        setattr(self,"_MSpace",variable)
+        self._MSpace=variable
     def getMSpace(self):
         return self._MSpace
 
     def setRotateOrder(self,variable):
-        setattr(self,"_rotateOrder",variable)
+        self._rotateOrder=variable
     def getRotateOrder(self):
         return self._rotateOrder
 
@@ -767,7 +782,7 @@ class SelfMatrixNode(SelfDagNode):
         have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
-    def getTranslate(self):
+    def getTranslateMMatrix(self):
         MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
         MVector=MTransformationMatrix.translation(self._MSpace)
         return MVector
@@ -784,7 +799,7 @@ class SelfMatrixNode(SelfDagNode):
         have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
-    def getRotate(self,radian=False):
+    def getRotateMMatrix(self,radian=False):
         MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
         MEulerRotation=MTransformationMatrix.rotation(asQuaternion=False)
         if not radian:
@@ -803,24 +818,24 @@ class SelfMatrixNode(SelfDagNode):
         have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix) or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
-    def getQuaternion(self):
+    def getQuaternionMMatrix(self):
         MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
         MQuaternion=MTransformationMatrix.rotation(asQuaternion=True)
         return MQuaternion
 
-    def setAxisAngle(self,bend=(1,0,0),twist=0):
+    def setAxisAngleMMartix(self,bend=(1,0,0),twist=0):
         bend_MVector=om2.MVector(bend)
         MQuaternion=om2.MQuaternion(twist,bend)
         add_MMatrix=MQuaternion.asMatrix()
         have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
-    def addAxisAngle(self,bend=(1,0,0),twist=0):
+    def addAxisAngleMMatrix(self,bend=(1,0,0),twist=0):
         bend_MVector=om2.MVector(bend)
         MQuaternion=om2.MQuaternion(twist,bend)
         self._MMatrix=MQuaternion.asMatrix()
         return self._MMatrix
-    def getAxisAngle(self,radian=False):
+    def getAxisAngleMMatrix(self,radian=False):
         MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
         MQuaternion=MTransformationMatrix.rotation(asQuaternion=True)
         bend_MVector,twist_float,=MQuaternion.asAxisAngle()
@@ -842,18 +857,21 @@ class SelfMatrixNode(SelfDagNode):
         have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix) or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
-    def getScale(self):
+    def getScaleMMatrix(self):
         MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
         scale_list=MTransformationMatrix.scale(self._MSpace)
         return scale_list
 
-    def getDirectionX(self):
+    #Public Function
+    def queryDirectionX(self):
         MVectorX=om2.MVector(self._MMatrix[0],self._MMatrix[1],self._MMatrix[2])
         return MVectorX
-    def getDirectionY(self):
+    
+    def queryDirectionY(self):
         MVectorY=om2.MVector(self._MMatrix[4],self._MMatrix[5],self._MMatrix[6])
         return MVectorY
-    def getDirectionZ(self):
+    
+    def queryDirectionZ(self):
         MVectorZ=om2.MVector(self._MMatrix[8],self._MMatrix[9],self._MMatrix[10])
         return MVectorZ
 
@@ -871,7 +889,7 @@ class SelfLocationNode(SelfMatrixNode):
 
     #Setting Function
     def setMatchNode(self,variable):
-        setattr(self,"_matchNode_MObject",variable)
+        self._matchNode_MObject=variable
     def getMatchNode(self):
         return self._matchNode_MObject
 

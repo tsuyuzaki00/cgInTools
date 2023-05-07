@@ -5,59 +5,32 @@ from cgInTools.library import jsonLB as jLB
 from cgInTools.maya.library import objectLB as oLB
 cit.reloads([oLB])
 
-data_dict={
-    "selfNode_dicts":[
-        {
-            "node":"pCube1",
-            "setting_dicts":[
-                {
-                    "function":"attr",
-                    "value":"translateX"
-                },
-                {
-                    "function":"value",
-                    "value":"1"
-                },
-            ],
-            "doIts":[
-                "editAttr",
-            ]
-        },
-        {
-            "node":"pCube1",
-            "setting_dicts":[
-                {
-                    "function":"Attr",
-                    "value":"translateY"
-                },
-                {
-                    "function":"Value",
-                    "value":"5"
-                },
-            ],
-            "doIts":[
-                "editAttr",
-            ]
-        },
-    ],
-    
-}
-
-def selfNode(self_dicts=[]):
-    if not self_dicts == []:
-        for self_dict in self_dicts:
-            node_SelfNode=oLB.SelfNode(self_dict["node"])
-            for setting_dict in self_dict["setting_dicts"]:
-                node_SelfNode.setting(setting_dict["function"],setting_dict["value"])
-            for doIt_str in self_dict["doIts"]:
-                node_SelfNode.doIt(doIt_str)
+def selfWrite(node=None):
+    if not node == None:
+        node_SelfNode=oLB.SelfNode()
+        node_SelfNode.setNode(node)
+        node_SelfNode.setAttr("translateX")
+        node_SelfNode.setDoIts(["queryAttr"])
+        node_SelfNode.setSetChoices(["DoIts","Node","Attr"])
+        write_dict=node_SelfNode.writeDict() 
+        return write_dict
     else:
         return None
-
-
+    
+def selfReadAndDo(read_dict=None):
+    if not read_dict == None:
+        node_SelfNode=oLB.SelfNode()
+        node_SelfNode.setReadDict(read_dict)
+        node_SelfNode.doIt()
 
 def main():
-    selfNode(data_dict["selfNode_dicts"])
-    pass
+    selfWrite()
+    node_Json=jLB.Json()
+    node_Json.setDirectory()
+    node_Json.setFile("test")
+    node_Json.write()
+    
+    read_dict=node_Json.read()
+    selfReadAndDo(read_dict)
 
 main()
