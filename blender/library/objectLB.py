@@ -2,12 +2,71 @@ import bpy
 import math
 import bmesh
 
-class SelfModifiersMesh(object):
+class SelfOrigin(object):
     def __init__(self):
+        self._read_dict={}
+        self._setChoices=["DoIts"]
+        self._doIts=[]
+    
+    #Setting Function
+    def setReadDict(self,variable):
+        self._read_dict=variable
+    def getReadDict(self):
+        return self._read_dict
+    
+    def setSetChoices(self,variables):
+        self._setChoices=variables
+    def getSetChoices(self):
+        return self._setChoices
+    
+    def setDoIts(self,variables):
+        self._doIts=variables
+    def getDoIts(self):
+        return self._doIts
+    
+    #Public Function
+    def writeDict(self,setChoices=None):
+        _setChoices=setChoices or self._setChoices
+
+        write_dict={}
+        for _selfChoice in _setChoices:
+            #print(_selfChoice)
+            variable=eval('self.get'+_selfChoice+'()')
+            write_dict[_selfChoice]=variable
+        return write_dict
+
+    def readDict(self,read_dict=None):
+        _read_dict=read_dict or self._read_dict
+
+        setFunctions=list(_read_dict.keys())
+        for setFunction in setFunctions:
+            #print(_read_dict[setFunction])
+            if isinstance(_read_dict[setFunction],str):
+                variable='"'+_read_dict[setFunction]+'"'
+            else:
+                variable=str(_read_dict[setFunction])
+            eval('self.set'+setFunction+'('+variable+')')
+
+    def doIt(self,doIts=None):
+        _doIts=doIts or self._doIts
+
+        if _doIts == None:
+            return
+        else:
+            for _doIt in _doIts:
+                eval("self."+_doIt+"()")
+
+class SelfModifiersMesh(SelfOrigin):
+    def __init__(self):
+        super(SelfModifiersMesh,self).__init__()
         self._mesh_str=None
         self._subject_str=None
         self._modifier_str=None
         self._modifierType_str=None
+        self._setChoices+=[
+        ]
+        self._doIts+=[
+        ]
 
     #Single Function
     def selectModifiersMesh_query_ObjectModifiers(self,meshName):
@@ -118,19 +177,25 @@ class SelfModifiersMesh(object):
         isModifier_bool=self.isModifier_query_bool(mesh_ObjectModifiers,_modifier_str)
         return isModifier_bool
 
-class SelfEditArmature(object):
+class SelfEditArmature(SelfOrigin):
     def __init__(self):
+        super(SelfEditArmature,self).__init__()
         self._armature_str=None
         self._bone_str=None
         self._head_list=None
         self._tail_list=None
         self._roll_float=None
-        self._initChoices=[
-            "armature_str",
-            "bone_str",
-            "head_list",
-            "tail_list",
-            "roll_float"
+        self._setChoices+=[
+            "Armature",
+            "Bone",
+            "Head",
+            "Tail",
+            "Roll"
+        ]
+        self._doIts+=[
+            "editHead",
+            "editTail",
+            "editRoll"
         ]
 
     def selectEditBone_query_EditBone(self,armatureName,boneName):
@@ -164,12 +229,6 @@ class SelfEditArmature(object):
         return roll_float
 
     #Setting Function
-    def setInitChoice(self,variable):
-        self._initChoices=variable
-        return self._initChoices
-    def getInitChoice(self):
-        return self._initChoices
-
     def setArmature(self,variable):
         self._armature_str=variable
         return self._armature_str
@@ -213,36 +272,6 @@ class SelfEditArmature(object):
         return self._roll_float
 
     #Public Function
-    def writeDict(self,initChoices=None):
-        _initChoices=initChoices or self._initChoices
-        write_dict={}
-        for _initChoice in _initChoices:
-            variable=getattr(self,"_"+_initChoice)
-            write_dict[_initChoice]=variable
-        return write_dict
-
-    def readDict(self,read_dict,initChoices=None):
-        _initChoices=initChoices or self._initChoices
-        for _initChoice in _initChoices:
-            setattr(self,"_"+_initChoice,read_dict[_initChoice])
-
-    def writeDict(self):
-        write_dict={
-            "armature_str":self._armature_str,
-            "bone_str":self._bone_str,
-            "head_list":self._head_list,
-            "tail_list":self._tail_list,
-            "roll_float":self._roll_float
-        }
-        return write_dict
-
-    def readDict(self,read_dict):
-        self._armature_str=read_dict["armature_str"]
-        self._bone_str=read_dict["bone_str"]
-        self._head_list=read_dict["head_list"]
-        self._tail_list=read_dict["tail_list"]
-        self._roll_float=read_dict["roll_float"]
-
     def editHead(self,vector=None,boneName=None,armatureName=None):
         _armature_str=armatureName or self._armature_str
         _bone_str=boneName or self._bone_str
@@ -264,8 +293,9 @@ class SelfEditArmature(object):
         bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
         self.roll_edit_func(bone_EditBone,_roll_float)
 
-class SelfPoseArmature(object):
+class SelfPoseArmature(SelfOrigin):
     def __init__(self):
+        super(SelfPoseArmature,self).__init__()
         self._armature_str=None
         self._bone_str=None
         self._property_str=None
@@ -279,18 +309,9 @@ class SelfPoseArmature(object):
         self._curveIn_list=None
         self._curveOut_list=None
         self._customObject_str=None
-        self._initChoices=[
-            "armature_str",
-            "bone_str",
-            "property_str",
-            "translation_list",
-            "rotation_list",
-            "scale_list",
-            "translationShape_list",
-            "scaleShape_list",
-            "ikfkShape_list",
-            "curveIn_list",
-            "curveOut_list"
+        self._setChoices+=[
+        ]
+        self._doIts+=[
         ]
 
     #Single Function
@@ -368,16 +389,10 @@ class SelfPoseArmature(object):
         curveOut_list=[bone_PoseBone.bbone_curveoutx,bone_PoseBone.bbone_curveoutz]
         return curveIn_list,curveOut_list
 
-    def constraint_edit_func(self,bone_PoseBone,constraint,fromTomMinMax,vector):
+    def constraint_edit_func(self,bone_PoseBone,constraint,fromToMinMax,vector):
         constraint_PoseBoneConstraints=bone_PoseBone.constraints[constraint]
 
     #Setting Function
-    def setInitChoice(self,variable):
-        self._initChoices=variable
-        return self._initChoices
-    def getInitChoice(self):
-        return self._initChoices
-
     def setArmature(self,variable):
         self._armature_str=variable
         return self._armature_str
@@ -487,23 +502,11 @@ class SelfPoseArmature(object):
         return self._curveOut_list
 
     #Public Function
-    def writeDict(self,initChoices=None):
-        _initChoices=initChoices or self._initChoices
-        write_dict={}
-        for _initChoice in _initChoices:
-            variable=getattr(self,"_"+_initChoice)
-            write_dict[_initChoice]=variable
-        return write_dict
-
-    def readDict(self,read_dict,initChoices=None):
-        _initChoices=initChoices or self._initChoices
-        for _initChoice in _initChoices:
-            setattr(self,"_"+_initChoice,read_dict[_initChoice])
-
     def editTranslation(self,vector=None,boneName=None,armatureName=None):
         _armature_str=armatureName or self._armature_str
         _bone_str=boneName or self._bone_str
         _translation_list=vector or self._translation_list
+
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.translation_edit_func(bone_PoseBone,_translation_list)
     
@@ -512,6 +515,7 @@ class SelfPoseArmature(object):
         _bone_str=boneName or self._bone_str
         _rotation_list=vector or self._rotation_list
         _mode_str=mode or self._rotationMode_str
+
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.rotation_edit_func(bone_PoseBone,_rotation_list,_mode_str)
     
@@ -519,6 +523,7 @@ class SelfPoseArmature(object):
         _armature_str=armatureName or self._armature_str
         _bone_str=boneName or self._bone_str
         _scale_list=vector or self._scale_list
+
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.scale_edit_func(bone_PoseBone,_scale_list)
     
@@ -526,6 +531,7 @@ class SelfPoseArmature(object):
         _armature_str=armatureName or self._armature_str
         _bone_str=boneName or self._bone_str
         _translationShape_list=vector or self._translationShape_list
+
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.customShapeTranslation_edit_func(bone_PoseBone,_translationShape_list)
     
@@ -533,6 +539,7 @@ class SelfPoseArmature(object):
         _armature_str=armatureName or self._armature_str
         _bone_str=boneName or self._bone_str
         _scaleShape_list=vector or self._scaleShape_list
+
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.customShapeScale_edit_func(bone_PoseBone,_scaleShape_list)
 
@@ -541,6 +548,7 @@ class SelfPoseArmature(object):
         _bone_str=boneName or self._bone_str
         _ikfkShape_list=param or self._ikfkShape_list
         _property_str=property_str or self._property_str
+
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.IKFKShape_edit_func(bone_PoseBone,_property_str,_ikfkShape_list)
 
@@ -549,5 +557,6 @@ class SelfPoseArmature(object):
         _bone_str=boneName or self._bone_str
         _curveIn_list=curveIn or self._curveIn_list
         _curveOut_list=curveOut or self._curveOut_list
+
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         self.bendyBone_edit_func(bone_PoseBone,_curveIn_list,_curveOut_list)
