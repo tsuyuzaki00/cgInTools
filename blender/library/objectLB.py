@@ -290,7 +290,6 @@ class SelfModifiersMesh(SelfOrigin):
 class SelfEditArmature(SelfOrigin):
     def __init__(self):
         super(SelfEditArmature,self).__init__()
-        self._createBone_str=None
         self._armature_str=None
         self._bone_str=None
         self._parentBone_str=None
@@ -298,6 +297,7 @@ class SelfEditArmature(SelfOrigin):
         self._head_list=None
         self._tail_list=None
         self._roll_float=None
+        self._layerNums=None
         self._setChoices+=[
             "Armature",
             "Bone",
@@ -353,6 +353,18 @@ class SelfEditArmature(SelfOrigin):
         bone_EditBone.parent=parent_EditBone
         bone_EditBone.use_connect=connect
 
+    def layer_edit_func(self,bone_EditBone,layerNums):
+        lists=[False]*32
+        for layerNum in layerNums:
+            bone_EditBone.layers[layerNum]=True
+            lists[layerNum]=True
+        for i,b in enumerate(lists):
+            bone_EditBone.layers[i]=b
+
+    def layer_query_ints(self,bone_EditBone):
+        layerNums=[i for i, value in enumerate(bone_EditBone.layers) if value is True]
+        return layerNums
+
     #Setting Function
     def setArmature(self,variable):
         self._armature_str=variable
@@ -366,24 +378,37 @@ class SelfEditArmature(SelfOrigin):
     def getBone(self):
         return self._bone_str
     
-    def setCreateBone(self,variable):
-        self._createBone_str=variable
-        return self._createBone_str
-    def getCreateBone(self):
-        return self._createBone_str
-    
     def setParentBone(self,variable):
         self._parentBone_str=variable
         return self._parentBone_str
+    def currentParentBone(self):
+        bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
+        parentBone_EditBone=bone_EditBone.parent
+        self._parentBone_str=parentBone_EditBone.name
+        return self._parentBone_str
     def getParentBone(self):
         return self._parentBone_str
-    
+
     def setParentConnect(self,variable):
         self._parentConnect_bool=variable
+        return self._parentConnect_bool
+    def currentParentConnect(self):
+        bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
+        self._parentConnect_bool=bone_EditBone.use_connect
         return self._parentConnect_bool
     def getParentConnect(self):
         return self._parentConnect_bool
     
+    def setLayerNums(self,variables):
+        self._layerNums=variables
+        return self._layerNums
+    def currentLayerNums(self):
+        bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
+        self._layerNums=self.layer_query_ints(bone_EditBone)
+        return self._layerNums
+    def getLayerNums(self):
+        return self._layerNums
+
     def setHead(self,variable):
         self._head_list=variable
         return self._head_list
@@ -417,10 +442,10 @@ class SelfEditArmature(SelfOrigin):
     #Public Function
     def createBone(self,boneName=None,armatureName=None):
         _armature_str=armatureName or self._armature_str
-        _bone_str=boneName or self._createBone_str
+        _bone_str=boneName or self._bone_str
         
-        newBone_str=self.editBone_create_EditBone(_armature_str,_bone_str)
-        return newBone_str
+        self._bone_str=self.editBone_create_EditBone(_armature_str,_bone_str)
+        return self._bone_str
 
     def parent(self,parentBoneName=None,boneName=None,armatureName=None,parentConnect=None):
         _armature_str=armatureName or self._armature_str
@@ -451,8 +476,17 @@ class SelfEditArmature(SelfOrigin):
         _armature_str=armatureName or self._armature_str
         _bone_str=boneName or self._bone_str
         _roll_float=value or self._roll_float
+
         bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
         self.roll_edit_func(bone_EditBone,_roll_float)
+
+    def editLayer(self,layer=None,boneName=None,armatureName=None):
+        _armature_str=armatureName or self._armature_str
+        _bone_str=boneName or self._bone_str
+        _layerNums=layer or self._layerNums
+
+        bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
+        self.layer_edit_func(bone_EditBone,_layerNums)
 
 class SelfPoseArmature(SelfOrigin):
     def __init__(self):
@@ -472,11 +506,9 @@ class SelfPoseArmature(SelfOrigin):
         self._ikfkShape_list=None
         self._curveIn_list=None
         self._curveOut_list=None
-        self._customObject_str=None
-        self._boneConstraintSourceMin_list=None
-        self._boneConstraintSourceMax_list=None
-        self._boneConstraintTargetMin_list=None
-        self._boneConstraintTargetMax_list=None
+        self._colorIndex_int=None
+        self._customShape_str=None
+        self._customShapePath_str=None
         self._setChoices+=[
         ]
         self._doIts+=[
@@ -496,7 +528,7 @@ class SelfPoseArmature(SelfOrigin):
     
     def translation_query_list(self,bone_PoseBone):
         translation_vector=bone_PoseBone.location
-        translation_list=[translation_vector[0],translation_vector[1],translation_vector[2]]
+        translation_list=[translation for translation in translation_vector]
         return translation_list
     
     def rotation_edit_func(self,bone_PoseBone,rotation,mode):
@@ -505,7 +537,7 @@ class SelfPoseArmature(SelfOrigin):
     
     def rotation_query_list(self,bone_PoseBone):
         rotation_vector=bone_PoseBone.rotation_euler
-        rotation_list=[rotation_vector[0],rotation_vector[1],rotation_vector[2]]
+        rotation_list=[rotation for rotation in rotation_vector]
         return rotation_list
 
     def rotationMode_query_str(self,bone_PoseBone):
@@ -517,7 +549,7 @@ class SelfPoseArmature(SelfOrigin):
     
     def scale_query_list(self,bone_PoseBone):
         scale_vector=bone_PoseBone.scale
-        scale_list=[scale_vector[0],scale_vector[1],scale_vector[2]]
+        scale_list=[scale for scale in scale_vector]
         return scale_list
 
     def customShapeTranslation_edit_func(self,bone_PoseBone,translation):
@@ -565,6 +597,24 @@ class SelfPoseArmature(SelfOrigin):
         constraint_PoseBoneConstraints=bone_PoseBone.constraints[boneConstraint]
         boneConstraintValue_value=eval("constraint_PoseBoneConstraints"+"."+attr)
         return boneConstraintValue_value
+
+    def colorIndex_edit_func(self,bone_PoseBone,colorIndex):
+        bone_PoseBone.bone_group_index=colorIndex
+
+    def colorIndex_query_int(self,bone_PoseBone):
+        colorIndex=bone_PoseBone.bone_group_index
+        return colorIndex
+
+    def customShape_edit_func(self,bone_PoseBone,customShape_str,customShapePath_str):
+        bone_PoseBone.custom_shape=bpy.data.objects[customShape_str,customShapePath_str]
+
+    def customShape_query_str(self,bone_PoseBone):
+        customShape_str=bone_PoseBone.custom_shape.name
+        return customShape_str
+
+    def customShapePath_query_str(self,bone_PoseBone):
+        customShapePath=bone_PoseBone.custom_shape.library.filepath
+        return repr(customShapePath)
 
     #Setting Function
     def setArmature(self,variable):
@@ -689,7 +739,37 @@ class SelfPoseArmature(SelfOrigin):
         self._curveOut_list=self.bendyBone_query_list_list(bone_PoseBone)[1]
         return self._curveOut_list
     def getCurveOut(self):
-        return self._curveOut_list    
+        return self._curveOut_list
+
+    def setColorIndex(self,variable):
+        self._colorIndex_int=variable
+        return self._colorIndex_int
+    def currentColorIndex(self):
+        bone_PoseBone=self.selectPoseBone_query_PoseBone(self._armature_str,self._bone_str)
+        self._colorIndex_int=self.colorIndex_query_int(bone_PoseBone)
+        return self._colorIndex_int
+    def getColorIndex(self):
+        return self._colorIndex_int    
+    
+    def setCustomShape(self,variable):
+        self._customShape_str=variable
+        return self._customShape_str
+    def currentCustomShape(self):
+        bone_PoseBone=self.selectPoseBone_query_PoseBone(self._armature_str,self._bone_str)
+        self._customShape_str=self.customShape_query_str(bone_PoseBone)
+        return self._customShape_str
+    def getCustomShape(self):
+        return self._customShape_str    
+    
+    def setCustomShapePath(self,variable):
+        self._customShapePath_str=variable
+        return self._customShapePath_str
+    def currentCustomShapePath(self):
+        bone_PoseBone=self.selectPoseBone_query_PoseBone(self._armature_str,self._bone_str)
+        self._customShapePath_str=self.customShapePath_query_str(bone_PoseBone)
+        return self._customShapePath_str
+    def getCustomShapePath(self):
+        return self._customShapePath_str    
     
     #Public Function
     def editTranslation(self,vector=None,boneName=None,armatureName=None):
@@ -770,6 +850,19 @@ class SelfPoseArmature(SelfOrigin):
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         value=self.boneConstraint_query_value(bone_PoseBone,_boneConstraint_str,_attr_str)
         return value
+
+    def editCustomShape(self,shape=None,colorIndex=None,shapePath=None,boneName=None,armatureName=None):
+        _armature_str=armatureName or self._armature_str
+        _bone_str=boneName or self._bone_str
+        _customShape_str=shape or self._customShape_str
+        _colorIndex_int=colorIndex or self._colorIndex_int
+        _customShapePath_str=shapePath or self._customShapePath_str
+        
+        bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
+        bone_PoseBone.rotation_mode="XYZ"
+        self.customShape_edit_func(bone_PoseBone,_customShape_str,_customShapePath_str)
+        bone_PoseBone.bone.show_wire=True
+        self.colorIndex_edit_func(bone_PoseBone,_colorIndex_int)
 
 class SelfLattice(SelfObject):
     def __init__(self):
