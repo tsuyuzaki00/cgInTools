@@ -144,9 +144,9 @@ class SelfObject(SelfOrigin):
     def getScale(self):
         return self._scale_list
 
-    def setDoParent(self,variable):
+    def setParent(self,variable):
         self._doParent_str=variable
-    def getDoParent(self):
+    def getParent(self):
         return self._doParent_str
 
     #Public Function
@@ -218,9 +218,6 @@ class SelfModifiersMesh(SelfOrigin):
         bake_DataTransfarModifier.use_vert_data=True
         bake_DataTransfarModifier.data_types_verts={'VGROUP_WEIGHTS'}
         bake_DataTransfarModifier.vert_mapping='POLYINTERP_NEAREST'
-        if bake_DataTransfarModifier.name == "DataTransfer_body":
-            bake_DataTransfarModifier.vertex_group="mod_fingerAll"
-            bake_DataTransfarModifier.invert_vertex_group=True
 
     def isModifier_query_bool(self,mesh_ObjectModifiers,modifier_str):
         try:
@@ -629,8 +626,10 @@ class SelfPoseArmature(SelfOrigin):
         return customShape_str
 
     def customShapePath_query_str(self,bone_PoseBone):
-        customShapePath=bone_PoseBone.custom_shape.library.filepath
-        return repr(customShapePath)
+        customShapePath_str=bone_PoseBone.custom_shape.library.filepath
+        customShapePath_raw=repr(customShapePath_str)
+        customShapePath_str=customShapePath_raw.replace("'","",2)
+        return customShapePath_str
 
     #Setting Function
     def setArmature(self,variable):
