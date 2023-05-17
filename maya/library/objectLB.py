@@ -517,9 +517,9 @@ class SelfDagNode(SelfNode):
         node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
         return node_str
 
-    def setDoParent(self,variable):
+    def setParent(self,variable):
         self._parent_MObject=self.selectNode_create_MObject(variable)
-    def getDoParent(self,fullPath=None):
+    def getParent(self,fullPath=None):
         _fullPath_bool=fullPath or self._fullPath_bool
         node_str=self._fullPathSwitch_query_str(self._parent_MObject,_fullPath_bool)
         return node_str
