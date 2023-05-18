@@ -1058,6 +1058,30 @@ class SelfCreateNode(SelfOrigin):
 
         pass
 
+
+class SelfVertexWeight(SelfOrigin):
+    def __init__(self):
+        super(SelfVertexWeight,self).__init__()
+        self._object_str=None
+        self._subject_str=None
+        self._vertexID_int=None
+        self._weight_float=None
+        self._setChoices+=[
+        ]
+        self._doIts+=[
+        ]
+
+class SelfVertexPoint(SelfOrigin):
+    def __init__(self):
+        super(SelfVertexWeight,self).__init__()
+        self._vertexID_int=None
+        self._position=None
+        self._setChoices+=[
+        ]
+        self._doIts+=[
+        ]
+
+
 class TrsObject(object):
     def __init__(self,obj):
         self._transMFn_list=RULES_DICT["transMFn_list"]
