@@ -1038,6 +1038,13 @@ class SelfVertexGroup(SelfOrigin):
         return self._weight_float
 
     #Public Function
+    def createVertexGroup(self,mesh=None,vertexGroupName=None):
+        _mesh_str=mesh or self._mesh_str
+        _vertexGroup_str=vertexGroupName or self._vertexGroup_str
+
+        mesh_Mesh=self.selectMesh_query_Mesh(_mesh_str)
+        self.vertexGroup_create_str(mesh_Mesh,_vertexGroup_str)
+
     def editWeight(self,mesh=None,vertexGroupName=None,vertexID=None,weight=None):
         _mesh_str=mesh or self._mesh_str
         _vertexGroup_str=vertexGroupName or self._vertexGroup_str
@@ -1047,3 +1054,15 @@ class SelfVertexGroup(SelfOrigin):
         mesh_Mesh=self.selectMesh_query_Mesh(_mesh_str)
         mesh_vertexGroup=self.convertMeshObject_create_vertexGroup(mesh_Mesh,_vertexGroup_str)
         self.weight_edit_func(mesh_vertexGroup,_vertexID_int,_weight_float)
+
+class SelfVertexWeight(SelfOrigin):
+    def __init__(self):
+        super(SelfVertexGroup,self).__init__()
+        self._object_str=None
+        self._subject_str=None
+        self._vertexID_int=None
+        self._weight_float=None
+        self._setChoices+=[
+        ]
+        self._doIts+=[
+        ]
