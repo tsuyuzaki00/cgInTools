@@ -886,7 +886,6 @@ class SelfLattice(SelfObject):
 class SelfVertexGroups(SelfOrigin):
     def __init__(self):
         super(SelfVertexGroups,self).__init__()
-        self._self_list=[]
         self._mesh_str=None
         self._vertexGroup_strs=None
 
@@ -897,9 +896,20 @@ class SelfVertexGroups(SelfOrigin):
         bpy.ops.object.mode_set(mode='OBJECT')
         return mesh_Object
 
-    def vertexGroup_create_str(self,mesh_Object,groupName_str):
-        mesh_vertexGroup=mesh_Object.vertex_groups.new(name=groupName_str)
+    def vertexGroup_create_str(self,mesh_Object,vertexGroup_str):
+        mesh_vertexGroup=mesh_Object.vertex_groups.new(name=vertexGroup_str)
         return mesh_vertexGroup.name
+
+    def vartexID_query_ints(self,mesh_Object,vertexGroup_str):
+        mesh_vertexGroup=mesh_Object.vertex_groups[vertexGroup_str]
+        vertices=[]
+        if mesh_vertexGroup is not None:
+            for mesh_MeshVertex in mesh_Object.data.vertices:
+                for vertexGroup in mesh_MeshVertex.groups:
+                    if str(mesh_vertexGroup.index) in str(vertexGroup.group):
+                        weightParam_dict={"vertexGroup":vertexGroup_str,"vertexID":mesh_MeshVertex.index,"weight":vertexGroup.weight}
+                        vertices.append(weightParam_dict)
+        return vertices
 
     #Setting Function
     def setSelfList(self,variables):
@@ -918,10 +928,18 @@ class SelfVertexGroups(SelfOrigin):
         self._vertexGroup_strs=[variable for variable in variables]
     def addVertexGroups(self,variables):
         self._vertexGroup_strs+=[variable for variable in variables]
+    def currrentVertexGroups(self):
+        pass
     def getVertexGroups(self):
         return self._vertexGroup_strs
 
     #Public Function
+    def test(self):
+        mesh_Mesh=self.selectMesh_query_Mesh(self._mesh_str)
+        for _vertexGroup_str in self._vertexGroup_strs:
+            self.vartexID_query_ints(mesh_Mesh,_vertexGroup_str)
+            
+
     def createJsonDicts(self):
         write_dicts=[]
         for _self in self._self_list:
@@ -1057,7 +1075,7 @@ class SelfVertexGroup(SelfOrigin):
 
 class SelfVertexWeight(SelfOrigin):
     def __init__(self):
-        super(SelfVertexGroup,self).__init__()
+        super(SelfVertexWeight,self).__init__()
         self._object_str=None
         self._subject_str=None
         self._vertexID_int=None
@@ -1066,3 +1084,57 @@ class SelfVertexWeight(SelfOrigin):
         ]
         self._doIts+=[
         ]
+
+    #Single Function
+    def selectMesh_query_Mesh(self,meshName):
+        mesh_Object=bpy.data.objects[meshName]
+        bpy.context.view_layer.objects.active=mesh_Object
+        bpy.ops.object.mode_set(mode='OBJECT')
+        return mesh_Object
+
+    def convertMeshObject_create_vertexGroup(self,mesh_Object,subject_str):
+        mesh_vertexGroup=mesh_Object.vertex_groups[subject_str]
+        return mesh_vertexGroup
+
+    def weight_edit_func(self,mesh_vertexGroup,vertexID_int,weight_float):
+        mesh_vertexGroup.add([vertexID_int],weight_float,'REPLACE')
+    
+    def weight_query_func(self,mesh_vertexGroup,vertexID_int):
+        weight_float=mesh_vertexGroup.weight(vertexID_int)
+        return weight_float
+
+    #Setting Function
+    def setObject(self,variable):
+        self._object_str=variable
+    def getObject(self):
+        return self._object_str
+    
+    def setSubject(self,variable):
+        self._subject_str=variable
+    def getSubject(self):
+        return self._subject_str
+
+    def setVertexID(self,variable):
+        self._vertexID_int=variable
+    def getVertexID(self):
+        return self._vertexID_int
+
+    def setWeight(self,variable):
+        self._weight_float=variable
+    def currrentWeight(self):
+        mesh_Mesh=self.selectMesh_query_Mesh(self._object_str)
+        mesh_vertexGroup=self.convertMeshObject_create_vertexGroup(mesh_Mesh,self._subject_str)
+        self._weight_float=self.weight_query_func(mesh_vertexGroup,self._vertexID_int)
+        return self._weight_float
+    def getWeight(self):
+        return self._weight_float
+
+    def editWeight(self,mesh=None,vertexGroupName=None,vertexID=None,weight=None):
+        _object_str=mesh or self._object_str
+        _subject_str=vertexGroupName or self._subject_str
+        _vertexID_int=vertexID or self._vertexID_int
+        _weight_float=weight or self._weight_float
+        
+        mesh_Mesh=self.selectMesh_query_Mesh(_object_str)
+        mesh_vertexGroup=self.convertMeshObject_create_vertexGroup(mesh_Mesh,_subject_str)
+        self.weight_edit_func(mesh_vertexGroup,_vertexID_int,_weight_float)
