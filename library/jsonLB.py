@@ -121,10 +121,18 @@ class Json(object):
     def writePacks(self):
         self._writePack_create_func(self._directory,self._file,self._extension,self._writePack_dicts)
 
-def getJson(directory,file):
+def readJson(directory,file):
     data=Json()
     data.setDirectory(directory)
     data.setFile(file)
     data.setExtension("json")
     json_dict=data.read()
     return json_dict
+
+def writeJson(directory,file,write):
+    data=Json()
+    data.setDirectory(directory)
+    data.setFile(file)
+    data.setExtension("json")
+    data.setWriteDict(write)
+    data.write()
