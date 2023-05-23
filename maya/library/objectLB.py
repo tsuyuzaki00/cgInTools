@@ -8,7 +8,7 @@ import cgInTools as cit
 from ...library import jsonLB as jLB
 cit.reloads([jLB])
 
-RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"openLibrary")
+RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
 
 class SelfOrigin(object):
     def __init__(self):
@@ -90,8 +90,7 @@ class SelfNode(SelfOrigin):
         elif not isinstance(node,str):
             om2.MGlobal.displayError("Please insert one string in value")
             sys.exit()
-        node_MSelectionList=om2.MSelectionList()
-        node_MSelectionList.add(node)
+        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
         node_MObject=node_MSelectionList.getDependNode(0)
         return node_MObject
 
@@ -1058,18 +1057,325 @@ class SelfCreateNode(SelfOrigin):
 
         pass
 
-
 class SelfVertexWeight(SelfOrigin):
     def __init__(self):
         super(SelfVertexWeight,self).__init__()
-        self._object_str=None
+        self._object_MDagPath=None
+        self._vertexID_MObject=None
+        self._skinCluster_MFnSkinCluster=None
         self._subject_str=None
-        self._vertexID_int=None
         self._weight_float=None
         self._setChoices+=[
+            "Object",
+            "Subject",
+            "SkinCluster",
+            "VertexID",
+            "Weight"
         ]
         self._doIts+=[
+            "editWeight"
         ]
+
+    #Single Function
+    def selectNode_create_MObject(self,node):
+        if node == None:
+            return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        return node_MObject
+
+    def selectComponent_create_MDagPath_MObject(self,node):
+        if node == None:
+            return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        component_MSelectionList=om2.MSelectionList()
+        component_MSelectionList.add(node)
+        shape_MDagPath,components_MObject=component_MSelectionList.getComponent(0)
+        return shape_MDagPath,components_MObject
+
+    def shape_create_MDagPath(self,shape):
+        if shape == None:
+            return None
+        elif not isinstance(shape,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        component_MSelectionList=om2.MSelectionList()
+        component_MSelectionList.add(shape)
+        shape_MDagPath=component_MSelectionList.getDagPath(0)
+        shape_MDagPath.extendToShape()
+        return shape_MDagPath
+
+    def convertToParentNodeOfShape_create_str(self,shape_MDagPath):
+        shape_MFnDagNode=om2.MFnDagNode(shape_MDagPath)
+        parent_MObject=shape_MFnDagNode.parent(0)
+        parent_MFnDependencyNode=om2.MFnDependencyNode(parent_MObject)
+        return parent_MFnDependencyNode.name()
+
+    def convertInt_create_MObject(self,componentID_int,MFn_int=554):
+        if componentID_int == None:
+            return None
+        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent()
+        components_MObject=component_MFnSingleIndexedComponent.create(MFn_int)
+        component_MFnSingleIndexedComponent.addElement(componentID_int)
+        return components_MObject
+
+    def componentID_query_int(self,components_MObject):
+        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent(components_MObject)
+        componentID_int=component_MFnSingleIndexedComponent.getElements()[0]
+        return componentID_int
+
+    def convertShape_query_MFnSkinCluster(self,shape_MDagPath):
+        shape_MDagPath=om2.MFnDagNode(shape_MDagPath)
+        inMesh_MPlug=shape_MDagPath.findPlug("inMesh",False)
+        skc_MPlug=inMesh_MPlug.connectedTo(True,False)[0]
+        skc_MObject=skc_MPlug.node()
+        skc_MFnSkinCluster=oma2.MFnSkinCluster(skc_MObject)
+        return skc_MFnSkinCluster
+
+    def convertMFnSkinClusterToJointName_query_strs(self,skc_MFnSkinCluster):
+        joint_MDagPathArray=skc_MFnSkinCluster.influenceObjects()
+        joint_strs=[om2.MFnDagNode(joint_MDagPath).name() for joint_MDagPath in joint_MDagPathArray]
+        return joint_strs
+
+    #Multi Function
+    def _convertJoint_query_int(self,skc_MFnSkinCluster,joint_str):
+        findJoints=self.convertMFnSkinClusterToJointName_query_strs(skc_MFnSkinCluster)
+        if joint_str in findJoints:
+            return findJoints.index(joint_str)
+        else:
+            return None
+
+    def _convertSkinClusterNode_query_MFnSkinCluster(self,node):
+        skc_MObject=self.selectNode_create_MObject(node)
+        if not isinstance(skc_MObject,om2.MObject):
+            return None
+        skc_MFnSkinCluster=oma2.MFnSkinCluster(skc_MObject)
+        return skc_MFnSkinCluster
+    
+    #Setting Function
+    def setComponent(self,variable):
+        self._object_MDagPath,self._vertexID_MObject=self.selectComponent_create_MDagPath_MObject(variable)
+
+    def setObject(self,variable):
+        self._object_MDagPath=self.shape_create_MDagPath(variable)
+    def getObject(self):
+        object_str=self.convertToParentNodeOfShape_create_str(self._object_MDagPath)
+        return object_str
+    
+    def setVertexID(self,variable):
+        self._vertexID_MObject=self.convertInt_create_MObject(variable)
+    def getVertexID(self):
+        vertexID_int=self.componentID_query_int(self._vertexID_MObject)
+        return vertexID_int
+
+    def setSkinCluster(self,variable):
+        self._skinCluster_MFnSkinCluster=self._convertSkinClusterNode_query_MFnSkinCluster(variable)
+    def getSkinCluster(self):
+        return self._skinCluster_MFnSkinCluster.name()
+
+    def setSubject(self,variable):
+        self._subject_str=variable
+    def getSubject(self):
+        return self._subject_str
+
+    def setWeight(self,variable):
+        self._weight_float=variable
+    def currentWeight(self):
+        skc_MFnSkinCluster=self._skinCluster_MFnSkinCluster or self.convertShape_query_MFnSkinCluster(self._object_MDagPath)
+        JointID_int=self._convertJoint_query_int(skc_MFnSkinCluster,self._subject_str)
+        self._weight_float=skc_MFnSkinCluster.getWeights(self._object_MDagPath,self._vertexID_MObject,JointID_int)
+        return self._weight_float[0]
+    def getWeight(self):
+        return self._weight_float
+
+    #Public Function
+    def editWeight(self,mesh=None,vertexID=None,joint=None,skinCluster=None,weight=None):
+        _object_MDagPath=self.shape_create_MDagPath(mesh) or self._object_MDagPath
+        _vertexID_MObject=self.convertInt_create_MObject(vertexID) or self._vertexID_MObject
+        _skinCluster_MFnSkinCluster=self._convertSkinClusterNode_query_MFnSkinCluster(skinCluster) or self._skinCluster_MFnSkinCluster or self.convertShape_query_MFnSkinCluster(self._object_MDagPath)
+        _subject_str=joint or self._subject_str
+        _weight_float=weight or self._weight_float
+
+        JointID_int=self._convertJoint_query_int(_skinCluster_MFnSkinCluster,_subject_str)
+        _skinCluster_MFnSkinCluster.setWeights(_object_MDagPath,_vertexID_MObject,JointID_int,_weight_float,normalize=True)
+
+class SelfMeshWeight(SelfOrigin):
+    def __init__(self):
+        super(SelfMeshWeight,self).__init__()
+        self._object_MDagPath=None
+        self._joint_strs=None
+        self._skinCluster_MFnSkinCluster=None
+        self._weight_SelfVertexWeights=[]
+        self._setChoices+=[
+            "Object",
+            "Subjects",
+            "VertexWeightDicts"
+        ]
+        self._doIts+=[
+            "editWeights"
+        ]
+
+    #Single Function
+    def selectComponent_create_MDagPath_MObject(self,node):
+        if node == None:
+            return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        component_MSelectionList=om2.MSelectionList()
+        component_MSelectionList.add(node)
+        shape_MDagPath,components_MObject=component_MSelectionList.getComponent(0)
+        return shape_MDagPath,components_MObject
+
+    def selectNode_create_MObject(self,node):
+        if node == None:
+            return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        return node_MObject
+
+    def shape_create_MDagPath(self,shape):
+        if shape == None:
+            return None
+        elif not isinstance(shape,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        component_MSelectionList=om2.MSelectionList()
+        component_MSelectionList.add(shape)
+        shape_MDagPath=component_MSelectionList.getDagPath(0)
+        shape_MDagPath.extendToShape()
+        return shape_MDagPath
+
+    def convertToParentNodeOfShape_create_str(self,shape_MDagPath):
+        shape_MFnDagNode=om2.MFnDagNode(shape_MDagPath)
+        parent_MObject=shape_MFnDagNode.parent(0)
+        parent_MFnDependencyNode=om2.MFnDependencyNode(parent_MObject)
+        return parent_MFnDependencyNode.name()
+
+    def convertMDagPathToAllVertexComponent_query_MObject(self,mesh_MDagPath):
+        mesh_MItMeshVertex=om2.MItMeshVertex(mesh_MDagPath)
+        
+        vertexIndices=[]
+        while not mesh_MItMeshVertex.isDone():
+            vertexComponent_MObject=mesh_MItMeshVertex.currentItem()
+            vertexIndices.append(vertexComponent_MObject)
+            mesh_MItMeshVertex.next()
+        
+        return vertexIndices
+
+    def componentID_query_int(self,components_MObject):
+        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent(components_MObject)
+        componentID_int=component_MFnSingleIndexedComponent.getElements()[0]
+        return componentID_int
+
+    def convertMFnSkinClusterToJointName_query_strs(self,skc_MFnSkinCluster):
+        joint_MDagPathArray=skc_MFnSkinCluster.influenceObjects()
+        joint_strs=[om2.MFnDagNode(joint_MDagPath).name() for joint_MDagPath in joint_MDagPathArray]
+        return joint_strs
+
+    def convertShape_query_MFnSkinCluster(self,shape_MDagPath):
+        shape_MDagPath=om2.MFnDagNode(shape_MDagPath)
+        inMesh_MPlug=shape_MDagPath.findPlug("inMesh",False)
+        skc_MPlug=inMesh_MPlug.connectedTo(True,False)[0]
+        skc_MObject=skc_MPlug.node()
+        skc_MFnSkinCluster=oma2.MFnSkinCluster(skc_MObject)
+        return skc_MFnSkinCluster
+
+    #Multi Function
+    def _convertSkinClusterNode_query_MFnSkinCluster(self,node):
+        skc_MObject=self.selectNode_create_MObject(node)
+        if not isinstance(skc_MObject,om2.MObject):
+            return None
+        skc_MFnSkinCluster=oma2.MFnSkinCluster(skc_MObject)
+        return skc_MFnSkinCluster
+
+    def _weight_query_SelfVertexWeights(self,mesh_MDagPath):
+        component_MObjects=self.convertMDagPathToAllVertexComponent_query_MObject(mesh_MDagPath)
+        skinCluster_MFnSkinCluster=self.convertShape_query_MFnSkinCluster(mesh_MDagPath)
+        joint_strs=self.convertMFnSkinClusterToJointName_query_strs(skinCluster_MFnSkinCluster)
+
+        data_SelfVertexWeights=[]
+        for component_MObject in component_MObjects:
+            weight=skinCluster_MFnSkinCluster.getWeights(mesh_MDagPath,component_MObject)
+            for jointID in range(weight[1]):
+                data_SelfVertexWeight=SelfVertexWeight()
+                data_SelfVertexWeight.setObject(om2.MFnDagNode(mesh_MDagPath).name())
+                data_SelfVertexWeight.setVertexID(self.componentID_query_int(component_MObject))
+                data_SelfVertexWeight.setSubject(joint_strs[jointID])
+                data_SelfVertexWeight.setWeight(weight[0][jointID])
+                data_SelfVertexWeights.append(data_SelfVertexWeight)
+        return data_SelfVertexWeights
+
+    #Setting Function
+    def setComponent(self,variable):
+        self._object_MDagPath,self._vertexID_MObject=self.selectComponent_create_MDagPath_MObject(variable)
+
+    def setObject(self,variable):
+        self._object_MDagPath=self.shape_create_MDagPath(variable)
+    def getObject(self):
+        object_str=self.convertToParentNodeOfShape_create_str(self._object_MDagPath)
+        return object_str
+    
+    def setSubjects(self,variables):
+        self._joint_strs=variables
+    def addSubjects(self,variables):
+        self._joint_strs+=[variable for variable in variables]
+    def currentSubjects(self):
+        skinCluster_MFnSkinCluster=self.convertShape_query_MFnSkinCluster(self._object_MDagPath)
+        self._joint_strs=self.convertMFnSkinClusterToJointName_query_strs(skinCluster_MFnSkinCluster)
+        return self._joint_strs
+    def getSubjects(self):
+        return self._joint_strs
+
+    def setSkinCluster(self,variable):
+        self._skinCluster_MFnSkinCluster=self._convertSkinClusterNode_query_MFnSkinCluster(variable)
+    def getSkinCluster(self):
+        return self._skinCluster_MFnSkinCluster
+    
+    def setSelfVertexWeights(self,variables):
+        self._weight_SelfVertexWeights=variables
+    def addSelfVertexWeights(self,variables):
+        self._weight_SelfVertexWeights+=[variable for variable in variables]
+    def currentSelfVertexWeights(self):
+        self._weight_SelfVertexWeights=self._weight_query_SelfVertexWeights(self._object_MDagPath)
+        return self._weight_SelfVertexWeights
+    def getSelfVertexWeights(self):
+        return self._weight_SelfVertexWeights
+
+    def setVertexWeightDicts(self,variables):
+        self._weight_SelfVertexWeights=[]
+        for variable in variables:
+            weight_SelfVertexWeight=SelfVertexWeight()
+            weight_SelfVertexWeight.readDict(variable)
+            self._weight_SelfVertexWeights.append(weight_SelfVertexWeight)
+    def addVertexWeightDicts(self,variables):
+        weight_SelfVertexWeight=SelfVertexWeight()
+        for variable in variables:
+            weight_SelfVertexWeight.readDict(variable)
+            self._weight_SelfVertexWeights.append(weight_SelfVertexWeight)
+    def getVertexWeightDicts(self):
+        weight_dicts=[]
+        for _weight_SelfVertexWeight in self._weight_SelfVertexWeights:
+            _weight_SelfVertexWeight.setSetChoices(["Object","Subject","VertexID","Weight"])
+            weight_dict=_weight_SelfVertexWeight.writeDict()
+            weight_dicts.append(weight_dict)
+        return weight_dicts
+
+    #Public Function
+    def bindJoints(self):
+        pass
+
+    def editWeights(self):
+        for _weight_SelfVertexWeight in self._weight_SelfVertexWeights:
+            _weight_SelfVertexWeight.editWeight()
 
 class SelfVertexPoint(SelfOrigin):
     def __init__(self):
