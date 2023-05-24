@@ -931,7 +931,7 @@ class SelfVertexWeight(SelfOrigin):
 
     def setWeight(self,variable):
         self._weight_float=variable
-    def currrentWeight(self):
+    def currentWeight(self):
         mesh_Mesh=self.selectMesh_query_Mesh(self._object_str)
         mesh_vertexGroup=self.convertMeshObject_create_vertexGroup(mesh_Mesh,self._subject_str)
         self._weight_float=self.weight_query_func(mesh_vertexGroup,self._vertexID_int)
@@ -956,8 +956,8 @@ class SelfMeshWeight(SelfOrigin):
         self._vertexGroup_strs=None
         self._weight_SelfVertexWeights=[]
         self._setChoices+=[
-            "Mesh",
-            "VertexGroups",
+            "Object",
+            "Subjects",
             "VertexWeightDicts"
         ]
         self._doIts+=[
@@ -991,20 +991,20 @@ class SelfMeshWeight(SelfOrigin):
         return data_SelfVertexWeights
 
     #Setting Function
-    def setMesh(self,variable):
+    def setObject(self,variable):
         self._mesh_str=variable
-    def getMesh(self):
+    def getObject(self):
         return self._mesh_str
     
-    def setVertexGroups(self,variables):
+    def setSubjects(self,variables):
         self._vertexGroup_strs=variables
-    def addVertexGroups(self,variables):
+    def addSubjects(self,variables):
         self._vertexGroup_strs+=[variable for variable in variables]
-    def currentVertexGroups(self):
+    def currentSubjects(self):
         mesh_Object=self.selectMesh_query_Object(self._mesh_str)
         self._vertexGroup_strs=[vertexGroups.name for vertexGroups in mesh_Object.vertex_groups]
         return self._vertexGroup_strs
-    def getVertexGroups(self):
+    def getSubjects(self):
         return self._vertexGroup_strs
     
     def setSelfVertexWeights(self,variables):
