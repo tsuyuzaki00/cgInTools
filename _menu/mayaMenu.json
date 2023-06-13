@@ -118,6 +118,8 @@
             ["EyebrowCtrls","cgInTools.mgear.execute","eyebrowCtrlsExport","main()",""]
         ],
         "build":
-        []
+        [
+            ["checkRun","cgInTools.maya.manager","checkRunMN","main()",""]
+        ]
     }
 }
