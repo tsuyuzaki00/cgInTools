@@ -187,8 +187,14 @@ class SelfComponent(SelfOrigin):
         self._MFn_int=None
         self._shape_MDagPath=None
         self._component_MObject=None
-        self._setChoices+=[]
-        self._doIts+=[]
+        self._setChoices+=[
+            "MFn",
+            "Shape",
+            "ComponentID"
+        ]
+        self._doIts+=[
+            "queryShapeType"
+        ]
         
     #Single Function
     def selectComponent_create_MDagPath_MObject(self,node):
@@ -326,7 +332,7 @@ class SelfConnectNode(SelfNode):
         else:
             return findConnectedTo_MObjects
 
-    #Private Function
+    #Inheritance Function
     def _findAttrConect_query_MObjects(self,node_MObject,attr,source=True,target=True):
         find_MPlug=self.nodeAttr_create_MPlug(node_MObject,attr)
         
@@ -336,9 +342,6 @@ class SelfConnectNode(SelfNode):
             return None
         else:
             return findConnectedTo_MObjects
-
-    def _nodeTypeToMFnConverter_query_int(self,nodeType):
-        return self._nodeTypeToMFn_dict[nodeType]
     
     #Setting Function
     def setOperationNode(self,variable):
@@ -490,7 +493,6 @@ class SelfDagNode(SelfNode):
             name_str=node_MFnDependencyNode.name()
         return name_str
 
-    #Private Function
     def _fullPathSwitch_query_strs(self,node_MObjects,fullPath=False):
         name_strs=[self._fullPathSwitch_query_str(node_MObject,fullPath) for node_MObject in node_MObjects]
         return name_strs
@@ -674,7 +676,7 @@ class SelfMatrixNode(SelfDagNode):
             return variable
         else:
             return None
-    
+        
     def initialNoneMMatrix_check_MMatrix(self,MMatrix):
         if isinstance(MMatrix,om2.MMatrix):
             return MMatrix
@@ -685,7 +687,7 @@ class SelfMatrixNode(SelfDagNode):
             MMatrix = None
             return MMatrix
 
-    #Private Function
+    #Multi Function
     def _nodeToNormalMMatrix_query_MMatrix(self,node_MObject):
         node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
@@ -798,7 +800,7 @@ class SelfMatrixNode(SelfDagNode):
         have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
         return self._MMatrix
-    def getRotateMMatrix(self,radian=False):
+    def getRotateMMatrix(self,radian=True):
         MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
         MEulerRotation=MTransformationMatrix.rotation(asQuaternion=False)
         if not radian:
@@ -834,7 +836,7 @@ class SelfMatrixNode(SelfDagNode):
         MQuaternion=om2.MQuaternion(twist,bend)
         self._MMatrix=MQuaternion.asMatrix()
         return self._MMatrix
-    def getAxisAngleMMatrix(self,radian=False):
+    def getAxisAngleMMatrix(self,radian=True):
         MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
         MQuaternion=MTransformationMatrix.rotation(asQuaternion=True)
         bend_MVector,twist_float,=MQuaternion.asAxisAngle()
@@ -843,15 +845,15 @@ class SelfMatrixNode(SelfDagNode):
         return bend_MVector,twist_float
 
     def setScaleMMatrix(self,variable):
-        scale_MVector=om2.MVector(variable)
+        scale_list3=self.vector3_check_vector3(variable)
         MTransformationMatrix=om2.MTransformationMatrix()
-        MTransformationMatrix.setScale(scale_MVector)
+        MTransformationMatrix.setScale(scale_list3,self._MSpace)
         self._MMatrix=MTransformationMatrix.asMatrix()
         return self._MMatrix
     def addScaleMMatrix(self,variable):
-        scale_MVector=om2.MVector(variable)
+        scale_list3=self.vector3_check_vector3(variable)
         MTransformationMatrix=om2.MTransformationMatrix()
-        MTransformationMatrix.setScale(scale_MVector,self._MSpace)
+        MTransformationMatrix.setScale(scale_list3,self._MSpace)
         add_MMatrix=MTransformationMatrix.asMatrix()
         have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix) or self._MMatrix
         self._MMatrix=have_MMatrix*add_MMatrix
@@ -874,119 +876,127 @@ class SelfMatrixNode(SelfDagNode):
         MVectorZ=om2.MVector(self._MMatrix[8],self._MMatrix[9],self._MMatrix[10])
         return MVectorZ
 
-class SelfLocationNode(SelfMatrixNode):
-    def __init__(self,node):
-        super(SelfLocationNode,self).__init__(node)
+class SelfTransformNode(SelfMatrixNode):
+    def __init__(self):
+        super(SelfTransformNode,self).__init__()
         self._matchNode_MObject=None
         self._setChoices+=[
-            "TransformNode",
+            "MatchNode"
         ]
         self._doIts+=[
             "nodeTranslate",
             "translate"
-        ]
+        ]    
 
     #Setting Function
     def setMatchNode(self,variable):
-        self._matchNode_MObject=variable
+        self._matchNode_MObject=self.selectNode_create_MObject(variable)
     def getMatchNode(self):
-        return self._matchNode_MObject
+        node_MFnDependencyNode=om2.MFnDependencyNode(self._matchNode_MObject)
+        name_str=node_MFnDependencyNode.name()
+        return name_str
+
+    #Inheritance Function
+    def _matchToMMatrix_query_MMatrix(self,node_MObject,matchNode_MObject):
+        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(node_MObject)
+        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(matchNode_MObject)
+        print("tehu")
+
+        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+        return transform_MMatrix
 
     #Public Function
-    def matchToTranslateNode(self,node=None,matchNode=None):
+    def matchToTranslate(self,node=None,matchNode=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
         
-        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
-        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
-
-        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+        transform_MMatrix=self._matchToMMatrix_query_MMatrix(_node_MObject,_matchNode_MObject)
 
         self.setMatrix(transform_MMatrix)
-        worldTranslate_MVector=self.getTranslate()
+        worldTranslate_MVector=self.getTranslateMMatrix()
 
         node_MFnTransform=om2.MFnTransform(_node_MObject)
         node_MFnTransform.translateBy(worldTranslate_MVector,self._MSpace)
 
-    def matchToRotateNode(self,node=None,matchNode=None):
+    def matchToRotate(self,node=None,matchNode=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
         
-        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
-        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
-
-        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+        transform_MMatrix=self._matchToMMatrix_query_MMatrix(_node_MObject,_matchNode_MObject)
 
         self.setMatrix(transform_MMatrix)
-        worldRotate_MEulerRotation=self.getRotate()
+        worldRotate_MEulerRotation=self.getRotateMMatrix()
 
-    def matchToQuaternionNode(self,node=None,matchNode=None):
+        node_MFnTransform=om2.MFnTransform(_node_MObject)
+        node_MFnTransform.rotateBy(worldRotate_MEulerRotation,self._MSpace)
+
+    def matchToQuaternion(self,node=None,matchNode=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
         
-        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
-        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
-
-        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+        transform_MMatrix=self._matchToMMatrix_query_MMatrix(_node_MObject,_matchNode_MObject)
 
         self.setMatrix(transform_MMatrix)
-        worldQuaternion_MQuaternion=self.getQuaternion()
+        worldQuaternion_MQuaternion=self.getQuaternionMMatrix()
 
-    def matchToScaleNode(self,node=None,matchNode=None):
+        node_MFnTransform=om2.MFnTransform(_node_MObject)
+        node_MFnTransform.rotateBy(worldQuaternion_MQuaternion,self._MSpace)
+
+    def matchToScale(self,node=None,matchNode=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _matchNode_MObject=self.selectNode_create_MObject(matchNode) or self._matchNode_MObject
         
-        myInverseWorld_MMatrix=self._nodeToInverseWorldMMatrix_query_MMatrix(_node_MObject)
-        worldTransForm_MMatrix=self._nodeToWorldMMatrix_query_MMatrix(_matchNode_MObject)
-
-        transform_MMatrix=worldTransForm_MMatrix*myInverseWorld_MMatrix
+        transform_MMatrix=self._matchToMMatrix_query_MMatrix(_node_MObject,_matchNode_MObject)
 
         self.setMatrix(transform_MMatrix)
-        worldScale_list=self.getScale()
+        worldScale_list=self.getScaleMMatrix()
+
+        node_MFnTransform=om2.MFnTransform(_node_MObject)
+        node_MFnTransform.scaleBy(worldScale_list)
 
     def translate(self,vector3=None):
         translate_vector3=self.vector3_check_vector3(vector3)
         node_MFnTransform=om2.MFnTransform(self._node_MObject)
         if translate_vector3 == None:
-            MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
-            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+            matrix_MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+            translate_MVector=matrix_MTransformationMatrix.translation(self._MSpace)
         else:
-            self.setTranslateMMatrix(vector3)
-            translate_MVector=self.getTranslate()
+            self.setTranslateMMatrix(translate_vector3)
+            translate_MVector=self.getTranslateMMatrix()
         node_MFnTransform.translateBy(translate_MVector,self._MSpace)
 
     def rotate(self,vector3=None):
-        translate_vector3=self.vector3_check_vector3(vector3)
+        rotate_vector3=self.vector3_check_vector3(vector3)
         node_MFnTransform=om2.MFnTransform(self._node_MObject)
-        if translate_vector3 == None:
-            MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
-            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+        if rotate_vector3 == None:
+            matrix_MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+            rotate_MEulerRotation=matrix_MTransformationMatrix.rotation(False)
         else:
-            self.setTranslateMMatrix(vector3)
-            translate_MVector=self.getTranslate()
-        node_MFnTransform.rotateBy(translate_MVector,self._MSpace)
+            self.setRotateMMatrix(vector3)
+            rotate_MEulerRotation=self.getRotateMMatrix()
+        node_MFnTransform.rotateBy(rotate_MEulerRotation,self._MSpace)
 
-    def quaternion(self,vector3=None):
-        translate_vector4=[0,0,0,1]
+    def quaternion(self,vector4=None):
+        quaternion_vector4=[0,0,0,1]
         node_MFnTransform=om2.MFnTransform(self._node_MObject)
-        if translate_vector4 == None:
+        if quaternion_vector4 == None:
             MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
-            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+            rotate_MQuaternion=MTransformationMatrix.rotation(True)
         else:
-            self.setTranslateMMatrix(vector3)
-            translate_MVector=self.getTranslate()
-        node_MFnTransform.rotateBy(translate_MVector,self._MSpace)
+            self.setQuaternionMMatrix(vector4)
+            rotate_MQuaternion=self.getQuaternionMMatrix()
+        node_MFnTransform.rotateBy(rotate_MQuaternion,self._MSpace)
 
     def scale(self,vector3=None):
         translate_vector3=self.vector3_check_vector3(vector3)
         node_MFnTransform=om2.MFnTransform(self._node_MObject)
         if translate_vector3 == None:
             MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
-            translate_MVector=MTransformationMatrix.translation(self._MSpace)
+            scale_list3=MTransformationMatrix.scale(self._MSpace)
         else:
-            self.setTranslateMMatrix(vector3)
-            translate_MVector=self.getTranslate()
-        node_MFnTransform.scaleBy(translate_MVector,self._MSpace)
+            self.setScaleMMatrix(vector3)
+            scale_list3=self.getScaleMMatrix()
+        node_MFnTransform.scaleBy(scale_list3)
 
     def addParentNull(self):
         pass

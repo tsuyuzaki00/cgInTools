@@ -17,25 +17,23 @@ class Menu():
             json_dict=json.load(f)
             return json_dict
 
-    def setItem_create_func(self,title,relativePath,fileName,function,icon):
-        command="import cgInTools as cit; from "+relativePath+" import "+fileName+" as ps; cit.reloads([ps]); ps."+function
-        if title == None:
-            pass
-        elif title == True or title == 1:
+    def setItem_create_func(self,title,fromFolder,importFile,function,icon):
+        command="import cgInTools as cit; from "+fromFolder+" import "+importFile+" as ps; cit.reloads([ps]); ps."+function
+        if title == True or title == 1:
             cmds.menuItem(optionBox=title,c=command)
         else:
             cmds.menuItem(label=title,c=command,i=icon)
 
     #Multi Function
-    def _singleItem_create_func(self,titleName,singleItem_lists):
+    def _singleItem_create_func(self,titleName,singleItem_dicts):
         cmds.menuItem(divider=True,dividerLabel=titleName)
-        for menuItem_list in singleItem_lists:
-            self.setItem_create_func(menuItem_list[0],menuItem_list[1],menuItem_list[2],menuItem_list[3],menuItem_list[4])
+        for menuItem_dict in singleItem_dicts:
+            self.setItem_create_func(menuItem_dict["label"],menuItem_dict["fromFolder"],menuItem_dict["importFile"],menuItem_dict["function"],menuItem_dict["icon"])
 
-    def _multiItem_create_func(self,titleName,multiItem_lists):
+    def _multiItem_create_func(self,titleName,multiItem_dicts):
         cmds.menuItem(subMenu=True,to=True,label=titleName)
-        for menuItem_list in multiItem_lists:
-            self.setItem_create_func(menuItem_list[0],menuItem_list[1],menuItem_list[2],menuItem_list[3],menuItem_list[4])
+        for menuItem_dict in multiItem_dicts:
+            self.setItem_create_func(menuItem_dict["label"],menuItem_dict["fromFolder"],menuItem_dict["importFile"],menuItem_dict["function"],menuItem_dict["icon"])
         cmds.setParent("..",menu=True)
 
     def _settingsMenu_create_func(self,menuTitle_str,orderMenu_lists,menus_dict):

@@ -5,12 +5,17 @@ import cgInTools as cit
 from . import setBaseLB as sbLB
 cit.reloads([sbLB])
 
-class Template():
+class SuperClass(object):
     def __init__(self):
-        self._value=""
-        self._setting=[]
+        self._superValue=""
+        self._settings=[]
 
-    def __loading(self):
+    def inheritance_mode_func(self):
+        pass
+
+class Template(SuperClass):
+    def __init__(self):
+        super(Template,self).__init__()
         self._value=""
 
     #Single Function
@@ -20,38 +25,43 @@ class Template():
     #Multi Function
     def _multi_mode_func(self):
         self.single_mode_func()
+        self._multi_mode_func()
+        pass
+
+    #Inheritance Function
+    def _inheritance_mode_func(self):
+        self.single_mode_func()
+        self._multi_mode_func()
+        self.inheritance_mode_func()
         pass
 
     #Private Function
-    def _private_mode_func(self):
+    def __private_mode_func(self):
         self.single_mode_func()
         self._multi_mode_func()
-        self.inheritance_func()
-        self._value
+        self.inheritance_mode_func()
+        self._inheritance_mode_func()
+        self._superValue
         pass
-
-    #Summary Function
-    def __summary(self):
-        self.single_mode_func()
-        self._multi_mode_func()
-        self.__private_mode_func()
-        self._value
-        #No return
 
     #Setting Function
     def setSetting(self,variable):
-        self._setting=variable
-        return self._setting
+        self._settings=variable
     def addSetting(self,variable):
-        self._setting.append(variable)
-        return self._setting
+        self._settings.append(variable)
     def currentSetting(self):
-        self._setting=self.single_mode_func()
-        return self._setting
+        self._settings=self.single_mode_func()
+        return self._settings
     def getSetting(self):
-        return self._setting
+        return self._settings
 
     #Public Function
     def public(self):
-        print(self._value)
+        self.single_mode_func()
+        self._multi_mode_func()
+        self.inheritance_mode_func()
+        self._inheritance_mode_func()
+        self.__private_mode_func()
+        self._value
+        self._superValue
         pass

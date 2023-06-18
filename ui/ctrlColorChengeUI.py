@@ -9,9 +9,26 @@ class ColorChengeWindouBase(QWidget):
 
         main_QVBoxLayout=QVBoxLayout(self)
 
-        artAttr_QHBoxLayout=QHBoxLayout(self)
-        main_QVBoxLayout.addLayout(artAttr_QHBoxLayout)
+        artAttr_QHBoxLayout=self.artAttrLayout_create_QHBoxLayout()
+        neutralButton_QHBoxLayout=self.neutralButtonLayout_create_QHBoxLayout()
+        templateColor_QWidget=self.templateColor_create_QWidget()
+        indexColor_QWidget=self.indexColor_create_QWidget()
+        mgearColor_QWidget=self.mgearColor_create_QWidget()
+        grisColor_QWidget=self.grisColor_create_QWidget()
 
+        ctrlColor_QTabWidget=QTabWidget(self)
+        ctrlColor_QTabWidget.addTab(templateColor_QWidget,"Default")
+        ctrlColor_QTabWidget.addTab(indexColor_QWidget,"Index")
+        ctrlColor_QTabWidget.addTab(mgearColor_QWidget,"Mgear")
+        ctrlColor_QTabWidget.addTab(grisColor_QWidget,"Gris")
+
+        main_QVBoxLayout.addLayout(artAttr_QHBoxLayout)
+        main_QVBoxLayout.addLayout(neutralButton_QHBoxLayout)
+        main_QVBoxLayout.addWidget(ctrlColor_QTabWidget)
+
+    #Single Function
+    def artAttrLayout_create_QHBoxLayout(self):
+        artAttr_QHBoxLayout=QHBoxLayout(self)
         self.radioGrp_QButtonGroup=QButtonGroup()
 
         override_QRadioButton=QRadioButton("Override",self)
@@ -22,9 +39,28 @@ class ColorChengeWindouBase(QWidget):
         wireframe_QRadioButton=QRadioButton("WireFrame",self)
         self.radioGrp_QButtonGroup.addButton(wireframe_QRadioButton,1)
         artAttr_QHBoxLayout.addWidget(wireframe_QRadioButton)
+        
+        return artAttr_QHBoxLayout
+    
+    def neutralButtonLayout_create_QHBoxLayout(self):
+        neutralButton_QHBoxLayout=QHBoxLayout(self)
 
+        overrideNeutral_QPushButton=QPushButton("OverrideNeutral",self)
+        overrideNeutral_QPushButton.setStyleSheet("color: gray;")
+        overrideNeutral_QPushButton.clicked.connect(self.buttonOverrideNeutralOnClicked)
+        neutralButton_QHBoxLayout.addWidget(overrideNeutral_QPushButton)
+
+        wireNeutral_QPushButton=QPushButton("WireNeutral",self)
+        wireNeutral_QPushButton.setStyleSheet("color: gray;")
+        wireNeutral_QPushButton.clicked.connect(self.buttonWireNeutralOnClicked)
+        neutralButton_QHBoxLayout.addWidget(wireNeutral_QPushButton)
+        
+        return neutralButton_QHBoxLayout
+    
+    def templateColor_create_QWidget(self):
+        color_QWidget=QWidget()
         custom_QGridLayout=QGridLayout(self)
-        main_QVBoxLayout.addLayout(custom_QGridLayout)
+        color_QWidget.setLayout(custom_QGridLayout)
 
         right_QVBoxLayout=QVBoxLayout(self)
         custom_QGridLayout.addLayout(right_QVBoxLayout,1,0)
@@ -109,6 +145,11 @@ class ColorChengeWindouBase(QWidget):
 
         other_QLabel=QLabel("Other Color",self)
         other_QVBoxLayout.addWidget(other_QLabel,True)
+        
+        white_QPushButton=QPushButton("White",self)
+        white_QPushButton.setStyleSheet("color: white;")
+        white_QPushButton.clicked.connect(self.buttonWhiteOnClicked)
+        other_QVBoxLayout.addWidget(white_QPushButton,True)
 
         magenta_QPushButton=QPushButton("Magenta",self)
         magenta_QPushButton.setStyleSheet("color: magenta;")
@@ -120,26 +161,49 @@ class ColorChengeWindouBase(QWidget):
         purple_QPushButton.clicked.connect(self.buttonPurpleOnClicked)
         other_QVBoxLayout.addWidget(purple_QPushButton,True)
         
-        white_QPushButton=QPushButton("White",self)
-        white_QPushButton.setStyleSheet("color: white;")
-        white_QPushButton.clicked.connect(self.buttonWhiteOnClicked)
-        other_QVBoxLayout.addWidget(white_QPushButton,True)
-        
         black_QPushButton=QPushButton("Black", self)
         black_QPushButton.setStyleSheet("color: black;")
         black_QPushButton.clicked.connect(self.buttonBlackOnClicked)
         other_QVBoxLayout.addWidget(black_QPushButton,True)
+        return color_QWidget
 
-        override_QPushButton=QPushButton("OverrideNeutral",self)
-        override_QPushButton.setStyleSheet("color: gray;")
-        override_QPushButton.clicked.connect(self.buttonOverrideNeutralOnClicked)
-        custom_QGridLayout.addWidget(override_QPushButton,2,0,2,2)
+    def indexColor_create_QWidget(self):
+        color_QWidget=QWidget()
+        custom_QGridLayout=QGridLayout(self)
+        color_QWidget.setLayout(custom_QGridLayout)
 
-        wire_QPushButton=QPushButton("WireNeutral",self)
-        wire_QPushButton.setStyleSheet("color: gray;")
-        wire_QPushButton.clicked.connect(self.buttonWireNeutralOnClicked)
-        custom_QGridLayout.addWidget(wire_QPushButton,2,2,2,2)
+        right_QVBoxLayout=QVBoxLayout(self)
+        custom_QGridLayout.addLayout(right_QVBoxLayout,1,0)
 
+        right_QLabel=QLabel("Right Color",self)
+        right_QVBoxLayout.addWidget(right_QLabel,True)
+        return color_QWidget
+    
+    def mgearColor_create_QWidget(self):
+        color_QWidget=QWidget()
+        custom_QGridLayout=QGridLayout(self)
+        color_QWidget.setLayout(custom_QGridLayout)
+
+        right_QVBoxLayout=QVBoxLayout(self)
+        custom_QGridLayout.addLayout(right_QVBoxLayout,1,0)
+
+        right_QLabel=QLabel("Right Color",self)
+        right_QVBoxLayout.addWidget(right_QLabel,True)
+        return color_QWidget
+    
+    def grisColor_create_QWidget(self):
+        color_QWidget=QWidget()
+        custom_QGridLayout=QGridLayout(self)
+        color_QWidget.setLayout(custom_QGridLayout)
+
+        right_QVBoxLayout=QVBoxLayout(self)
+        custom_QGridLayout.addLayout(right_QVBoxLayout,1,0)
+
+        right_QLabel=QLabel("Right Color",self)
+        right_QVBoxLayout.addWidget(right_QLabel,True)
+        return color_QWidget
+
+    #Public Function
     def buttonRedOnClicked(self):
         print("Red")
     def buttonPinkOnClicked(self):

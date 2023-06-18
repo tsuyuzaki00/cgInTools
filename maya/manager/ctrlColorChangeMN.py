@@ -12,8 +12,8 @@ from ..library import colorLB as cLB
 cit.reloads([UI,wLB,cLB])
 
 class ColorChangeWindow(UI.ColorChengeWindouBase):
-    def __init__(self, parent):
-        super(ColorChangeWindow, self).__init__(parent)
+    def __init__(self,parent):
+        super(ColorChangeWindow,self).__init__(parent)
         self.setWindowFlags(Qt.Window)
         self.setWindowTitle("ctrlColorChenge")
 
@@ -21,9 +21,9 @@ class ColorChangeWindow(UI.ColorChengeWindouBase):
     def changeColor_edit_func(self,value,swicth=0):
         change=cLB.Color()
         change.setValue(value)
-        objs=cmds.ls(sl=True)
-        for obj in objs:
-            change.setObject(obj)
+        sels=cmds.ls(sl=True)
+        for sel in sels:
+            change.setNode(sel)
             if swicth is 0:
                 change.overrideColor()
             elif swicth is 1:
