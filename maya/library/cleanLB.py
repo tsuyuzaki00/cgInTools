@@ -21,7 +21,8 @@ def delUnknownNode_edit_func():
             cmds.unknownPlugin(p,r=True)
             print("Removed unknown plugin : {}".format(p))
 
-def defaultMaterial_edit_func(obj):
+def defaultMaterial_edit_func(obj,defMaterial="initialShadingGroup"):
+    cmds.lockNode(defMaterial,l=False,lu=False)
     cmds.sets(obj,e=True,forceElement="initialShadingGroup")
 
 def delGarbageReference_edit_func():
