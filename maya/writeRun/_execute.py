@@ -23,5 +23,6 @@ def main():
     nodeM.setMatchNode("pCube2")
     nodeM.matchToTranslate()
     nodeM.matchToQuaternion()
+    #nodeM.translate([3,0,0])
 
 main()
