@@ -324,11 +324,11 @@ class SelfEditArmature(SelfOrigin):
             "editRoll"
         ]
 
-    def selectEditBone_query_EditBone(self,armatureName,boneName):
-        armature_Object=bpy.data.objects[armatureName]
+    def selectEditBone_query_EditBone(self,armature_str,bone_str):
+        armature_Object=bpy.data.objects[armature_str]
         bpy.context.view_layer.objects.active=armature_Object
         bpy.ops.object.mode_set(mode='EDIT')
-        bone_EditBone=armature_Object.data.edit_bones[boneName]
+        bone_EditBone=armature_Object.data.edit_bones[bone_str]
         return bone_EditBone
 
     def editBone_create_EditBone(self,armature_str,bone_str):
