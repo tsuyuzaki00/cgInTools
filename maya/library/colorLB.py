@@ -2,16 +2,15 @@
 import maya.cmds as cmds
 
 import cgInTools as cit
-from . import setBaseLB as sbLB
-from . import jsonLB as jLB
-cit.reloads([sbLB,jLB])
+from ...library import jsonLB as jLB
+cit.reloads([jLB])
 
-RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
+RULES_DICT=jLB.readJson(cit.settings_dir,"library")
 
 class Color(object):
     def __init__(self):
         super(Color,self).__init__()
-        self._colorIndex_lists=RULES_DICT["rgbToColorIndex_lists"]
+        self._colorIndex_dicts=RULES_DICT["colorIndex_dicts"]
         self._node=None
         self._value=None
 
@@ -53,7 +52,7 @@ class Color(object):
     def wireframeColor_edit_func(self,nodeShapes,color=None,ruleData=[]):
         if isinstance(color,int):
             use=2
-            color=ruleData[color]
+            color=ruleData[color]["Wire"]
         elif isinstance(color,list) or isinstance(color,tuple):
             use=2
         else:
@@ -87,4 +86,4 @@ class Color(object):
         _value=value or self._value
         
         nodeShapes=self.wireColorShape_query_list(_node)
-        self.wireframeColor_edit_func(nodeShapes,_value,ruleData=self._colorIndex_lists)
+        self.wireframeColor_edit_func(nodeShapes,_value,ruleData=self._colorIndex_dicts)

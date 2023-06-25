@@ -30,54 +30,99 @@ class ColorChangeWindow(UI.ColorChengeWindouBase):
                 change.wireframeColor()
 
     #Public Function
-    def buttonRedOnClicked(self):
+    def index01ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(13,id_int)#Red
-    def buttonPinkOnClicked(self):
+        self.changeColor_edit_func(1,id_int)
+    def index02ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(20,id_int)#Pink
-    def buttonCrimsonOnClicked(self):
+        self.changeColor_edit_func(2,id_int)
+    def index03ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(31,id_int)#Crimson
-    def buttonDarkRedOnClicked(self):
+        self.changeColor_edit_func(3,id_int)
+    def index04ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(4,id_int)#DarkRed
-    def buttonYellowOnClicked(self):
+        self.changeColor_edit_func(4,id_int)
+    def index05ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(17,id_int)#Yellow
-    def buttonLimeOnClicked(self):
+        self.changeColor_edit_func(5,id_int)
+    def index06ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(14,id_int)#lime
-    def buttonGreenOnClicked(self):
+        self.changeColor_edit_func(6,id_int)
+    def index07ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(27,id_int)#MediumSeaGreen
-    def buttonDarkGreenOnClicked(self):
+        self.changeColor_edit_func(7,id_int)
+    def index08ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(7,id_int)#DarkGreen
-    def buttonBlueOnClicked(self):
+        self.changeColor_edit_func(8,id_int)
+    def index09ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(6,id_int)#Blue
-    def buttonCyanOnClicked(self):
+        self.changeColor_edit_func(9,id_int)
+    def index10ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(18,id_int)#Cyan
-    def buttonTealOnClicked(self):
+        self.changeColor_edit_func(10,id_int)
+    def index11ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(28,id_int)#SteelBlue
-    def buttonDarkBlueOnClicked(self):
+        self.changeColor_edit_func(11,id_int)
+    def index12ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(15,id_int)#DarkBlue
-    def buttonMagentaOnClicked(self):
+        self.changeColor_edit_func(12,id_int)
+    def index13ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(9,id_int)#Magenta
-    def buttonPurpleOnClicked(self):
+        self.changeColor_edit_func(13,id_int)
+    def index14ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(30,id_int)#Purple
-    def buttonWhiteOnClicked(self):
+        self.changeColor_edit_func(14,id_int)
+    def index15ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(16,id_int)#White
-    def buttonBlackOnClicked(self):
+        self.changeColor_edit_func(15,id_int)
+    def index16ButtonOnClicked(self):
         id_int=self.radioGrp_QButtonGroup.checkedId()
-        self.changeColor_edit_func(1,id_int)#Black
+        self.changeColor_edit_func(16,id_int)
+    def index17ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(17,id_int)
+    def index18ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(18,id_int)
+    def index19ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(19,id_int)
+    def index20ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(20,id_int)
+    def index21ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(21,id_int)
+    def index22ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(22,id_int)
+    def index23ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(23,id_int)
+    def index24ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(24,id_int)
+    def index25ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(25,id_int)
+    def index26ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(26,id_int)
+    def index27ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(27,id_int)
+    def index28ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(28,id_int)
+    def index29ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(29,id_int)
+    def index30ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(30,id_int)
+    def index31ButtonOnClicked(self):
+        id_int=self.radioGrp_QButtonGroup.checkedId()
+        self.changeColor_edit_func(31,id_int)
     def buttonOverrideNeutralOnClicked(self):
         self.changeColor_edit_func(None,0)#OverrideNeutral
     def buttonWireNeutralOnClicked(self):
