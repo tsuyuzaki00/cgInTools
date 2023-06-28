@@ -380,9 +380,6 @@ class ColorChengeWindouBase(QWidget):
         index31_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index31_str+";")
         index31_QPushButton.clicked.connect(self.index31ButtonOnClicked)
         custom_QGridLayout.addWidget(index31_QPushButton,3,0)
-        
-        
-
         return color_QWidget
     
     def mgearColor_create_QWidget(self):
@@ -459,29 +456,23 @@ class ColorChengeWindouBase(QWidget):
         right_QLabel=QLabel("Right Color",self)
         right_QVBoxLayout.addWidget(right_QLabel,True)
 
-        index13_QPushButton=QPushButton("main",self)
-        index13_str=self._colorIndex_dicts[13]["RGBFF"]
-        index13_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index13_str+";")
-        index13_QPushButton.clicked.connect(self.index13ButtonOnClicked)
-        right_QVBoxLayout.addWidget(index13_QPushButton,True)
-
-        index20_QPushButton=QPushButton("sub",self)
-        index20_str=self._colorIndex_dicts[20]["RGBFF"]
-        index20_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index20_str+";")
-        index20_QPushButton.clicked.connect(self.index20ButtonOnClicked)
-        right_QVBoxLayout.addWidget(index20_QPushButton,True)
-        
-        index31_QPushButton=QPushButton("support",self)
-        index31_str=self._colorIndex_dicts[31]["RGBFF"]
-        index31_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index31_str+";")
-        index31_QPushButton.clicked.connect(self.index31ButtonOnClicked)
-        right_QVBoxLayout.addWidget(index31_QPushButton,True)
-        
-        index04_QPushButton=QPushButton("inside",self)
+        index04_QPushButton=QPushButton("main",self)
         index04_str=self._colorIndex_dicts[4]["RGBFF"]
         index04_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index04_str+";")
         index04_QPushButton.clicked.connect(self.index04ButtonOnClicked)
         right_QVBoxLayout.addWidget(index04_QPushButton,True)
+
+        index09_QPushButton=QPushButton("sub",self)
+        index09_str=self._colorIndex_dicts[9]["RGBFF"]
+        index09_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index09_str+";")
+        index09_QPushButton.clicked.connect(self.index09ButtonOnClicked)
+        right_QVBoxLayout.addWidget(index09_QPushButton,True)
+        
+        index30_QPushButton=QPushButton("support",self)
+        index30_str=self._colorIndex_dicts[30]["RGBFF"]
+        index30_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index30_str+";")
+        index30_QPushButton.clicked.connect(self.index30ButtonOnClicked)
+        right_QVBoxLayout.addWidget(index30_QPushButton,True)
 
         center_QVBoxLayout=QVBoxLayout(self)
         custom_QGridLayout.addLayout(center_QVBoxLayout,1,1)
@@ -489,29 +480,23 @@ class ColorChengeWindouBase(QWidget):
         center_QLabel=QLabel("Center Color",self)
         center_QVBoxLayout.addWidget(center_QLabel,True)
 
-        index17_QPushButton=QPushButton("main",self)
-        index17_str=self._colorIndex_dicts[17]["RGBFF"]
-        index17_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index17_str+";")
-        index17_QPushButton.clicked.connect(self.index17ButtonOnClicked)
-        center_QVBoxLayout.addWidget(index17_QPushButton,True)
+        index33_QPushButton=QPushButton("main",self)
+        index33_str=self._colorIndex_dicts[33]["RGBFF"]
+        index33_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index33_str+";")
+        index33_QPushButton.clicked.connect(self.index33ButtonOnClicked)
+        center_QVBoxLayout.addWidget(index33_QPushButton,True)
 
-        index14_QPushButton=QPushButton("sub",self)
-        index14_str=self._colorIndex_dicts[14]["RGBFF"]
-        index14_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index14_str+";")
-        index14_QPushButton.clicked.connect(self.index14ButtonOnClicked)
-        center_QVBoxLayout.addWidget(index14_QPushButton,True)
+        index23_QPushButton=QPushButton("sub",self)
+        index23_str=self._colorIndex_dicts[23]["RGBFF"]
+        index23_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index23_str+";")
+        index23_QPushButton.clicked.connect(self.index23ButtonOnClicked)
+        center_QVBoxLayout.addWidget(index23_QPushButton,True)
 
-        index27_QPushButton=QPushButton("support",self)
-        index27_str=self._colorIndex_dicts[27]["RGBFF"]
-        index27_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index27_str+";")
-        index27_QPushButton.clicked.connect(self.index27ButtonOnClicked)
-        center_QVBoxLayout.addWidget(index27_QPushButton,True)
-
-        index07_QPushButton=QPushButton("inside",self)
-        index07_str=self._colorIndex_dicts[7]["RGBFF"]
-        index07_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index07_str+";")
-        index07_QPushButton.clicked.connect(self.index07ButtonOnClicked)
-        center_QVBoxLayout.addWidget(index07_QPushButton,True)
+        index13_QPushButton=QPushButton("support",self)
+        index13_str=self._colorIndex_dicts[13]["RGBFF"]
+        index13_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index13_str+";")
+        index13_QPushButton.clicked.connect(self.index13ButtonOnClicked)
+        center_QVBoxLayout.addWidget(index13_QPushButton,True)
         
         left_QVBoxLayout=QVBoxLayout(self)
         custom_QGridLayout.addLayout(left_QVBoxLayout,1,2)
@@ -525,23 +510,17 @@ class ColorChengeWindouBase(QWidget):
         index06_QPushButton.clicked.connect(self.index06ButtonOnClicked)
         left_QVBoxLayout.addWidget(index06_QPushButton,True)
 
-        index18_QPushButton=QPushButton("sub",self)
-        index18_str=self._colorIndex_dicts[18]["RGBFF"]
-        index18_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index18_str+";")
-        index18_QPushButton.clicked.connect(self.index18ButtonOnClicked)
-        left_QVBoxLayout.addWidget(index18_QPushButton,True)
-        
-        index28_QPushButton=QPushButton("support",self)
+        index28_QPushButton=QPushButton("sub",self)
         index28_str=self._colorIndex_dicts[28]["RGBFF"]
         index28_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index28_str+";")
         index28_QPushButton.clicked.connect(self.index28ButtonOnClicked)
         left_QVBoxLayout.addWidget(index28_QPushButton,True)
         
-        index15_QPushButton=QPushButton("inside",self)
-        index15_str=self._colorIndex_dicts[15]["RGBFF"]
-        index15_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index15_str+";")
-        index15_QPushButton.clicked.connect(self.index15ButtonOnClicked)
-        left_QVBoxLayout.addWidget(index15_QPushButton,True)
+        index29_QPushButton=QPushButton("support",self)
+        index29_str=self._colorIndex_dicts[29]["RGBFF"]
+        index29_QPushButton.setStyleSheet("color:#f5f5f5; background:"+index29_str+";")
+        index29_QPushButton.clicked.connect(self.index29ButtonOnClicked)
+        left_QVBoxLayout.addWidget(index29_QPushButton,True)
         return color_QWidget
 
     #Public Function
@@ -607,6 +586,8 @@ class ColorChengeWindouBase(QWidget):
         print(30)
     def index31ButtonOnClicked(self):
         print(31)
+    def index32ButtonOnClicked(self):
+        print(32)
     def buttonOverrideNeutralOnClicked(self):
         print("OverrideNeutral")
     def buttonWireNeutralOnClicked(self):
