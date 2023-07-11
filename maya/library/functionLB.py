@@ -29,3 +29,25 @@ def _childSelections_query_strs(nodeType="transform",removes=[]):
         for newChild in newChilds:
             selects.append(newChild)
     return selects
+
+def splineIKJoints_create_dict(self,joints,renameType="jnt"):
+        splineIK_dict={}
+        jointPosition_lists=[cmds.xform(joint,q=True,ws=True,t=True) for joint in joints]
+        
+        crv=cmds.curve(ep=jointPosition_lists,n=joints[0].replace(renameType,"crv"))
+        shape=cmds.listRelatives(crv,s=True)[0]
+        cmds.rename(shape,crv+"Shape")
+        ikHandleName_str=crv.replace("crv","ikhl")
+        ikEffectorName_str=crv.replace("crv","ikef")
+        
+        hdl,eff=cmds.ikHandle(sol='ikSplineSolver',ccv=False,pcv=False,sj=joints[0],ee=joints[-1],curve=crv,n=ikHandleName_str)
+        eff=cmds.rename(eff,ikEffectorName_str)
+        
+        splineIK_dict["curve"]=crv
+        splineIK_dict["ikHandle"]=hdl
+        splineIK_dict["ikEffector"]=eff
+        return splineIK_dict
+
+def setMultMatrix(node,matrixAttr,mumx,num):
+    node_matrix=cmds.getAttr(node+"."+matrixAttr)
+    cmds.setAttr(mumx+".matrixIn["+str(num)+"]",node_matrix,type="matrix")

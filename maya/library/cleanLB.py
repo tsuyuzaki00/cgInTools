@@ -23,7 +23,7 @@ def delUnknownNode_edit_func():
 
 def defaultMaterial_edit_func(obj,defMaterial="initialShadingGroup"):
     cmds.lockNode(defMaterial,l=False,lu=False)
-    cmds.sets(obj,e=True,forceElement="initialShadingGroup")
+    cmds.sets(obj,e=True,forceElement=defMaterial)
 
 def delGarbageReference_edit_func():
     count=0
