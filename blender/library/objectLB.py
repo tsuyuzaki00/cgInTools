@@ -612,18 +612,24 @@ class SelfPoseArmature(SelfOrigin):
         return boneConstraintValue_value
 
     def colorIndex_edit_func(self,bone_PoseBone,colorIndex):
-        bone_PoseBone.bone_group_index=colorIndex
+        if not colorIndex == None:
+            bone_PoseBone.bone_group_index=colorIndex
 
     def colorIndex_query_int(self,bone_PoseBone):
         colorIndex=bone_PoseBone.bone_group_index
+        if colorIndex == 0:
+            return None
         return colorIndex
 
     def customShape_edit_func(self,bone_PoseBone,customShape_str,customShapePath_str):
-        bone_PoseBone.custom_shape=bpy.data.objects[customShape_str,customShapePath_str]
+        if not customShape_str == None:
+            bone_PoseBone.custom_shape=bpy.data.objects[customShape_str,customShapePath_str]
 
     def customShape_query_str(self,bone_PoseBone):
-        customShape_str=bone_PoseBone.custom_shape.name
-        return customShape_str
+        if not bone_PoseBone.custom_shape == None:
+            customShape_str=bone_PoseBone.custom_shape.name
+            return customShape_str
+        return None
 
     def customShapePath_query_str(self,bone_PoseBone):
         customShapePath_str=bone_PoseBone.custom_shape.library.filepath
