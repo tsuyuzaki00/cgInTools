@@ -40,5 +40,8 @@ def delGarbageReference_edit_func():
 
     print("Total errors found: " + str(count))
 
-def nodeUnLocked_edit_func(node="initialShadingGroup"):
+def nodeUnLocked_edit_tuple2(node="initialShadingGroup"):
+    pastNode_bools=cmds.lockNode(node,q=True)
     cmds.lockNode(node,l=False,lu=False)
+    lockNode_bools=cmds.lockNode(node,q=True)
+    return lockNode_bools,pastNode_bools

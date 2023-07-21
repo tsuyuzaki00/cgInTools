@@ -25,11 +25,15 @@ class SelfOrigin(object):
     
     def setSetChoices(self,variables):
         self._setChoices=variables
+    def addSetChoices(self,variables):
+        self._setChoices+=variables
     def getSetChoices(self):
         return self._setChoices
     
     def setDoIts(self,variables):
         self._doIts=variables
+    def addDoIts(self,variables):
+        self._doIts+=variables
     def getDoIts(self):
         return self._doIts
     
@@ -39,7 +43,6 @@ class SelfOrigin(object):
 
         write_dict={}
         for _selfChoice in _setChoices:
-            #print(_selfChoice)
             variable=eval('self.get'+_selfChoice+'()')
             write_dict[_selfChoice]=variable
         return write_dict
@@ -49,9 +52,10 @@ class SelfOrigin(object):
 
         setFunctions=list(_read_dict.keys())
         for setFunction in setFunctions:
-            #print(_read_dict[setFunction])
-            if isinstance(_read_dict[setFunction],str):
-                variable='"'+_read_dict[setFunction]+'"'
+            if _read_dict.get(setFunction) is None:
+                break
+            elif isinstance(_read_dict[setFunction],str):
+                variable='"'+_read_dict.get(setFunction)+'"'
             else:
                 variable=str(_read_dict[setFunction])
             eval('self.set'+setFunction+'('+variable+')')
