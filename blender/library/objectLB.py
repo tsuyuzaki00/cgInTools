@@ -16,11 +16,15 @@ class SelfOrigin(object):
     
     def setSetChoices(self,variables):
         self._setChoices=variables
+    def addSetChoices(self,variables):
+        self._setChoices+=variables
     def getSetChoices(self):
         return self._setChoices
     
     def setDoIts(self,variables):
         self._doIts=variables
+    def addDoIts(self,variables):
+        self._doIts+=variables
     def getDoIts(self):
         return self._doIts
     
@@ -30,7 +34,6 @@ class SelfOrigin(object):
 
         write_dict={}
         for _selfChoice in _setChoices:
-            #print(_selfChoice)
             variable=eval('self.get'+_selfChoice+'()')
             write_dict[_selfChoice]=variable
         return write_dict
@@ -40,9 +43,10 @@ class SelfOrigin(object):
 
         setFunctions=list(_read_dict.keys())
         for setFunction in setFunctions:
-            #print(_read_dict[setFunction])
-            if isinstance(_read_dict[setFunction],str):
-                variable='"'+_read_dict[setFunction]+'"'
+            if _read_dict.get(setFunction) is None:
+                break
+            elif isinstance(_read_dict[setFunction],str):
+                variable='"'+_read_dict.get(setFunction)+'"'
             else:
                 variable=str(_read_dict[setFunction])
             eval('self.set'+setFunction+'('+variable+')')
@@ -311,6 +315,7 @@ class SelfEditArmature(SelfOrigin):
         self._tail_list=None
         self._roll_float=None
         self._layerNums=None
+        self._bendyBoneSize_list2=None
         self._setChoices+=[
             "Armature",
             "Bone",
@@ -377,6 +382,16 @@ class SelfEditArmature(SelfOrigin):
     def layer_query_ints(self,bone_EditBone):
         layerNums=[i for i, value in enumerate(bone_EditBone.layers) if value is True]
         return layerNums
+
+    def bendyBoneSize_query_list2(self,bone_EditBone):
+        size_list2=[]
+        size_list2[0]=bone_EditBone.bbone_x
+        size_list2[1]=bone_EditBone.bbone_z
+        return size_list2
+    
+    def bendyBoneSize_edit_func(self,bone_EditBone,size_list2=[0.1,0.1]):
+        bone_EditBone.bbone_x=size_list2[0]
+        bone_EditBone.bbone_z=size_list2[1]
 
     #Setting Function
     def setArmature(self,variable):
@@ -452,6 +467,16 @@ class SelfEditArmature(SelfOrigin):
     def getRoll(self):
         return self._roll_float
 
+    def setBendyBoneSize(self,variable):
+        self._bendyBoneSize_list2=variable
+        return self._bendyBoneSize_list2
+    def currentBendyBoneSize(self):
+        bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
+        self._bendyBoneSize_list2=self.bendyBoneSize_query_list2(bone_EditBone)
+        return self._bendyBoneSize_list2
+    def getBendyBoneSize(self):
+        return self._bendyBoneSize_list2
+
     #Public Function
     def createBone(self,boneName=None,armatureName=None):
         _armature_str=armatureName or self._armature_str
@@ -500,6 +525,14 @@ class SelfEditArmature(SelfOrigin):
 
         bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
         self.layer_edit_func(bone_EditBone,_layerNums)
+
+    def editBendyBoneSize(self,size=None,boneName=None,armatureName=None):
+        _armature_str=armatureName or self._armature_str
+        _bone_str=boneName or self._bone_str
+        _bendyBoneSize_list2=size or self._bendyBoneSize_list2
+
+        bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
+        self.bendyBoneSize_edit_func(bone_EditBone,_bendyBoneSize_list2)
 
 class SelfPoseArmature(SelfOrigin):
     def __init__(self):
@@ -622,11 +655,11 @@ class SelfPoseArmature(SelfOrigin):
         return colorIndex
 
     def customShape_edit_func(self,bone_PoseBone,customShape_str,customShapePath_str):
-        if not customShape_str == None:
+        if not customShape_str is None:
             bone_PoseBone.custom_shape=bpy.data.objects[customShape_str,customShapePath_str]
 
     def customShape_query_str(self,bone_PoseBone):
-        if not bone_PoseBone.custom_shape == None:
+        if not bone_PoseBone.custom_shape is None:
             customShape_str=bone_PoseBone.custom_shape.name
             return customShape_str
         return None
@@ -881,9 +914,9 @@ class SelfPoseArmature(SelfOrigin):
         
         bone_PoseBone=self.selectPoseBone_query_PoseBone(_armature_str,_bone_str)
         bone_PoseBone.rotation_mode="XYZ"
+        self.colorIndex_edit_func(bone_PoseBone,_colorIndex_int)
         self.customShape_edit_func(bone_PoseBone,_customShape_str,_customShapePath_str)
         bone_PoseBone.bone.show_wire=True
-        self.colorIndex_edit_func(bone_PoseBone,_colorIndex_int)
 
 class SelfLattice(SelfObject):
     def __init__(self):
