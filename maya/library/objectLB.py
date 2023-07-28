@@ -53,7 +53,7 @@ class SelfOrigin(object):
         setFunctions=list(_read_dict.keys())
         for setFunction in setFunctions:
             if _read_dict.get(setFunction) is None:
-                break
+                continue
             elif isinstance(_read_dict[setFunction],str):
                 variable='"'+_read_dict.get(setFunction)+'"'
             else:

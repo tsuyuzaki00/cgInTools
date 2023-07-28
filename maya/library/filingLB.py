@@ -20,6 +20,9 @@ class Path(sbLB.BasePath):
         self._file=scene.split(".")[0]
         self._extension=scene.split(".")[1]
 
+    def __str__(self):
+        pass
+
     def __loading(self):
         self._path=os.path.normpath(self._path)
 
@@ -36,19 +39,34 @@ class Path(sbLB.BasePath):
         split_str=self._name.split(self._split)[self._index]
         return split_str
 
-class Project(sbLB.BasePath):
+class Project():
     def __init__(self):
-        super(Project,self).__init__()
-        self.defSetProjectFolder=PROJECTFOLDER
-        self._workPath=cmds.workspace(q=True,rd=True,o=True)
-        self._defPath=os.path.abspath(os.path.join(self._workPath,".."))
-        self._projectPathName="_newProject"
-
-    def __loading(self):
-        self._workPath=cmds.workspace(q=True,rd=True)
-        self._defPath=os.path.abspath(os.path.join(self._workPath,".."))
+        self._defSetProjectFolder=PROJECTFOLDER
+        
+        self._absoluteDirectory=None
+        self._relativeDirectory=None
+        self._projectName="_newProject"
+    
+    def __str__(self):
+        projectDirectory=self.projectDirectory_create_str(self._absoluteDirectory,self._relativeDirectory,self._projectName)
+        return projectDirectory
 
     #Single Function
+    def projectDirectory_create_str(self,absoluteDirectory,relativeDirectory,projectName):
+        if absoluteDirectory is None:
+            absoluteDirectory="D:"
+        if relativeDirectory is None:
+            relativeDirectory=""
+        projectDirectory=os.path.join(absoluteDirectory,relativeDirectory,projectName)
+        return projectDirectory
+
+    def setProject_edit_str(self,projectDirectory,create=False):
+        if create:
+            shutil.copytree(self._defSetProjectFolder,projectDirectory)
+        cmds.workspace(projectDirectory,o=True)
+        projectDirectory=cmds.workspace(q=True,rd=True)
+        return projectDirectory
+
     def isPath_check_str(self,path):
         boolean=os.path.isdir(path)
         if boolean:
@@ -56,59 +74,57 @@ class Project(sbLB.BasePath):
         else :
             cmds.error(path+" path does not exist.")
 
-    def notSamePath_check_str(self,path):
-        boolean=os.path.isdir(path)
-        if boolean:
-            cmds.error(path+" folder with the same name already exists")
-        else :
-            return path
+    #Setting Function
+    def getDirectory(self):
+        if self._absoluteDirectory is None:
+            absoluteDirectory="D:"
+        else:
+            absoluteDirectory=self._absoluteDirectory
+        if self._relativeDirectory is None:
+            relativeDirectory=""
+        else:
+            relativeDirectory=self._relativeDirectory
+        directory=os.path.join(absoluteDirectory,relativeDirectory)
+        return directory
 
-    def setProject_edit_str(self,path,name):
-        workPath=os.path.join(path,name)
-        cmds.workspace(workPath,o=True)
-        workPath=cmds.workspace(q=True,rd=True)
-        return workPath
+    def setAbsoluteDirectory(self,variable):
+        self._absoluteDirectory=variable
+        return self._absoluteDirectory
+    def getAbsoluteDirectory(self):
+        return self._absoluteDirectory
+    
+    def setRelativeDirectory(self,variable):
+        self._relativeDirectory=variable
+        return self._relativeDirectory
+    def getRelativeDirectory(self):
+        return self._relativeDirectory
 
-    #Multi Function
-    def _isPathAndSamePath_check_func(self,path,name):
-        checkPath=os.path.join(path,name)
-        self.isPath_check_str(checkPath)
-        self.notSamePath_check_str(checkPath)
-
-    #Private Function
-    def _setProject_create_str(self,path,name):
-        workPath=os.path.join(path,name)
-        shutil.copytree(self.defSetProjectFolder,workPath)
-        cmds.workspace(workPath,o=True)
-        workPath=cmds.workspace(q=True,rd=True)
-        return workPath
+    def setProjectName(self,variable):
+        self._projectName=variable
+        return self._projectName
+    def getProjectName(self):
+        return self._projectName
 
     #Public Function
-    def queryInDefPath(self,variable):
-        inDefPath=os.path.abspath(os.path.join(self._defPath,variable))
-        return inDefPath
+    def createProject(self,absoluteDirectory=None,relativeDirectory=None,projectName=None):
+        _absoluteDirectory=absoluteDirectory or self._absoluteDirectory
+        _relativeDirectory=relativeDirectory or self._relativeDirectory
+        _projectName=projectName or self._projectName
 
-    def createProject(self):
-        self._isPathAndSamePath_check_func(self._path,self._projectName)
-        self._workPath=self._setProject_create_str(self._path,self._projectName)
-        return self._workPath
+        #self._isPathAndSamePath_check_func(self._path,self._projectName)
+        projectDirectory=self.projectDirectory_create_str(_absoluteDirectory,_relativeDirectory,_projectName)
+        workDirectory=self.setProject_edit_str(projectDirectory,create=True)
+        return workDirectory
 
-    def editProject(self):
-        self._isPathAndSamePath_check_func(self._path,self._projectName)
-        self._workPath=self.setProject_edit_str(self._path,self._projectName)
-        return self._workPath
-
-    def createInProject(self):
-        self.__loading()
-        self._isPathAndSamePath_check_func(self._defPath,self._projectName)
-        self._workPath=self._setProject_create_str(self._defPath,self._projectName)
-        return self._workPath
-
-    def editInProject(self):
-        self.__loading()
-        self._isPathAndSamePath_check_func(self._defPath,self._projectName)
-        self._workPath=self.setProject_edit_str(self._defPath,self._projectName)
-        return self._workPath
+    def editProject(self,absoluteDirectory=None,relativeDirectory=None,projectName=None):
+        _absoluteDirectory=absoluteDirectory or self._absoluteDirectory
+        _relativeDirectory=relativeDirectory or self._relativeDirectory
+        _projectName=projectName or self._projectName
+        
+        #self._isPathAndSamePath_check_func(self._path,self._projectName)
+        projectDirectory=self.projectDirectory_create_str(_absoluteDirectory,_relativeDirectory,_projectName)
+        workDirectory=self.setProject_edit_str(projectDirectory)
+        return workDirectory
  
 class File(sbLB.BaseFile):
     def __init__(self):
