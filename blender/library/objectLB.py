@@ -44,7 +44,7 @@ class SelfOrigin(object):
         setFunctions=list(_read_dict.keys())
         for setFunction in setFunctions:
             if _read_dict.get(setFunction) is None:
-                break
+                continue
             elif isinstance(_read_dict[setFunction],str):
                 variable='"'+_read_dict.get(setFunction)+'"'
             else:
@@ -330,6 +330,8 @@ class SelfEditArmature(SelfOrigin):
         ]
 
     def selectEditBone_query_EditBone(self,armature_str,bone_str):
+        if armature_str is None or bone_str is None:
+            return None
         armature_Object=bpy.data.objects[armature_str]
         bpy.context.view_layer.objects.active=armature_Object
         bpy.ops.object.mode_set(mode='EDIT')
@@ -412,7 +414,10 @@ class SelfEditArmature(SelfOrigin):
     def currentParentBone(self):
         bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
         parentBone_EditBone=bone_EditBone.parent
-        self._parentBone_str=parentBone_EditBone.name
+        if parentBone_EditBone is None:
+            self._parentBone_str=None
+        else:
+            self._parentBone_str=parentBone_EditBone.name
         return self._parentBone_str
     def getParentBone(self):
         return self._parentBone_str
