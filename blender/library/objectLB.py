@@ -316,6 +316,7 @@ class SelfEditArmature(SelfOrigin):
         self._roll_float=None
         self._layerNums=None
         self._bendyBoneSize_list2=None
+        self._inheritScale_str=None
         self._setChoices+=[
             "Armature",
             "Bone",
@@ -394,6 +395,14 @@ class SelfEditArmature(SelfOrigin):
     def bendyBoneSize_edit_func(self,bone_EditBone,size_list2=[0.1,0.1]):
         bone_EditBone.bbone_x=size_list2[0]
         bone_EditBone.bbone_z=size_list2[1]
+
+    def inheritScale_edit_func(self,bone_EditBone,scaleType_str=None):
+        if scaleType_str is None:
+            return
+        bone_EditBone.inherit_scale=scaleType_str
+
+    def inheritScale_query_str(self,bone_EditBone):
+        return bone_EditBone.inherit_scale
 
     #Setting Function
     def setArmature(self,variable):
@@ -482,6 +491,16 @@ class SelfEditArmature(SelfOrigin):
     def getBendyBoneSize(self):
         return self._bendyBoneSize_list2
 
+    def setInheritScale(self,variable):
+        self._inheritScale_str=variable
+        return self._inheritScale_str
+    def currentInheritScale(self):
+        bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
+        self._inheritScale_str=self.inheritScale_query_str(bone_EditBone)
+        return self._inheritScale_str
+    def getInheritScale(self):
+        return self._inheritScale_str
+
     #Public Function
     def createBone(self,boneName=None,armatureName=None):
         _armature_str=armatureName or self._armature_str
@@ -538,6 +557,14 @@ class SelfEditArmature(SelfOrigin):
 
         bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
         self.bendyBoneSize_edit_func(bone_EditBone,_bendyBoneSize_list2)
+
+    def editInheritScale(self,scaleType=None,boneName=None,armatureName=None):
+        _armature_str=armatureName or self._armature_str
+        _bone_str=boneName or self._bone_str
+        _inheritScale_str=scaleType or self._inheritScale_str
+
+        bone_EditBone=self.selectEditBone_query_EditBone(_armature_str,_bone_str)
+        self.inheritScale_edit_func(bone_EditBone,_inheritScale_str)
 
 class SelfPoseArmature(SelfOrigin):
     def __init__(self):
