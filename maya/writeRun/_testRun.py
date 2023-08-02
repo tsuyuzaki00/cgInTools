@@ -11,6 +11,7 @@ camera.addAnimDicts({"matrix":[],"time":-1,"in":"","out":""})
 camera.addLightDicts({"light":"","name":"","matrix":[]})
 
 def main():
-    pass
+    cmds.file("")
+    print("test")
 
 main()
