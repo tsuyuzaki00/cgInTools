@@ -1,0 +1,1 @@
+"C:/Program Files/Autodesk/Maya2022/bin/mayabatch.exe" -file "D:/3DCG/Maya/_test/test.ma" -command "file -rename """D:/3DCG/Maya/_test/test01.ma""";file -save";
