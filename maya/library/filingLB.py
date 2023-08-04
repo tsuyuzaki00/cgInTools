@@ -1,7 +1,8 @@
 # -*- coding: iso-8859-15 -*-
-import maya.cmds as cmds
 import os
 import shutil
+import maya.cmds as cmds
+import maya.api.OpenMaya as om2
 
 import cgInTools as cit
 from . import setBaseLB as sbLB
@@ -126,20 +127,28 @@ class Project():
         workDirectory=self.setProject_edit_str(projectDirectory)
         return workDirectory
  
-class File(sbLB.BaseFile):
+class File():
     def __init__(self):
         self._fileType_dict=RULE_DICT["fileType_dict"]
-        workPath=cmds.workspace(q=True,sn=True)
-        self._path=workPath
-        self._file=work_path.split("/")[-1]
+
+        self._absoluteDirectory=None
+        self._relativeDirectory=None
+        self._file=None
+        self._exType=None
 
     #Single Function
-    def fileSave_edit_func(self,file,exType="mayaAscii"):
-        currentScenePath=cmds.file(q=True,sn=True)
-        root=os.path.dirname(currentScenePath)
-        if root == "":
-            cmds.file(rename=file)
+    def fileSave_edit_func(self,directory,file,exType="mayaAscii"):
+        path=os.path.join(directory,file)
+        cmds.file(rename=path)
         cmds.file(save=True,op="v=0",type=exType)
+
+    def projectDirectory_create_str(self,absoluteDirectory,relativeDirectory,projectName):
+        if absoluteDirectory is None:
+            absoluteDirectory="D:"
+        if relativeDirectory is None:
+            relativeDirectory=""
+        projectDirectory=os.path.join(absoluteDirectory,relativeDirectory,projectName)
+        return projectDirectory
 
     def exportMAMB_create_func(self,objs,path,file,ex="ma",exType="mayaAscii"):
         cmds.select(objs)
@@ -173,13 +182,44 @@ class File(sbLB.BaseFile):
         elif extension is "obj" or extension is "fbx":
             self.exportOBJFBX_create_func(objs,path,file,extension,fileType)
 
+    #Setting Function
+    def setAbsoluteDirectory(self,variable):
+        self._absoluteDirectory=variable
+        return self._absoluteDirectory
+    def getAbsoluteDirectory(self):
+        return self._absoluteDirectory
+    
+    def setRelativeDirectory(self,variable):
+        self._relativeDirectory=variable
+        return self._relativeDirectory
+    def getRelativeDirectory(self):
+        return self._relativeDirectory
+
+    def setFile(self,variable):
+        self._file=variable
+        return self._file
+    def getFile(self):
+        return self._file
+    
+    def setExType(self,variable):
+        self._exType=variable
+        return self._exType
+    def getExType(self):
+        return self._exType
+
     #Public Function
     def addPath(self,variable):
         addPath=os.path.abspath(os.path.join(self._path,variable))
         return addPath
 
-    def save(self):
-        self.fileSave_edit_func(self._file,self._fileType[1])
+    def save(self,absolute=None,relative=None,name=None,exType=None):
+        _absoluteDirectory=absolute or self._absoluteDirectory or "D:"
+        _relativeDirectory=relative or self._relativeDirectory or ""
+        _file=name or self._file or "_spaceSave"
+        _exType=exType or self._exType or "mayaAscii"
+
+        _directory=os.path.join(_absoluteDirectory,_relativeDirectory)
+        self.fileSave_edit_func(_directory,_file,_exType)
 
     def exportFile(self):
         self._judgeFileType_create_func(self._objs,self._path,self._file,self._extension,self._fileType_dict)

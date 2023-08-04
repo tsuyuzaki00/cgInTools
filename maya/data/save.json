@@ -1,0 +1,11 @@
+{   
+    "share_dict":{
+        "AbsoluteDirectory":"D:/Maya"
+    },
+    "save_dicts":[
+        {
+            "RelativeDirectory":"_test/scenes",
+            "File":"_teston"
+        }
+    ]
+}
