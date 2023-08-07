@@ -1,70 +1,61 @@
 import maya.cmds as cmds
-
 import cgInTools as cit
-from . import setBaseLB as sbLB
-cit.reloads([sbLB])
 
-class SourceToTarget(sbLB.BasePair):
+class SourceToTarget():
     def __init__(self):
-        self._sourceNode=""
-        self._targetNode=""
-        self._posNum=4
+        self._sourceNode=None
+        self._targetNode=None
+        self._corePosition_str=None
     
     #Single Function
-    def alignmentPos_quary_vector(self,object,positionID_int):
-        bbox=cmds.exactWorldBoundingBox(object,ignoreInvisible=False)
-        if positionID_int == 1:
-            up=[(bbox[0]+bbox[3])/2,bbox[4],(bbox[2]+bbox[5])/2]
-            return up
-        elif positionID_int == 2:
-            back=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[2]]
-            return back
-        elif positionID_int == 3:
-            left=[bbox[0],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
-            return left
-        elif positionID_int == 4:    
-            center=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
-            return center
-        elif positionID_int == 5:
-            right=[bbox[3],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
-            return right
-        elif positionID_int == 6:
-            front=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[5]]
-            return front
-        elif positionID_int == 7:
-            down=[(bbox[0]+bbox[3])/2,bbox[1],(bbox[2]+bbox[5])/2]
-            return down
-
-    #Multi Function
-    def _moveToTarget_edit_func(self,source,target,positionID_int):
-        target_vector=self.alignmentPos_quary_vector(target,positionID_int)
-        cmds.move(target_vector[0],target_vector[1],target_vector[2],source,a=True)
+    def corePosition_quary_vector3(self,node_str,corePosition_str):
+        bbox=cmds.exactWorldBoundingBox(node_str,ignoreInvisible=False)
+        if corePosition_str is "up":
+            node_vector3=[(bbox[0]+bbox[3])/2,bbox[4],(bbox[2]+bbox[5])/2]
+            return node_vector3
+        elif corePosition_str is "back":
+            node_vector3=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[2]]
+            return node_vector3
+        elif corePosition_str is "left":
+            node_vector3=[bbox[0],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
+            return node_vector3
+        elif corePosition_str is "center":    
+            node_vector3=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
+            return node_vector3
+        elif corePosition_str is "right":
+            node_vector3=[bbox[3],(bbox[1]+bbox[4])/2,(bbox[2]+bbox[5])/2]
+            return node_vector3
+        elif corePosition_str is "front":
+            node_vector3=[(bbox[0]+bbox[3])/2,(bbox[1]+bbox[4])/2,bbox[5]]
+            return node_vector3
+        elif corePosition_str is "down":
+            node_vector3=[(bbox[0]+bbox[3])/2,bbox[1],(bbox[2]+bbox[5])/2]
+            return node_vector3
     
-    #Public Function
-    def setPos(self,variable):
-        if variable is 1 or variable is "up":
-            self._posNum = 1
-            return self._posNum
-        elif variable is 2 or variable is "back":
-            self._posNum = 2
-            return self._posNum
-        elif variable is 3 or variable is "left":
-            self._posNum = 3
-            return self._posNum
-        elif variable is 4 or variable is "center":
-            self._posNum = 4
-            return self._posNum
-        elif variable is 5 or variable is "right":
-            self._posNum = 5
-            return self._posNum
-        elif variable is 6 or variable is "front":
-            self._posNum = 6
-            return self._posNum
-        elif variable is 7 or variable is "down":
-            self._posNum = 7
-            return self._posNum
-    def getPos(self):
-        return self._posNum
+    #Setting Function
+    def setSourceNode(self,variable):
+        self._sourceNode=variable
+        return self._sourceNode
+    def getSourceNode(self):
+        return self._sourceNode
+    
+    def setTargetNode(self,variable):
+        self._targetNode=variable
+        return self._targetNode
+    def getTargetNode(self):
+        return self._targetNode
+    
+    def setCorePosition(self,variable):
+        self._corePosition_str=variable
+        return self._corePosition_str
+    def getCorePosition(self):
+        return self._corePosition_str    
 
-    def moveToTarget(self):
-        self._moveToTarget_edit_func(self._sourceNode,self._targetNode,self._posNum)
+    #Public Function
+    def moveToTarget(self,sourceNode=None,targetNode=None,corePos=None):
+        _sourceNode=sourceNode or self._sourceNode
+        _targetNode=targetNode or self._targetNode
+        _corePosition_str=corePos or self._corePosition_str or "center"
+
+        targetPos_vector3=self.corePosition_quary_vector3(_targetNode,_corePosition_str)
+        cmds.move(targetPos_vector3[0],targetPos_vector3[1],targetPos_vector3[2],_sourceNode,a=True)

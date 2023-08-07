@@ -14,6 +14,15 @@ cit.reloads([UI,wLB,sttLB])
 class TargetPosWindow(UI.TargetPosWindowBase):
     def __init__(self, parent):
         super(TargetPosWindow, self).__init__(parent)
+        self._replaceCorePositions=[
+            "up",
+            "back",
+            "left",
+            "center",
+            "right",
+            "front",
+            "down"
+        ]
         self.setObjectName("targetMovePosition")
         self.setWindowTitle("targetMovePosition")
         self.buttonLeft_QPushButton.setText("Run")
@@ -27,7 +36,8 @@ class TargetPosWindow(UI.TargetPosWindowBase):
         sources=eval(source_str)
         targets=eval(target_str)
         targetSet=sttLB.SourceToTarget()
-        targetSet.setPos(position_id)
+        corePosition_str=self._replaceCorePositions[position_id]
+        targetSet.setCorePosition(corePosition_str)
         targetSet.setTargetNode(targets)
         for source in sources:
             targetSet.setSourceNode(source)

@@ -137,18 +137,22 @@ class File():
         self._exType=None
 
     #Single Function
-    def fileSave_edit_func(self,directory,file,exType="mayaAscii"):
+    def fileSave_edit_func(self,directory,file,exType):
+        if file is None:
+            file="_spaceSave"
+        if exType is None:
+            exType="mayaAscii"
         path=os.path.join(directory,file)
         cmds.file(rename=path)
         cmds.file(save=True,op="v=0",type=exType)
 
-    def projectDirectory_create_str(self,absoluteDirectory,relativeDirectory,projectName):
+    def newDirectory_create_str(self,absoluteDirectory,relativeDirectory):
         if absoluteDirectory is None:
             absoluteDirectory="D:"
         if relativeDirectory is None:
             relativeDirectory=""
-        projectDirectory=os.path.join(absoluteDirectory,relativeDirectory,projectName)
-        return projectDirectory
+        newDirectory=os.path.join(absoluteDirectory,relativeDirectory)
+        return newDirectory
 
     def exportMAMB_create_func(self,objs,path,file,ex="ma",exType="mayaAscii"):
         cmds.select(objs)
@@ -213,12 +217,12 @@ class File():
         return addPath
 
     def save(self,absolute=None,relative=None,name=None,exType=None):
-        _absoluteDirectory=absolute or self._absoluteDirectory or "D:"
-        _relativeDirectory=relative or self._relativeDirectory or ""
-        _file=name or self._file or "_spaceSave"
-        _exType=exType or self._exType or "mayaAscii"
+        _absoluteDirectory=absolute or self._absoluteDirectory
+        _relativeDirectory=relative or self._relativeDirectory
+        _file=name or self._file
+        _exType=exType or self._exType
 
-        _directory=os.path.join(_absoluteDirectory,_relativeDirectory)
+        _directory=self.newDirectory_create_str(_absoluteDirectory,_relativeDirectory)
         self.fileSave_edit_func(_directory,_file,_exType)
 
     def exportFile(self):
