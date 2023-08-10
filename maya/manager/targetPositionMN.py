@@ -15,6 +15,7 @@ class TargetPosWindow(UI.TargetPosWindowBase):
     def __init__(self, parent):
         super(TargetPosWindow, self).__init__(parent)
         self._replaceCorePositions=[
+            "",
             "up",
             "back",
             "left",
