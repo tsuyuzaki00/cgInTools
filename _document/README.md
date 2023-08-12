@@ -1,37 +1,16 @@
 # Document
 
+## 各フォルダの定義
 
+canvas アプリケーションObsidianで使用するキャンバスファイルを保存するフォルダ
 
-## アプリ内フォルダーの定義
+image README.mdや他のmarkDownで使用する画像を保存するフォルダ
 
-[image](/documents/_menu/README.md)
+## 用語定義
 
-README.mdや他のmarkDownで使用する画像を保存するフォルダー
+[制作方針](/\_document/productionPolicy.md)
 
-[_settings](/documents/_menu/README.md)
+[言語定義](/\_document/languageDefinition.md)
 
-UIの初期設定をjsonファイルにして保存するフォルダー
+[libraryで使用するclassの命名規則](/\_document/classDefinition.md)
 
-[data](/documents/_menu/README.md)
-
-書き出し読み込みを行うjsonファイルを保存するフォルダー
-
-[execute](/documents/_menu/README.md)
-
-Libraryを読み込んだりして、コマンド実行する物を格納するフォルダー
-
-[library](/documents/_menu/README.md)
-
-使いまわしやすいスクリプトを格納するフォルダー
-
-[manager](/documents/_menu/README.md)
-
-execute,libray,uiのファイルをインポートして組み合わせたものを格納するフォルダー
-
-[documents](/documents/_menu/README.md)
-
-アプリ内フォルダーのみで使用するマニュアルをまとめるフォルダー
-
-[images](/documents/_menu/README.md)
-
-アプリ内フォルダーのみで使用する画像を保存するフォルダー

@@ -2,40 +2,24 @@
 
 ## README.md=目次 
 
-## 各フォルダーの定義
+## 各フォルダの定義
 
-[definition](/document/definition.md)
+[\_document](/_document/README.md) 全体で使用するマニュアルをまとめるフォルダ
 
-用語の定義をまとめているファイル
+[\_menu](/_menu/README.md) 上部メニューに表示させるフォルダ
 
-[_menu](/_menu/README.md)
+[\_settings](/_settings/README.md) libraryの初期設定をするフォルダ
 
-上部メニューに表示させるフォルダー
+[execute](/execute/README.md)  直接Pythonを実行するフォルダ
 
-[document](/document/README.md)
+[library](/library/README.md) どのツールでも使用するスクリプトをまとめているフォルダ
 
-全体で使用するマニュアルをまとめるフォルダ
+[blender](/blender/README.md) 3DCGツールBlenderで使用するスクリプトフォルダ
 
-[maya](/maya/README.md)
+[maya](/maya/README.md) 3DCGツールMayaで使用するスクリプトフォルダ
 
-アプリケーションMayaで使用するスクリプトフォルダ
+[sourceTrail](/sourceTrail/README.md) スクリプトの参照、継承の流れが見えるアプリケーションsourceTrailのフォルダ
 
-[mgear](/mgear/README.md)
+[ui](/ui/README.md) どのDCCツールでも使えるUIファイルを格納するフォルダ
 
-3DCGツールMayaで使用するスクリプトフォルダ
-
-[sourceTrail](/sourceTrail/README.md)
-
-スクリプトの参照、継承の流れが見えるアプリケーションsourceTrailのフォルダ
-
-[ui](/ui/README.md)
-
-どのDCCツールでも使えるUIファイルを格納するフォルダ
-
-[init.py](/documents/init.md)
-
-内部フォルダーのパスを取得する際に使用可能な変数群
-
-バージョンの違いに適した変数を返す関数群
-
-import cgInTools as cit で主に使用している
+[\_\_init\_\_.py](/_document/init.md) import cgInTools as cit で主に使用しているファイル

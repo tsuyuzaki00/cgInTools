@@ -8,14 +8,81 @@
         "type": "tabs",
         "children": [
           {
-            "id": "f6050f5fa6a114f2",
+            "id": "11c47b349a442629",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "README.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "0b4fe8420401f5a8",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/productionPolicy.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "42b938508a6b47d9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/languageDefinition.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "b687956f02244232",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/classDefinition.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          }
+        ],
+        "currentTab": 1
+      },
+      {
+        "id": "84040b1b61c2550c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "726e4124f30898f9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/languageDefinition.md",
                 "mode": "preview",
-                "source": false
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "8ad483ad62ef4b77",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/classDefinition.md",
+                "mode": "preview",
+                "source": true
               }
             }
           }
@@ -69,7 +136,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 221.5
   },
   "right": {
     "id": "8ee04141f1757217",
@@ -85,7 +152,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "library/_document/namingRules.md",
+                "file": "_document/productionPolicy.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +169,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "library/_document/namingRules.md",
+                "file": "_document/productionPolicy.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +192,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "library/_document/namingRules.md"
+                "file": "_document/productionPolicy.md"
               }
             }
           }
@@ -146,10 +213,41 @@
       "command-palette:コマンドパレットを開く": false
     }
   },
-  "active": "aa83e31f990a187d",
+  "active": "0b4fe8420401f5a8",
   "lastOpenFiles": [
-    "_document/definition.md",
+    "_document/README.md",
+    "_document/productionPolicy.md",
+    "_document/languageDefinition.md",
+    "_document/classDefinition.md",
     "README.md",
+    "library/_template.py",
+    "_document/languageDefinition.md.md",
+    "_document/languageDefinition.md_.md",
+    "cgInTools/_document/languageDefinition.md_.md",
+    "cgInTools/_document",
+    "cgInTools",
+    "_document/init.md",
+    "maya/mgear/data/bodyCheckAnim/memo.json",
+    "maya/mgear/_tree/__init__.py",
+    "maya/mgear/_settings/README.md",
+    "maya/mgear/_settings/facialCtrlLips.json",
+    "maya/mgear/_settings/facialCtrlEyes.json",
+    "maya/mgear/_settings/facialCtrlEyebrows.json",
+    "maya/mgear/manager/__init__.py",
+    "maya/mgear/manager/README.md",
+    "maya/mgear/library/__init__.py",
+    "maya/mgear/library/README.md",
+    "maya/mgear/execute/README.md",
+    "maya/mgear/data/README.md",
+    "maya/mgear/README.md",
+    "_document/__defSetProject.md",
+    "maya/library/_document/jsonLB.md",
+    "documents/_menu/README.md",
+    "_document/definition.md",
+    "_document/canvas/importStructure.canvas",
+    "maya/setup/_document/title.md",
+    "_document/image/importStructure.png",
+    "maya/library/_document/_professional/objectLB.md",
     "definition.md",
     "__defSetProject.md"
   ]

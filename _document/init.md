@@ -1,37 +1,66 @@
-# __init__
+# \_\_init\_\_
 
-### attributeLB < setBaseLB
 
-## class <span style="color:0066DD">ClassName</span>
+## Functions
 
-## self Values:
+### def reloads() 
 
-### self._object
+Parameters : ps=strings
 
-def [setObject()](#setobject)
+Returns : None
 
-def [getObject()](#getobject)
+Documents :  python2,3どちらでもreloadができる関数
 
-## Public function
+## 内部フォルダーのパスを取得する際に使用可能な変数群
 
-## Private Function
+### root_dir = .../cgInTools/
 
-## Multi Function
+### menu_dir = .../cgInTools/\_menu/
 
-## Single Function
+### settings_dir = .../cgInTools/\_settings/
 
-===================
+### execute_dir = .../cgInTools/execute/
 
-<a id="setobject"></a>
-### def setObject()
+### library_dir = .../cgInTools/library/
 
-Parameters : object
+### ui_dir = .../cgInTools/ui/
 
-Returns : object
+### maya_dir = .../cgInTools/maya/
 
-<a id="getobject"></a>
-### def getObject()
+### mayaDefSetProject_dir = .../cgInTools/maya/\_\_defSetProject/
 
-Parameters :
+### mayaSettings_dir = .../cgInTools/maya/\_settings/
 
-Returns : object
+### mayaExecute_dir = .../cgInTools/maya/execute/
+
+### mayaLibrary_dir = .../cgInTools/maya/library/
+
+### mayaManager_dir = .../cgInTools/maya/manager/
+
+### mayaOption_dir = .../cgInTools/maya/option/
+
+### mayaSetup_dir = .../cgInTools/maya/setup/
+
+### mgear_dir = .../cgInTools/maya/mgear/
+
+### mgearSettings_dir = .../cgInTools/maya/\_settings/
+
+### mgearExecute_dir = .../cgInTools/maya/mgear/execute
+
+### mgearLibrary_dir = .../cgInTools/maya/mgear/library
+
+### mgearManager_dir = .../cgInTools/maya/mgear/manager
+
+### blender_dir = .../cgInTools/blender/
+
+### blenderSettings_dir = .../cgInTools/blender/\_settings/
+
+### blenderExecute_dir = .../cgInTools/blender/execute/
+
+### blenderLibrary_dir = .../cgInTools/blender/library/
+
+### blenderManager_dir = .../cgInTools/blender/manager/
+
+### blenderOption_dir = .../cgInTools/blender/option/
+
+### blenderSetup_dir = .../cgInTools/blender/setup/
