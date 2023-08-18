@@ -134,6 +134,7 @@ class File():
         self._absoluteDirectory=None
         self._relativeDirectory=None
         self._file=None
+        self._extension=None
         self._exType=None
 
     #Single Function
@@ -145,6 +146,12 @@ class File():
         path=os.path.join(directory,file)
         cmds.file(rename=path)
         cmds.file(save=True,op="v=0",type=exType)
+
+    def fileOpen_edit_func(self,directory,file,ex):
+        if ex is None:
+            ex="ma"
+        path=os.path.join(directory,file)
+        cmds.file(path+"."+ex,open=True,force=True)
 
     def newDirectory_create_str(self,absoluteDirectory,relativeDirectory):
         if absoluteDirectory is None:
@@ -205,6 +212,12 @@ class File():
     def getFile(self):
         return self._file
     
+    def setExtension(self,variable):
+        self._extension=variable
+        return self._extension
+    def getExtension(self):
+        return self._extension
+
     def setExType(self,variable):
         self._exType=variable
         return self._exType
@@ -224,6 +237,15 @@ class File():
 
         _directory=self.newDirectory_create_str(_absoluteDirectory,_relativeDirectory)
         self.fileSave_edit_func(_directory,_file,_exType)
+
+    def open(self,absolute=None,relative=None,name=None,ex=None):
+        _absoluteDirectory=absolute or self._absoluteDirectory
+        _relativeDirectory=relative or self._relativeDirectory
+        _file=name or self._file
+        _extension=ex or self._extension
+
+        _directory=self.newDirectory_create_str(_absoluteDirectory,_relativeDirectory)
+        self.fileOpen_edit_func(_directory,_file,_extension)
 
     def exportFile(self):
         self._judgeFileType_create_func(self._objs,self._path,self._file,self._extension,self._fileType_dict)
