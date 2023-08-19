@@ -1,8 +1,7 @@
 # Library
 
 DCCツール関係なく使いまわせるスクリプト
-## もくじ
 
-[title](/library/_document/title.md)
+[baseLB](baseLB.md) 
 
-[namingRules](/library/_document/namingRules.md)
+[jsonLB](/library/_document/jsonLB.md)

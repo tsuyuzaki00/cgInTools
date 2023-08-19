@@ -8,85 +8,49 @@
         "type": "tabs",
         "children": [
           {
-            "id": "11c47b349a442629",
+            "id": "6ca178469612e6d6",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "library/_document/_professional/baseLB.md",
                 "mode": "source",
+                "source": true
+              }
+            }
+          }
+        ]
+      },
+      {
+        "id": "810c559e6182887d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a7fa7cfc8a0e6073",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "library/_document/_professional/baseLB.md",
+                "mode": "preview",
                 "source": true
               }
             }
           },
           {
-            "id": "0b4fe8420401f5a8",
+            "id": "05308bf2fc6efb48",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_document/productionPolicy.md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "42b938508a6b47d9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_document/languageDefinition.md",
-                "mode": "source",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "b687956f02244232",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_document/classDefinition.md",
-                "mode": "source",
+                "file": "maya/library/_document/_professional/objectLB.md",
+                "mode": "preview",
                 "source": true
               }
             }
           }
         ],
         "currentTab": 1
-      },
-      {
-        "id": "84040b1b61c2550c",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "726e4124f30898f9",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_document/languageDefinition.md",
-                "mode": "preview",
-                "source": true
-              }
-            }
-          },
-          {
-            "id": "8ad483ad62ef4b77",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "_document/classDefinition.md",
-                "mode": "preview",
-                "source": true
-              }
-            }
-          }
-        ]
       }
     ],
     "direction": "vertical"
@@ -152,7 +116,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_document/productionPolicy.md",
+                "file": "maya/library/_document/_professional/objectLB.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -169,7 +133,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_document/productionPolicy.md",
+                "file": "maya/library/_document/_professional/objectLB.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -192,7 +156,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_document/productionPolicy.md"
+                "file": "maya/library/_document/_professional/objectLB.md"
               }
             }
           }
@@ -213,13 +177,26 @@
       "command-palette:コマンドパレットを開く": false
     }
   },
-  "active": "0b4fe8420401f5a8",
+  "active": "05308bf2fc6efb48",
   "lastOpenFiles": [
-    "_document/README.md",
+    "library/_document/_professional/baseLB.md",
+    "maya/library/_document/_professional/objectLB.md",
+    "library/_document/_professional/jsonLB.md",
+    "library/_document/baseLB.md",
+    "maya/library/_document/objectLB.md",
+    "library/_document/_professional/conceptLB.md",
+    "library/_document/_professional",
+    "library/README.md",
+    "README.md",
+    "_document/canvas/importStructure.canvas",
+    "library/_document/jsonLB copy.md",
+    "library/_document/jsonLB.md",
+    "_document/namingRules.md",
+    "_document/classDefinition.md",
     "_document/productionPolicy.md",
     "_document/languageDefinition.md",
-    "_document/classDefinition.md",
-    "README.md",
+    "library/conceptLB.py",
+    "_document/README.md",
     "library/_template.py",
     "_document/languageDefinition.md.md",
     "_document/languageDefinition.md_.md",
@@ -233,22 +210,12 @@
     "maya/mgear/_settings/facialCtrlLips.json",
     "maya/mgear/_settings/facialCtrlEyes.json",
     "maya/mgear/_settings/facialCtrlEyebrows.json",
-    "maya/mgear/manager/__init__.py",
     "maya/mgear/manager/README.md",
-    "maya/mgear/library/__init__.py",
     "maya/mgear/library/README.md",
     "maya/mgear/execute/README.md",
     "maya/mgear/data/README.md",
     "maya/mgear/README.md",
     "_document/__defSetProject.md",
-    "maya/library/_document/jsonLB.md",
-    "documents/_menu/README.md",
-    "_document/definition.md",
-    "_document/canvas/importStructure.canvas",
-    "maya/setup/_document/title.md",
-    "_document/image/importStructure.png",
-    "maya/library/_document/_professional/objectLB.md",
-    "definition.md",
-    "__defSetProject.md"
+    "_document/image/importStructure.png"
   ]
 }
