@@ -1,6 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 import cgInTools as cit
-from ..library import jsonLB as jLB
+from . import jsonLB as jLB
 cit.reloads([jLB])
 
 class SelfOrigin(object):
