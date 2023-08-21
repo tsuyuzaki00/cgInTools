@@ -1,37 +1,81 @@
-# Title
+# jsonLB
 
-### attributeLB < setBaseLB
 
-## class <span style="color:0066DD">ClassName</span>
+[玄人向け(professional)](/library/_document/_professional/jsonLB.md)
 
-## self Values:
+## クラス一覧
+class : [Json(object)](#json00) obsidian : [[#class Json|Json(object)]]
 
-### self._object
+## 関数一覧
+def : [readJson()](#readjson) obsidian : [[#def readJson|readJson()]]
 
-def [setObject()](#setobject)
+def : [writeJson()](#writejson) obsidian : [[#def writeJson|writeJson()]]
 
-def [getObject()](#getobject)
+## 変数一覧
 
-## Public function
+None
 
-## Private Function
+---
 
-## Multi Function
+<a id="json"></a>
+### class Json
+
+Inheritance : object
+
+import : json,os
+
+Summary : Jsonファイルを読み込み書き出しするクラス
 
 ## Single Function
 
-===================
+def : [path_create_str()](#pathcreatestr) obsidian : [[#def path_create_str()|path_create_str()]]
 
-<a id="setobject"></a>
-### def setObject()
+def : [jsonPath_query_dict()](#jsonpathquerydict) obsidian : [[#def jsonPath_query_dict()|jsonPath_query_dict()]]
 
-Parameters : object
+def : [jsonPath_create_func()](#jsonpathcreatefunc) obsidian : [[#def jsonPath_create_func()|jsonPath_create_func()]]
 
-Returns : object
+## Multi Function
 
-<a id="getobject"></a>
-### def getObject()
+def : [\_thisPack_check_func()](#\_thispackcheckfunc)
 
-Parameters :
+## Inheritance Function
 
-Returns : object
+None
+
+## Private Function
+
+None
+
+## Setting Function
+
+
+
+## Public function
+
+---
+
+
+
+---
+
+<a id="readjson"></a>
+### def readJson()
+
+Signature : 
+
+Parameters : 
+
+Returns : None
+
+Description : 
+
+<a id="writejson"></a>
+### def writeJson()
+
+Signature : 
+
+Parameters : 
+
+Returns : None
+
+Description : 

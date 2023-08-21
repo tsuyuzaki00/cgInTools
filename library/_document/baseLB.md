@@ -3,12 +3,20 @@
 [玄人向け(professional)](/library/_document/_professional/baseLB.md)
 
 ## クラス一覧
-def : [SelfOrigin(object)](#selforigin) obsidian : [[#class SelfOrigin|SelfOrigin(object)]]
+class : [SelfOrigin(object)](#selforigin) obsidian : [[#class SelfOrigin|SelfOrigin(object)]]
+
+## 関数一覧
+
+None
+
+## 変数一覧
+
+None
 
 ---
 
 <a id="selforigin"></a>
-### class SelfOrigin
+# class SelfOrigin
 
 Inheritance : object
 
@@ -24,11 +32,11 @@ None
 
 None
 
-## Private Function
+## Inheritance Function
 
 None
 
-## Summary Function
+## Private Function
 
 None
 
@@ -59,6 +67,7 @@ def : [readDict()](#readdict) obsidian : [[#def readDict()|readDict()]]
 def : [doIt()](#doit) obsidian : [[#def doIt()|doIt()]]
 
 ---
+# SelfOrigin
 
 ## Setting Function
 
@@ -184,3 +193,10 @@ Parameters :
 Returns : None
 
 Description : 
+
+---
+
+
+
+---
+
