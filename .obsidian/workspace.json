@@ -8,12 +8,36 @@
         "type": "tabs",
         "children": [
           {
-            "id": "6ca178469612e6d6",
+            "id": "622fc8e9cab5cd62",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_document/namingRules.md",
+                "file": "_document/_professional/_template.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "cd66bd0775cb0832",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "library/_document/_professional/baseLB.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "cbb0365a5dfbbc8c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "library/_document/_professional/jsonLB.md",
                 "mode": "source",
                 "source": true
               }
@@ -30,6 +54,14 @@
                 "source": true
               }
             }
+          },
+          {
+            "id": "d88dd6ded9561e39",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
           }
         ]
       },
@@ -38,12 +70,36 @@
         "type": "tabs",
         "children": [
           {
+            "id": "9bc3a5ad5b90c4ec",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/_template.md",
+                "mode": "preview",
+                "source": true
+              }
+            }
+          },
+          {
             "id": "8f57591f34083117",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "library/_document/_professional/baseLB.md",
+                "file": "library/_document/baseLB.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "0a37b9f130f34f24",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "library/_document/_professional/jsonLB.md",
                 "mode": "preview",
                 "source": true
               }
@@ -58,24 +114,6 @@
                 "file": "maya/library/_document/pointLB.md",
                 "mode": "preview",
                 "source": false
-              }
-            }
-          }
-        ]
-      },
-      {
-        "id": "810c559e6182887d",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "05308bf2fc6efb48",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "maya/library/_document/_professional/objectLB.md",
-                "mode": "source",
-                "source": true
               }
             }
           }
@@ -145,7 +183,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "_document/namingRules.md",
+                "file": "_document/_professional/_template.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -162,7 +200,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "_document/namingRules.md",
+                "file": "_document/_professional/_template.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -185,7 +223,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "_document/namingRules.md"
+                "file": "_document/_professional/_template.md"
               }
             }
           }
@@ -198,23 +236,39 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:Open quick switcher": false,
-      "graph:Open graph view": false,
-      "canvas:Create new canvas": false,
-      "daily-notes:Open today's daily note": false,
-      "templates:Insert template": false,
-      "command-palette:Open command palette": false
+      "switcher:クイックスイッチャーを開く": false,
+      "graph:グラフビューを開く": false,
+      "canvas:新規キャンバスを作成": false,
+      "daily-notes:今日のデイリーノートを開く": false,
+      "templates:テンプレートを挿入": false,
+      "command-palette:コマンドパレットを開く": false
     }
   },
-  "active": "6ca178469612e6d6",
+  "active": "622fc8e9cab5cd62",
   "lastOpenFiles": [
+    "_document/_template.md",
+    "_document/_professional/_template.md",
+    "_document/_professional",
+    "_settings/_document/title.md",
+    "library/_document/_professional/jsonLB.md",
+    "library/_document/baseLB.md",
+    "library/_document/_professional/baseLB.md",
+    "library/_document/jsonLB.md",
+    "library/_document/_professional/json.md",
+    "maya/writeRun/__pycache__/_execute.cpython-37.pyc",
+    "maya/writeRun/_execute.py",
+    "maya/writeRun/__pycache__/execute.cpython-37.pyc",
+    "maya/writeRun/execute.py",
+    "maya/writeRun/__pycache__/__init__.cpython-37.pyc",
+    "maya/writeRun/__pycache__",
+    "maya/writeRun/__init__.py",
+    "maya/execute/__pycache__/mayaPortEX.cpython-37.pyc",
+    "_document/namingRules.md",
     "_document/languageDefinition.md",
     "_document/init.md",
     "_document/productionPolicy.md",
     "_document/classDefinition.md",
-    "library/_document/_professional/baseLB.md",
     "maya/library/_document/pointLB.md",
-    "library/_document/baseLB.md",
     "maya/library/_document/_professional/meshLB.md",
     "maya/library/_document/_professional/skinLB.md",
     "maya/library/_document/_professional/transformLB.md",
@@ -225,26 +279,10 @@
     "maya/library/_document/matrixLB.md",
     "maya/library/_document/jsonLB.md",
     "maya/library/_document/_professional/objectLB.md",
-    "library/_document/_professional/json.md",
     "library/baseLB.py",
-    "library/_document/_professional/jsonLB.md",
     "maya/library/_document/objectLB.md",
     "library/_document/_professional/conceptLB.md",
-    "library/_document/_professional",
-    "library/README.md",
-    "README.md",
     "_document/canvas/importStructure.canvas",
-    "library/_document/jsonLB copy.md",
-    "library/_document/jsonLB.md",
-    "_document/namingRules.md",
-    "library/conceptLB.py",
-    "library/_template.py",
-    "cgInTools/_document",
-    "cgInTools",
-    "maya/mgear/data/bodyCheckAnim/memo.json",
-    "maya/mgear/_tree/__init__.py",
-    "maya/mgear/_settings/facialCtrlLips.json",
-    "maya/mgear/_settings/facialCtrlEyes.json",
     "_document/image/importStructure.png"
   ]
 }
