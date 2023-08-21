@@ -68,6 +68,7 @@ def : [doIt()](#doit) obsidian : [[#def doIt()|doIt()]]
 
 ---
 # class SelfOrigin
+
 ## Single Function
 
 None
@@ -85,6 +86,7 @@ None
 None
 
 ## Setting Function
+
 <a id="selfreaddict"></a>
 ### def setReadDict()
 

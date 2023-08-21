@@ -8,6 +8,18 @@
         "type": "tabs",
         "children": [
           {
+            "id": "622fc8e9cab5cd62",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/_professional/_template.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
             "id": "cd66bd0775cb0832",
             "type": "leaf",
             "state": {
@@ -42,22 +54,41 @@
                 "source": true
               }
             }
+          },
+          {
+            "id": "d88dd6ded9561e39",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
           }
-        ],
-        "currentTab": 1
+        ]
       },
       {
         "id": "80412c0cbe641380",
         "type": "tabs",
         "children": [
           {
+            "id": "9bc3a5ad5b90c4ec",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "_document/_template.md",
+                "mode": "preview",
+                "source": true
+              }
+            }
+          },
+          {
             "id": "8f57591f34083117",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "library/_document/_professional/baseLB.md",
-                "mode": "preview",
+                "file": "library/_document/baseLB.md",
+                "mode": "source",
                 "source": true
               }
             }
@@ -86,8 +117,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -153,7 +183,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md",
+                "file": "_document/_professional/_template.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -170,7 +200,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md",
+                "file": "_document/_professional/_template.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -193,7 +223,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md"
+                "file": "_document/_professional/_template.md"
               }
             }
           }
@@ -214,10 +244,15 @@
       "command-palette:コマンドパレットを開く": false
     }
   },
-  "active": "cbb0365a5dfbbc8c",
+  "active": "622fc8e9cab5cd62",
   "lastOpenFiles": [
-    "library/_document/_professional/baseLB.md",
+    "_document/_template.md",
+    "_document/_professional/_template.md",
+    "_document/_professional",
+    "_settings/_document/title.md",
     "library/_document/_professional/jsonLB.md",
+    "library/_document/baseLB.md",
+    "library/_document/_professional/baseLB.md",
     "library/_document/jsonLB.md",
     "library/_document/_professional/json.md",
     "maya/writeRun/__pycache__/_execute.cpython-37.pyc",
@@ -228,7 +263,6 @@
     "maya/writeRun/__pycache__",
     "maya/writeRun/__init__.py",
     "maya/execute/__pycache__/mayaPortEX.cpython-37.pyc",
-    "library/_document/baseLB.md",
     "_document/namingRules.md",
     "_document/languageDefinition.md",
     "_document/init.md",
@@ -248,9 +282,6 @@
     "library/baseLB.py",
     "maya/library/_document/objectLB.md",
     "library/_document/_professional/conceptLB.md",
-    "library/_document/_professional",
-    "library/README.md",
-    "README.md",
     "_document/canvas/importStructure.canvas",
     "_document/image/importStructure.png"
   ]
