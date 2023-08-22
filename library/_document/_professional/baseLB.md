@@ -42,29 +42,29 @@ None
 
 ## Setting Function
 
-def : [setReadDict()](#selfreaddict) obsidian : [[#def setReadDict()|setReadDict()]]
+def : [setReadDict()](#selforiginselfreaddict) obsidian : [[#SelfOrigin.setReadDict()|setReadDict()]]
 
-def : [getReadDict()](#getreaddict) obsidian : [[#def getReadDict()|getReadDict()]]
+def : [getReadDict()](#selforigingetreaddict) obsidian : [[#SelfOrigin.getReadDict()|getReadDict()]]
 
-def : [setDataChoices()](#setdatachoices) obsidian : [[#def setDataChoices()|setDataChoices()]]
+def : [setDataChoices()](#selforiginsetdatachoices) obsidian : [[#SelfOrigin.setDataChoices()|setDataChoices()]]
 
-def : [addDataChoices()](#adddatachoices) obsidian : [[#def addDataChoices()|addDataChoices()]]
+def : [addDataChoices()](#selforiginadddatachoices) obsidian : [[#SelfOrigin.addDataChoices()|addDataChoices()]]
 
-def : [getDataChoices()](#getdatachoices) obsidian : [[#def getDataChoices()|getDataChoices()]]
+def : [getDataChoices()](#selforigingetdatachoices) obsidian : [[#SelfOrigin.getDataChoices()|getDataChoices()]]
 
-def : [setDoIts()](#setdoIts) obsidian : [[#def setDoIts()|setDoIts()]]
+def : [setDoIts()](#selforiginsetdoIts) obsidian : [[#SelfOrigin.setDoIts()|setDoIts()]]
 
-def : [addDoIts()](#adddoits) obsidian : [[#def addDoIts()|addDoIts()]]
+def : [addDoIts()](#selforiginadddoits) obsidian : [[#SelfOrigin.addDoIts()|addDoIts()]]
 
-def : [getDoIts()](#getdoits) obsidian : [[#def getDoIts()|getDoIts()]]
+def : [getDoIts()](#selforigingetdoits) obsidian : [[#SelfOrigin.getDoIts()|getDoIts()]]
 
 ## Public Function
 
-def : [writeDict()](#writedict) obsidian : [[#def writeDict()|writeDict()]]
+def : [writeDict()](#selforiginwritedict) obsidian : [[#SelfOrigin.writeDict()|writeDict()]]
 
-def : [readDict()](#readdict) obsidian : [[#def readDict()|readDict()]]
+def : [readDict()](#selforiginreaddict) obsidian : [[#SelfOrigin.readDict()|readDict()]]
 
-def : [doIt()](#doit) obsidian : [[#def doIt()|doIt()]]
+def : [doIt()](#selforigindoit) obsidian : [[#SelfOrigin.doIt()|doIt()]]
 
 ---
 # class SelfOrigin
@@ -87,8 +87,8 @@ None
 
 ## Setting Function
 
-<a id="selfreaddict"></a>
-### def setReadDict()
+<a id="selforiginselfreaddict"></a>
+### SelfOrigin.setReadDict()
 
 Signature : 
 
@@ -98,8 +98,8 @@ Returns : None
 
 Description : 
 
-<a id="getreaddict"></a>
-### def getReadDict()
+<a id="selforigingetreaddict"></a>
+### SelfOrigin.getReadDict()
 
 Signature : 
 
@@ -109,8 +109,8 @@ Returns : None
 
 Description : 
 
-<a id="setdatachoices"></a>
-### def setDataChoices()
+<a id="selforiginsetdatachoices"></a>
+### SelfOrigin.setDataChoices()
 
 Signature : 
 
@@ -120,8 +120,8 @@ Returns : None
 
 Description : 
 
-<a id="adddatachoices"></a>
-### def addDataChoices()
+<a id="selforiginadddatachoices"></a>
+### SelfOrigin.addDataChoices()
 
 Signature : 
 
@@ -131,8 +131,8 @@ Returns : None
 
 Description : 
 
-<a id="getdatachoices"></a>
-### def getDataChoices()
+<a id="selforigingetdatachoices"></a>
+### SelfOrigin.getDataChoices()
 
 Signature : 
 
@@ -142,8 +142,8 @@ Returns : None
 
 Description : 
 
-<a id="setdoits"></a>
-### def setDoIts()
+<a id="selforiginsetdoits"></a>
+### SelfOrigin.setDoIts()
 
 Signature : 
 
@@ -153,8 +153,8 @@ Returns : None
 
 Description : 
 
-<a id="adddoits"></a>
-### def addDoIts()
+<a id="selforiginadddoits"></a>
+### SelfOrigin.addDoIts()
 
 Signature : 
 
@@ -164,8 +164,8 @@ Returns : None
 
 Description : 
 
-<a id="getdoits"></a>
-### def getDoIts()
+<a id="selforigingetdoits"></a>
+### SelfOrigin.getDoIts()
 
 Signature : 
 
@@ -176,8 +176,8 @@ Returns : None
 Description : 
 
 ## Public Function
-<a id="writedict"></a>
-### def writeDict()
+<a id="selforiginwritedict"></a>
+### SelfOrigin.writeDict()
 
 Signature : 
 
@@ -187,8 +187,8 @@ Returns : None
 
 Description : 
 
-<a id="readdict"></a>
-### def readDict()
+<a id="selforiginreaddict"></a>
+### SelfOrigin.readDict()
 
 Signature : 
 
@@ -198,8 +198,8 @@ Returns : None
 
 Description : 
 
-<a id="doit"></a>
-### def doIt()
+<a id="selforigindoit"></a>
+### SelfOrigin.doIt()
 
 Signature : 
 

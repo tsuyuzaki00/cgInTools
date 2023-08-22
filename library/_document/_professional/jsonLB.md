@@ -29,15 +29,15 @@ Summary : Jsonファイルを読み込み書き出しするクラス
 
 ## Single Function
 
-def : [path_create_str()](#pathcreatestr) obsidian : [[#def path_create_str()|path_create_str()]]
+def : [path_create_str()](#jsonpathcreatestr) obsidian : [[#Json.path_create_str()|path_create_str()]]
 
-def : [jsonPath_query_dict()](#jsonpathquerydict) obsidian : [[#def jsonPath_query_dict()|jsonPath_query_dict()]]
+def : [jsonPath_query_dict()](#jsonjsonpathquerydict) obsidian : [[#Json.jsonPath_query_dict()|jsonPath_query_dict()]]
 
-def : [jsonPath_create_func()](#jsonpathcreatefunc) obsidian : [[#def jsonPath_create_func()|jsonPath_create_func()]]
+def : [jsonPath_create_func()](#jsonjsonpathcreatefunc) obsidian : [[#Json.jsonPath_create_func()|jsonPath_create_func()]]
 
 ## Multi Function
 
-def : [\_thisPack_check_func()](#\_thispackcheckfunc) obsidian : [[#def jsonPath_create_func()|jsonPath_create_func()]]
+None
 
 ## Inheritance Function
 
@@ -49,27 +49,27 @@ None
 
 ## Setting Function
 
-def : [setDirectory()](#setdirectory) obsidian : [[#def setDirectory()|setDirectory()]]
+def : [setDirectory()](#jsonsetdirectory) obsidian : [[#Json.setDirectory()|setDirectory()]]
 
-def : [getDirectory()](#getdirectory) obsidian : [[#def getDirectory()|getDirectory()]]
+def : [getDirectory()](#jsongetdirectory) obsidian : [[#Json.getDirectory()|getDirectory()]]
 
-def : [setFile()](#setfile) obsidian : [[#def setFile()|setFile()]]
+def : [setFile()](#jsonsetfile) obsidian : [[#Json.setFile()|setFile()]]
 
-def : [getFile()](#getfile) obsidian : [[#def getFile()|getFile()]]
+def : [getFile()](#jsongetfile) obsidian : [[#Json.getFile()|getFile()]]
 
-def : [setExtension()](#setextension) obsidian : [[#def setExtension()|setExtension()]]
+def : [setExtension()](#jsonsetextension) obsidian : [[#Json.setExtension()|setExtension()]]
 
-def : [getExtension()](#getextension) obsidian : [[#def getExtension()|getExtension()]]
+def : [getExtension()](#jsongetextension) obsidian : [[#Json.getExtension()|getExtension()]]
 
-def : [setWriteDict()](#setwritedict) obsidian : [[#def setWriteDict()|setWriteDict()]]
+def : [setWriteDict()](#jsonsetwritedict) obsidian : [[#Json.setWriteDict()|setWriteDict()]]
 
-def : [getWriteDict()](#getwritedict) obsidian : [[#def getWriteDict()|getWriteDict()]]
+def : [getWriteDict()](#jsongetwritedict) obsidian : [[#Json.getWriteDict()|getWriteDict()]]
 
 ## Public Function
 
-def : [read()](#read) obsidian : [[#def read()|read()]]
+def : [read()](#jsonread) obsidian : [[#Json.read()|read()]]
 
-def : [write()](#write) obsidian : [[#def write()|write()]]
+def : [write()](#jsonwrite) obsidian : [[#Json.write()|write()]]
 
 ---
 
@@ -96,17 +96,35 @@ None
 
 ## Private Function
 
-None
+def : [\_\_readPack_query_dicts()](#jsonpackreadpackquerydicts) obsidian : [[#JsonPack. _ _readPack_query_dicts()|__readPack_query_dicts()]]
+
+def : [\_\_writePack_query_dicts()](#jsonpackwritepackcreatefunc) obsidian : [[#JsonPack. \_\_writePack_create_func()|__writePack_create_func()]]
 
 ## Setting Function
 
-None
+def : [setDirectory()](#jsonpacksetdirectory) obsidian : [[#JsonPack.setDirectory()|setDirectory()]]
+
+def : [getDirectory()](#jsonpackgetdirectory) obsidian : [[#JsonPack.getDirectory()|getDirectory()]]
+
+def : [setFile()](#jsonpacksetfile) obsidian : [[#JsonPack.setFile()|setFile()]]
+
+def : [getFile()](#jsonpackgetfile) obsidian : [[#JsonPack.getFile()|getFile()]]
+
+def : [setExtension()](#jsonpacksetextension) obsidian : [[#JsonPack.setExtension()|setExtension()]]
+
+def : [getExtension()](#jsonpackgetextension) obsidian : [[#JsonPack.getExtension()|getExtension()]]
+
+def : [setJsonObjects()](#jsonpacksetjsonobjects) obsidian : [[#JsonPack.setJsonObjects()|getExtension()]]
+
+def : [addJsonObjects()](#jsonpackaddjsonobjects) obsidian : [[#JsonPack.addJsonObjects()|addJsonObjects()]]
+
+def : [getJsonObjects()](#jsonpackgetjsonobjects) obsidian : [[#JsonPack.getJsonObjects()|getJsonObjects()]]
 
 ## Public Function
 
-def : [readPacks()](#readpacks) obsidian : [[#def readPacks()|readPacks()]]
+def : [readPack()](#jsonpackreadpack) obsidian : [[#JsonPack.readPack()|readPack()]]
 
-def : [writePacks()](#writepacks) obsidian : [[#def writePacks()|writePacks()]]
+def : [writePack()](#jsonpackwritepack) obsidian : [[#JsonPack.writePack()|writePack()]]
 
 ---
 
@@ -114,7 +132,38 @@ def : [writePacks()](#writepacks) obsidian : [[#def writePacks()|writePacks()]]
 
 ## Single Function
 
-None
+<a id="jsonpathcreatestr"></a>
+### Json.path_create_str()
+
+Signature : 
+
+Parameters : 
+
+Returns : None
+
+Description : 
+
+<a id="jsonjsonpathquerydict"></a>
+### Json.jsonPath_query_dict()
+
+Signature : 
+
+Parameters : 
+
+Returns : None
+
+Description : 
+
+<a id="jsonjsonpathcreatefunc"></a>
+### Json.jsonPath_create_func()
+
+Signature : 
+
+Parameters : 
+
+Returns : None
+
+Description : 
 
 ## Multi Function
 
@@ -130,8 +179,8 @@ None
 
 ## Setting Function
 
-<a id="setdirectory"></a>
-### def setDirectory()
+<a id="jsonsetdirectory"></a>
+### Json.setDirectory()
 
 Signature : 
 
@@ -141,8 +190,8 @@ Returns : None
 
 Description : 
 
-<a id="getdirectory"></a>
-### def getDirectory()
+<a id="jsongetdirectory"></a>
+### Json.getDirectory()
 
 Signature : 
 
@@ -152,8 +201,8 @@ Returns : None
 
 Description : 
 
-<a id="setfile"></a>
-### def setFile()
+<a id="jsonsetfile"></a>
+### Json.setFile()
 
 Signature : 
 
@@ -163,8 +212,8 @@ Returns : None
 
 Description : 
 
-<a id="getfile"></a>
-### def getFile()
+<a id="jsongetfile"></a>
+### Json.getFile()
 
 Signature : 
 
@@ -174,8 +223,8 @@ Returns : None
 
 Description : 
 
-<a id="setextension"></a>
-### def setExtension()
+<a id="jsonsetextension"></a>
+### Json.setExtension()
 
 Signature : 
 
@@ -185,8 +234,8 @@ Returns : None
 
 Description : 
 
-<a id="getextension"></a>
-### def getExtension()
+<a id="jsongetextension"></a>
+### Json.getExtension()
 
 Signature : 
 
@@ -196,8 +245,8 @@ Returns : None
 
 Description : 
 
-<a id="setwritedict"></a>
-### def setWriteDict()
+<a id="jsonsetwritedict"></a>
+### Json.setWriteDict()
 
 Signature : 
 
@@ -207,8 +256,8 @@ Returns : None
 
 Description : 
 
-<a id="getwritedict"></a>
-### def getWriteDict()
+<a id="jsongetwritedict"></a>
+### Json.getWriteDict()
 
 Signature : 
 
@@ -220,8 +269,8 @@ Description :
 
 ## Public Function
 
-<a id="read"></a>
-### def read()
+<a id="jsonread"></a>
+### Json.read()
 
 Signature : 
 
@@ -231,8 +280,8 @@ Returns : None
 
 Description : 
 
-<a id="write"></a>
-### def write()
+<a id="jsonwrite"></a>
+### Json.write()
 
 Signature : 
 
@@ -260,12 +309,32 @@ None
 
 ## Private Function
 
-None
+<a id="jsonpackreadpackquerydicts"></a>
+### JsonPack.\_\_readPack_query_dicts()
+
+Signature : 
+
+Parameters : 
+
+Returns : None
+
+Description : 
+
+<a id="jsonpackwritepackcreatefunc"></a>
+### JsonPack.\_\_writePack_create_func()
+
+Signature : 
+
+Parameters : 
+
+Returns : None
+
+Description : 
 
 ## Setting Function
 
-<a id="setdirectory01"></a>
-### def setDirectory()
+<a id="jsonpacksetdirectory"></a>
+### JsonPack.setDirectory()
 
 Signature : 
 
@@ -275,8 +344,8 @@ Returns : None
 
 Description : 
 
-<a id="getdirectory01"></a>
-### def getDirectory()
+<a id="jsonpackgetdirectory"></a>
+### JsonPack.getDirectory()
 
 Signature : 
 
@@ -286,8 +355,8 @@ Returns : None
 
 Description : 
 
-<a id="setfile01"></a>
-### def setFile()
+<a id="jsonpacksetfile"></a>
+### JsonPack.setFile()
 
 Signature : 
 
@@ -297,8 +366,8 @@ Returns : None
 
 Description : 
 
-<a id="getfile01"></a>
-### def getFile()
+<a id="jsonpackgetfile"></a>
+### JsonPack.getFile()
 
 Signature : 
 
@@ -308,8 +377,8 @@ Returns : None
 
 Description : 
 
-<a id="setextension01"></a>
-### def setExtension()
+<a id="jsonpacksetextension"></a>
+### JsonPack.setExtension()
 
 Signature : 
 
@@ -319,8 +388,8 @@ Returns : None
 
 Description : 
 
-<a id="getextension01"></a>
-### def getExtension()
+<a id="jsonpackgetextension"></a>
+### JsonPack.getExtension()
 
 Signature : 
 
@@ -330,8 +399,8 @@ Returns : None
 
 Description : 
 
-<a id="setjsonobjects"></a>
-### def setJsonObjects()
+<a id="jsonpacksetjsonobjects"></a>
+### JsonPack.setJsonObjects()
 
 Signature : 
 
@@ -341,8 +410,8 @@ Returns : None
 
 Description : 
 
-<a id="addjsonobject"></a>
-### def addJsonObjects()
+<a id="jsonpackaddjsonobject"></a>
+### JsonPack.addJsonObjects()
 
 Signature : 
 
@@ -352,8 +421,8 @@ Returns : None
 
 Description : 
 
-<a id="getjsonobject"></a>
-### def getJsonObjects()
+<a id="jsonpackgetjsonobject"></a>
+### JsonPack.getJsonObjects()
 
 Signature : 
 
@@ -365,8 +434,8 @@ Description :
 
 ## Public Function
 
-<a id="readpacks"></a>
-### def readPacks()
+<a id="jsonpackreadpacks"></a>
+### JsonPack.readPack()
 
 Signature : 
 
@@ -376,8 +445,8 @@ Returns : None
 
 Description : 
 
-<a id="writepacks"></a>
-### def writePacks()
+<a id="jsonpackwritepack"></a>
+### JsonPack.writePack()
 
 Signature : 
 

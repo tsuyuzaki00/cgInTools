@@ -32,33 +32,33 @@ Summary : Class001のざっくりした内容を書く
 
 ## Single Function
 
-def : [single_mode_func()](#class001singlemodefunc) obsidian : [[#class001.single_mode_func()|single_mode_func()]]
+def : [single_mode_func()](#class001singlemodefunc) obsidian : [[#Class001.single_mode_func()|single_mode_func()]]
 
 ## Multi Function
 
-def : [\_multi_mode_func()](#class001_multimodefunc) obsidian : [[#class001.\_multi_mode_func()|_multi_mode_func()]]
+def : [\_multi_mode_func()](#class001_multimodefunc) obsidian : [[#Class001.\_multi_mode_func()|_multi_mode_func()]]
 
 ## Inheritance Function
 
-def : [\_inheritance_mode_func()](#class001_inheritancemodefunc) obsidian : [[#class001.\_inheritance_mode_func()|_inheritance_mode_func()]]
+def : [\_inheritance_mode_func()](#class001_inheritancemodefunc) obsidian : [[#Class001.\_inheritance_mode_func()|_inheritance_mode_func()]]
 
 ## Private Function
 
-def : [\_\_private_mode_func()](#class001__privatemodefunc) obsidian : [[#class001.\_\_private_mode_func()|__private_mode_func()]]
+def : [\_\_private_mode_func()](#class001__privatemodefunc) obsidian : [[#Class001.\_\_private_mode_func()|__private_mode_func()]]
 
 ## Setting Function
 
 def : [setSetting()](#class001setsetting) obsidian : [[#class001.setSetting()|setSetting()]]
 
-def : [addSetting()](#class001addsetting) obsidian : [[#class001.addSetting()|addSetting()]]
+def : [addSetting()](#class001addsetting) obsidian : [[#Class001.addSetting()|addSetting()]]
 
-def : [currentSetting()](#class001currentsetting) obsidian : [[#class001.currentSetting()|currentSetting()]]
+def : [currentSetting()](#class001currentsetting) obsidian : [[#Class001.currentSetting()|currentSetting()]]
 
-def : [getSetting()](#class001getsetting) obsidian : [[#class001.getSetting()|getSetting()]]
+def : [getSetting()](#class001getsetting) obsidian : [[#Class001.getSetting()|getSetting()]]
 
 ## Public Function
 
-def : [public()](#class001public) obsidian : [[#class001.public()|public()]]
+def : [public()](#class001public) obsidian : [[#Class001.public()|public()]]
 
 ---
 
@@ -74,33 +74,33 @@ Summary : Class002のざっくりした内容を書く
 
 ## Single Function
 
-def : [single_mode_func()](#class002singlemodefunc) obsidian : [[#class002.single_mode_func()|single_mode_func()]]
+def : [single_mode_func()](#class002singlemodefunc) obsidian : [[#Class002.single_mode_func()|single_mode_func()]]
 
 ## Multi Function
 
-def : [\_multi_mode_func()](#class002_multimodefunc) obsidian : [[#class002.\_multi_mode_func()|_multi_mode_func()]]
+def : [\_multi_mode_func()](#class002_multimodefunc) obsidian : [[#Class002.\_multi_mode_func()|_multi_mode_func()]]
 
 ## Inheritance Function
 
-def : [\_inheritance_mode_func()](#class002_inheritancemodefunc) obsidian : [[#class002.\_inheritance_mode_func()|_inheritance_mode_func()]]
+def : [\_inheritance_mode_func()](#class002_inheritancemodefunc) obsidian : [[#Class002.\_inheritance_mode_func()|_inheritance_mode_func()]]
 
 ## Private Function
 
-def : [\_\_private_mode_func()](#class002__privatemodefunc) obsidian : [[#class002.\_\_private_mode_func()|__private_mode_func()]]
+def : [\_\_private_mode_func()](#class002__privatemodefunc) obsidian : [[#Class002.\_\_private_mode_func()|__private_mode_func()]]
 
 ## Setting Function
 
-def : [setSetting()](#class002setsetting) obsidian : [[#class002.setSetting()|setSetting()]]
+def : [setSetting()](#class002setsetting) obsidian : [[#Class002.setSetting()|setSetting()]]
 
-def : [addSetting()](#class002addsetting) obsidian : [[#class002.addSetting()|addSetting()]]
+def : [addSetting()](#class002addsetting) obsidian : [[#Class002.addSetting()|addSetting()]]
 
-def : [currentSetting()](#class002currentsetting) obsidian : [[#class002.currentSetting()|currentSetting()]]
+def : [currentSetting()](#class002currentsetting) obsidian : [[#Class002.currentSetting()|currentSetting()]]
 
-def : [getSetting()](#class002getsetting) obsidian : [[#class002.getSetting()|getSetting()]]
+def : [getSetting()](#class002getsetting) obsidian : [[#Class002.getSetting()|getSetting()]]
 
 ## Public Function
 
-def : [public()](#class002public) obsidian : [[#class002.public()|public()]]
+def : [public()](#class002public) obsidian : [[#Class002.public()|public()]]
 
 ---
 
@@ -144,7 +144,7 @@ None
 ## Single Function
 
 <a id="class001singlemodefunc"></a>
-### class001.single_mode_func()
+### Class001.single_mode_func()
 
 Signature :  class001.single_mode_func()
 
@@ -157,7 +157,7 @@ Description :
 ## Multi Function
 
 <a id="class001_multimodefunc"></a>
-### class001.\_multi_mode_func()
+### Class001.\_multi_mode_func()
 
 Signature : 
 
@@ -170,7 +170,7 @@ Description :
 ## Inheritance Function
 
 <a id="class001_inheritancemodefunc"></a>
-### class001.\_inheritance_mode_func()
+### Class001.\_inheritance_mode_func()
 
 Signature : 
 
@@ -183,7 +183,7 @@ Description :
 ## Private Function
 
 <a id="class001__privatemodefunc001"></a>
-### class001.\_\_private_mode_func()
+### Class001.\_\_private_mode_func()
 
 Signature : 
 
@@ -196,7 +196,7 @@ Description :
 ## Setting Function
 
 <a id="class001setsetting"></a>
-### class001.setSetting()
+### Class001.setSetting()
 
 Signature : 
 
@@ -207,7 +207,7 @@ Returns : None
 Description : 
 
 <a id="class001addsetting"></a>
-### class001.addSetting()
+### Class001.addSetting()
 
 Signature : 
 
@@ -218,7 +218,7 @@ Returns : None
 Description : 
 
 <a id="class001currentsetting"></a>
-### class001.currentSetting()
+### Class001.currentSetting()
 
 Signature : 
 
@@ -229,7 +229,7 @@ Returns : None
 Description : 
 
 <a id="class001getsetting"></a>
-### class001.getSetting()
+### Class001.getSetting()
 
 Signature : 
 
@@ -242,7 +242,7 @@ Description :
 ## Public Function
 
 <a id="class001public"></a>
-### class001.public()
+### Class001.public()
 
 Signature : 
 
@@ -259,7 +259,7 @@ Description :
 ## Single Function
 
 <a id="class002singlemodefunc"></a>
-### class002.single_mode_func()
+### Class002.single_mode_func()
 
 Signature :  class002.single_mode_func()
 
@@ -272,7 +272,7 @@ Description :
 ## Multi Function
 
 <a id="class002_multimodefunc"></a>
-### class002.\_multi_mode_func()
+### Class002.\_multi_mode_func()
 
 Signature : 
 
@@ -285,7 +285,7 @@ Description :
 ## Inheritance Function
 
 <a id="class002_inheritancemodefunc"></a>
-### class002.\_inheritance_mode_func()
+### Class002.\_inheritance_mode_func()
 
 Signature : 
 
@@ -298,7 +298,7 @@ Description :
 ## Private Function
 
 <a id="class002__privatemodefunc001"></a>
-### class002.\_\_private_mode_func()
+### Class002.\_\_private_mode_func()
 
 Signature : 
 
@@ -311,7 +311,7 @@ Description :
 ## Setting Function
 
 <a id="class002setsetting"></a>
-### class002.setSetting()
+### Class002.setSetting()
 
 Signature : 
 
@@ -322,7 +322,7 @@ Returns : None
 Description : 
 
 <a id="class002addsetting"></a>
-### class002.addSetting()
+### Class002.addSetting()
 
 Signature : 
 
@@ -333,7 +333,7 @@ Returns : None
 Description : 
 
 <a id="class002currentsetting"></a>
-### class002.currentSetting()
+### Class002.currentSetting()
 
 Signature : 
 
@@ -344,7 +344,7 @@ Returns : None
 Description : 
 
 <a id="class002getsetting"></a>
-### class002.getSetting()
+### Class002.getSetting()
 
 Signature : 
 
@@ -357,7 +357,7 @@ Description :
 ## Public Function
 
 <a id="class002public"></a>
-### class002.public()
+### Class002.public()
 
 Signature : 
 

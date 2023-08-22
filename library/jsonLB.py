@@ -8,11 +8,8 @@ class Json(object):
     def __init__(self):
         self._directory=None
         self._file=None
-        self._extension="json"
-        self._read_dict={}
-        self._readPack_dicts=[]
+        self._extension=None
         self._write_dict={}
-        self._writePack_dicts=[]# {"dataDict":{},"file":""}
 
     #Single Function
     def path_create_str(self,directory,file,extension="json",newFolder=None):
@@ -23,43 +20,15 @@ class Json(object):
             path=os.path.join(directory,newFolder,file+"."+extension)
             return path
 
-    def readJson_quary_dict(self,path):
+    def jsonPath_query_dict(self,path):
         with open(path,"r") as f:
             read_dict=json.load(f)
             return read_dict
             
-    def writeJson_create_func(self,path,write_dict):
+    def jsonPath_create_func(self,path,write_dict):
         with open(path,"w") as f:
             json.dump(write_dict,f,indent=4,ensure_ascii=False)
 
-    #Multi Function
-    def _thisPack_check_func(self,directory,file,extension):
-        try:
-            path=self.path_create_str(directory,file,extension+"Pack")
-            self.readJson_quary_dict(path)
-        except:
-            print('setFile is No packFiles.')
-
-    def _readPack_quary_list(self,directory,file,extension):
-        imPackPath=self.path_create_str(directory,file,extension+"Pack")
-        pack_dict=self.readJson_quary_dict(imPackPath)
-        data_dicts=[]
-        for fileEX_dict in pack_dict["packFiles"]:
-            imPath=self.path_create_str(directory,fileEX_dict["file"],fileEX_dict["extension"])
-            data_dict=self.readJson_quary_dict(imPath)
-            data_dicts.append(data_dict)
-        return data_dicts
-
-    def _writePack_create_func(self,directory,file,extension,pack_dicts):
-        packPath=self.path_create_str(directory,file,extension+"Pack")
-        packFiles=[]
-        for pack_dict in pack_dicts:
-            packFiles.append({"file":pack_dict["file"],"extension":pack_dict["extension"]})
-            exPath=os.path.join(directory,pack_dict["file"]+"."+pack_dict["extension"])
-            self.writeJson_create_func(exPath,pack_dict["dataDict"])#create a normal json file
-        write_dict={"packFiles":packFiles}
-        self.writeJson_create_func(packPath,write_dict)#create a pack json file
-    
     #Setting Function
     def setDirectory(self,variable):
         self._directory=variable
@@ -85,41 +54,99 @@ class Json(object):
     def getWriteDict(self):
         return self._write_dict
 
-    def setWritePackDict(self,variable,file=None):
-        file=file or self._file
-        self._writePack_dicts=[{"file":file,"extension":self._extension,"dataDict":variable}]
-        return self._writePack_dicts
-    def addWritePackDict(self,variable,file=None):
-        file=file or self._file
-        self._writePack_dicts.append({"file":file,"extension":self._extension,"dataDict":variable})
-        return self._writePack_dicts
-    def getWritePackDicts(self):
-        return self._writePack_dicts
-
     #Public Function
     def read(self,path=None):
         if not path == None:
-            self._read_dict=self.readJson_quary_dict(path)
+            read_dict=self.jsonPath_query_dict(path)
         else:
             path=self.path_create_str(self._directory,self._file,self._extension)
-            self._read_dict=self.readJson_quary_dict(path)
-        return self._read_dict
+            read_dict=self.jsonPath_query_dict(path)
+        return read_dict
 
     def write(self,path=None,write_dict=None):
         _write_dict=write_dict or self._write_dict
         if not path == None:
-            self.writeJson_create_func(path,_write_dict)
+            self.jsonPath_create_func(path,_write_dict)
         else:
             path=self.path_create_str(self._directory,self._file,self._extension)
-            self.writeJson_create_func(path,_write_dict)
+            self.jsonPath_create_func(path,_write_dict)
+    
+class JsonPack(object):
+    def __init__(self):
+        self._directory=None
+        self._file=None
+        self._extension=None
+        self._writePack_Jsons=[]
 
-    def readPacks(self):
-        self._thisPack_check_func(self._directory,self._file,self._extension)
-        self._readPack_dicts=self._readPack_quary_list(self._directory,self._file,self._extension)
-        return self._readPack_dicts
+    #Private Function
+    def __readPack_query_dicts(self,directory,file,extension):
+        pack_Json=Json()
+        pack_Json.setDirectory(directory)
+        pack_Json.setFile(file)
+        pack_Json.setExtension(extension)
+        pack_dict=pack_Json.read()
 
-    def writePacks(self):
-        self._writePack_create_func(self._directory,self._file,self._extension,self._writePack_dicts)
+        read_dicts=[]
+        for fileEX_dict in pack_dict["packFiles"]:
+            read_Json=Json()
+            read_Json.setDirectory(directory)
+            read_Json.setFile(fileEX_dict["file"])
+            read_Json.setExtension(fileEX_dict["extension"])
+            read_dict=read_Json.read()
+
+            read_dicts+=read_dict
+        return read_dicts
+
+    def __writePack_create_func(self,directory,file,extension,write_Jsons):
+        packFiles=[]
+        for write_Json in write_Jsons:
+            write_Json.write()
+            file_str=write_Json.getFile()
+            extension_str=write_Json.getExtension()
+            packFiles.append({"file":file_str,"extension":extension_str})
+        write_dict={"packFiles":packFiles}
+
+        pack_Json=Json()
+        pack_Json.setDirectory(directory)
+        pack_Json.setFile(file)
+        pack_Json.setExtension(extension)
+        pack_Json.setWriteDict(write_dict)
+        pack_Json.write()
+    
+    #Setting Function
+    def setDirectory(self,variable):
+        self._directory=variable
+        return self._directory
+    def getDirectory(self):
+        return self._directory
+
+    def setFile(self,variable):
+        self._file=variable
+        return self._file
+    def getFile(self):
+        return self._file
+
+    def setExtension(self,variable):
+        self._extension=variable
+        return self._extension
+    def getExtension(self):
+        return self._extension
+
+    def setJsonObjects(self,variables):
+        self._writePack_Jsons=variables
+    def addJsonObjects(self,variables):
+        self._writePack_Jsons+=variables
+    def getJsonObjects(self):
+        return self._writePack_Jsons
+
+    #Public Function
+    def readPack(self):
+        readPack_dicts=self.__readPack_query_dicts(self._directory,self._file,self._extension)
+        return readPack_dicts
+
+    def writePack(self):
+        self.__writePack_create_func(self._directory,self._file,self._extension,self._writePack_Jsons)
+
 
 def readJson(directory,file):
     data=Json()
