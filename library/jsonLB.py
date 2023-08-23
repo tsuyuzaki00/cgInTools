@@ -8,7 +8,7 @@ class Json(object):
     def __init__(self):
         self._directory=None
         self._file=None
-        self._extension=None
+        self._extension="json"
         self._write_dict={}
 
     #Single Function
@@ -63,8 +63,8 @@ class Json(object):
             read_dict=self.jsonPath_query_dict(path)
         return read_dict
 
-    def write(self,path=None,write_dict=None):
-        _write_dict=write_dict or self._write_dict
+    def write(self,path=None,write=None):
+        _write_dict=write or self._write_dict
         if not path == None:
             self.jsonPath_create_func(path,_write_dict)
         else:
@@ -75,7 +75,7 @@ class JsonPack(object):
     def __init__(self):
         self._directory=None
         self._file=None
-        self._extension=None
+        self._extension="jsonPack"
         self._writePack_Jsons=[]
 
     #Private Function
