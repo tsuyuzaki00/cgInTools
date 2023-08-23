@@ -1,7 +1,6 @@
 # jsonLB
 
-
-[玄人向け(professional)](/library/_document/_professional/jsonLB.md)
+[玄人向け(professional)](./_professional/jsonLB.md)
 
 ## クラス一覧
 class : [Json(object)](#json00) obsidian : [[#class Json|Json(object)]]

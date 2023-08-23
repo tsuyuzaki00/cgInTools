@@ -1,409 +1,333 @@
 # jsonLB
-
-[一般向け(person)](library/_document/jsonLB.md)
+[一般向け(person)](../jsonLB.md)
 
 ## クラス一覧
-class : [Json(object)](#json) obsidian : [[#class Json Page|Json(object)]]
-
-class : [JsonPack(object)](#jsonpack) obsidian : [[#class JsonPack Page|JsonPack(object)]]
+class [Json()](#json)  
+class [JsonPack()](#jsonpack)  
 
 ## 関数一覧
-def : [readJson()](#readjson) obsidian : [[#def readJson|readJson()]]
-
-def : [writeJson()](#writejson) obsidian : [[#def writeJson|writeJson()]]
+def [readJson()](#readjson)  
+def [writeJson()](#writejson)  
 
 ## 変数一覧
-
 None
 
 ---
-
 <a id="json"></a>
 # class Json Page
+Inheritance :  
+object
 
-Inheritance : object
+import :  
+json,os
 
-import : json,os
-
-Summary : Jsonファイルを読み込み書き出しするクラス
+Summary :  
+Jsonファイルを読み込み書き出しするクラス
 
 ## Single Function
-
-def : [path_create_str()](#jsonpathcreatestr) obsidian : [[#Json.path_create_str()|path_create_str()]]
-
-def : [jsonPath_query_dict()](#jsonjsonpathquerydict) obsidian : [[#Json.jsonPath_query_dict()|jsonPath_query_dict()]]
-
-def : [jsonPath_create_func()](#jsonjsonpathcreatefunc) obsidian : [[#Json.jsonPath_create_func()|jsonPath_create_func()]]
-
+def [path_create_str()](#jsonpathcreatestr)  
+def [jsonPath_query_dict()](#jsonjsonpathquerydict)  
+def [jsonPath_create_func()](#jsonjsonpathcreatefunc)  
 ## Multi Function
-
 None
-
 ## Inheritance Function
-
 None
-
 ## Private Function
-
 None
-
 ## Setting Function
-
-def : [setDirectory()](#jsonsetdirectory) obsidian : [[#Json.setDirectory()|setDirectory()]]
-
-def : [getDirectory()](#jsongetdirectory) obsidian : [[#Json.getDirectory()|getDirectory()]]
-
-def : [setFile()](#jsonsetfile) obsidian : [[#Json.setFile()|setFile()]]
-
-def : [getFile()](#jsongetfile) obsidian : [[#Json.getFile()|getFile()]]
-
-def : [setExtension()](#jsonsetextension) obsidian : [[#Json.setExtension()|setExtension()]]
-
-def : [getExtension()](#jsongetextension) obsidian : [[#Json.getExtension()|getExtension()]]
-
-def : [setWriteDict()](#jsonsetwritedict) obsidian : [[#Json.setWriteDict()|setWriteDict()]]
-
-def : [getWriteDict()](#jsongetwritedict) obsidian : [[#Json.getWriteDict()|getWriteDict()]]
-
+def [setDirectory()](#jsonsetdirectory)  
+def [getDirectory()](#jsongetdirectory)  
+def [setFile()](#jsonsetfile)  
+def [getFile()](#jsongetfile)  
+def [setExtension()](#jsonsetextension)  
+def [getExtension()](#jsongetextension)  
+def [setWriteDict()](#jsonsetwritedict)  
+def [getWriteDict()](#jsongetwritedict)  
 ## Public Function
-
-def : [read()](#jsonread) obsidian : [[#Json.read()|read()]]
-
-def : [write()](#jsonwrite) obsidian : [[#Json.write()|write()]]
+def [read()](#jsonread)  
+def [write()](#jsonwrite)  
 
 ---
 
 <a id="jsonpack"></a>
 # class JsonPack Page
 
-Inheritance : object
+Inheritance :  
+object
 
-import : json,os
+import :  
+json,os
 
-Summary : 複数のJsonファイルを読み込み書き出しするクラス
+Summary :  
+複数のJsonファイルを読み込み書き出しするクラス
 
 ## Single Function
-
 None
-
 ## Multi Function
-
 None
-
 ## Inheritance Function
-
 None
-
 ## Private Function
-
-def : [\_\_readPack_query_dicts()](#jsonpackreadpackquerydicts) obsidian : [[#JsonPack. _ _readPack_query_dicts()|__readPack_query_dicts()]]
-
-def : [\_\_writePack_query_dicts()](#jsonpackwritepackcreatefunc) obsidian : [[#JsonPack. \_\_writePack_create_func()|__writePack_create_func()]]
-
+def [\_\_readPack_query_dicts()](#jsonpackreadpackquerydicts)  
+def [\_\_writePack_create_func()](#jsonpackwritepackcreatefunc)  
 ## Setting Function
-
-def : [setDirectory()](#jsonpacksetdirectory) obsidian : [[#JsonPack.setDirectory()|setDirectory()]]
-
-def : [getDirectory()](#jsonpackgetdirectory) obsidian : [[#JsonPack.getDirectory()|getDirectory()]]
-
-def : [setFile()](#jsonpacksetfile) obsidian : [[#JsonPack.setFile()|setFile()]]
-
-def : [getFile()](#jsonpackgetfile) obsidian : [[#JsonPack.getFile()|getFile()]]
-
-def : [setExtension()](#jsonpacksetextension) obsidian : [[#JsonPack.setExtension()|setExtension()]]
-
-def : [getExtension()](#jsonpackgetextension) obsidian : [[#JsonPack.getExtension()|getExtension()]]
-
-def : [setJsonObjects()](#jsonpacksetjsonobjects) obsidian : [[#JsonPack.setJsonObjects()|setJsonObjects()]]
-
-def : [addJsonObjects()](#jsonpackaddjsonobjects) obsidian : [[#JsonPack.addJsonObjects()|addJsonObjects()]]
-
-def : [getJsonObjects()](#jsonpackgetjsonobjects) obsidian : [[#JsonPack.getJsonObjects()|getJsonObjects()]]
-
+def [setDirectory()](#jsonpacksetdirectory)  
+def [getDirectory()](#jsonpackgetdirectory)  
+def [setFile()](#jsonpacksetfile)  
+def [getFile()](#jsonpackgetfile)  
+def [setExtension()](#jsonpacksetextension)  
+def [getExtension()](#jsonpackgetextension)  
+def [setJsonObjects()](#jsonpacksetjsonobjects)  
+def [addJsonObjects()](#jsonpackaddjsonobjects)  
+def [getJsonObjects()](#jsonpackgetjsonobjects)  
 ## Public Function
-
-def : [readPack()](#jsonpackreadpack) obsidian : [[#JsonPack.readPack()|readPack()]]
-
-def : [writePack()](#jsonpackwritepack) obsidian : [[#JsonPack.writePack()|writePack()]]
+def [readPack()](#jsonpackreadpack)  
+def [writePack()](#jsonpackwritepack)  
 
 ---
-
 # class Json
-
 ## Single Function
-
 <a id="jsonpathcreatestr"></a>
 ### Json.path_create_str()
+Signature :  
+path_create_str(directory,file,extension="json",newFolder=None)
 
-Signature :
- path_create_str(directory,file,extension="json",newFolder=None)
+Parameters :  
+directory - string(directory)  
+file - string  
+extension - string(extension)  
+newFolder - string  
 
-Parameters :
- directory - string(directory)
- file - string
- extension - string(extension)
- newFolder - string
+Returns :  
+string(path)  
 
-Returns :
- string(path)
-
-Description :
- フォルダ階層の文字列、ファイル名の文字列、拡張子の文字列、必要ならフォルダーの文字列を入れてパスの文字列を作成する関数
+Description :  
+フォルダ階層の文字列、ファイル名の文字列、拡張子の文字列、必要ならフォルダーの文字列を入れてパスの文字列を作成する関数
 
 <a id="jsonjsonpathquerydict"></a>
 ### Json.jsonPath_query_dict()
+Signature :  
+jsonPath_query_dict(path)
 
-Signature :
- jsonPath_query_dict(path)
+Parameters :  
+path - string(path)
 
-Parameters :
- path - string(path)
+Returns :  
+dict
 
-Returns :
- dict
-
-Description : 
- 指定したパスからjsonファイルを読み込む関数
+Description :  
+指定したパスからjsonファイルを読み込む関数
 
 <a id="jsonjsonpathcreatefunc"></a>
 ### Json.jsonPath_create_func()
+Signature :  
+jsonPath_create_func(path,write_dict)
 
-Signature :
- jsonPath_create_func(path,write_dict)
+Parameters :  
+path - string(path)  
+write_dict - dict  
 
-Parameters : 
- path - string(path)
- write_dict - dict
+Returns :  
+None
 
-Returns :
- None
-
-Description :
- 指定したパスにjsonファイルを書き出す関数
-
+Description :  
+指定したパスにjsonファイルを書き出す関数
 ## Multi Function
-
 None
-
 ## Inheritance Function
-
 None
-
 ## Private Function
-
 None
-
 ## Setting Function
-
 <a id="jsonsetdirectory"></a>
 ### Json.setDirectory()
+Signature :  
+setDirectory(variable)
 
-Signature :
- setDirectory(variable)
+Parameters :  
+variable - string
 
-Parameters : 
- variable - string
+Returns :  
+string(directory)
 
-Returns :
- string(directory)
-
-Description : 
- フォルダ階層の文字列を設定する関数
+Description :  
+フォルダ階層の文字列を設定する関数
 
 <a id="jsongetdirectory"></a>
 ### Json.getDirectory()
+Signature :  
+getDirectory()
 
-Signature :
- getDirectory()
+Parameters :  
+None
 
-Parameters : 
- None
+Returns :  
+string(directory)
 
-Returns :
- string(directory)
-
-Description : 
- 設定したフォルダ階層の文字列を返す関数
+Description :  
+設定したフォルダ階層の文字列を返す関数
 
 <a id="jsonsetfile"></a>
 ### Json.setFile()
+Signature :  
+setFile(variable)
 
-Signature : 
- setFile(variable)
+Parameters :  
+variable - string
 
-Parameters :
- variable - string
+Returns :  
+string
 
-Returns :
- string
-
-Description : 
- ファイル名の文字列を設定する関数
+Description :  
+ファイル名の文字列を設定する関数
 
 <a id="jsongetfile"></a>
 ### Json.getFile()
+Signature :  
+getFile()
 
-Signature :
- getFile()
+Parameters :  
+None
 
-Parameters :
- None
+Returns :  
+string
 
-Returns :
- string
-
-Description :
- 設定したファイル名の文字列を返す関数
+Description :  
+設定したファイル名の文字列を返す関数
 
 <a id="jsonsetextension"></a>
 ### Json.setExtension()
+Signature :  
+setExtension(variable)
 
-Signature :
- setExtension(variable)
+Parameters :  
+variable - string(extension)
 
-Parameters :
- variable - string(extension)
+Returns :  
+string
 
-Returns :
- string
-
-Description :
- 拡張子の文字列を設定する関数
+Description :  
+拡張子の文字列を設定する関数
 
 <a id="jsongetextension"></a>
 ### Json.getExtension()
+Signature :  
+getExtension()
 
-Signature :
- getExtension()
+Parameters :  
+None
 
-Parameters :
- None
+Returns :  
+string(extension)
 
-Returns :
- string(extension)
-
-Description :
- 設定した拡張子の文字列を返す関数
+Description :  
+設定した拡張子の文字列を返す関数
 
 <a id="jsonsetwritedict"></a>
 ### Json.setWriteDict()
+Signature :  
+setWriteDict(variable)
 
-Signature :
- setWriteDict(variable)
+Parameters :  
+variable - dict
 
-Parameters :
- variable - dict
+Returns :  
+dict
 
-Returns :
- dict
-
-Description :
- Jsonファイルに書き出す辞書を設定する関数
+Description :  
+Jsonファイルに書き出す辞書を設定する関数
 
 <a id="jsongetwritedict"></a>
 ### Json.getWriteDict()
-
-Signature :
+Signature :  
  getWriteDict()
 
-Parameters :
- None
+Parameters :  
+None
 
-Returns :
- dict
+Returns :  
+dict
 
-Description :
- 設定したJsonファイルに書き出す辞書を返す関数
+Description :  
+設定したJsonファイルに書き出す辞書を返す関数
 
 ## Public Function
-
 <a id="jsonread"></a>
 ### Json.read()
 
-Signature :
- setDirectory(variable)
- setFile(variable)
- setExtension(variable)
- read()
- or
- read(path)
+Signature :  
+[setDirectory(variable)](#jsonsetdirectory)  
+[setFile(variable)](#jsonsetfile)  
+[setExtension(variable)](#jsonsetextension)  
+read() or read(path)
 
-Parameters :
- path - string(path)
+Parameters :  
+path - string(path)
 
-Returns :
- dict
+Returns :  
+dict
 
-Description :
- Jsonファイルを読み込む関数
+Description :  
+Jsonファイルを読み込む関数
 
 <a id="jsonwrite"></a>
 ### Json.write()
 
-Signature :
- setDirectory(variable)
- setFile(variable)
- setExtension(variable)
- setWriteDict(variable)
- write()
- or
- write(path,write)
+Signature :  
+[setDirectory(variable)](#jsonsetdirectory)    
+[setFile(variable)](#jsonsetfile)  
+[setExtension(variable)](#jsonsetextension)  
+[setWriteDict(variable)](#jsonsetwritedict)  
+write() or write(path,write)
 
-Parameters :
- path - string(path)
- write - dict
+Parameters :  
+path - string(path)  
+write - dict  
 
-Returns :
- None
+Returns :  
+None
 
-Description :
- Jsonファイルを書き出す関数
+Description :  
+Jsonファイルを書き出す関数
 
 --- 
 
 # class JsonPack
-
 ## Single Function
-
 None
-
 ##  Multi Function
-
 None
-
 ## Inheritance Function
-
 None
-
 ## Private Function
-
 <a id="jsonpackreadpackquerydicts"></a>
 ### JsonPack.\_\_readPack_query_dicts()
 
-Signature :
- \_\_readPack_query_dict(directory,file,extension)
+Signature :  
+\_\_readPack_query_dict(directory,file,extension)
 
-Parameters :
-directory - string(directory)
-file - string
-extension - string(extension)
+Parameters :  
+directory - string(directory)  
+file - string  
+extension - string(extension)  
 
-Returns :
- dicts
+Returns :  
+dicts
 
-Description :
- JsonPackファイルを読み込む関数
+Description :  
+JsonPackファイルを読み込む関数
 
 <a id="jsonpackwritepackcreatefunc"></a>
 ### JsonPack.\_\_writePack_create_func()
 
-Signature :
+Signature :  
+\_\_writePack_create_func(directory,file,extension,write_Jsons)
 
-Parameters : 
- directory - string(directory)
- file - string
- extension - string(extension)
- write_Jsons - Json
+Parameters :  
+directory - string(directory)  
+file - string  
+extension - string(extension)  
+write_Jsons - [Json](#class-json-page)  
 
 Returns :
  None
