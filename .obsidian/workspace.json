@@ -6,6 +6,7 @@
       {
         "id": "ea6aa22497cd0ad5",
         "type": "tabs",
+        "dimension": 45.75936883629191,
         "children": [
           {
             "id": "622fc8e9cab5cd62",
@@ -13,7 +14,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_document/_professional/_template.md",
+                "file": "_document/_template.md",
                 "mode": "source",
                 "source": true
               }
@@ -68,11 +69,12 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 1
       },
       {
         "id": "80412c0cbe641380",
         "type": "tabs",
+        "dimension": 54.24063116370809,
         "children": [
           {
             "id": "9bc3a5ad5b90c4ec",
@@ -80,7 +82,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "_document/_template.md",
+                "file": "_document/_professional/_template.md",
                 "mode": "preview",
                 "source": true
               }
@@ -123,7 +125,7 @@
             }
           }
         ],
-        "currentTab": 2
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -189,7 +191,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md",
+                "file": "library/_document/_professional/baseLB.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -206,7 +208,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md",
+                "file": "library/_document/_professional/baseLB.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -229,7 +231,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md"
+                "file": "library/_document/_professional/baseLB.md"
               }
             }
           }
@@ -250,13 +252,13 @@
       "command-palette:コマンドパレットを開く": false
     }
   },
-  "active": "0a37b9f130f34f24",
+  "active": "8f57591f34083117",
   "lastOpenFiles": [
-    "library/_document/_professional/baseLB.md",
-    "library/_document/_professional/jsonLB.md",
-    "library/_document/baseLB.md",
-    "_document/_professional/_template.md",
     "_document/_template.md",
+    "_document/_professional/_template.md",
+    "library/_document/_professional/jsonLB.md",
+    "library/_document/_professional/baseLB.md",
+    "library/_document/baseLB.md",
     "_document/_professional",
     "_settings/_document/title.md",
     "library/_document/jsonLB.md",

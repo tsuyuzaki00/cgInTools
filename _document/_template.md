@@ -1,253 +1,241 @@
-# _template
+# \_template
 
-[玄人向け(professional)](/_document/_professional/_template.md)
-[一般向け(person)](/_document/_template.md)
+[玄人向け(professional)](./_professional/_template.md)
 
 ## クラス一覧
-class : [Class001(object)](#class001) obsidian : [[#class Class001 Page|Class001(object)]]
-
-class : [Class002(object)](#class002) obsidian : [[#class Class002 Page|Class002(object)]]
-
-class : [Class003(object)](#class003) obsidian : [[#class Class002 Page|Class003(object)]]
+class [Class001(object)](#class-class001-page)   
+class [Class002(object)](#class-class002-page)  
+class [Class003(object)](#class-class003-page)  
 
 ## 関数一覧
-
-def :  [functionOnly()](#functiononly) obsidian : [[#def functionOnly()|functionOnly()]]
+def [functionOnly()](#def-functiononly)  
 
 ## 変数一覧
-
 None
 
 ---
 
-<a id="class001"></a>
 # class Class001 Page
+Inheritance :  
+継承しているものを書く無い場合はobjectと書く
 
-Inheritance : 継承しているものを書く無い場合はobjectと書く
+import :  
+インポートで使用している専用ライブラリのみ書く  
+[\_template](_template.md)
 
-import : インポートで使用している専用ライブラリのみ書く
-[\_template](/_document/_template.md)
-
-Summary : Class001のざっくりした内容を書く
+Summary :  
+Class001のざっくりした内容を書く
 
 ## Setting Function
-
-def : [setSetting()](#class001setsetting) obsidian : [[#class001.setSetting()|setSetting()]]
-
-def : [addSetting()](#class001addsetting) obsidian : [[#class001.addSetting()|addSetting()]]
-
-def : [currentSetting()](#class001currentsetting) obsidian : [[#class001.currentSetting()|currentSetting()]]
-
-def : [getSetting()](#class001getsetting) obsidian : [[#class001.getSetting()|getSetting()]]
+def [setSetting()](#class001setsetting)  
+def [addSetting()](#class001addsetting)  
+def [currentSetting()](#class001currentsetting)  
+def [getSetting()](#class001getsetting)  
 
 ## Public Function
-
-def : [public()](#class001public) obsidian : [[#class001.public()|public()]]
+def [public()](#class001public) 
 
 ---
 
-<a id="class002"></a>
 # class Class002 Page
+Inheritance :  
+継承しているものを書く無い場合はobjectと書く
 
-Inheritance : 継承しているものを書く無い場合はobjectと書く
+import :  
+インポートで使用している専用ライブラリのみ書く  
+[\_template](_template.md)
 
-import : インポートで使用している専用ライブラリのみ書く
-[\_template](/_document/_template.md)
-
-Summary : Class002のざっくりした内容を書く
+Summary :  
+Class002のざっくりした内容を書く  
 
 ## Setting Function
-
-def : [setSetting()](#class002setsetting) obsidian : [[#class002.setSetting()|setSetting()]]
-
-def : [addSetting()](#class002addsetting) obsidian : [[#class002.addSetting()|addSetting()]]
-
-def : [currentSetting()](#class002currentsetting) obsidian : [[#class002.currentSetting()|currentSetting()]]
-
-def : [getSetting()](#class002getsetting) obsidian : [[#class002.getSetting()|getSetting()]]
+def [setSetting()](#class002setsetting)  
+def [addSetting()](#class002addsetting)  
+def [currentSetting()](#class002currentsetting)  
+def [getSetting()](#class002getsetting)  
 
 ## Public Function
-
-def : [public()](#class002public) obsidian : [[#class002.public()|public()]]
+def [public()](#class002public)  
 
 ---
-
-<a id="class003"></a>
 # class Class003 Page
+Inheritance :  
+object
 
-Inheritance : object
-
-import : None
-
-Summary : とくになし
-
-## Single Function
-
+import :  
 None
 
-## Multi Function
-
-None
-
-## Inheritance Function
-
-None
-
-## Private Function
-
-None
+Summary :  
+とくになし
 
 ## Setting Function
-
 None
 
 ## Public Function
-
 None
 
 ---
 
 # class Class001
-
 ## Setting Function
+### Class001.setSetting()
+Signature :  
+setSetting(variable)
 
-<a id="class001setsetting"></a>
-### class001.setSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
 
-Description : 
+### Class001.addSetting()
+Signature :  
+addSetting()
 
-<a id="class001addsetting"></a>
-### class001.addSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
 
-Description : 
+### Class001.currentSetting()
+Signature :  
+currentSetting()
 
-<a id="class001currentsetting"></a>
-### class001.currentSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
 
-Description : 
+### Class001.getSetting()
+Signature :  
+getSetting()
 
-<a id="class001getsetting"></a>
-### class001.getSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
-
-Description : 
 
 ## Public Function
+### Class001.public()
+Signature :  
+setSetting()  
+public() or public(variable)
 
-<a id="class001public"></a>
-### class001.public()
+Parameters :  
+variable - bool
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
-
-Description : 
 
 ---
 
 # class Class002
-
 ## Setting Function
+### Class002.setSetting()
+Signature :  
+setSetting()
 
-<a id="class002setsetting"></a>
-### class002.setSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
 
-Description : 
+### Class002.addSetting()
+Signature :  
+addSetting()
 
-<a id="class002addsetting"></a>
-### class002.addSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
 
-Description : 
+### Class002.currentSetting()
+Signature :  
+currentSetting()
 
-<a id="class002currentsetting"></a>
-### class002.currentSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
 
-Description : 
+### Class002.getSetting()
+Signature :  
+getSetting()
 
-<a id="class002getsetting"></a>
-### class002.getSetting()
+Parameters :  
+None
 
-Signature : 
+Returns :  
+None
 
-Parameters : 
+Description :  
 
-Returns : None
-
-Description : 
 
 ## Public Function
+### Class002.public()
 
-<a id="class002public"></a>
-### class002.public()
+Signature :  
+setSetting(variable)  
+public() or public(variable)
 
-Signature : 
+Parameters :  
+None
 
-Parameters : 
+Returns :  
+None
 
-Returns : None
+Description :  
 
-Description : 
 
 ---
 
 # Functions
-
-<a id="functionOnly"></a>
 ### def functionOnly()
-
 Signature :  
+functionOnly()
 
-Parameters : 
+Parameters :  
+None
 
-Returns : None
+Returns :  
+None
 
-Description : 
+Description :  
+
 
 ---
 
 # Variables
-
 None
+
+---
