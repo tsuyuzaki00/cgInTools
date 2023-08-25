@@ -2,6 +2,66 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
+class Polygon(object):
+    def __init__(self):
+        self._name_str=None
+        self._polygons=None#[[MPoint,MPoint,MPoint,MPoint],[MPoint,MPoint,MPoint,MPoint]]
+
+    #Single Function
+    def allVertex_query_MPoints(self,polygons):
+        points=[point for polygon in polygons for point in polygon]
+        unique_Points=[item for index, item in enumerate(points) if item not in points[:index]]
+        sorted_Points=[] 
+        for unique_Point in unique_Points:
+            for i in range(len(unique_Points)):
+                if unique_Point.sameID(i):
+                    sorted_Points.append(unique_Point)
+        #hikaku=[point.getID() for point in points]
+        #unique_Points=set(hikaku)
+
+        #for index, item in enumerate(points):
+        #    if item not in points[:index]:
+        #        print(item.getID())
+        return sorted_Points
+
+    def polygonCount_query_ints(self,polygons):
+        polygonCounts=[len(polygon) for polygon in polygons]
+        return polygonCounts
+    
+    def pointID_query_ints(self,polygons):
+        #pointIDs=[]
+        #for polygon in polygons:
+        #    for point in polygon:
+        #        id_int=point.getID()
+        #        pointIDs.append(id_int)
+        pointIDs=[point.getID() for polygon in polygons for point in polygon]
+        return pointIDs
+
+    #Setting Function
+    def setName(self,variables):
+        self._name_str=variables
+        return self._name_str
+    def getName(self):
+        return self._name_str
+
+    def setPolygons(self,variables):
+        self._polygons=variables
+        return self._polygons
+    def getPolygons(self):
+        return self._polygons
+
+    #Public Function
+    def create(self,vertices):
+        trans_fn=om2.MFnTransform()
+        trans_obj=trans_fn.create()
+        _name_str=trans_fn.setName(self._name_str)
+        fn_mesh=om2.MFnMesh()
+
+        #vertices=self.allVertex_query_MPoints(self._polygons)
+        polygonCounts=self.polygonCount_query_ints(self._polygons)
+
+        fn_mesh.create(vertices,polygonCounts,polygonConnects,parent=trans_obj)
+        fn_mesh.setName(_name_str+'Shape')
 
 class CreateMesh():
     def __init__(self):

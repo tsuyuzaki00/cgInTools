@@ -2,6 +2,30 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
+class Point(om2.MPoint):
+    def __init__(self,*points):
+        super(Point,self).__init__(*points)
+        self._point_list3=None
+        self._id_int=None
+
+    #Setting Function
+    def setPosition(self,variables):
+        self._point_list3=variables
+        return self._point_list3
+    def getPosition(self):
+        return self._point_list3
+
+    def setID(self,variable):
+        self._id_int=variable
+        return self._id_int
+    def getID(self):
+        return self._id_int
+    def sameID(self,variable):
+        if self._id_int is variable:
+            return True
+        else:
+            return False
+
 def getPoints_query_list():
     pass
 
