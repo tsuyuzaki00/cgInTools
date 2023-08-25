@@ -10,18 +10,15 @@ class Polygon(object):
     #Single Function
     def allVertex_query_MPoints(self,polygons):
         points=[point for polygon in polygons for point in polygon]
-        unique_Points=[item for index, item in enumerate(points) if item not in points[:index]]
-        sorted_Points=[] 
-        for unique_Point in unique_Points:
-            for i in range(len(unique_Points)):
-                if unique_Point.sameID(i):
-                    sorted_Points.append(unique_Point)
-        #hikaku=[point.getID() for point in points]
-        #unique_Points=set(hikaku)
+        
+        seen_ids=set()
+        unique_Points=[]
+        for point in points:
+            if point.getID() not in seen_ids:
+                unique_Points.append(point)
+                seen_ids.add(point.getID())
 
-        #for index, item in enumerate(points):
-        #    if item not in points[:index]:
-        #        print(item.getID())
+        sorted_Points=sorted(unique_Points,key=lambda x: x.getID())
         return sorted_Points
 
     def polygonCount_query_ints(self,polygons):
@@ -51,14 +48,15 @@ class Polygon(object):
         return self._polygons
 
     #Public Function
-    def create(self,vertices):
+    def create(self):
         trans_fn=om2.MFnTransform()
         trans_obj=trans_fn.create()
         _name_str=trans_fn.setName(self._name_str)
         fn_mesh=om2.MFnMesh()
 
-        #vertices=self.allVertex_query_MPoints(self._polygons)
+        vertices=self.allVertex_query_MPoints(self._polygons)
         polygonCounts=self.polygonCount_query_ints(self._polygons)
+        polygonConnects=self.pointID_query_ints(self._polygons)
 
         fn_mesh.create(vertices,polygonCounts,polygonConnects,parent=trans_obj)
         fn_mesh.setName(_name_str+'Shape')

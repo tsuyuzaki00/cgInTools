@@ -35,33 +35,24 @@ def main():
     MPoint7=pLB.Point([-5,5,5])
     MPoint7.setID(7)
 
-    test_MPoints=[
-        MPoint0,
-        MPoint1,
-        MPoint2,
-        MPoint3,
-        MPoint4,
-        MPoint5,
-        MPoint6,
-        MPoint7
-    ]
-
     createPolygons=[
         [MPoint3,MPoint2,MPoint1,MPoint0],
-        [MPoint1,MPoint2,MPoint6,MPoint5],
-        [MPoint0,MPoint1,MPoint5,MPoint4],
-        [MPoint2,MPoint3,MPoint7,MPoint6],
-        [MPoint3,MPoint0,MPoint4,MPoint7],
-        [MPoint4,MPoint5,MPoint6,MPoint7]
+        [MPoint2,MPoint6,MPoint5,MPoint1],
+        [MPoint5,MPoint6,MPoint7,MPoint4],
+        [MPoint7,MPoint3,MPoint0,MPoint4],
+        #[MPoint0,MPoint1,MPoint5,MPoint4],
+        #[MPoint2,MPoint3,MPoint7,MPoint6],
     ]
 
     cube=mLB.Polygon()
-    #cube.setName("pCube")
-    #cube.setPolygons(createPolygons)
+    cube.setName("pCube")
+    cube.setPolygons(createPolygons)
     #print(cube.polygonCount_query_ints(createPolygons))
     #print(cube.pointID_query_ints(createPolygons))
-    #cube.create(test_MPoints)
-    test=cube.allVertex_query_MPoints(createPolygons)
-    print(test)
+    #print(cube.allVertex_query_MPoints(createPolygons))
+    cube.create()
+
+    cmds.select(cube.getName())
+    cmds.hyperShade(a='standardSurface1')
 
 main()
