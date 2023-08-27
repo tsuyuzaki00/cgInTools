@@ -1,25 +1,36 @@
 # scriptsInTools
+- [ ] 編集中
+- [x] 編集済み
 
-## README.md=目次 
-
+## README.md=もくじ 
 ## 各フォルダの定義
 
-[\_document](/_document/README.md) 全体で使用するマニュアルをまとめるフォルダ
+[\_document](./_document/README.md)  
+全体で使用するマニュアルをまとめるフォルダ
 
-[\_menu](/_menu/README.md) 上部メニューに表示させるフォルダ
+[\_menu](./_menu/README.md)  
+上部メニューに表示させるフォルダ
 
-[\_settings](/_settings/README.md) libraryの初期設定をするフォルダ
+[\_settings](./_settings/README.md)  
+libraryの初期設定をするフォルダ
 
-[execute](/execute/README.md)  直接Pythonを実行するフォルダ
+[execute](./execute/README.md)  
+直接Pythonを実行するフォルダ
 
-[library](/library/README.md) どのツールでも使用するスクリプトをまとめているフォルダ
+[library](./library/README.md)  
+どのツールでも使用するスクリプトをまとめているフォルダ
 
-[blender](/blender/README.md) 3DCGツールBlenderで使用するスクリプトフォルダ
+[blender](./blender/README.md)  
+3DCGツールBlenderで使用するスクリプトフォルダ
 
-[maya](/maya/README.md) 3DCGツールMayaで使用するスクリプトフォルダ
+[maya](./maya/README.md)  
+3DCGツールMayaで使用するスクリプトフォルダ
 
-[sourceTrail](/sourceTrail/README.md) スクリプトの参照、継承の流れが見えるアプリケーションsourceTrailのフォルダ
+[sourceTrail](./sourceTrail/README.md)  
+スクリプトの参照、継承の流れが見えるアプリケーションsourceTrailのフォルダ
 
-[ui](/ui/README.md) どのDCCツールでも使えるUIファイルを格納するフォルダ
+[ui](./ui/README.md)  
+どのDCCツールでも使えるUIファイルを格納するフォルダ
 
-[\_\_init\_\_.py](/_document/init.md) import cgInTools as cit で主に使用しているファイル
+[\_\_init\_\_.py](./_document/init.md)  
+import cgInTools as cit で主に使用しているファイル

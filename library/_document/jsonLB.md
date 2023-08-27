@@ -1,4 +1,6 @@
 # jsonLB
+- [x] 編集中
+- [ ] 編集済み
 
 [玄人向け(professional)](./_professional/jsonLB.md)
 

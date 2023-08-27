@@ -47,4 +47,4 @@ name()
 実行するための関数
 
 ### テンプレートPython
-[\_template.py](/library/\_template.py)
+[\_template.py](../library/\_template.py)

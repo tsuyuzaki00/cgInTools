@@ -1,4 +1,6 @@
 # \_template
+- [ ] 編集中
+- [x] 編集済み
 
 [玄人向け(professional)](./_professional/_template.md)
 
@@ -77,32 +79,34 @@ None
 ---
 
 # class Class001
+
 ## Setting Function
 ### Class001.setSetting()
 Signature :  
 setSetting(variable)
 
 Parameters :  
-None
+variable - value  
 
 Returns :  
-None
+value
 
 Description :  
-
+クラス内変数に設定する関数
 
 ### Class001.addSetting()
 Signature :  
-addSetting()
+addSetting(variables)
 
 Parameters :  
-None
+variables - list  
 
 Returns :  
-None
+list
 
 Description :  
-
+クラス内変数に追加する関数  
+シーケンスを渡す事が多い
 
 ### Class001.currentSetting()
 Signature :  
@@ -112,10 +116,11 @@ Parameters :
 None
 
 Returns :  
-None
+value
 
 Description :  
-
+取得してクラン内変数に設定する関数  
+パラメータには何も入れない
 
 ### Class001.getSetting()
 Signature :  
@@ -125,10 +130,11 @@ Parameters :
 None
 
 Returns :  
-None
+value
 
 Description :  
-
+クラス内変数に設定している変数を返す関数  
+パラメータには何も入れない
 
 ## Public Function
 ### Class001.public()
@@ -137,13 +143,15 @@ setSetting()
 public() or public(variable)
 
 Parameters :  
-variable - bool
+variable - value  
 
 Returns :  
 None
 
 Description :  
-
+設定した変数を使用してアクションする際に使用する関数  
+set関数に設定していれば何も変数を入れずに実行し  
+無ければ変数を入れる必要がある
 
 ---
 
@@ -151,29 +159,30 @@ Description :
 ## Setting Function
 ### Class002.setSetting()
 Signature :  
-setSetting()
+setSetting(variable)
 
 Parameters :  
-None
+variable - value  
 
 Returns :  
-None
+value
 
 Description :  
-
+クラス内変数に設定する関数
 
 ### Class002.addSetting()
 Signature :  
-addSetting()
+addSetting(variables)
 
 Parameters :  
-None
+variables - list  
 
 Returns :  
-None
+list
 
 Description :  
-
+クラス内変数に追加する関数  
+シーケンスを渡す事が多い
 
 ### Class002.currentSetting()
 Signature :  
@@ -183,10 +192,11 @@ Parameters :
 None
 
 Returns :  
-None
+value
 
 Description :  
-
+取得してクラン内変数に設定する関数  
+パラメータには何も入れない
 
 ### Class002.getSetting()
 Signature :  
@@ -196,26 +206,28 @@ Parameters :
 None
 
 Returns :  
-None
+value
 
 Description :  
-
+クラス内変数に設定している変数を返す関数  
+パラメータには何も入れない
 
 ## Public Function
 ### Class002.public()
-
 Signature :  
-setSetting(variable)  
+setSetting()  
 public() or public(variable)
 
 Parameters :  
-None
+variable - value  
 
 Returns :  
 None
 
 Description :  
-
+設定した変数を使用してアクションする際に使用する関数  
+set関数に設定していれば何も変数を入れずに実行し  
+無ければ変数を入れる必要がある
 
 ---
 
@@ -231,7 +243,7 @@ Returns :
 None
 
 Description :  
-
+関数...以上
 
 ---
 

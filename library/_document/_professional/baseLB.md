@@ -1,213 +1,224 @@
 # baseLB
+- [ ] 編集中
+- [x] 編集済み
 
-[一般向け(person)](/library/_document/baseLB.md)
+[一般向け(person)](../baseLB.md)
 
 ## クラス一覧
-class : [SelfOrigin(object)](#selforigin) obsidian : [[#class SelfOrigin Page|SelfOrigin(object)]]
+class : [SelfOrigin(object)](#class-selforigin-page)
 
 ## 関数一覧
-
 None
 
 ## 変数一覧
-
 None
 
 ---
 
-<a id="selforigin"></a>
 # class SelfOrigin Page
+Inheritance :  
+object
 
-Inheritance : object
+import :  
+None
 
-import : [jsonLB](/library/_document/_professional/json.md)
-
-Summary : データを取得してアクションをするの指示が入っているクラス
+Summary :  
+データを取得してアクションをするの指示が入っているクラス
 
 ## Single Function
-
 None
 
 ## Multi Function
-
 None
 
 ## Inheritance Function
-
 None
 
 ## Private Function
-
 None
 
 ## Setting Function
-
-def : [setReadDict()](#selforiginselfreaddict) obsidian : [[#SelfOrigin.setReadDict()|setReadDict()]]
-
-def : [getReadDict()](#selforigingetreaddict) obsidian : [[#SelfOrigin.getReadDict()|getReadDict()]]
-
-def : [setDataChoices()](#selforiginsetdatachoices) obsidian : [[#SelfOrigin.setDataChoices()|setDataChoices()]]
-
-def : [addDataChoices()](#selforiginadddatachoices) obsidian : [[#SelfOrigin.addDataChoices()|addDataChoices()]]
-
-def : [getDataChoices()](#selforigingetdatachoices) obsidian : [[#SelfOrigin.getDataChoices()|getDataChoices()]]
-
-def : [setDoIts()](#selforiginsetdoIts) obsidian : [[#SelfOrigin.setDoIts()|setDoIts()]]
-
-def : [addDoIts()](#selforiginadddoits) obsidian : [[#SelfOrigin.addDoIts()|addDoIts()]]
-
-def : [getDoIts()](#selforigingetdoits) obsidian : [[#SelfOrigin.getDoIts()|getDoIts()]]
-
+def [setReadDict()](#selforiginsetreaddict)  
+def [getReadDict()](#selforigingetreaddict)  
+def [setDataChoices()](#selforiginsetdatachoices)  
+def [addDataChoices()](#selforiginadddatachoices)  
+def [getDataChoices()](#selforigingetdatachoices)  
+def [setDoIts()](#selforiginsetdoIts)  
+def [addDoIts()](#selforiginadddoits)  
+def [getDoIts()](#selforigingetdoits)  
 ## Public Function
-
-def : [writeDict()](#selforiginwritedict) obsidian : [[#SelfOrigin.writeDict()|writeDict()]]
-
-def : [readDict()](#selforiginreaddict) obsidian : [[#SelfOrigin.readDict()|readDict()]]
-
-def : [doIt()](#selforigindoit) obsidian : [[#SelfOrigin.doIt()|doIt()]]
+def : [writeDict()](#selforiginwritedict)  
+def : [readDict()](#selforiginreaddict)  
+def : [doIt()](#selforigindoit)  
 
 ---
 # class SelfOrigin
-
 ## Single Function
-
 None
 
 ## Multi Function
-
 None
 
 ## Inheritance Function
-
 None
 
 ## Private Function
-
 None
 
 ## Setting Function
 
-<a id="selforiginselfreaddict"></a>
 ### SelfOrigin.setReadDict()
+Signature :  
+setReadDict(variable)
 
-Signature : 
+Parameters :  
+variable - dict
 
-Parameters : 
+Returns :  
+dict
 
-Returns : None
+Description :  
+setting関数たちに組み込むためのdictを読み込む関数
 
-Description : 
-
-<a id="selforigingetreaddict"></a>
 ### SelfOrigin.getReadDict()
+Signature :  
+getReadDict()
 
-Signature : 
+Parameters :  
+None
 
-Parameters : 
+Returns :  
+dict
 
-Returns : None
+Description :  
+setting関数に設定するdictを返す関数
 
-Description : 
-
-<a id="selforiginsetdatachoices"></a>
 ### SelfOrigin.setDataChoices()
+Signature :  
+setDataChoices(variables)
 
-Signature : 
+Parameters :  
+variables - strings
 
-Parameters : 
+Returns :  
+strings
 
-Returns : None
+Description :  
+writeDict()を実行した際に書き出せるように設定する関数  
+writeDict()に書き出したいsetting関数のset,getを除いた文字列を入れる必要がある  
+例: setNode(),getNode()があった場合setDataChoices(["Node"])となる  
 
-Description : 
-
-<a id="selforiginadddatachoices"></a>
 ### SelfOrigin.addDataChoices()
+Signature :  
+addDataChoices(variables)
 
-Signature : 
+Parameters :  
+variables - strings
 
-Parameters : 
+Returns :  
+strings
 
-Returns : None
+Description :  
+writeDict()を実行した際に書き出せるように設定を追加する関数  
+writeDict()に書き出したいsetting関数のset,getを除いた文字列を入れる必要がある  
+例: setNode(),getNode()があった場合addDataChoices(["Node"])となる  
 
-Description : 
-
-<a id="selforigingetdatachoices"></a>
 ### SelfOrigin.getDataChoices()
+Signature :  
+getDataChoices()
 
-Signature : 
+Parameters :  
+None
 
-Parameters : 
+Returns :  
+strings
 
-Returns : None
+Description :  
+設定した書き出す予定のシーケンス文字列を返す関数
 
-Description : 
-
-<a id="selforiginsetdoits"></a>
 ### SelfOrigin.setDoIts()
+Signature :  
+setDoIts(variables)
 
-Signature : 
+Parameters :  
+variables - strings
 
-Parameters : 
+Returns :  
+strings
 
-Returns : None
+Description :  
+doIt()を実行した際に実行してほしいpublic関数名を設定する関数  
+例: read(),create()があった場合setDoIts(["read","create"])となる
 
-Description : 
-
-<a id="selforiginadddoits"></a>
 ### SelfOrigin.addDoIts()
+Signature :  
+addDoIts(variables)
 
-Signature : 
+Parameters :  
+variables - strings
 
-Parameters : 
+Returns :  
+strings
 
-Returns : None
+Description :  
+doIt()を実行した際に実行してほしいpublic関数名を設定に追加する関数  
+例: read(),create()があった場合addDoIts(["read","create"])となる
 
-Description : 
-
-<a id="selforigingetdoits"></a>
 ### SelfOrigin.getDoIts()
+Signature :  
+getDoIts()
 
-Signature : 
+Parameters :  
+None
 
-Parameters : 
+Returns :  
+strings
 
-Returns : None
-
-Description : 
+Description :  
+設定したpublic関数名のlistを返す関数
 
 ## Public Function
-<a id="selforiginwritedict"></a>
 ### SelfOrigin.writeDict()
+Signature :  
+[setDataChoices()](#selforiginsetdatachoices)  
+writeDict() or writeDict(dataChoices)
 
-Signature : 
+Parameters :  
+dataChoices - dict
 
-Parameters : 
+Returns :  
+dict
 
-Returns : None
+Description :  
+dataChoicesで設定したsetting関数をdictで返す関数
 
-Description : 
-
-<a id="selforiginreaddict"></a>
 ### SelfOrigin.readDict()
+Signature :  
+[setReadDict()](#selforiginsetreaddict)  
+readDict() or readDict(settingData)
 
-Signature : 
+Parameters :  
+settingData - dict
 
-Parameters : 
+Returns :  
+None
 
-Returns : None
+Description :  
+dictを使ってsetting関数たちに読み込ませる関数
 
-Description : 
-
-<a id="selforigindoit"></a>
 ### SelfOrigin.doIt()
+Signature :  
+[setDoIts](#selforiginsetdoits)  
+doIt() or doIt(doIts)
 
-Signature : 
+Parameters :  
+doIts - strings
 
-Parameters : 
+Returns :  
+None
 
-Returns : None
-
-Description : 
+Description :  
+doItsで設定したpublic関数を順番に実行する関数
 
 ---
 
