@@ -1,21 +1,16 @@
 # Maya
+- [x] 編集中
+- [ ] 編集済み
 
 3DCGツールMayaで使用するスクリプトフォルダ
 ## もくじ
+[__defSetProject](../_document/__defSetProject.md)  
+[_setting](./_settings/README.md)  
+[execute](./execute/README.md)  
+[library](./library/README.md)  
+[manager](./manager/README.md)  
+[option](./option/README.md)  
+[setup](./setup/README.md)  
 
-[__defSetProject](/document/__defSetProject.md)
-
-[data](/maya/data/README.md)
-
-[execute](/maya/execute/README.md)
-
-[library](/maya/library/README.md)
-
-[manager](/maya/manager/README.md)
-
-[option](/maya/option/README.md)
-
-[setup](/maya/setup/README.md)
-
-## げんり
-
+---
+[back](../README.md)
