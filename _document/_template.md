@@ -18,14 +18,14 @@ None
 ---
 
 # class Class001 Page
-Inheritance :  
+>Inheritance :  
 継承しているものを書く無い場合はobjectと書く
 
-import :  
+>import :  
 インポートで使用している専用ライブラリのみ書く  
 [\_template](_template.md)
 
-Summary :  
+>Summary :  
 Class001のざっくりした内容を書く
 
 ## Setting Function
@@ -40,14 +40,14 @@ def [public()](#class001public)
 ---
 
 # class Class002 Page
-Inheritance :  
+>Inheritance :  
 継承しているものを書く無い場合はobjectと書く
 
-import :  
+>import :  
 インポートで使用している専用ライブラリのみ書く  
 [\_template](_template.md)
 
-Summary :  
+>Summary :  
 Class002のざっくりした内容を書く  
 
 ## Setting Function
@@ -61,13 +61,13 @@ def [public()](#class002public)
 
 ---
 # class Class003 Page
-Inheritance :  
+>Inheritance :  
 object
 
-import :  
+>import :  
 None
 
-Summary :  
+>Summary :  
 とくになし
 
 ## Setting Function
@@ -82,73 +82,73 @@ None
 
 ## Setting Function
 ### Class001.setSetting()
-Signature :  
+>Signature :  
 setSetting(variable)
 
-Parameters :  
+>Parameters :  
 variable - value  
 
-Returns :  
+>Returns :  
 value
 
-Description :  
+>Description :  
 クラス内変数に設定する関数
 
 ### Class001.addSetting()
-Signature :  
+>Signature :  
 addSetting(variables)
 
-Parameters :  
+>Parameters :  
 variables - list  
 
-Returns :  
+>Returns :  
 list
 
-Description :  
+>Description :  
 クラス内変数に追加する関数  
 シーケンスを渡す事が多い
 
 ### Class001.currentSetting()
-Signature :  
+>Signature :  
 currentSetting()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 value
 
-Description :  
+>Description :  
 取得してクラン内変数に設定する関数  
 パラメータには何も入れない
 
 ### Class001.getSetting()
-Signature :  
+>Signature :  
 getSetting()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 value
 
-Description :  
+>Description :  
 クラス内変数に設定している変数を返す関数  
 パラメータには何も入れない
 
 ## Public Function
 ### Class001.public()
-Signature :  
+>Signature :  
 setSetting()  
 public() or public(variable)
 
-Parameters :  
+>Parameters :  
 variable - value  
 
-Returns :  
+>Returns :  
 None
 
-Description :  
+>Description :  
 設定した変数を使用してアクションする際に使用する関数  
 set関数に設定していれば何も変数を入れずに実行し  
 無ければ変数を入れる必要がある
@@ -158,73 +158,73 @@ set関数に設定していれば何も変数を入れずに実行し
 # class Class002
 ## Setting Function
 ### Class002.setSetting()
-Signature :  
+>Signature :  
 setSetting(variable)
 
-Parameters :  
+>Parameters :  
 variable - value  
 
-Returns :  
+>Returns :  
 value
 
-Description :  
+>Description :  
 クラス内変数に設定する関数
 
 ### Class002.addSetting()
-Signature :  
+>Signature :  
 addSetting(variables)
 
-Parameters :  
+>Parameters :  
 variables - list  
 
-Returns :  
+>Returns :  
 list
 
-Description :  
+>Description :  
 クラス内変数に追加する関数  
 シーケンスを渡す事が多い
 
 ### Class002.currentSetting()
-Signature :  
+>Signature :  
 currentSetting()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 value
 
-Description :  
+>Description :  
 取得してクラン内変数に設定する関数  
 パラメータには何も入れない
 
 ### Class002.getSetting()
-Signature :  
+>Signature :  
 getSetting()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 value
 
-Description :  
+>Description :  
 クラス内変数に設定している変数を返す関数  
 パラメータには何も入れない
 
 ## Public Function
 ### Class002.public()
-Signature :  
+>Signature :  
 setSetting()  
 public() or public(variable)
 
-Parameters :  
+>Parameters :  
 variable - value  
 
-Returns :  
+>Returns :  
 None
 
-Description :  
+>Description :  
 設定した変数を使用してアクションする際に使用する関数  
 set関数に設定していれば何も変数を入れずに実行し  
 無ければ変数を入れる必要がある
@@ -233,16 +233,16 @@ set関数に設定していれば何も変数を入れずに実行し
 
 # Functions
 ### def functionOnly()
-Signature :  
+>Signature :  
 functionOnly()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 None
 
-Description :  
+>Description :  
 関数...以上
 
 ---
@@ -251,3 +251,4 @@ Description :
 None
 
 ---
+[back](README.md) [Top](#_template)

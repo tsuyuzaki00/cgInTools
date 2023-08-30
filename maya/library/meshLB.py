@@ -26,11 +26,13 @@ class Polygon(object):
         return polygonCounts
     
     def pointID_query_ints(self,polygons):
-        #pointIDs=[]
-        #for polygon in polygons:
-        #    for point in polygon:
-        #        id_int=point.getID()
-        #        pointIDs.append(id_int)
+        """
+        pointIDs=[]
+        for polygon in polygons:
+            for point in polygon:
+                id_int=point.getID()
+                pointIDs.append(id_int)
+        """
         pointIDs=[point.getID() for polygon in polygons for point in polygon]
         return pointIDs
 

@@ -1,4 +1,6 @@
 # Maya Library
+- [x] 編集中
+- [ ] 編集済み
 
 よく使う関数をまとめているファイル群
 
@@ -57,3 +59,6 @@
 ### Base object class
 
 [setBaseLB](/maya/library/_document/setBaseLB.md)
+
+---
+[back](../README.md)

@@ -1,5 +1,6 @@
 # \_\_init\_\_
-
+- [x] 編集中
+- [ ] 編集済み
 
 ## Functions
 
@@ -64,3 +65,6 @@ Documents :  python2,3どちらでもreloadができる関数
 ### blenderOption_dir = .../cgInTools/blender/option/
 
 ### blenderSetup_dir = .../cgInTools/blender/setup/
+
+---
+[back](../README.md)

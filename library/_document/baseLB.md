@@ -16,13 +16,13 @@ None
 ---
 
 # class SelfOrigin Page
-Inheritance :  
+>Inheritance :  
 object
 
-import :  
+>import :  
 None
 
-Summary :  
+>Summary :  
 データを取得してアクションをするの指示が入っているクラス
 
 ## Setting Function
@@ -35,164 +35,164 @@ def [setDoIts()](#selforiginsetdoIts)
 def [addDoIts()](#selforiginadddoits)  
 def [getDoIts()](#selforigingetdoits)  
 ## Public Function
-def : [writeDict()](#selforiginwritedict)  
-def : [readDict()](#selforiginreaddict)  
-def : [doIt()](#selforigindoit)  
+def [writeDict()](#selforiginwritedict)  
+def [readDict()](#selforiginreaddict)  
+def [doIt()](#selforigindoit)  
 
 ---
 # class SelfOrigin
 ## Setting Function
 ### SelfOrigin.setReadDict()
-Signature :  
+>Signature :  
 setReadDict(variable)
 
-Parameters :  
+>Parameters :  
 variable - dict
 
-Returns :  
+>Returns :  
 dict
 
-Description :  
+>Description :  
 setting関数たちに組み込むためのdictを読み込む関数
 
 ### SelfOrigin.getReadDict()
-Signature :  
+>Signature :  
 getReadDict()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 dict
 
-Description :  
+>Description :  
 setting関数に設定するdictを返す関数
 
 ### SelfOrigin.setDataChoices()
-Signature :  
+>Signature :  
 setDataChoices(variables)
 
-Parameters :  
+>Parameters :  
 variables - strings
 
-Returns :  
+>Returns :  
 strings
 
-Description :  
+>Description :  
 writeDict()を実行した際に書き出せるように設定する関数  
 writeDict()に書き出したいsetting関数のset,getを除いた文字列を入れる必要がある  
 例: setNode(),getNode()があった場合setDataChoices(["Node"])となる  
 
 ### SelfOrigin.addDataChoices()
-Signature :  
+>Signature :  
 addDataChoices(variables)
 
-Parameters :  
+>Parameters :  
 variables - strings
 
-Returns :  
+>Returns :  
 strings
 
-Description :  
+>Description :  
 writeDict()を実行した際に書き出せるように設定を追加する関数  
 writeDict()に書き出したいsetting関数のset,getを除いた文字列を入れる必要がある  
 例: setNode(),getNode()があった場合addDataChoices(["Node"])となる  
 
 ### SelfOrigin.getDataChoices()
-Signature :  
+>Signature :  
 getDataChoices()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 strings
 
-Description :  
+>Description :  
 設定した書き出す予定のシーケンス文字列を返す関数
 
 ### SelfOrigin.setDoIts()
-Signature :  
+>Signature :  
 setDoIts(variables)
 
-Parameters :  
+>Parameters :  
 variables - strings
 
-Returns :  
+>Returns :  
 strings
 
-Description :  
+>Description :  
 doIt()を実行した際に実行してほしいpublic関数名を設定する関数  
 例: read(),create()があった場合setDoIts(["read","create"])となる
 
 ### SelfOrigin.addDoIts()
-Signature :  
+>Signature :  
 addDoIts(variables)
 
-Parameters :  
+>Parameters :  
 variables - strings
 
-Returns :  
+>Returns :  
 strings
 
-Description :  
+>Description :  
 doIt()を実行した際に実行してほしいpublic関数名を設定に追加する関数  
 例: read(),create()があった場合addDoIts(["read","create"])となる
 
 ### SelfOrigin.getDoIts()
-Signature :  
+>Signature :  
 getDoIts()
 
-Parameters :  
+>Parameters :  
 None
 
-Returns :  
+>Returns :  
 strings
 
-Description :  
+>Description :  
 設定したpublic関数名のlistを返す関数
 
 ## Public Function
 ### SelfOrigin.writeDict()
-Signature :  
+>Signature :  
 [setDataChoices()](#selforiginsetdatachoices)  
 writeDict() or writeDict(dataChoices)
 
-Parameters :  
+>Parameters :  
 dataChoices - dict
 
-Returns :  
+>Returns :  
 dict
 
-Description :  
+>Description :  
 dataChoicesで設定したsetting関数をdictで返す関数
 
 ### SelfOrigin.readDict()
-Signature :  
+>Signature :  
 [setReadDict()](#selforiginsetreaddict)  
 readDict() or readDict(settingData)
 
-Parameters :  
+>Parameters :  
 settingData - dict
 
-Returns :  
+>Returns :  
 None
 
-Description :  
+>Description :  
 dictを使ってsetting関数たちに読み込ませる関数
 
 ### SelfOrigin.doIt()
-Signature :  
+>Signature :  
 [setDoIts](#selforiginsetdoits)  
 doIt() or doIt(doIts)
 
-Parameters :  
+>Parameters :  
 doIts - strings
 
-Returns :  
+>Returns :  
 None
 
-Description :  
+>Description :  
 doItsで設定したpublic関数を順番に実行する関数
 
 ---

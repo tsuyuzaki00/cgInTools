@@ -26,8 +26,6 @@ class Point(om2.MPoint):
         else:
             return False
 
-def getPoints_query_list():
-    pass
 
 def setTargetPos_edit_obj(source,target):
     cmds.parent(source,target)
