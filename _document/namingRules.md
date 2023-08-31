@@ -47,9 +47,9 @@ check 問題ないか調べる際のモード
             * froat 小数点ありの数字  
     * string 文字列  
         * attr アトリビュート名  
-        * dir ディレクトリ名  
         * ext 拡張子名  
         * path パス名  
+            * dir ディレクトリ名  
         * unicode UNIシステムの文字列  
             * node ノード名  
             * obj 3DCGのオブジェクト名  

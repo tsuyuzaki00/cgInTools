@@ -5,127 +5,78 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
 import cgInTools as cit
-from . import setBaseLB as sbLB
+from cgInTools.library import jsonLB as jLB
+from cgInTools.library import pathLB as pLB
 from . import cleanLB as cLB
-from . import checkLB as chLB
-from . import jsonLB as jLB
-cit.reloads([sbLB,cLB,chLB,jLB])
+cit.reloads([jLB,pLB,cLB])
 
-RULE_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
+RULE_DICT=jLB.readJson(cit.mayaSettings_dir,"library")
 PROJECTFOLDER=cit.mayaDefSetProject_dir
-
-class Path(sbLB.BasePath):
-    def __init__(self):
-        super(Path,self).__init__()
-        scene=cmds.file(q=True,sceneName=True).split("/")[-1]
-        self._file=scene.split(".")[0]
-        self._extension=scene.split(".")[1]
-
-    def __str__(self):
-        pass
-
-    def __loading(self):
-        self._path=os.path.normpath(self._path)
-
-    #Public Function
-    def clean(self):
-        self.__loading()
-
-    def getSplitPathOfIndex(self):
-        norm_path=os.path.normpath(self._path)
-        split_str=norm_path.split("\\")[self._index]
-        return split_str
-
-    def getSplitNameOfIndex(self):
-        split_str=self._name.split(self._split)[self._index]
-        return split_str
-
 class Project():
     def __init__(self):
         self._defSetProjectFolder=PROJECTFOLDER
-        
-        self._absoluteDirectory=None
-        self._relativeDirectory=None
-        self._projectName="_newProject"
+        self._project_Path=pLB.Path()
     
     def __str__(self):
-        projectDirectory=self.projectDirectory_create_str(self._absoluteDirectory,self._relativeDirectory,self._projectName)
-        return projectDirectory
+        project_dir=self._project_Path.queryDirectory()
+        return project_dir
 
     #Single Function
-    def projectDirectory_create_str(self,absoluteDirectory,relativeDirectory,projectName):
-        if absoluteDirectory is None:
-            absoluteDirectory="D:"
-        if relativeDirectory is None:
-            relativeDirectory=""
-        projectDirectory=os.path.join(absoluteDirectory,relativeDirectory,projectName)
-        return projectDirectory
-
-    def setProject_edit_str(self,projectDirectory,create=False):
+    def setProject_edit_str(self,project_dir,create=False):
         if create:
-            shutil.copytree(self._defSetProjectFolder,projectDirectory)
-        cmds.workspace(projectDirectory,o=True)
-        projectDirectory=cmds.workspace(q=True,rd=True)
-        return projectDirectory
-
-    def isPath_check_str(self,path):
-        boolean=os.path.isdir(path)
-        if boolean:
-            return path
-        else :
-            cmds.error(path+" path does not exist.")
+            shutil.copytree(self._defSetProjectFolder,project_dir)
+        cmds.workspace(project_dir,o=True)
+        project_dir=cmds.workspace(q=True,rd=True)
+        return project_dir
 
     #Setting Function
+    def setDirectory(self,variable):
+        _directory_dir=self._project_Path.setAbsoluteDirectory(variable)
+        return _directory_dir
+    def currentDirectory(self):
+        project_dir=cmds.workspace(q=True,rd=True)
+        absoluteDirectorys=project_dir.split("/")[:-2]
+        absolute_dir=os.path.join(*absoluteDirectorys)
+        _directory_dir=self._project_Path.setAbsoluteDirectory(absolute_dir)
+        return _directory_dir
     def getDirectory(self):
-        if self._absoluteDirectory is None:
-            absoluteDirectory="D:"
-        else:
-            absoluteDirectory=self._absoluteDirectory
-        if self._relativeDirectory is None:
-            relativeDirectory=""
-        else:
-            relativeDirectory=self._relativeDirectory
-        directory=os.path.join(absoluteDirectory,relativeDirectory)
-        return directory
-
-    def setAbsoluteDirectory(self,variable):
-        self._absoluteDirectory=variable
-        return self._absoluteDirectory
-    def getAbsoluteDirectory(self):
-        return self._absoluteDirectory
+        return self._project_Path.getAbsoluteDirectory()
     
-    def setRelativeDirectory(self,variable):
-        self._relativeDirectory=variable
-        return self._relativeDirectory
-    def getRelativeDirectory(self):
-        return self._relativeDirectory
-
     def setProjectName(self,variable):
-        self._projectName=variable
-        return self._projectName
+        _projectName_str=self._project_Path.setRelativeDirectory(variable)
+        return _projectName_str
+    def currentProjectName(self):
+        project_dir=cmds.workspace(q=True,rd=True)
+        projectName_str=project_dir.split("/")[-2]
+        projectName_str=self._project_Path.setRelativeDirectory(projectName_str)
+        return projectName_str
     def getProjectName(self):
-        return self._projectName
+        return self._project_Path.getRelativeDirectory()
 
     #Public Function
-    def createProject(self,absoluteDirectory=None,relativeDirectory=None,projectName=None):
-        _absoluteDirectory=absoluteDirectory or self._absoluteDirectory
-        _relativeDirectory=relativeDirectory or self._relativeDirectory
-        _projectName=projectName or self._projectName
+    def createProject(self,directory=None,name=None):
+        if not directory is None:
+            self._project_Path.setAbsoluteDirectory(directory)
+        if not name is None:
+            self._project_Path.setRelativeDirectory(name)
 
-        #self._isPathAndSamePath_check_func(self._path,self._projectName)
-        projectDirectory=self.projectDirectory_create_str(_absoluteDirectory,_relativeDirectory,_projectName)
-        workDirectory=self.setProject_edit_str(projectDirectory,create=True)
-        return workDirectory
+        project_dir=self._project_Path.queryDirectory()
+        workSpace_dir=self.setProject_edit_str(project_dir,create=True)
+        return workSpace_dir
 
-    def editProject(self,absoluteDirectory=None,relativeDirectory=None,projectName=None):
-        _absoluteDirectory=absoluteDirectory or self._absoluteDirectory
-        _relativeDirectory=relativeDirectory or self._relativeDirectory
-        _projectName=projectName or self._projectName
+    def editProject(self,directory=None,name=None):
+        if not directory is None:
+            self._project_Path.setAbsoluteDirectory(directory)
+        if not name is None:
+            self._project_Path.setRelativeDirectory(name)
         
-        #self._isPathAndSamePath_check_func(self._path,self._projectName)
-        projectDirectory=self.projectDirectory_create_str(_absoluteDirectory,_relativeDirectory,_projectName)
-        workDirectory=self.setProject_edit_str(projectDirectory)
-        return workDirectory
+        project_dir=self._project_Path.queryDirectory()
+        workSpace_dir=self.setProject_edit_str(project_dir)
+        return workSpace_dir
+
+    def queryProject(self):
+        project_dir=self._project_Path.queryDirectory()
+        return project_dir
  
 class File():
     def __init__(self):
