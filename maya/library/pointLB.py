@@ -5,15 +5,41 @@ import maya.api.OpenMaya as om2
 class Point(om2.MPoint):
     def __init__(self,*points):
         super(Point,self).__init__(*points)
-        self._point_list3=None
+        #self.x
+        #self.y
+        #self.z
+        #self.w
         self._id_int=None
+
+    def __repr__(self):
+        MPoints=[self.x,self.y,self.z,self.w]
+        return MPoints
 
     #Setting Function
     def setPosition(self,variables):
-        self._point_list3=variables
-        return self._point_list3
+        length_int=len(variables)
+        if length_int >= 2:
+            self.x=variables[0]
+            self.y=variables[1]
+        else:
+            self.x=0.0
+            self.y=0.0
+
+        if length_int >= 3:
+            self.z=variables[2]
+        else:
+            self.z=0.0
+
+        if length_int >= 4:
+            self.w=variables[3]
+        else:
+            self.w=1.0
+
+        MPoints=[self.x,self.y,self.z,self.w]
+        return MPoints
     def getPosition(self):
-        return self._point_list3
+        MPoints=[self.x,self.y,self.z,self.w]
+        return MPoints
 
     def setID(self,variable):
         self._id_int=variable
