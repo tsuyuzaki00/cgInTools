@@ -18,7 +18,7 @@ class Path(object):
         absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
         return absolutePath_path
 
-    def __rshift__(self,move_path):
+    def __rshift__(self,variable):
         _absolute_dir=self._absolute_dir or ""
         _relative_dir=self._relative_dir or ""
         _file_str=self._file_str or ""
@@ -26,9 +26,9 @@ class Path(object):
 
         mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
         absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
-        shutil.move(absolutePath_path,str(move_path))
+        shutil.move(absolutePath_path,str(variable))
 
-    def __irshift__(self,paste_path):
+    def __irshift__(self,variable):
         _absolute_dir=self._absolute_dir or ""
         _relative_dir=self._relative_dir or ""
         _file_str=self._file_str or ""
@@ -36,9 +36,9 @@ class Path(object):
 
         mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
         absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
-        shutil.copy2(absolutePath_path,str(paste_path))
+        shutil.copy2(absolutePath_path,str(variable))
 
-    def __lshift__(self,move_path):
+    def __lshift__(self,variable):
         _absolute_dir=self._absolute_dir or ""
         _relative_dir=self._relative_dir or ""
         _file_str=self._file_str or ""
@@ -46,9 +46,9 @@ class Path(object):
 
         mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
         absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
-        shutil.move(str(move_path),absolutePath_path)
+        shutil.move(str(variable),absolutePath_path)
     
-    def __ilshift__(self,copy_path):
+    def __ilshift__(self,variable):
         _absolute_dir=self._absolute_dir or ""
         _relative_dir=self._relative_dir or ""
         _file_str=self._file_str or ""
@@ -56,7 +56,7 @@ class Path(object):
 
         mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
         absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
-        shutil.copy2(str(copy_path),absolutePath_path)
+        shutil.copy2(str(variable),absolutePath_path)
 
     #Single Function
     def mergeDirectory_create_dir(self,upperDirectory_dir,lowerDirectory_dir):
@@ -87,7 +87,7 @@ class Path(object):
         self._relative_dir=variable
         return self._relative_dir
     def addRelativeDirectory(self,variable):
-        self._relative_dir=mergeDirectory_create_dir(self._relative_dir,variable)
+        self._relative_dir=self.mergeDirectory_create_dir(self._relative_dir,variable)
         return self._relative_dir
     def getRelativeDirectory(self):
         return self._relative_dir

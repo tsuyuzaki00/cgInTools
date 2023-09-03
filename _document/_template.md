@@ -1,6 +1,6 @@
 # \_template
-- [ ] 編集中
-- [x] 編集済み
+- [x] 編集中
+- [ ] 編集済み
 
 [玄人向け(professional)](./_professional/_template.md)
 

@@ -1,6 +1,6 @@
 # baseLB
-- [ ] 編集中
-- [x] 編集済み
+- [x] 編集中
+- [ ] 編集済み
 
 [一般向け(person)](../baseLB.md)
 
@@ -24,6 +24,9 @@ None
 
 >Summary :  
 データを取得してアクションをするの指示が入っているクラス
+
+## Special Function
+def [\_\_init\_\_()](#selforigin__init__)
 
 ## Single Function
 None
@@ -53,6 +56,26 @@ def [doIt()](#selforigindoit)
 
 ---
 # class SelfOrigin
+## Special Function
+### SelfOrigin.\_\_init\_\_()
+>Signature :  
+instance=SelfOrigin()  
+\_absolute_dir=None  
+\_relative_dir=None  
+\_file_str=None  
+\_extension_ext=None  
+
+>Parameters :  
+None
+
+>Returns :  
+None
+
+>Description :  
+\_absolute_dir - 絶対ディレクトリをもつ変数  
+\_relative_dir - 相対ディレクトリをもつ変数  
+\_file_str - ファイル名をもつ変数  
+
 ## Single Function
 None
 
@@ -66,7 +89,6 @@ None
 None
 
 ## Setting Function
-
 ### SelfOrigin.setReadDict()
 >Signature :  
 setReadDict(variable)

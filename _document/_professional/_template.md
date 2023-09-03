@@ -1,6 +1,6 @@
 # \_template
-- [ ] 編集中
-- [x] 編集済み
+- [x] 編集中
+- [ ] 編集済み
 
 [一般向け(person)](../_template.md)
 
@@ -27,6 +27,9 @@ None
 
 >Summary :  
 Class001のざっくりした内容を書く
+
+## Special Function
+def [\_\_init\_\_()](#class001__init__)
 
 ## Single Function
 def [single_mode_func()](#class001single_mode_func)  
@@ -62,6 +65,8 @@ def [public()](#class001public)
 >Summary :  
 Class002のざっくりした内容を書く  
 
+## Special Function
+def [\_\_init\_\_()](#class002__init__)
 ## Single Function
 def [single_mode_func()](#class002single_mode_func)  
 
@@ -94,6 +99,8 @@ None
 >Summary :  
 とくになし
 
+## Special Function
+None
 ## Single Function
 None
 
@@ -115,6 +122,20 @@ None
 ---
 
 # class Class001
+## Special Function
+### Class001.\_\_init\_\_()
+>Signature :  
+instance=Class001()  
+\_localVariable_value=None  
+
+>Parameters :  
+None
+
+>Returns :  
+None
+
+>Description :  
+\_localVariable_value - 変数の説明を書く  
 ## Single Function
 ### Class001.single_mode_func()
 >Signature :  
@@ -246,6 +267,20 @@ set関数に設定していれば何も変数を入れずに実行し
 ---
 
 # class Class002
+## Special Function
+### Class002.\_\_init\_\_()
+>Signature :  
+instance=Class002()  
+\_localVariable_value=None  
+
+>Parameters :  
+None
+
+>Returns :  
+None
+
+>Description :  
+\_localVariable_value - 変数の説明を書く  
 ## Single Function
 ### Class002.single_mode_func()
 >Signature :  
