@@ -51,3 +51,22 @@ def splineIKJoints_create_dict(self,joints,renameType="jnt"):
 def setMultMatrix(node,matrixAttr,mumx,num):
     node_matrix=cmds.getAttr(node+"."+matrixAttr)
     cmds.setAttr(mumx+".matrixIn["+str(num)+"]",node_matrix,type="matrix")
+
+def allDisConnectAttr(node):
+    node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
+    node_MObject=node_MSelectionList.getDependNode(0)
+    node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+    node_MPlugArray=node_MFnDependencyNode.getConnections()
+    for node_MPlug in node_MPlugArray:
+        if node_MPlug.isConnected:
+            source_MPlugArray=node_MPlug.connectedTo(True,False)
+            for source_MPlug in source_MPlugArray:
+                source_MDGModifier=om2.MDGModifier()
+                source_MDGModifier.disconnect(source_MPlug,node_MPlug)
+                source_MDGModifier.doIt()
+            
+            target_MPlugArray=node_MPlug.connectedTo(False,True)
+            for target_MPlug in target_MPlugArray:
+                target_MDGModifier=om2.MDGModifier()
+                target_MDGModifier.disconnect(node_MPlug,target_MPlug)
+                target_MDGModifier.doIt()

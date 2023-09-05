@@ -10,72 +10,14 @@ cit.reloads([jLB])
 
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
 
-class SelfOrigin(object):
-    def __init__(self):
-        self._nodeTypeToMFn_dict=RULES_DICT["nodeTypeToMFn_dict"]
-        self._read_dict={}
-        self._setChoices=["DoIts"]
-        self._doIts=[]
-    
-    #Setting Function
-    def setReadDict(self,variable):
-        self._read_dict=variable
-    def getReadDict(self):
-        return self._read_dict
-    
-    def setSetChoices(self,variables):
-        self._setChoices=variables
-    def addSetChoices(self,variables):
-        self._setChoices+=variables
-    def getSetChoices(self):
-        return self._setChoices
-    
-    def setDoIts(self,variables):
-        self._doIts=variables
-    def addDoIts(self,variables):
-        self._doIts+=variables
-    def getDoIts(self):
-        return self._doIts
-    
-    #Public Function
-    def writeDict(self,setChoices=None):
-        _setChoices=setChoices or self._setChoices
-
-        write_dict={}
-        for _selfChoice in _setChoices:
-            variable=eval('self.get'+_selfChoice+'()')
-            write_dict[_selfChoice]=variable
-        return write_dict
-
-    def readDict(self,read_dict=None):
-        _read_dict=read_dict or self._read_dict
-
-        setFunctions=list(_read_dict.keys())
-        for setFunction in setFunctions:
-            if _read_dict.get(setFunction) is None:
-                continue
-            elif isinstance(_read_dict[setFunction],str):
-                variable='"'+_read_dict.get(setFunction)+'"'
-            else:
-                variable=str(_read_dict[setFunction])
-            eval('self.set'+setFunction+'('+variable+')')
-
-    def doIt(self,doIts=None):
-        _doIts=doIts or self._doIts
-
-        if _doIts == None:
-            return
-        else:
-            for _doIt in _doIts:
-                eval("self."+_doIt+"()")
-
-class SelfNode(SelfOrigin):
+class Node(object):
     def __init__(self):
         super(SelfNode,self).__init__()
+        self._nodeName_str=None
+        self._attrName_str=None
+        self._value_value=None
         self._node_MObject=None
-        self._attr_str=None
-        self._value=None
-        self._valueType="double"
+        self._valueType_str_str="double"
         self._setChoices+=[
             "Node",
             "Attr",
@@ -140,6 +82,12 @@ class SelfNode(SelfOrigin):
             pass
     
     #Setting Function
+    def setNodeName(self,variable):
+        self._nodeName_str=variable
+        return self._nodeName_str
+    def getNodeName(self):
+        return self._nodeName_str
+
     def setNode(self,variable):
         self._node_MObject=self.selectNode_create_MObject(variable)
     def getNode(self):
@@ -147,20 +95,21 @@ class SelfNode(SelfOrigin):
         name_str=node_MFnDependencyNode.name()
         return name_str
 
-    def setAttr(self,variable):
-        self._attr_str=variable
+    def setAttrName(self,variable):
+        self._attrName_str=variable
+        return self._attrName_str
     def getAttr(self):
-        return self._attr_str
+        return self._attrName_str
 
     def setValue(self,variable):
-        self._value=variable
+        self._value_value=variable
     def getValue(self):
-        return self._value
+        return self._value_value
     
     def setValueType(self,variable):
-        self._valueType=variable
+        self._valueType_str=variable
     def getValueType(self):
-        return self._valueType
+        return self._valueType_str
     
     #Public Function
     def editAttr(self,node=None,attr=None,value=None):
@@ -174,10 +123,10 @@ class SelfNode(SelfOrigin):
     def queryAttr(self,node=None,attr=None,valueType=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _attr_str=attr or self._attr_str
-        _valueType=valueType or self._valueType
+        _valueType_str=valueType or self._valueType_str
         if not _attr_str == None:
             node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
-            value=self.queryAttr_query_value(node_MPlug,_valueType)
+            value=self.queryAttr_query_value(node_MPlug,_valueType_str)
             return value
         
     def queryNodeType(self,node=None):

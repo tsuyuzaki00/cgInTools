@@ -55,8 +55,7 @@
               }
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "vertical"
@@ -102,7 +101,8 @@
               "state": {}
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -122,7 +122,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md",
+                "file": "_document/_template.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -139,7 +139,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md",
+                "file": "_document/_template.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -162,7 +162,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "library/_document/_professional/jsonLB.md"
+                "file": "_document/_template.md"
               }
             }
           }
@@ -183,26 +183,32 @@
       "command-palette:コマンドパレットを開く": false
     }
   },
-  "active": "cbb0365a5dfbbc8c",
+  "active": "622fc8e9cab5cd62",
   "lastOpenFiles": [
-    "_document/_professional/_template.md",
+    "library/_document/pathLB.md",
+    "library/_document/_professional/pathLB.md",
+    "library/baseLB.pyc",
+    "maya/library/nodeLB.py",
+    "maya/__defSetProject/scripts/cgInToolsData",
+    "maya/__defSetProject/scripts/cgInTools",
+    "library/__pycache__/pathLB.cpython-37.pyc",
+    "library/pathLB.py",
     "library/_document/_professional/baseLB.md",
     "library/_document/_professional/jsonLB.md",
+    "blender/library/_document/_professional/objectLB.md",
+    "blender/library/_document/_professional",
+    "blender/library/_document/objectLB.md",
+    "blender/library/_document",
+    "blender/library/README.md",
+    "blender/README.md",
+    "_document/_professional/_template.md",
     "_document/_template.md",
     "maya/library/__pycache__/pointLB.cpython-37.pyc",
     "maya/library/__pycache__/meshLB.cpython-37.pyc",
     "library/_document/baseLB.md",
-    "_document/_professional",
     "_settings/_document/title.md",
     "library/_document/jsonLB.md",
     "library/_document/_professional/json.md",
-    "maya/writeRun/__pycache__/_execute.cpython-37.pyc",
-    "maya/writeRun/_execute.py",
-    "maya/writeRun/__pycache__/execute.cpython-37.pyc",
-    "maya/writeRun/execute.py",
-    "maya/writeRun/__pycache__/__init__.cpython-37.pyc",
-    "maya/writeRun/__pycache__",
-    "maya/writeRun/__init__.py",
     "_document/namingRules.md",
     "_document/languageDefinition.md",
     "_document/init.md",
@@ -215,11 +221,6 @@
     "maya/library/_document/_professional/pointLB.md",
     "maya/library/_document/_professional/matrixLB.md",
     "maya/library/_document/transformLB.md",
-    "maya/library/_document/pointLB copy.md",
-    "maya/library/_document/matrixLB.md",
-    "maya/library/_document/jsonLB.md",
-    "maya/library/_document/_professional/objectLB.md",
-    "maya/library/_document/objectLB.md",
     "_document/canvas/importStructure.canvas",
     "_document/image/importStructure.png"
   ]
