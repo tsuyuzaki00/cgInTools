@@ -5,63 +5,63 @@ cit.reloads([jLB])
 
 class SelfOrigin(object):
     def __init__(self):
-        self._read_dict={}
-        self._dataChoices=["DoIts"]
-        self._doIts=[]
+        self._data_dict={}
+        self._dataChoice_strs=["DoIts"]
+        self._doIt_strs=[]
     
     #Setting Function
-    def setReadDict(self,variable):
-        self._read_dict=variable
-        return self._read_dict
-    def getReadDict(self):
-        return self._read_dict
+    def setDataDict(self,variable):
+        self._data_dict=variable
+        return self._data_dict
+    def getDataDict(self):
+        return self._data_dict
     
     def setDataChoices(self,variables):
-        self._dataChoices=variables
-        return self._dataChoices
+        self._dataChoice_strs=variables
+        return self._dataChoice_strs
     def addDataChoices(self,variables):
-        self._dataChoices+=variables
-        return self._dataChoices
+        self._dataChoice_strs+=variables
+        return self._dataChoice_strs
     def getDataChoices(self):
-        return self._dataChoices
+        return self._dataChoice_strs
     
     def setDoIts(self,variables):
-        self._doIts=variables
-        return self._doIts
+        self._doIt_strs=variables
+        return self._doIt_strs
     def addDoIts(self,variables):
-        self._doIts+=variables
-        return self._doIts
+        self._doIt_strs+=variables
+        return self._doIt_strs
     def getDoIts(self):
-        return self._doIts
+        return self._doIt_strs
     
     #Public Function
-    def writeDict(self,dataChoices=None):
-        _dataChoices=dataChoices or self._dataChoices
+    def writeData(self,dataChoices=None):
+        _dataChoice_strs=dataChoices or self._dataChoice_strs
 
         write_dict={}
-        for _selfChoice in _dataChoices:
+        for _selfChoice in _dataChoice_strs:
             variable=eval('self.get'+_selfChoice+'()')
             write_dict[_selfChoice]=variable
         return write_dict
 
-    def readDict(self,settingData=None):
-        _read_dict=settingData or self._read_dict
+    def readData(self,settingData=None):
+        _data_dict=settingData or self._data_dict
 
-        setFunctions=list(_read_dict.keys())
+        setFunctions=list(_data_dict.keys())
         for setFunction in setFunctions:
-            if _read_dict.get(setFunction) is None:
+            if _data_dict.get(setFunction) is None:
                 continue
-            elif isinstance(_read_dict[setFunction],str):
-                variable='"'+_read_dict.get(setFunction)+'"'
+            elif isinstance(_data_dict[setFunction],str):
+                variable='"'+_data_dict.get(setFunction)+'"'
             else:
-                variable=str(_read_dict[setFunction])
+                variable=str(_data_dict[setFunction])
             eval('self.set'+setFunction+'('+variable+')')
 
     def doIt(self,doIts=None):
-        _doIts=doIts or self._doIts
+        _doIt_strs=doIts or self._doIt_strs
 
-        if _doIts == None:
+        if _doIt_strs == None:
             return
         else:
-            for _doIt in _doIts:
+            for _doIt in _doIt_strs:
                 eval("self."+_doIt+"()")

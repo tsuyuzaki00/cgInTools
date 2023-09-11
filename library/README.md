@@ -1,11 +1,12 @@
 # Library
-- [x] 編集中
-- [ ] 編集済み
+- [ ] 編集中
+- [x] 編集済み
 
 DCCツール関係なく使いまわせるスクリプト
 
-[baseLB](baseLB.md)  
-[jsonLB](jsonLB.md)  
+[baseLB](./_document/baseLB.md)  
+[jsonLB](./_document/jsonLB.md)  
+[pathLB](./_document/pathLB.md)
 
 ---
 [back](../README.md)

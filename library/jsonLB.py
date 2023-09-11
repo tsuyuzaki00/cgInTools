@@ -1,22 +1,16 @@
 # -*- coding: iso-8859-15 -*-
-import json,os
+import json
+import cgInTools as cit
+from . import pathLB as pLB
+cit.reloads([pLB])
 
 class Json(object):
     def __init__(self):
-        self._directory_str=None
-        self._file_str=None
-        self._extension_str="json"
+        self._json_Path=pLB.Path()
+        self._json_Path.setExtension("json")
         self._write_dict={}
 
     #Single Function
-    def path_create_str(self,directory,file,extension="json",newFolder=None):
-        if newFolder == None:
-            path=os.path.join(directory,file+"."+extension)
-            return path
-        else:
-            path=os.path.join(directory,newFolder,file+"."+extension)
-            return path
-
     def jsonPath_query_dict(self,path):
         with open(path,"r") as f:
             read_dict=json.load(f)
@@ -27,23 +21,29 @@ class Json(object):
             json.dump(write_dict,f,indent=4,ensure_ascii=False)
 
     #Setting Function
-    def setDirectory(self,variable):
-        self._directory_str=variable
-        return self._directory_str
-    def getDirectory(self):
-        return self._directory_str
+    def setAbsoluteDirectory(self,variable):
+        _absoluteDirectory_str=self._json_Path.setAbsoluteDirectory(variable)
+        return _absoluteDirectory_str
+    def getAbsoluteDirectory(self):
+        return self._json_Path.getAbsoluteDirectory()
+    
+    def setRelativeDirectory(self,variable):
+        _relativeDirectory_str=self._json_Path.setRelativeDirectory(variable)
+        return _relativeDirectory_str
+    def getRelativeDirectory(self):
+        return self._json_Path.getRelativeDirectory()
 
     def setFile(self,variable):
-        self._file_str=variable
-        return self._file_str
+        _file_str=self._json_Path.setFile(variable)
+        return _file_str
     def getFile(self):
-        return self._file_str
+        return self._json_Path.getFile()
 
     def setExtension(self,variable):
-        self._extension_str=variable
-        return self._extension_str
+        _extension_str=self._json_Path.setExtension(variable)
+        return _extension_str
     def getExtension(self):
-        return self._extension_str
+        return self._json_Path.getExtension()
 
     def setWriteDict(self,variable):
         self._write_dict=variable
@@ -52,35 +52,28 @@ class Json(object):
         return self._write_dict
 
     #Public Function
-    def read(self,directory=None,file=None,extension=None):
-        _directory_str=directory or self._directory_str
-        _file_str=file or self._file_str
-        _extension_str= extension or self._extension_str
-
-        path=self.path_create_str(_directory_str,_file_str,_extension_str)
-        read_dict=self.jsonPath_query_dict(path)
+    def read(self,absolute=None,relative=None,file=None,extension=None):
+        absolute_path=self._json_Path.queryAbsolutePath(absolute,relative,file,extension)
+        read_dict=self.jsonPath_query_dict(absolute_path)
         return read_dict
 
-    def write(self,directory=None,file=None,extension=None,write=None):
-        _directory_str=directory or self._directory_str
-        _file_str=file or self._file_str
-        _extension_str= extension or self._extension_str
+    def write(self,absolute=None,relative=None,file=None,extension=None,write=None):
         _write_dict=write or self._write_dict
 
-        path=self.path_create_str(_directory_str,_file_str,_extension_str)
-        self.jsonPath_create_func(path,_write_dict)
+        absolute_path=self._json_Path.queryAbsolutePath(absolute,relative,file,extension)
+        self.jsonPath_create_func(absolute_path,_write_dict)
     
 class JsonPack(object):
     def __init__(self):
-        self._directory_str=None
-        self._file_str=None
-        self._extension_str="jsonPack"
+        self._jsonPack_Path=pLB.Path()
+        self._jsonPack_Path.setExtension("jsonPack")
         self._writePack_Jsons=[]
 
     #Private Function
-    def __readPack_query_dicts(self,directory,file,extension):
+    def __readPack_query_dicts(self,absolute,relative,file,extension):
         pack_Json=Json()
-        pack_Json.setDirectory(directory)
+        pack_Json.setAbsoluteDirectory(absolute)
+        pack_Json.setRelativeDirectory(relative)
         pack_Json.setFile(file)
         pack_Json.setExtension(extension)
         pack_dict=pack_Json.read()
@@ -88,15 +81,15 @@ class JsonPack(object):
         read_dicts=[]
         for fileEX_dict in pack_dict["packFiles"]:
             read_Json=Json()
-            read_Json.setDirectory(directory)
+            pack_Json.setAbsoluteDirectory(absolute)
+            pack_Json.setRelativeDirectory(relative)
             read_Json.setFile(fileEX_dict["file"])
             read_Json.setExtension(fileEX_dict["extension"])
             read_dict=read_Json.read()
-
             read_dicts+=read_dict
         return read_dicts
 
-    def __writePack_create_func(self,directory,file,extension,write_Jsons):
+    def __writePack_create_func(self,absolute,relative,file,extension,write_Jsons):
         packFiles=[]
         for write_Json in write_Jsons:
             write_Json.write()
@@ -106,30 +99,37 @@ class JsonPack(object):
         write_dict={"packFiles":packFiles}
 
         pack_Json=Json()
-        pack_Json.setDirectory(directory)
+        pack_Json.setAbsoluteDirectory(absolute)
+        pack_Json.setRelativeDirectory(relative)
         pack_Json.setFile(file)
         pack_Json.setExtension(extension)
         pack_Json.setWriteDict(write_dict)
         pack_Json.write()
     
     #Setting Function
-    def setDirectory(self,variable):
-        self._directory_str=variable
-        return self._directory_str
-    def getDirectory(self):
-        return self._directory_str
+    def setAbsoluteDirectory(self,variable):
+        _absoluteDirectory_str=self._jsonPack_Path.setAbsoluteDirectory(variable)
+        return _absoluteDirectory_str
+    def getAbsoluteDirectory(self):
+        return self._jsonPack_Path.getAbsoluteDirectory()
+    
+    def setRelativeDirectory(self,variable):
+        _relativeDirectory_str=self._jsonPack_Path.setRelativeDirectory(variable)
+        return _relativeDirectory_str
+    def getRelativeDirectory(self):
+        return self._jsonPack_Path.getRelativeDirectory()
 
     def setFile(self,variable):
-        self._file_str=variable
-        return self._file_str
+        _file_str=self._jsonPack_Path.setFile(variable)
+        return _file_str
     def getFile(self):
-        return self._file_str
+        return self._jsonPack_Path.getFile()
 
     def setExtension(self,variable):
-        self._extension_str=variable
-        return self._extension_str
+        _extension_str=self._jsonPack_Path.setExtension(variable)
+        return _extension_str
     def getExtension(self):
-        return self._extension_str
+        return self._jsonPack_Path.getExtension()
 
     def setJsonObjects(self,variables):
         self._writePack_Jsons=variables
@@ -141,25 +141,27 @@ class JsonPack(object):
         return self._writePack_Jsons
 
     #Public Function
-    def readPack(self,directory=None,file=None,extension=None):
-        _directory_str=directory or self._directory_str
-        _file_str=file or self._file_str
-        _extension_str= extension or self._extension_str
+    def readPack(self,absolute=None,relative=None,file=None,extension=None):
+        _absolute_str=absolute or self._jsonPack_Path.getAbsoluteDirectory()
+        _relative_str=relative or self._jsonPack_Path.getRelativeDirectory()
+        _file_str=file or self._jsonPack_Path.getFile()
+        _extension_str= extension or self._jsonPack_Path.getExtension()
 
-        readPack_dicts=self.__readPack_query_dicts(_directory_str,_file_str,_extension_str)
+        readPack_dicts=self.__readPack_query_dicts(_absolute_str,_relative_str,_file_str,_extension_str)
         return readPack_dicts
 
-    def writePack(self,directory=None,file=None,extension=None,writePack=None):
-        _directory_str=directory or self._directory_str
-        _file_str=file or self._file_str
-        _extension_str=extension or self._extension_str
-        _writePack_Jsons=writeJson or self._writePack_Jsons
+    def writePack(self,absolute=None,relative=None,file=None,extension=None,writePack=None):
+        _absolute_str=absolute or self._jsonPack_Path.getAbsoluteDirectory()
+        _relative_str=relative or self._jsonPack_Path.getRelativeDirectory()
+        _file_str=file or self._jsonPack_Path.getFile()
+        _extension_str= extension or self._jsonPack_Path.getExtension()
+        _writePack_Jsons=writePack or self._writePack_Jsons
 
-        self.__writePack_create_func(_directory_str,_file_str,_extension_str,_writePack_Jsons)
+        self.__writePack_create_func(_absolute_str,_relative_str,_file_str,_extension_str,_writePack_Jsons)
 
 def readJson(directory,file):
     data=Json()
-    data.setDirectory(directory)
+    data.setAbsoluteDirectory(directory)
     data.setFile(file)
     data.setExtension("json")
     json_dict=data.read()
@@ -167,7 +169,7 @@ def readJson(directory,file):
 
 def writeJson(directory,file,write):
     data=Json()
-    data.setDirectory(directory)
+    data.setAbsoluteDirectory(directory)
     data.setFile(file)
     data.setExtension("json")
     data.setWriteDict(write)

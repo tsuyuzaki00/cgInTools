@@ -1,6 +1,6 @@
 # baseLB
-- [x] 編集中
-- [ ] 編集済み
+- [ ] 編集中
+- [x] 編集済み
 
 [一般向け(person)](../baseLB.md)
 
@@ -41,8 +41,8 @@ None
 None
 
 ## Setting Function
-def [setReadDict()](#selforiginsetreaddict)  
-def [getReadDict()](#selforigingetreaddict)  
+def [setDataDict()](#selforiginsetdatadict)  
+def [getDataDict()](#selforigingetdatadict)  
 def [setDataChoices()](#selforiginsetdatachoices)  
 def [addDataChoices()](#selforiginadddatachoices)  
 def [getDataChoices()](#selforigingetdatachoices)  
@@ -50,8 +50,8 @@ def [setDoIts()](#selforiginsetdoIts)
 def [addDoIts()](#selforiginadddoits)  
 def [getDoIts()](#selforigingetdoits)  
 ## Public Function
-def [writeDict()](#selforiginwritedict)  
-def [readDict()](#selforiginreaddict)  
+def [writeData()](#selforiginwritedata)  
+def [readData()](#selforiginreaddata)  
 def [doIt()](#selforigindoit)  
 
 ---
@@ -60,10 +60,9 @@ def [doIt()](#selforigindoit)
 ### SelfOrigin.\_\_init\_\_()
 >Signature :  
 instance=SelfOrigin()  
-\_absolute_dir=None  
-\_relative_dir=None  
-\_file_str=None  
-\_extension_ext=None  
+\_data\_dict={}  
+\_dataChoice\_strs=["DoIts"]  
+\_doIt\_strs=[]  
 
 >Parameters :  
 None
@@ -72,9 +71,9 @@ None
 None
 
 >Description :  
-\_absolute_dir - 絶対ディレクトリをもつ変数  
-\_relative_dir - 相対ディレクトリをもつ変数  
-\_file_str - ファイル名をもつ変数  
+\_data\_dict - データ(set,getに設定する変数)を保持する辞書型変数  
+\_dataChoice\_strs - どのデータを保持するかを決めるリスト変数  
+\_doIt\_strs - doIt関数を呼び出した際に実行する関数名を保持するリスト変数  
 
 ## Single Function
 None
@@ -89,9 +88,9 @@ None
 None
 
 ## Setting Function
-### SelfOrigin.setReadDict()
+### SelfOrigin.setDataDict()
 >Signature :  
-setReadDict(variable)
+setDataDict(variable)
 
 >Parameters :  
 variable - dict
@@ -102,9 +101,9 @@ dict
 >Description :  
 setting関数たちに組み込むためのdictを読み込む関数
 
-### SelfOrigin.getReadDict()
+### SelfOrigin.getDataDict()
 >Signature :  
-getReadDict()
+getDataDict()
 
 >Parameters :  
 None
@@ -120,10 +119,10 @@ setting関数に設定するdictを返す関数
 setDataChoices(variables)
 
 >Parameters :  
-variables - strings
+variables - sequence of string
 
 >Returns :  
-strings
+sequence of string
 
 >Description :  
 writeDict()を実行した際に書き出せるように設定する関数  
@@ -135,10 +134,10 @@ writeDict()に書き出したいsetting関数のset,getを除いた文字列を�
 addDataChoices(variables)
 
 >Parameters :  
-variables - strings
+variables - sequence of string
 
 >Returns :  
-strings
+sequence of string
 
 >Description :  
 writeDict()を実行した際に書き出せるように設定を追加する関数  
@@ -153,7 +152,7 @@ getDataChoices()
 None
 
 >Returns :  
-strings
+sequence of string
 
 >Description :  
 設定した書き出す予定のシーケンス文字列を返す関数
@@ -163,10 +162,10 @@ strings
 setDoIts(variables)
 
 >Parameters :  
-variables - strings
+variables - sequence of string
 
 >Returns :  
-strings
+sequence of string
 
 >Description :  
 doIt()を実行した際に実行してほしいpublic関数名を設定する関数  
@@ -177,10 +176,10 @@ doIt()を実行した際に実行してほしいpublic関数名を設定する�
 addDoIts(variables)
 
 >Parameters :  
-variables - strings
+variables - sequence of string
 
 >Returns :  
-strings
+sequence of string
 
 >Description :  
 doIt()を実行した際に実行してほしいpublic関数名を設定に追加する関数  
@@ -194,19 +193,19 @@ getDoIts()
 None
 
 >Returns :  
-strings
+sequence of string
 
 >Description :  
 設定したpublic関数名のlistを返す関数
 
 ## Public Function
-### SelfOrigin.writeDict()
+### SelfOrigin.writeData()
 >Signature :  
 [setDataChoices()](#selforiginsetdatachoices)  
-writeDict() or writeDict(dataChoices)
+writeData() or writeData(dataChoices)
 
 >Parameters :  
-dataChoices - dict
+dataChoices - sequence of string
 
 >Returns :  
 dict
@@ -214,10 +213,10 @@ dict
 >Description :  
 dataChoicesで設定したsetting関数をdictで返す関数
 
-### SelfOrigin.readDict()
+### SelfOrigin.readData()
 >Signature :  
-[setReadDict()](#selforiginsetreaddict)  
-readDict() or readDict(settingData)
+[setDataDict()](#selforiginsetreaddict)  
+readData() or readData(settingData)
 
 >Parameters :  
 settingData - dict
@@ -234,7 +233,7 @@ dictを使ってsetting関数たちに読み込ませる関数
 doIt() or doIt(doIts)
 
 >Parameters :  
-doIts - strings
+doIts - sequence of string
 
 >Returns :  
 None
@@ -245,7 +244,12 @@ doItsで設定したpublic関数を順番に実行する関数
 ---
 
 # Functions
+None
 
 ---
 
 # Variables
+None
+
+---
+[back](../../README.md) [Top](#baselb)

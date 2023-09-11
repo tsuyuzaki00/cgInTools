@@ -21,14 +21,16 @@ None
 object
 
 >import :  
-json,os
+[json](https://docs.python.org/ja/3/library/json.html)  
+[Path](./pathLB.md)  
 
 >Summary :  
 Jsonファイルを読み込み書き出しするクラス
-
 ## Setting Function
-def [setDirectory()](#jsonsetdirectory)  
-def [getDirectory()](#jsongetdirectory)  
+def [setAbsoluteDirectory()](#jsonsetabsolutedirectory)  
+def [getAbsoluteDirectory()](#jsongetabsolutedirectory)  
+def [setRelativeDirectory()](#jsonsetrelativedirectory)  
+def [getRelativeDirectory()](#jsongetrelativedirectory)  
 def [setFile()](#jsonsetfile)  
 def [getFile()](#jsongetfile)  
 def [setExtension()](#jsonsetextension)  
@@ -45,14 +47,16 @@ def [write()](#jsonwrite)
 object
 
 >import :  
+[Path](./pathLB.md)  
 [Json](#class-json-page)
 
 >Summary :  
 複数のJsonファイルを読み込み書き出しするクラス
-
 ## Setting Function
-def [setDirectory()](#jsonpacksetdirectory)  
-def [getDirectory()](#jsonpackgetdirectory)  
+def [setAbsoluteDirectory()](#jsonpacksetabsolutedirectory)  
+def [getAbsoluteDirectory()](#jsonpackgetabsolutedirectory)  
+def [setRelativeDirectory()](#jsonpacksetrelativedirectory)  
+def [getRelativeDirectory()](#jsonpackgetrelativedirectory)  
 def [setFile()](#jsonpacksetfile)  
 def [getFile()](#jsonpackgetfile)  
 def [setExtension()](#jsonpacksetextension)  
@@ -67,9 +71,9 @@ def [writePack()](#jsonpackwritepack)
 ---
 # class Json
 ## Setting Function
-### Json.setDirectory()
+### Json.setAbsoluteDirectory()
 >Signature :  
-setDirectory(variable)
+setAbsoluteDirectory(variable)
 
 >Parameters :  
 variable - string
@@ -78,10 +82,10 @@ variable - string
 string(directory)
 
 >Description :  
-フォルダ階層の文字列を設定する関数
-### Json.getDirectory()
+上層フォルダ階層の文字列を設定する関数
+### Json.getAbsoluteDirectory()
 >Signature :  
-getDirectory()
+getAbsoluteDirectory()
 
 >Parameters :  
 None
@@ -90,8 +94,31 @@ None
 string(directory)
 
 >Description :  
-設定したフォルダ階層の文字列を返す関数
+設定した上層フォルダ階層の文字列を返す関数
+### Json.setRelativeDirectory()
+>Signature :  
+setRelativeDirectory(variable)
 
+>Parameters :  
+variable - string
+
+>Returns :  
+string(directory)
+
+>Description :  
+下層フォルダ階層の文字列を設定する関数
+### Json.getRelativeDirectory()
+>Signature :  
+getRelativeDirectory()
+
+>Parameters :  
+None
+
+>Returns :  
+string(directory)
+
+>Description :  
+設定した下層フォルダ階層の文字列を返す関数
 ### Json.setFile()
 >Signature :  
 setFile(variable)
@@ -173,13 +200,15 @@ dict
 ## Public Function
 ### Json.read()
 >Signature :  
-[setDirectory(variable)](#jsonsetdirectory)  
+[setAbsoluteDirectory(variable)](#jsonsetabsolutedirectory)  
+[setRelativeDirectory(variable)](#jsonsetrelativedirectory)  
 [setFile(variable)](#jsonsetfile)  
 [setExtension(variable)](#jsonsetextension)  
-read() or read(directory=None,file=None,extension=None)
+read() or read(absolute=None,relative=None,file=None,extension=None)
 
 >Parameters :  
-directory - string(directory)  
+absolute - string(directory)  
+relative - string(directory)  
 file - string  
 extension - string(extension)  
 
@@ -191,14 +220,16 @@ Jsonファイルを読み込む関数
 
 ### Json.write()
 >Signature :  
-[setDirectory(variable)](#jsonsetdirectory)    
+[setAbsoluteDirectory(variable)](#jsonsetabsolutedirectory)  
+[setRelativeDirectory(variable)](#jsonsetrelativedirectory)  
 [setFile(variable)](#jsonsetfile)  
 [setExtension(variable)](#jsonsetextension)  
 [setWriteDict(variable)](#jsonsetwritedict)  
-write() or write(directory=None,file=None,extension=None,write=None)
+write() or write(absolute=None,relative=None,,file=None,extension=None,write=None)
 
 >Parameters :  
-directory - string(directory)  
+absolute - string(directory)  
+relative - string(directory)  
 file - string  
 extension - string(extension)  
 write - dict  
@@ -212,9 +243,9 @@ Jsonファイルを書き出す関数
 --- 
 # class JsonPack
 ## Setting Function
-### JsonPack.setDirectory()
+### JsonPack.setAbsoluteDirectory()
 >Signature :  
-setDirectory(variable)
+setAbsoluteDirectory(variable)
 
 >Parameters :  
 variable - string
@@ -223,10 +254,10 @@ variable - string
 string(directory)
 
 >Description :  
-フォルダ階層の文字列を設定する関数
-### JsonPack.getDirectory()
+上層フォルダ階層の文字列を設定する関数
+### JsonPack.getAbsoluteDirectory()
 >Signature :  
-getDirectory()
+getAbsoluteDirectory()
 
 >Parameters :  
 None
@@ -235,7 +266,31 @@ None
 string(directory)
 
 >Description :  
-設定したフォルダ階層の文字列を返す関数
+設定した上層フォルダ階層の文字列を返す関数
+### JsonPack.setRelativeDirectory()
+>Signature :  
+setRelativeDirectory(variable)
+
+>Parameters :  
+variable - string
+
+>Returns :  
+string(directory)
+
+>Description :  
+下層フォルダ階層の文字列を設定する関数
+### JsonPack.getRelativeDirectory()
+>Signature :  
+getRelativeDirectory()
+
+>Parameters :  
+None
+
+>Returns :  
+string(directory)
+
+>Description :  
+設定した下層フォルダ階層の文字列を返す関数
 
 ### JsonPack.setFile()
 >Signature :  
@@ -330,13 +385,15 @@ sequence of [Json](#class-json-page)
 ## Public Function
 ### JsonPack.readPack()
 >Signature :  
-[setDirectory(variable)](#jsonpacksetdirectory)  
+[setAbsoluteDirectory(variable)](#jsonpacksetabsolutedirectory)  
+[setRelativeDirectory(variable)](#jsonpacksetrelativedirectory)  
 [setFile(variable)](#jsonpacksetfile)  
 [setExtension(variable)](#jsonpacksetextension)  
-readPack() or readPack(directory=None,file=None,extension=None)
+readPack() or readPack(absolute=None,relative=None,file=None,extension=None)
 
 >Parameters :  
-directory - string(directory)  
+absolute - string(directory)  
+relative - string(directory)  
 file - string  
 extension - string(extension)  
 
@@ -348,16 +405,19 @@ jsonPackを読み込む関数
 
 ### JsonPack.writePack()
 >Signature :  
-[setDirectory(variable)](#jsonpacksetdirectory)  
+[setAbsoluteDirectory(variable)](#jsonpacksetabsolutedirectory)  
+[setRelativeDirectory(variable)](#jsonpacksetrelativedirectory)  
 [setFile(variable)](#jsonpacksetfile)  
 [setExtension(variable)](#jsonpacksetextension)  
 [setJsonObjects(variable)](#jsonpacksetjsonobjects)
-writePack() or writePack(directory=None,file=None,extension=None,writePack=None)
+writePack() or writePack(absolute=None,relative=None,file=None,extension=None,writePack=None)
 
 >Parameters :  
-directory - string(directory)  
+absolute - string(directory)  
+relative - string(directory)  
 file - string  
-extension - string(extension)
+extension - string(extension)  
+writePack - sequence of [Json](#class-json-page)
 
 >Returns :  
 None
@@ -394,8 +454,12 @@ write - dict
 None
 
 >Description :  
-拡張子をjsonで固定してjsonファイルを書き込む関数
+拡張子をjsonで固定してjsonファイルを書き出す関数
 
 ---
 
 # Variables
+None
+
+---
+[back](../README.md) [Top](#jsonlb)
