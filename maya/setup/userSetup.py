@@ -13,7 +13,7 @@ os.environ["OOMOZI"] = r"D:/"
 
 wrk_path=cmds.workspace(q=True,rd=True)
 folder_str="cgInToolsData"
-os.environ['CGINTOOLS_DATA_PATH']=os.path.join(wrk_path,"scripts",folder_str)
+os.environ['CGINTOOLSDATA_DIRECTORY']=os.path.join(wrk_path,"scripts",folder_str)
 
 if int(sys.version[0]) == 2:
     try:

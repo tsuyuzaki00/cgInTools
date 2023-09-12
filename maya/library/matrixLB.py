@@ -9,35 +9,36 @@ class Matrix(om2.MMatrix):
         self._mirrorAxis_str=None
         self._mirrorOrientation_str=None
         
-        standerd_Matrix=Matrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-        self._pivot_Matrix=standerd_Matrix
-        self._target_Matrix=standerd_Matrix
-        self._source_Matrix=standerd_Matrix
+        if not matrix is None:
+            standerd_MMatrix=om2.MMatrix(matrix)
+        self._pivot_MMatrix=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
+        self._target_MMatrix=None
+        self._source_MMatrix=None
 
     #Setting Function
     def setMatrix(self,variable):
-        self.kIdentity=variable
+        self.kIdentity=om2.MMatrix(variable)
         return self.kIdentity
     def getMatrix(self):
         return self.kIdentity
 
     def setPivotMatrix(self,variable):
-        self._pivot_Matrix=variable
-        return self._pivot_Matrix
+        self._pivot_MMatrix=om2.MMatrix(variable)
+        return self._pivot_MMatrix
     def getPivotMatrix(self):
-        return self._pivot_Matrix
+        return self._pivot_MMatrix
 
     def setTargetMatrix(self,variable):
-        self._target_Matrix=variable
-        return self._target_Matrix
+        self._target_MMatrix=om2.MMatrix(variable)
+        return self._target_MMatrix
     def getTargetMatrix(self):
-        return self._target_Matrix
+        return self._target_MMatrix
 
     def setSourceMatrix(self,variable):
-        self._source_Matrix=variable
-        return self._source_Matrix
+        self._source_MMatrix=om2.MMatrix(variable)
+        return self._source_MMatrix
     def getSourceMatrix(self):
-        return self._source_Matrix
+        return self._source_MMatrix
 
     #Public Function
     def match(self,matrix=None):

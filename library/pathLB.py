@@ -49,6 +49,9 @@ class Path(object):
     def setAbsoluteDirectory(self,variable):
         self._absolute_dir=variable
         return self._absolute_dir
+    def addAbsoluteDirectory(self,variable):
+        self._absolute_dir=self.mergeDirectory_create_dir(self._absolute_dir,variable)
+        return self._absolute_dir
     def getAbsoluteDirectory(self):
         return self._absolute_dir
     
@@ -151,6 +154,15 @@ class Path(object):
         mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
         if not os.path.exists(mergeDirectory_dir) and not os.path.isdir(mergeDirectory_dir):
             os.makedirs(mergeDirectory_dir)
+
+    def createEnvironmentVariable(self,directory=None,environName=None):
+        _absolute_dir=directory or self._absolute_dir
+        _relative_dir=environName or self._relative_dir
+
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
+        environRename_str=_relative_dir.replace("/","_").replace("\\","_").upper()
+        os.environ[environRename_str+"_DIRECTORY"]=os.path.join(mergeDirectory_dir)
+        return mergeDirectory_dir
 
     def targetPathMove(self,targetPath=None,absolute=None,relative=None,file=None,ext=None):
         _targetPath_Path=targetPath or self._target_Path
