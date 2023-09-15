@@ -127,9 +127,15 @@ class SelfNode(bLB.SelfOrigin):
         objectType_str=self.nodeType_query_str(_node_MObject)
         return objectType_str
 
-class SelfDagNode(SelfNode):
+class SelfDGNode(bLB.SelfOrigin):
+    pass
+
+class SelfAttribute(bLB.SelfOrigin):
+    pass
+
+class SelfDAGNode(SelfDGNode):
     def __init__(self):
-        super(SelfDagNode,self).__init__()
+        super(SelfDAGNode,self).__init__()
         self._parent_MObject=None
         self._fullPath_bool=False
         self._firstOnly_bool=False
@@ -358,273 +364,21 @@ class SelfDagNode(SelfNode):
             child_strs=self._fullPathSwitch_query_strs(child_MObjects,_fullPath_bool)
             return child_strs
 
-class SelfDGNode(bLB.SelfOrigin):
-    pass
-
-class SelfComponent(bLB.SelfOrigin):
-    def __init__(self):
-        super(SelfComponent,self).__init__()
-        self._MFn_int=None
-        self._shape_MDagPath=None
-        self._component_MObject=None
-        self._setChoices+=[
-            "MFn",
-            "Shape",
-            "ComponentID"
-        ]
-        self._doIts+=[
-            "queryShapeType"
-        ]
-        
-    #Single Function
-    def selectComponent_create_MDagPath_MObject(self,node):
-        if node == None:
-            return None
-        elif not isinstance(node,str):
-            om2.MGlobal.displayError("Please insert one string in value")
-            sys.exit()
-        component_MSelectionList=om2.MSelectionList()
-        component_MSelectionList.add(node)
-        shape_MDagPath,components_MObject=component_MSelectionList.getComponent(0)
-        return shape_MDagPath,components_MObject
-    
-    def shape_create_MDagPath(self,shape):
-        if shape == None:
-            return None
-        elif not isinstance(shape,str):
-            om2.MGlobal.displayError("Please insert one string in value")
-            sys.exit()
-        component_MSelectionList=om2.MSelectionList()
-        component_MSelectionList.add(shape)
-        shape_MDagPath=component_MSelectionList.getDagPath(0)
-        shape_MDagPath.extendToShape()
-        return shape_MDagPath
-    
-    def convertToInt_create_MObject(self,componentID_int,MFn_int):
-        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent()
-        components_MObject=component_MFnSingleIndexedComponent.create(MFn_int)
-        component_MFnSingleIndexedComponent.addElement(componentID_int)
-        return components_MObject
-
-    def componentID_query_int(self,components_MObject):
-        component_MFnSingleIndexedComponent=om2.MFnSingleIndexedComponent(components_MObject)
-        componentID_int=component_MFnSingleIndexedComponent.getElements()[0]
-        return componentID_int
-
-    def shapeType_query_str(self,shape_MDagPath):
-        node_MFnDagNode=om2.MFnDagNode(shape_MDagPath)
-        nodeType_str=node_MFnDagNode.typeName
-        return nodeType_str
-
-    #Setting Function
-    def setComponent(self,variable):
-        self._shape_MDagPath,self._components_MObject=self.selectComponent_create_MDagPath_MObject(variable)
-        self._MFn_int=self._components_MObject.apiType()
-
-    def setMFn(self,variable):
-        self._MFn_int=variable
-    def getMFn(self):
-        return self._MFn_int
-
-    def setShape(self,variable):
-        self._shape_MDagPath=self.shape_create_MDagPath(variable)
-    def getShape(self):
-        shape_MFnDagNode=om2.MFnDagNode(self._shape_MDagPath)
-        shape_str=shape_MFnDagNode.name()
-        return shape_str
-    
-    def setComponentID(self,variable,MFn=None):
-        _MFn_int=MFn or self._MFn_int
-        self._component_MObject=self.convertToInt_create_MObject(variable,_MFn_int)
-    def getComponentID(self):
-        componentID_int=self.componentID_query_int(self._component_MObject)
-        return componentID_int
-    
-    #Public Function
-    def queryShapeType(self):
-        objectType_str=self.shapeType_query_str(self._shape_MDagPath)
-        return objectType_str
-    
-class SelfConnectNode(SelfNode):
-    def __init__(self):
-        super(SelfConnectNode,self).__init__()
-        self._operationNode_MObject=None
-        self._operationAttr_str=None
-        self._findType_str=None
-        self._findEnum_str="NodeType" # or MFn
-        self._findSource_bool=True
-        self._findTarget_bool=True
-        self._setChoices+=[
-            "OperationNode",
-            "OperationAttr",
-            "FindType",
-            "FindEnum",
-            "FindSource",
-            "FindTarget"
-        ]
-        self._doIts+=[
-            "connectAttr"
-        ]
-
-    #Single Function
-    def replaceMObjectToNode_query_strs(self,connectNode_MObjects):
-        if connectNode_MObjects == None or connectNode_MObjects == []:
-            return None
-        connectNode_strs=[]
-        for connectNode_MObject in connectNode_MObjects:
-            connectNode_MFnDependencyNode=om2.MFnDependencyNode(connectNode_MObject)
-            connectNode_str=connectNode_MFnDependencyNode.name()
-            connectNode_strs.append(connectNode_str)
-        return connectNode_strs
-    
-    def connectionNode_query_MPlugs(self,node_MObject,source=True,target=True):
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        connections_MPlugArray=node_MFnDependencyNode.getConnections()
-        
-        connectedTo_MPlugs=[]
-        for connection_MPlug in connections_MPlugArray:
-            connectedTo_MPlugArray=connection_MPlug.connectedTo(source,target)
-            for connectedTo_MPlug in connectedTo_MPlugArray:
-                connectedTo_MPlugs.append(connectedTo_MPlug)
-        if connectedTo_MPlugs == []:
-            return None
-        else:
-            return connectedTo_MPlugs
-    
-    #Multi Function
-    def _findType_query_MObjects(self,node_MObject,find,findEnum="NodeType",source=True,target=True):
-        #findEnum="MFn" or "NodeType"
-        connectedTo_MPlugs=self.connectionNode_query_MPlugs(node_MObject,source,target)
-        findConnectedTo_MObjects=[]
-        for connectedTo_MPlug in connectedTo_MPlugs:
-            connectedTo_MObject=connectedTo_MPlug.node()
-            if findEnum == "NodeType":
-                if om2.MFnDependencyNode(connectedTo_MObject).typeName == find:
-                    findConnectedTo_MObjects.append(connectedTo_MObject)
-            elif findEnum == "MFn":
-                if connectedTo_MObject.hasFn(find):
-                    findConnectedTo_MObjects.append(connectedTo_MObject)
-            else:
-                om2.MGlobal.displayError('Please set "findEnum" to "MFn" or "NodeType".')
-                sys.exit()
-        if findConnectedTo_MObjects == []:
-            return None
-        else:
-            return findConnectedTo_MObjects
-
-    #Inheritance Function
-    def _findAttrConect_query_MObjects(self,node_MObject,attr,source=True,target=True):
-        find_MPlug=self.nodeAttr_create_MPlug(node_MObject,attr)
-        
-        targets_MPlugArray=find_MPlug.connectedTo(source,target)
-        findConnectedTo_MObjects=[target_MPlug.node() for target_MPlug in targets_MPlugArray]
-        if findConnectedTo_MObjects == []:
-            return None
-        else:
-            return findConnectedTo_MObjects
-    
-    #Setting Function
-    def setOperationNode(self,variable):
-        self._operationNode_MObject=self.selectNode_create_MObject(variable)
-    def getOperationNode(self):
-        node_MFnDependencyNode=om2.MFnDependencyNode(self._operationNode_MObject)
-        operationNode_str=node_MFnDependencyNode.name()
-        return operationNode_str
-
-    def setOperationAttr(self,variable):
-        self._operationAttr_str=variable
-    def getOperationAttr(self):
-        return self._operationAttr_str
-    
-    def setFindType(self,variable):
-        self._findType_str=variable
-    def getFindType(self):
-        return self._findType_str
-    
-    def setFindEnum(self,variable):
-        self._findEnum_str=variable
-    def getFindEnum(self):
-        return self._findEnum_str
-
-    def setFindSource(self,variable):
-        self._findSource_bool=variable
-    def getFindSource(self):
-        return self._findSource_bool
-
-    def setFindTarget(self,variable):
-        self._findTarget_bool=variable
-    def getFindTarget(self):
-        return self._findTarget_bool
-
-    #Public Function
-    def connectAttr(self,node=None,attr=None,operationNode=None,operationAttr=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _attr_str=attr or self._attr_str
-        _operationNode_MObject=self.selectNode_create_MObject(operationNode) or self._operationNode_MObject
-        _operationAttr_str=operationAttr or self._operationAttr_str
-
-        node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
-        sourceNode_MPlug=self.nodeAttr_create_MPlug(_operationNode_MObject,_operationAttr_str)
-        
-        MDGModifier=om2.MDGModifier()
-        MDGModifier.connect(sourceNode_MPlug,node_MPlug)
-        MDGModifier.doIt()
-
-    def queryConnectionNodes(self,node=None,source=None,target=None):
-        _node_MObject=node or self._node_MObject
-        _findSource_bool=source or self._findSource_bool
-        _findTarget_bool=target or self._findTarget_bool
-
-        connectedTo_MPlugs=self.connectionNode_query_MPlugs(_node_MObject,_findSource_bool,_findTarget_bool)
-        connectNode_MObjects=[connectedTo_MPlug.node() for connectedTo_MPlug in connectedTo_MPlugs]
-        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
-        return connectNodes
-
-    def queryConnectionNodeAttrToFind(self,node=None,attr=None,source=None,target=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _attr_str=attr or self._attr_str
-        _findSource_bool=source or self._findSource_bool
-        _findTarget_bool=target or self._findTarget_bool
-
-        connectNode_MObjects=self._findAttrConect_query_MObjects(_node_MObject,_attr_str,_findSource_bool,_findTarget_bool)
-        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
-        return connectNodes
-
-    def queryConnectionNodeTypeOrMFnToFind(self,node=None,findType=None,findEnum=None,source=None,target=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _findType_str=findType or self._findType_str
-        _findEnum_str=findEnum or self._findEnum_str
-        _findSource_bool=source or self._findSource_bool
-        _findTarget_bool=target or self._findTarget_bool
-
-        connectNode_MObjects=self._findType_query_MObjects(_node_MObject,_findType_str,_findEnum_str,_findSource_bool,_findTarget_bool)
-        connectNodes=self.replaceMObjectToNode_query_strs(connectNode_MObjects)
-        return connectNodes
-
-class SelfTransNode(bLB.SelfOrigin):
-    def __init__(self):
-        super(SelfTransNode,self).__init__()
-
-class SelfGeometry(bLB.SelfOrigin):
+class SelfGeometry(SelfDAGNode):
     def __init__(self):
         super(SelfGeometry,self).__init__()
-
-class SelfJoint(bLB.SelfOrigin):
+class SelfJoint(SelfDAGNode):
     def __init__(self):
         super(SelfJoint,self).__init__()
-
-class SelfCurve(bLB.SelfOrigin):
+class SelfCurve(SelfDAGNode):
     def __init__(self):
         super(SelfCurve,self).__init__()
-
-class SelfSurface(bLB.SelfOrigin):
+class SelfSurface(SelfDAGNode):
     def __init__(self):
         super(SelfSurface,self).__init__()
-
-class SelfLight(bLB.SelfOrigin):
+class SelfLight(SelfDAGNode):
     def __init__(self):
         super(SelfLight,self).__init__()
-
-class SelfCamera(bLB.SelfOrigin):
+class SelfCamera(SelfDAGNode):
     def __init__(self):
         super(SelfCamera,self).__init__()
