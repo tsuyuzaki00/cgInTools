@@ -3,88 +3,22 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
 """
-Plug memo
-アトリビュートの変数の編集
-アトリビュートの変数を取得
-ノード同士のコネクト
-アニメーションキーの設定
-ドリブンキーの設定
-"""
-class Plug():
-    def __init__(self):
-        self._nodeName_str=None
-        self._attr_Attribute=None
-        self._animKey_Keys=[]
-        self._target_Node=None
-        self._source_Node=None
-
-    #Setting Function
-    def setNodeName(self,variable):
-        self._nodeName_str=variable
-        return self._nodeName_str
-    def getNodeName(self):
-        return self._nodeName_str
-    
-    def setAttribute(self,variable):
-        self._attr_Attribute=variable
-        return self._attr_Attribute
-    def getAttribute(self):
-        return self._attr_Attribute
-    
-    def setAnimKeys(self,variables):
-        self._animKey_Keys=variables
-        return self._animKey_Keys
-    def addAnimKeys(self,variables):
-        self._animKey_Keys+=variables
-        return self._animKey_Keys
-    def getAnimKeys(self):
-        return self._animKey_Keys
-    
-    def setTargetNode(self,variable):
-        self._target_Node=variable
-        return self._target_Node
-    def getTargetNode(self):
-        return self._target_Node
-
-    def setSourceNode(self,variable):
-        self._source_Node=variable
-        return self._source_Node
-    def getSourceNode(self):
-        return self._source_Node
-
-    #Public Function
-    def editAttr(self):
-        pass
-    
-    def queryAttr(self):
-        pass
-
-    def connectTarget(self):
-        pass
-    
-    def connectSource(self):
-        pass
-
-    def createAnimKey(self):
-        pass
-
-    def deleteAnimKey(self):
-        pass
-
-
-"""
 Attribute memo
 アトリビュート自体を作成
 アトリビュート自体の編集
 """
 class Attribute():
     def __init__(self):
-        self._defName_str=None
+        self._longName_str=None
+        self._shortName_str=None
         self._niceName_str=None
         self._value_value=None
         self._createType_str=None
         self._min_float=None
         self._max_float=None
+
+    def __str__(self):
+        return self._longName_str
 
     #Single Function
     def addAttr_check_bool(self,node,attr):
@@ -167,11 +101,17 @@ class Attribute():
         return nodeAttr
     
     #Setting Function
-    def setDefName(self,variable):
-        self._defName_str=variable
-        return self._defName_str
-    def getDefName(self):
-        return self._defName_str
+    def setLongName(self,variable):
+        self._longName_str=variable
+        return self._longName_str
+    def getLongName(self):
+        return self._longName_str
+    
+    def setShortName(self,variable):
+        self._shortName_str=variable
+        return self._shortName_str
+    def getShortName(self):
+        return self._shortName_str
 
     def setNiceName(self,variable):
         self._niceName_str=variable
@@ -191,19 +131,55 @@ class Attribute():
     def getCreateType(self):
         return self._createType_str
 
-    def setMin(self,variable):
+    def setKeyLockState(self,variable):
+        self._keyLock_bool=variable
+        return self._keyLock_bool
+    def getKeyLockState(self):
+        return self._keyLock_bool
+    
+    def setValueLockState(self,variable):
+        self._valueLock_bool=variable
+        return self._valueLock_bool
+    def getValueLockState(self):
+        return self._valueLock_bool
+    
+    def setHideState(self,variable):
+        self._hide_bool=variable
+        return self._hide_bool
+    def getHideState(self):
+        return self._hide_bool
+    
+    def setMinState(self,variable):
+        self._min_bool=variable
+        return self._min_bool
+    def getMinState(self):
+        return self._min_bool
+    
+    def setMaxState(self,variable):
+        self._max_bool=variable
+        return self._max_bool
+    def getMaxState(self):
+        return self._max_bool
+    
+    def setMinValue(self,variable):
         self._min_float=variable
         return self._min_float
-    def getMin(self):
+    def getMinValue(self):
         return self._min_float
     
-    def setMax(self,variable):
+    def setMaxValue(self,variable):
         self._max_float=variable
         return self._max_float
-    def getMax(self):
+    def getMaxValue(self):
         return self._max_float
     
     #Public Function
+    def create(self):
+        pass
+
+    def edit(self):
+        pass
+
     def getKeyableAttrs(self,find=""):
         keyable_list=self.keyable_quary_list(self._object,find)
         return keyable_list
@@ -249,3 +225,72 @@ class Attribute():
     def isProxy(self):
         nodeAttr=self.isProxy_edit_nodeAttr(self._object,self._attr,self._proxy)
         return nodeAttr
+    
+"""
+Plug memo
+アトリビュートの変数の編集
+アトリビュートの変数を取得
+ノード同士のコネクト
+アニメーションキーの設定
+ドリブンキーの設定
+"""
+class Plug():
+    def __init__(self):
+        self._node_Node=None
+        self._attr_Attribute=None
+        self._animKey_Keys=[]
+        self._target_Node=None
+        self._source_Node=None
+
+    #Setting Function
+    def setNodeName(self,variable):
+        self._nodeName_str=variable
+        return self._nodeName_str
+    def getNodeName(self):
+        return self._nodeName_str
+    
+    def setAttribute(self,variable):
+        self._attr_Attribute=variable
+        return self._attr_Attribute
+    def getAttribute(self):
+        return self._attr_Attribute
+    
+    def setAnimKeys(self,variables):
+        self._animKey_Keys=variables
+        return self._animKey_Keys
+    def addAnimKeys(self,variables):
+        self._animKey_Keys+=variables
+        return self._animKey_Keys
+    def getAnimKeys(self):
+        return self._animKey_Keys
+    
+    def setTargetNode(self,variable):
+        self._target_Node=variable
+        return self._target_Node
+    def getTargetNode(self):
+        return self._target_Node
+
+    def setSourceNode(self,variable):
+        self._source_Node=variable
+        return self._source_Node
+    def getSourceNode(self):
+        return self._source_Node
+
+    #Public Function
+    def editAttr(self):
+        pass
+    
+    def queryAttr(self):
+        pass
+
+    def connectTarget(self):
+        pass
+    
+    def connectSource(self):
+        pass
+
+    def createAnimKey(self):
+        pass
+
+    def deleteAnimKey(self):
+        pass

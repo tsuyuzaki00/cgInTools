@@ -5,6 +5,13 @@ from . import objectLB as oLB
 from . import jsonLB as jLB
 cit.reloads([oLB,jLB])
 
+class Key():
+    def __init__(self):
+        self._influenceValue_value=None
+        self._myValue_value=None
+        self._inTangentType_int=None
+        self._outTangentType_int=None
+
 class SelfAttributeKey():
     def __init__(self):
         #self._node=None

@@ -11,127 +11,34 @@ cit.reloads([bLB,jLB])
 
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
 
-class SelfNode(bLB.SelfOrigin):
+class SelfDGNode(bLB.SelfOrigin):
     def __init__(self):
-        super(SelfNode,self).__init__()
-        self._node_MObject=None
-        self._attr_str=None
-        self._value=None
-        self._valueType="double"
-        self._setChoices+=[
-            "Node",
-            "Attr",
-            "Value",
-            "ValueType"
+        super(SelfDGNode,self).__init__()
+        #self._node_Node=None
+        self._plug_Plugs=[]
+        self._dataChoice_strs+=[
+            "Plugs"
         ]
-        self._doIts+=[
-            "editAttr",
-            "queryAttr"
+        self._doIt_strs+=[
+            "plugsDoIt",
         ]
-    
-    #Single Function
-    def selectNode_create_MObject(self,node):
-        if node == None:
-            return None
-        elif not isinstance(node,str):
-            om2.MGlobal.displayError("Please insert one string in value")
-            sys.exit()
-        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
-        node_MObject=node_MSelectionList.getDependNode(0)
-        return node_MObject
 
-    def nodeType_query_str(self,node_MObject):
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        nodeType_str=node_MFnDependencyNode.typeName
-        return nodeType_str
-
-    def nodeAttr_create_MPlug(self,node_MObject,attr):
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
-        return node_MPlug
-
-    def editAttr_edit_func(self,node_MPlug,value):
-        if isinstance(value,int):
-            node_MPlug.setInt(value)
-        elif isinstance(value,float):
-            node_MPlug.setFloat(value)
-        elif isinstance(value,str):
-            node_MPlug.setString(value)
-        elif isinstance(value,bool):
-            node_MPlug.setBool(value)
-        else:
-            pass
-
-    def queryAttr_query_value(self,node_MPlug,valueType="double"):
-        if valueType == "double" or valueType == "Double":
-            value=node_MPlug.asDouble()
-            return value
-        elif valueType == "int" or valueType == "Int":
-            value=node_MPlug.asInt()
-            return value
-        elif valueType == "float" or valueType == "Float":
-            value=node_MPlug.asFloat()
-            return value
-        elif valueType == "str" or valueType == "Str" or valueType == "string" or valueType == "String":
-            value=node_MPlug.asString()
-            return value
-        elif valueType == "bool" or valueType == "Bool" or valueType == "boolean" or valueType == "Boolean":
-            value=node_MPlug.asBool()
-            return value
-        else:
-            pass
-    
     #Setting Function
-    def setNode(self,variable):
-        self._node_MObject=self.selectNode_create_MObject(variable)
-    def getNode(self):
-        node_MFnDependencyNode=om2.MFnDependencyNode(self._node_MObject)
-        name_str=node_MFnDependencyNode.name()
-        return name_str
-
-    def setAttr(self,variable):
-        self._attr_str=variable
-    def getAttr(self):
-        return self._attr_str
-
-    def setValue(self,variable):
-        self._value=variable
-    def getValue(self):
-        return self._value
-    
-    def setValueType(self,variable):
-        self._valueType=variable
-    def getValueType(self):
-        return self._valueType
+    def setPlugs(self,variables):
+        self._plug_Plugs=variables
+        return self._plug_Plugs
+    def addPlugs(self,variables):
+        self._plug_Plugs+=variables
+        return self._plug_Plugs
+    def getPlugs(self):
+        return self._plug_Plugs
     
     #Public Function
-    def editAttr(self,node=None,attr=None,value=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _attr_str=attr or self._attr_str
-        _value=value or self._value
-        if not _attr_str == None or not _value == None:
-            node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
-            self.editAttr_edit_func(node_MPlug,_value)
+    def plugsDoIt(self):
+        for _plug_Plug in self._plug_Plugs:
+            _plug_Plug.doIt()
 
-    def queryAttr(self,node=None,attr=None,valueType=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _attr_str=attr or self._attr_str
-        _valueType=valueType or self._valueType
-        if not _attr_str == None:
-            node_MPlug=self.nodeAttr_create_MPlug(_node_MObject,_attr_str)
-            value=self.queryAttr_query_value(node_MPlug,_valueType)
-            return value
 
-    def queryNodeType(self,node=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        objectType_str=self.nodeType_query_str(_node_MObject)
-        return objectType_str
-
-class SelfDGNode(bLB.SelfOrigin):
-    pass
-
-class SelfAttribute(bLB.SelfOrigin):
-    pass
 
 class SelfDAGNode(SelfDGNode):
     def __init__(self):
@@ -140,12 +47,12 @@ class SelfDAGNode(SelfDGNode):
         self._fullPath_bool=False
         self._firstOnly_bool=False
         self._firstAddress_int=0
-        self._setChoices+=[
+        self._dataChoice_strs+=[
             "FullPath",
             "FirstOnly",
             "FirstAddress",
         ]
-        self._doIts+=[
+        self._doIt_strs+=[
             "parent",
             "replaceByParent",
             "replaceByChild",
@@ -364,6 +271,9 @@ class SelfDAGNode(SelfDGNode):
             child_strs=self._fullPathSwitch_query_strs(child_MObjects,_fullPath_bool)
             return child_strs
 
+class SelfTransNode(SelfDAGNode):
+    def __init__(self):
+        super(SelfTransNode,self).__init__()
 class SelfGeometry(SelfDAGNode):
     def __init__(self):
         super(SelfGeometry,self).__init__()

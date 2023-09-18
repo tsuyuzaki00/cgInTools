@@ -9,6 +9,15 @@ cit.reloads([sbLB,jLB,aLB])
 
 RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
 
+class Rename(object):
+    def __init__(self):
+        self._titleName_str=None
+        self._nodeName_str=None
+        self._sideName_str=None
+        self._numberNames=[]
+        self._hierarchyNames=[]
+        self._orderNames=[]
+
 class Naming(sbLB.BaseName):
     def __init__(self):
         super(Naming,self).__init__()
