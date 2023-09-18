@@ -1,6 +1,6 @@
 # pathLB
-- [x] 編集中
-- [ ] 編集済み
+- [ ] 編集中
+- [x] 編集済み
 
 [一般向け(person)](../pathLB.md)
 
@@ -264,7 +264,20 @@ variable - string(directory)
 string(directory)  
 
 >Description :  
-絶対的フォルダ階層を設定する関数  
+絶対フォルダ階層を設定する関数  
+
+### Path.addAbsoluteDirectory()
+>Signature :  
+addAbsoluteDirectory(variable)  
+
+>Parameters :  
+variable - string(directory)  
+
+>Returns :  
+string(directory)  
+
+>Description :  
+絶対フォルダ階層に階層を追加する関数  
 
 ### Path.getAbsoluteDirectory()
 >Signature :  
@@ -277,7 +290,7 @@ None
 string(directory)  
 
 >Description :  
-設定した絶対的フォルダ階層を返す関数  
+設定した絶対フォルダ階層を返す関数  
 
 ### Path.setRelativeDirectory()
 >Signature :  
@@ -290,7 +303,7 @@ variable - string(directory)
 string(directory)  
 
 >Description :  
-相対的フォルダ階層を設定する関数  
+相対フォルダ階層を設定する関数  
 
 ### Path.addRelativeDirectory()
 >Signature :  
@@ -303,190 +316,358 @@ variable - string(directory)
 string(directory)  
 
 >Description :  
-相対的フォルダ階層のさらに階層を追加する関数  
+相対フォルダ階層に階層を追加する関数  
 
 ### Path.getRelativeDirectory()
 >Signature :  
-getRelativeDirectory()
+getRelativeDirectory()  
 
 >Parameters :  
-None
+None  
 
 >Returns :  
-string(directory)
+string(directory)  
 
 >Description :  
-設定した相対的フォルダ階層を返す関数
+設定した相対フォルダ階層を返す関数
 
 ### Path.setFile()
 >Signature :  
 setFile(variable)
 
 >Parameters :  
-variable - string
+variable - string  
 
 >Returns :  
-value
+string  
 
 >Description :  
-クラス内変数に設定している変数を返す関数  
-パラメータには何も入れない
+ファイル名を設定する関数  
 
 ### Path.getFile()
 >Signature :  
-getFile()
+getFile()  
 
 >Parameters :  
-None
+None  
 
 >Returns :  
-value
+string  
 
 >Description :  
-クラス内変数に設定している変数を返す関数  
-パラメータには何も入れない
+設定したファイル名を返す関数  
 
 ### Path.setExtension()
 >Signature :  
 setExtension(variable)
 
 >Parameters :  
-variable - string
+variable - string(extension)
 
 >Returns :  
-value
+string(extension)
 
 >Description :  
-クラス内変数に設定している変数を返す関数  
-パラメータには何も入れない
+拡張子名を設定する関数  
 
 ### Path.getExtension()
 >Signature :  
-getExtension()
+getExtension()  
 
 >Parameters :  
-None
+None  
 
 >Returns :  
-value
+string(extension)  
 
 >Description :  
-クラス内変数に設定している変数を返す関数  
-パラメータには何も入れない
+設定した拡張子名を返す関数  
+
+### Path.setTargetPath()
+>Signature :  
+setTargetPath(variable)
+
+>Parameters :  
+variable - [Path](#class-path)  
+
+>Returns :  
+[Path](#class-path)  
+
+>Description :  
+影響を与えるパスオブジェクトを設定する関数  
+
+### Path.getTargetPath()
+>Signature :  
+getTargetPath()  
+
+>Parameters :  
+None  
+
+>Returns :  
+[Path](#class-path)  
+
+>Description :  
+設定した影響を与えるパスオブジェクトを返す関数  
+
+### Path.setSourcePath()
+>Signature :  
+setSourcePath(variable)
+
+>Parameters :  
+variable - [Path](#class-path)  
+
+>Returns :  
+[Path](#class-path)  
+
+>Description :  
+影響を受けるパスオブジェクトを設定する関数  
+
+### Path.getSourcePath()
+>Signature :  
+getSourcePath()  
+
+>Parameters :  
+None  
+
+>Returns :  
+[Path](#class-path)  
+
+>Description :  
+設定した影響を受けるパスオブジェクトを返す関数  
 
 ## Public Function
-### Path.absolutePath()
+### Path.queryDirectory()
 >Signature :  
 [setAbsoluteDirectory()](#pathsetabsolutedirectory)  
-absolutePath() or absolutePath(variable)
+[setRelativeDirectory()](#pathsetrelativedirectory)  
+queryDirectory() or queryDirectory(absolute=None,relative=None)
 
 >Parameters :  
-variable - value  
+absolute - string(directory)  
+relative - string(directory)  
 
 >Returns :  
-None
+string(directory)  
 
 >Description :  
-設定した変数を使用してアクションする際に使用する関数  
-set関数に設定していれば何も変数を入れずに実行し  
-無ければ変数を入れる必要がある
+絶対フォルダ階層と相対フォルダ階層を結合した文字列を返す関数  
+### Path.queryAbsolutePath()
+>Signature :  
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
+[setRelativeDirectory()](#pathsetrelativedirectory)  
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+queryAbsolutePath() or queryAbsolutePath(absolute=None,relative=None,file=None,ext=None)
 
-### Path.relativePath()
+>Parameters :  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
+
+>Returns :  
+string(path)  
+
+>Description :  
+絶対パスを返す関数  
+
+### Path.queryRelativePath()
 >Signature :  
 [setRelativeDirectory()](#pathsetrelativedirectory)  
-relativePath() or relativePath(variable)
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+queryRelativePath() or queryRelativePath(relative=None,file=None,ext=None)
 
 >Parameters :  
-variable - value  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
 
 >Returns :  
-None
+string(path)  
 
 >Description :  
-設定した変数を使用してアクションする際に使用する関数  
-set関数に設定していれば何も変数を入れずに実行し  
-無ければ変数を入れる必要がある
+相対パスを返す関数  
 
-### Path.relativePath()
+### Path.querySequencePath()
 >Signature :  
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
 [setRelativeDirectory()](#pathsetrelativedirectory)  
-relativePath() or relativePath(variable)
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+querySequencePath() or querySequencePath(absolute=None,relative=None,file=None,ext=None)  
 
 >Parameters :  
-variable - value  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
 
 >Returns :  
-None
+sequence of string  
 
 >Description :  
-設定した変数を使用してアクションする際に使用する関数  
-set関数に設定していれば何も変数を入れずに実行し  
-無ければ変数を入れる必要がある
+フォルダ階層ごと、ファイル名、拡張子名とバラバラにしてlist文字列で返す関数
 
 ### Path.createFileExt()
 >Signature :  
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
 [setRelativeDirectory()](#pathsetrelativedirectory)  
-createFileExt() or createFileExt(variable)
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+createFileExt() or createFileExt(absolute=None,relative=None,file=None,ext=None)  
 
 >Parameters :  
-variable - value  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
 
 >Returns :  
-None
+None  
 
 >Description :  
-設定した変数を使用してアクションする際に使用する関数  
-set関数に設定していれば何も変数を入れずに実行し  
-無ければ変数を入れる必要がある
+新しくファイル名を作成する関数  
 
 ### Path.deleteFileExt()
 >Signature :  
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
 [setRelativeDirectory()](#pathsetrelativedirectory)  
-deleteFileExt() or deleteFileExt(variable)
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+deleteFileExt() or deleteFileExt(absolute=None,relative=None,file=None,ext=None)  
 
 >Parameters :  
-variable - value  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
 
 >Returns :  
-None
+None  
 
 >Description :  
-設定した変数を使用してアクションする際に使用する関数  
-set関数に設定していれば何も変数を入れずに実行し  
-無ければ変数を入れる必要がある
+指定したファイル名を削除する関数  
 
 ### Path.createDirectory()
 >Signature :  
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
 [setRelativeDirectory()](#pathsetrelativedirectory)  
-createDirectory() or createDirectory(variable)
+createDirectory() or createDirectory(absolute=None,relative=None)  
 
 >Parameters :  
-variable - value  
+absolute - string(directory)  
+relative - string(directory)  
 
 >Returns :  
-None
+None  
 
 >Description :  
-設定した変数を使用してアクションする際に使用する関数  
-set関数に設定していれば何も変数を入れずに実行し  
-無ければ変数を入れる必要がある
+同じ名前のフォルダ階層が無ければフォルダ階層を作成する関数  
 
-### Path.queryDirectory()
+### Path.createEnvironmentVariable()
 >Signature :  
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
 [setRelativeDirectory()](#pathsetrelativedirectory)  
-queryDirectory() or queryDirectory(variable)
+createEnvironmentVariable() or createEnvironmentVariable(directory=None,environName=None)  
 
 >Parameters :  
-variable - value  
+directory - string(directory)  
+environName - string(directory)  
 
 >Returns :  
-None
+string(directory)  
 
 >Description :  
-設定した変数を使用してアクションする際に使用する関数  
-set関数に設定していれば何も変数を入れずに実行し  
-無ければ変数を入れる必要がある
+環境変数を作成する関数  
 
+### Path.targetPathMove()
+>Signature :  
+[setTargetPath()](#pathsettargetpath)
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
+[setRelativeDirectory()](#pathsetrelativedirectory)  
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+deleteFileExt() or deleteFileExt(targetPath=None,absolute=None,relative=None,file=None,ext=None)  
+
+>Parameters :  
+targetPath - [Path](#class-path)  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
+
+>Returns :  
+None  
+
+>Description :  
+現在所持しているPathをtargetPathに移す関数  
+
+### Path.targetPathCopy()
+>Signature :  
+[setTargetPath()](#pathsettargetpath)
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
+[setRelativeDirectory()](#pathsetrelativedirectory)  
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+deleteFileExt() or deleteFileExt(targetPath=None,absolute=None,relative=None,file=None,ext=None)  
+
+>Parameters :  
+targetPath - [Path](#class-path)  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
+
+>Returns :  
+None  
+
+>Description :  
+現在所持しているPathをtargetPathにコピーする関数  
+
+### Path.sourcePathMove()
+>Signature :  
+[setSourcePath()](#pathsetsourcepath)
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
+[setRelativeDirectory()](#pathsetrelativedirectory)  
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+deleteFileExt() or deleteFileExt(sourcePath=None,absolute=None,relative=None,file=None,ext=None)  
+
+>Parameters :  
+sourcePath - [Path](#class-path)  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
+
+>Returns :  
+None  
+
+>Description :  
+sourcePathを現在所持しているPathに移す関数  
+
+### Path.sourcePathCopy()
+>Signature :  
+[setSourcePath()](#pathsetsourcepath)
+[setAbsoluteDirectory()](#pathsetabsolutedirectory)  
+[setRelativeDirectory()](#pathsetrelativedirectory)  
+[setFile()](#pathsetfile)  
+[setExtension()](#pathsetextension)  
+deleteFileExt() or deleteFileExt(sourcePath=None,absolute=None,relative=None,file=None,ext=None)  
+
+>Parameters :  
+sourcePath - [Path](#class-path)  
+absolute - string(directory)  
+relative - string(directory)  
+file - string  
+ext - string(extension)  
+
+>Returns :  
+None  
+
+>Description :  
+sourcePathを現在所持しているPathにコピーする関数  
 ---
 # Functions
 None
