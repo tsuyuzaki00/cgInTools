@@ -11,10 +11,31 @@ cit.reloads([bLB,jLB])
 
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
 
+class DataNode(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataNode,self).__init__()
+
+class DataAttribute(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataAttribute,self).__init__()
+
+class DataVertex(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataVertex,self).__init__()
+
+class DataEdge(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataVertex,self).__init__()
+
+class DataFace(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataFace,self).__init__()
+
 class SelfDGNode(bLB.SelfOrigin):
     def __init__(self):
         super(SelfDGNode,self).__init__()
-        #self._node_Node=None
+        self._node_Node=None
+        self._attr_Attributes=[]
         self._plug_Plugs=[]
         self._dataChoice_strs+=[
             "Plugs"
@@ -37,8 +58,6 @@ class SelfDGNode(bLB.SelfOrigin):
     def plugsDoIt(self):
         for _plug_Plug in self._plug_Plugs:
             _plug_Plug.doIt()
-
-
 
 class SelfDAGNode(SelfDGNode):
     def __init__(self):
@@ -274,21 +293,28 @@ class SelfDAGNode(SelfDGNode):
 class SelfTransNode(SelfDAGNode):
     def __init__(self):
         super(SelfTransNode,self).__init__()
-class SelfGeometry(SelfDAGNode):
-    def __init__(self):
-        super(SelfGeometry,self).__init__()
+
 class SelfJoint(SelfDAGNode):
     def __init__(self):
         super(SelfJoint,self).__init__()
-class SelfCurve(SelfDAGNode):
-    def __init__(self):
-        super(SelfCurve,self).__init__()
-class SelfSurface(SelfDAGNode):
-    def __init__(self):
-        super(SelfSurface,self).__init__()
+
 class SelfLight(SelfDAGNode):
     def __init__(self):
         super(SelfLight,self).__init__()
+
 class SelfCamera(SelfDAGNode):
     def __init__(self):
         super(SelfCamera,self).__init__()
+
+class SelfGeometry(SelfDAGNode):
+    def __init__(self):
+        super(SelfGeometry,self).__init__()
+
+class SelfCurve(SelfDAGNode):
+    def __init__(self):
+        super(SelfCurve,self).__init__()
+
+class SelfSurface(SelfDAGNode):
+    def __init__(self):
+        super(SelfSurface,self).__init__()
+
