@@ -2,21 +2,13 @@
 import maya.cmds as cmds
 
 import cgInTools as cit
+from ...library import baseLB as bLB
 from . import setBaseLB as sbLB
 from . import jsonLB as jLB
 from . import attributeLB as aLB
-cit.reloads([sbLB,jLB,aLB])
+cit.reloads([bLB,sbLB,jLB,aLB])
 
 RULES_DICT=jLB.getJson(cit.mayaSettings_dir,"library")
-
-class Rename(object):
-    def __init__(self):
-        self._titleName_str=None
-        self._nodeName_str=None
-        self._sideName_str=None
-        self._numberNames=[]
-        self._hierarchyNames=[]
-        self._orderNames=[]
 
 class Naming(sbLB.BaseName):
     def __init__(self):
@@ -260,3 +252,90 @@ class Naming(sbLB.BaseName):
             evalSelf=eval("self._"+_markNaming_dict["attrString"])
             mark.setStringName(evalSelf)
             mark.addAttr()
+
+class SelfNodeName(bLB.SelfOrigin):
+    def __init__(self):
+        super(SelfNodeName,self).__init__()
+        self._titleName_str=None
+        self._nodeTypeName_str=None
+        self._sideName_str=None
+        self._numberName_ints=[]
+        self._hierarchyName_strs=[]
+        self._customName_strs=[]
+        self._orderName_enums=[]
+
+        self._node_DataNode=None
+
+    #Setting Function
+    def setTitleName(self,variable):
+        self._titleName_str=variable
+        return self._titleName_str
+    def getTitleName(self):
+        return self._titleName_str
+    
+    def setNodeTypeName(self,variable):
+        self._nodeTypeName_str=variable
+        return self._nodeTypeName_str
+    def getNodeTypeName(self):
+        return self._nodeTypeName_str
+    
+    def setSideName(self,variable):
+        self._sideName_str=variable
+        return self._sideName_str
+    def getSideName(self):
+        return self._sideName_str
+    
+    def setNumberNames(self,variables):
+        self._numberName_ints=variables
+        return self._numberName_ints
+    def addNumberNames(self,variables):
+        self._numberName_ints+=variables
+        return self._numberName_ints
+    def getNumberNames(self):
+        return self._numberName_ints
+    
+    def setHierarchyNames(self,variables):
+        self._hierarchyName_strs=variables
+        return self._hierarchyName_strs
+    def addHierarchyNames(self,variables):
+        self._hierarchyName_strs+=variables
+        return self._hierarchyName_strs
+    def getHierarchyNames(self):
+        return self._hierarchyName_strs
+    
+    def setCustomNames(self,variables):
+        self._customName_strs=variables
+        return self._customName_strs
+    def addCustomNames(self,variables):
+        self._customName_strs+=variables
+        return self._customName_strs
+    def getCustomNames(self):
+        return self._customName_strs
+    
+    def setOrderNames(self,variables):
+        self._orderName_enums=variables
+        return self._orderName_enums
+    def addOrderNames(self,variables):
+        self._orderName_enums+=variables
+        return self._orderName_enums
+    def getOrderNames(self):
+        return self._orderName_enums
+
+    def setDataNode(self,variables):
+        self._node_DataNode=variables
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
+
+    #Public Function
+    def fullAutoName(self):
+        name_str=""
+        return name_str
+    
+    def autoName(self):
+        name_str=""
+        return name_str
+    
+    def name(self):
+        name_str=""
+        return name_str

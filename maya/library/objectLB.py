@@ -11,65 +11,75 @@ cit.reloads([bLB,jLB])
 
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
 
-class DataNode(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataNode,self).__init__()
-
-class DataAttribute(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataAttribute,self).__init__()
-
-class DataVertex(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataVertex,self).__init__()
-
-class DataEdge(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataVertex,self).__init__()
-
-class DataFace(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataFace,self).__init__()
-
 class SelfDGNode(bLB.SelfOrigin):
     def __init__(self):
         super(SelfDGNode,self).__init__()
-        self._node_Node=None
-        self._attr_Attributes=[]
-        self._plug_Plugs=[]
+        self._node_DataNode=None
+        self._name_DataName=None
+        self._attrName_strs=[]
         self._dataChoice_strs+=[
-            "Plugs"
+            "DataNode",
+            "DataName",
+            "AttributeNames"
         ]
         self._doIt_strs+=[
-            "plugsDoIt",
+            "createNode",
+            "duplicateNode",
+            "rename",
+            "searchDataAttributes",
+            "searchDataPlugs"
         ]
 
     #Setting Function
-    def setPlugs(self,variables):
-        self._plug_Plugs=variables
-        return self._plug_Plugs
-    def addPlugs(self,variables):
-        self._plug_Plugs+=variables
-        return self._plug_Plugs
-    def getPlugs(self):
-        return self._plug_Plugs
+    def setDataNode(self,variable):
+        self._node_DataNode=variable
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
+
+    def setDataName(self,variable):
+        self._name_DataName=variable
+        return self._name_DataName
+    def getDataName(self):
+        return self._name_DataName
+    
+    def setAttributeNames(self,variables):
+        self._attrName_strs=variables
+        return self._attrName_strs
+    def addAttributeNames(self,variables):
+        self._attrName_strs+=variables
+        return self._attrName_strs
+    def getAttributeNames(self):
+        return self._attrName_strs
     
     #Public Function
-    def plugsDoIt(self):
-        for _plug_Plug in self._plug_Plugs:
-            _plug_Plug.doIt()
+    def createNode(self):
+        pass
+
+    def duplicateNode(self):
+        pass
+
+    def rename(self):
+        pass
+
+    def searchDataAttributes(self):
+        pass
+
+    def searchDataPlugs(self):
+        pass
 
 class SelfDAGNode(SelfDGNode):
     def __init__(self):
         super(SelfDAGNode,self).__init__()
-        self._parent_MObject=None
+        #self._node_DataNode=None
+        #self._name_DataName=None
+        #self._attrName_strs=[]
+        self._matrix_DataMatrix=None
         self._fullPath_bool=False
-        self._firstOnly_bool=False
-        self._firstAddress_int=0
+
         self._dataChoice_strs+=[
-            "FullPath",
-            "FirstOnly",
-            "FirstAddress",
+            "DataMatrix",
+            "FullPath"
         ]
         self._doIt_strs+=[
             "parent",
@@ -136,46 +146,20 @@ class SelfDAGNode(SelfDGNode):
         return name_strs
 
     #Setting Function
+    def setDataMatrix(self,variable):
+        self._matrix_DataMatrix=variable
+        return self._matrix_DataMatrix
+    def getDataMatrix(self):
+        return self._matrix_DataMatrix
+    
     def setFullPath(self,variable):
         self._fullPath_bool=variable
+        return self._fullPath_bool
     def getFullPath(self):
         return self._fullPath_bool
     
-    def setFirstOnly(self,variable):
-        self._firstOnly_bool=variable
-    def getFirstOnly(self):
-        return self._firstOnly_bool
-    
-    def setFirstAddress(self,variable):
-        self._firstAddress_int=variable
-    def getFirstAddress(self):
-        return self._firstAddress_int
-    
-    def getNode(self,fullPath=None):
-        _fullPath_bool=fullPath or self._fullPath_bool
-        node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
-        return node_str
-
-    def setParent(self,variable):
-        self._parent_MObject=self.selectNode_create_MObject(variable)
-    def getParent(self,fullPath=None):
-        _fullPath_bool=fullPath or self._fullPath_bool
-        node_str=self._fullPathSwitch_query_str(self._parent_MObject,_fullPath_bool)
-        return node_str
-    
     #Public Function
-    def parent(self,node=None,parent=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _parent_MObject=self.selectNode_create_MObject(parent) or self._parent_MObject
-        
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        parent_MDagPath=self.convertMObject_create_MDagPath(_parent_MObject)
-        
-        parent_MDagModifier=om2.MDagModifier()
-        parent_MDagModifier.reparentNode(node_MDagPath,parent_MDagPath)
-        parent_MDagModifier.doIt()
-
-    def replaceByParent(self,node=None,fullPath=None):
+    def queryParentSelfDAGNode(self,node=None,fullPath=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _fullPath_bool=fullPath or self._fullPath_bool
 
@@ -185,7 +169,7 @@ class SelfDAGNode(SelfDGNode):
         node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
         return node_str
     
-    def replaceByChild(self,node=None,fullPath=False,firstAddress=None):
+    def queryChildSelfDAGNodes(self,node=None,fullPath=False):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _fullPath_bool=fullPath or self._fullPath_bool
         _firstAddress_int=firstAddress or self._firstAddress_int
@@ -197,71 +181,7 @@ class SelfDAGNode(SelfDGNode):
         node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
         return node_str
         
-    def replaceByShape(self,node=None,fullPath=False,firstAddress=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-
-        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
-        self._node_MObject=shape_MObjects[_firstAddress_int]
-        node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
-        return node_str
-
-    def queryShape(self,node=None,fullPath=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObject=self.shape_query_MObject(node_MDagPath)
-        shape_str=self._fullPathSwitch_query_str(shape_MObject,_fullPath_bool)
-        return shape_str
-    
-    def queryShapes(self,node=None,fullPath=None,firstOnly=None,firstAddress=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
-        _firstOnly_bool=firstOnly or self._firstOnly_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
-        if shape_MObjects == None:
-            return None
-        if _firstOnly_bool:
-            shape_str=self._fullPathSwitch_query_str(shape_MObjects[_firstAddress_int],_fullPath_bool)
-            return shape_str
-        else:
-            shape_strs=self._fullPathSwitch_query_strs(shape_MObjects,_fullPath_bool)
-            return shape_strs
-    
-    def queryShapeType(self,node=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObject=self.shape_query_MObject(node_MDagPath)
-        shapeType_str=self.nodeType_query_str(shape_MObject)
-        return shapeType_str
-    
-    def queryShapeTypes(self,node=None,firstOnly=None,firstAddress=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _firstOnly_bool=firstOnly or self._firstOnly_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        shape_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=True)
-        if shape_MObjects == None:
-            return None
-        if _firstOnly_bool:
-            shapeType_str=self.nodeType_query_str(shape_MObjects[_firstAddress_int])
-            return shapeType_str
-        else:
-            shapeType_strs=[]
-            for shape_MObject in shape_MObjects:
-                shapeType_str=self.nodeType_query_str(shape_MObject)
-                shapeType_strs.append(shapeType_str)
-            return shapeType_strs
-
-    def queryParent(self,node=None,fullPath=None):
+    def queryParentDataNode(self,node=None,fullPath=None):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _fullPath_bool=fullPath or self._fullPath_bool
 
@@ -273,7 +193,7 @@ class SelfDAGNode(SelfDGNode):
         else:
             return parent_str
 
-    def queryChilds(self,node=None,fullPath=False,firstOnly=None,firstAddress=None):
+    def queryChildDataNodes(self,node=None,fullPath=False):
         _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
         _fullPath_bool=fullPath or self._fullPath_bool
         _firstOnly_bool=firstOnly or self._firstOnly_bool
@@ -290,31 +210,284 @@ class SelfDAGNode(SelfDGNode):
             child_strs=self._fullPathSwitch_query_strs(child_MObjects,_fullPath_bool)
             return child_strs
 
-class SelfTransNode(SelfDAGNode):
+    def editTransform(self):
+        pass
+
+    def editTranslate(self):
+        pass
+
+    def editRotation(self):
+        pass
+
+    def editQuaternion(self):
+        pass
+
+    def editScale(self):
+        pass
+
+    def editShear(self):
+        pass
+
+    def matchTransform(self):
+        pass
+    
+    def matchTranslate(self):
+        pass
+
+    def matchRotation(self):
+        pass
+    
+    def matchQuaternion(self):
+        pass
+    
+    def matchAimVector(self):
+        pass
+    
+    def matchScale(self):
+        pass
+    
+    def matchShear(self):
+        pass
+
+    def mirrorTransform(self):
+        pass
+
+    def mirrorTranslate(self):
+        pass
+    
+    def mirrorRotation(self):
+        pass
+
+    def mirrorQuaternion(self):
+        pass
+    
+    def mirrorShear(self):
+        pass
+
+class SelfPlug(bLB.SelfOrigin):
     def __init__(self):
-        super(SelfTransNode,self).__init__()
+        super(SelfPlug,self).__init__()
+        self._plug_DataPlug=None
+        self._anim_DataKey=None
+        self._driven_DataKey=None
+        self._keyLock_bool=False
+        self._valueLock_bool=False
+        self._hide_bool=False
+        self._value_value=None
+        self._dataChoice_strs+=[
+            "DataPlug",
+            "AnimDataKey",
+            "DrivenDataKey",
+            "KeyLock",
+            "ValueLock",
+            "Hide",
+            "Value"
+        ]
+        self._doIt_strs+=[
+            "animKey",
+            "drivenKey",
+            "keyLock",
+            "valueLock",
+            "hide",
+            "editValue",
+            "queryValue"
+        ]
+    
+    #Setting Function
+    def setDataPlug(self,variable):
+        self._plug_DataPlug=variable
+        return self._plug_DataPlug
+    def getDataPlug(self):
+        return self._plug_DataPlug
+    
+    def setAnimDataKey(self,variable):
+        self._anim_DataKey=variable
+        return self._anim_DataKey
+    def getAnimDataKey(self):
+        return self._anim_DataKey
+    
+    def setDrivenDataKey(self,variable):
+        self._driven_DataKey=variable
+        return self._driven_DataKey
+    def getDrivenDataKey(self):
+        return self._driven_DataKey
+    
+    def setKeyLock(self,variable):
+        self._keyLock_bool=variable
+        return self._keyLock_bool
+    def getKeyLock(self):
+        return self._keyLock_bool
+    
+    def setValueLock(self,variable):
+        self._valueLock_bool=variable
+        return self._valueLock_bool
+    def getValueLock(self):
+        return self._valueLock_bool
+    
+    def setHide(self,variable):
+        self._hide_bool=variable
+        return self._hide_bool
+    def getHide(self):
+        return self._hide_bool
+
+    def setValue(self,variable):
+        self._value_value=variable
+        return self._value_value
+    def getValue(self):
+        return self._value_value
+    
+    #Public Function
+    def animKey(self):
+        pass
+
+    def drivenKey(self):
+        pass
+
+    def keyLock(self):
+        pass
+
+    def valueLock(self):
+        pass
+
+    def hide(self):
+        pass
+
+    def editValue(self):
+        pass
+
+    def queryValue(self):
+        pass
 
 class SelfJoint(SelfDAGNode):
     def __init__(self):
         super(SelfJoint,self).__init__()
+        #self._node_DataNode=None
+        #self._name_DataName=None
+        #self._attrName_strs=[]
+        #self._matrix_DataMatrix=None
+        #self._fullPath_bool=False
+        self._joint_DataJoint=None
+
+        self._dataChoice_strs+=[
+        ]
+        self._doIt_strs+=[
+        ]
+
+    def setDataJoint(self,variable):
+        self._joint_DataJoint=variable
+        return self._joint_DataJoint
+    def getDataJoint(self):
+        return self._joint_DataJoint
+    
+    #Public Function
 
 class SelfLight(SelfDAGNode):
     def __init__(self):
         super(SelfLight,self).__init__()
+        #self._node_DataNode=None
+        #self._name_DataName=None
+        #self._attrName_strs=[]
+        #self._matrix_DataMatrix=None
+        #self._fullPath_bool=False
 
 class SelfCamera(SelfDAGNode):
     def __init__(self):
         super(SelfCamera,self).__init__()
+        #self._node_DataNode=None
+        #self._name_DataName=None
+        #self._attrName_strs=[]
+        #self._matrix_DataMatrix=None
+        #self._fullPath_bool=False
 
 class SelfGeometry(SelfDAGNode):
     def __init__(self):
         super(SelfGeometry,self).__init__()
+        #self._node_DataNode=None
+        #self._name_DataName=None
+        #self._attrName_strs=[]
+        #self._matrix_DataMatrix=None
+        #self._fullPath_bool=False
+        self._geo_DataGeometry=None
+        self._skin_DataSkinWeight=None
+
+    #Setting Function
+    def setDataGeometry(self,variable):
+        self._geo_DataGeometry=variable
+        return self._geo_DataGeometry
+    def currentDataGeometry(self):
+        pass
+    def getDataGeometry(self):
+        return self._geo_DataGeometry
+    
+    def setDataSkinWeight(self,variable):
+        self._skin_DataSkinWeight=variable
+        return self._skin_DataSkinWeight
+    def currentDataSkinWeight(self):
+        pass
+    def getDataSkinWeight(self):
+        return self._skin_DataSkinWeight
+    
+    #Public Function
+    def createGeometry(self):
+        pass
+
+    def updateGeometry(self):
+        pass
+
+    def createSkinWeight(self):
+        pass
+
+    def updateSkinWeight(self):
+        pass
 
 class SelfCurve(SelfDAGNode):
     def __init__(self):
         super(SelfCurve,self).__init__()
+        #self._node_DataNode=None
+        #self._name_DataName=None
+        #self._attrName_strs=[]
+        #self._matrix_DataMatrix=None
+        #self._fullPath_bool=False
+        self._curve_DataCurve=None
+
+    #Setting Function
+    def setDataCurve(self,variable):
+        self._curve_DataCurve=variable
+        return self._curve_DataCurve
+    def getDataCurve(self):
+        return self._curve_DataCurve
+    
+    #Public Function
+    def createCurve(self):
+        pass
+
+    def updateCurve(self):
+        pass
 
 class SelfSurface(SelfDAGNode):
     def __init__(self):
         super(SelfSurface,self).__init__()
+        #self._node_DataNode=None
+        #self._name_DataName=None
+        #self._attrName_strs=[]
+        #self._matrix_DataMatrix=None
+        #self._fullPath_bool=False
+        self._surface_DataSurface=None
 
+    #Setting Function
+    def setDataCurve(self,variable):
+        self._surface_DataSurface=variable
+        return self._surface_DataSurface
+    def getDataCurve(self):
+        return self._surface_DataSurface
+    
+    #Public Function
+    def createSurface(self):
+        pass
+
+    def updateSurface(self):
+        pass
+
+class SelfTime(bLB.SelfOrigin):
+    def __init__(self):
+        self._time_DataTimes=None
