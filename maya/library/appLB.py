@@ -9,7 +9,7 @@ from ...library import baseLB as bLB
 from ...library import jsonLB as jLB
 cit.reloads([bLB,jLB])
 
-class MatchConnect(bLB.SelfOrigin):
+class AppConnect(bLB.SelfOrigin):
     def __init__(self):
         self._source_SelfPlug=None
         self._target_SelfPlug=None
@@ -32,7 +32,7 @@ class MatchConnect(bLB.SelfOrigin):
     def connect(self):
         pass
 
-class MatchParent(bLB.SelfOrigin):
+class AppParent(bLB.SelfOrigin):
     def __init__(self):
         self._node_SelfDAGNode=None
         self._parent_SelfDAGNode=None

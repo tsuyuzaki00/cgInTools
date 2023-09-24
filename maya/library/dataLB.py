@@ -12,10 +12,29 @@ cit.reloads([bLB,jLB])
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
 
 class DataNode(bLB.SelfOrigin):
-    def __init__(self):
+    def __init__(self,dataNode=None):
         super(DataNode,self).__init__()
-        self._nodeName_str=None
-        self._nodeType_str=None
+        if type(dataNode) is DataNode:
+            self._nodeName_str=dataNode.getNodeName()
+            self._nodeType_str=dataNode.getNodeType()
+        elif type(dataNode) is om2.MObject:
+            node_MFnDependencyNode=om2.MFnDependencyNode(dataNode)
+            self._nodeName_str=node_MFnDependencyNode.name()
+            self._nodeType_str=node_MFnDependencyNode.typeName
+        else:
+            self._nodeName_str=None
+            self._nodeType_str=None
+
+    #Single Function
+    def node_query_MObject(self,node):
+        if node == None:
+            return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        return node_MObject
 
     #Setting Function
     def setNodeName(self,variable):
@@ -32,23 +51,41 @@ class DataNode(bLB.SelfOrigin):
     
     #Public Function
     def searchNode(self,nodeName=None):
-        pass
+        _nodeName_str=nodeName or self._nodeName_str
+
+        node_MObject=self.node_query_MObject(_nodeName_str)
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        self._nodeType_str=node_MFnDependencyNode.typeName
 
 class DataAttribute(bLB.SelfOrigin):
-    def __init__(self):
+    def __init__(self,dataAttribute=None):
         super(DataAttribute,self).__init__()
-        self._longName_str=None
-        self._shortName_str=None
-        self._niceName_str=None
-        self._value_value=None
-        self._createType_str=None
-        self._keyLock_bool=False
-        self._valueLock_bool=False
-        self._hide_bool=False
-        self._min_bool=False
-        self._max_bool=False
-        self._min_float=None
-        self._max_float=None
+        if type(dataAttribute) is DataAttribute:
+            self._longName_str=dataAttribute.getLongName()
+            self._shortName_str=dataAttribute.getShortName()
+            self._valueType_str=dataAttribute.getValueType()
+            self._value_DataValueType=dataAttribute.getDataValueType()
+            self._keyLock_bool=dataAttribute.getKeyLockState()
+            self._valueLock_bool=dataAttribute.getValueLockState()
+            self._hide_bool=dataAttribute.getHideState()
+        elif type(dataAttribute) is om2.MObject:
+            attr_MFnAttribute=om2.MFnAttribute(dataAttribute)
+
+            self._longName_str=attr_MFnAttribute.name
+            self._shortName_str=attr_MFnAttribute.shortName
+            self._valueType_str=None
+            self._value_DataValueType=None
+            self._keyLock_bool=attr_MFnAttribute.keyable
+            self._valueLock_bool=False
+            self._hide_bool=attr_MFnAttribute.hidden
+        else:
+            self._longName_str=None
+            self._shortName_str=None
+            self._valueType_str=None
+            self._value_DataValueType=None
+            self._keyLock_bool=False
+            self._valueLock_bool=False
+            self._hide_bool=False
 
     #Setting Function
     def setLongName(self,variable):
@@ -62,25 +99,19 @@ class DataAttribute(bLB.SelfOrigin):
         return self._shortName_str
     def getShortName(self):
         return self._shortName_str
-
-    def setNiceName(self,variable):
-        self._niceName_str=variable
-        return self._niceName_str
-    def getNiceName(self):
-        return self._niceName_str
     
-    def setDefaultValue(self,variable):
-        self._defValue_value=variable
-        return self._defValue_value
-    def getDefaultValue(self):
-        return self._defValue_value
-
-    def setCreateType(self,variable):
-        self._createType_str=variable
-        return self._createType_str
-    def getCreateType(self):
-        return self._createType_str
-
+    def setValueType(self,variable):
+        self._valueType_str=variable
+        return self._valueType_str
+    def getValueType(self):
+        return self._valueType_str
+    
+    def setDataValueType(self,variable):
+        self._value_DataValueType=variable
+        return self._value_DataValueType
+    def getDataValueType(self):
+        return self._value_DataValueType
+    
     def setKeyLockState(self,variable):
         self._keyLock_bool=variable
         return self._keyLock_bool
@@ -98,36 +129,65 @@ class DataAttribute(bLB.SelfOrigin):
         return self._hide_bool
     def getHideState(self):
         return self._hide_bool
-    
-    def setMinState(self,variable):
-        self._min_bool=variable
-        return self._min_bool
-    def getMinState(self):
-        return self._min_bool
-    
-    def setMaxState(self,variable):
-        self._max_bool=variable
-        return self._max_bool
-    def getMaxState(self):
-        return self._max_bool
-    
-    def setMinValue(self,variable):
-        self._min_float=variable
-        return self._min_float
-    def getMinValue(self):
-        return self._min_float
-    
-    def setMaxValue(self,variable):
-        self._max_float=variable
-        return self._max_float
-    def getMaxValue(self):
-        return self._max_float
         
+class DataValueInt(bLB.SelfOrigin):
+    def __init__(self,dataValueInt=None):
+        super(DataValueInt,self).__init__()
+        if type(dataValueInt) is DataValueInt:
+            pass
+        else:
+            self._valueType_str=None
+
+class DataValueFloat(bLB.SelfOrigin):
+    def __init__(self,dataValueFloat=None):
+        super(DataValueFloat,self).__init__()
+        if type(dataValueFloat) is DataValueFloat:
+            pass
+        else:
+            self._valueType_str=None
+
+class DataValueString(bLB.SelfOrigin):
+    def __init__(self,dataValueString=None):
+        super(DataValueString,self).__init__()
+        if type(dataValueString) is DataValueString:
+            pass
+        else:
+            self._valueType_str=None
+class DataValueBoolean(bLB.SelfOrigin):
+    def __init__(self,dataValueBoolean=None):
+        super(DataValueBoolean,self).__init__()
+        if type(dataValueBoolean) is DataValueBoolean:
+            pass
+        else:
+            self._valueType_str=None
+class DataValueVector(bLB.SelfOrigin):
+    def __init__(self,dataValueVector=None):
+        super(DataValueVector,self).__init__()
+        if type(dataValueVector) is DataValueVector:
+            pass
+        else:
+            self._valueType_str=None
+
+class DataValueEnum(bLB.SelfOrigin):
+    def __init__(self,dataValueEnum=None):
+        super(DataValueEnum,self).__init__()
+        if type(dataValueEnum) is DataValueEnum:
+            pass
+        else:
+            self._valueType_str=None
+
 class DataPlug(bLB.SelfOrigin):
-    def __init__(self):
+    def __init__(self,dataPlug=None):
         super(DataPlug,self).__init__()
-        self._node_DataNode=None
-        self._attr_DataAttribute=None
+        if type(dataPlug) is DataPlug:
+            self._node_DataNode=dataPlug.getDataNode()
+            self._attr_DataAttribute=dataPlug.getDataAttribute()
+        elif type(dataPlug) is om2.MPlug:
+            self._node_DataNode=DataNode(dataPlug.node())
+            self._attr_DataAttribute=DataAttribute(dataPlug.attribute())
+        else:
+            self._node_DataNode=None
+            self._attr_DataAttribute=None
 
     #Setting Function
     def setDataNode(self,variable):
@@ -205,8 +265,6 @@ class DataTime(bLB.SelfOrigin):
     def __init__(self):
         super(DataTime,self).__init__()
         self._time_MTime=None
-        self._node_DataNode=None
-        self._attr_DataAttribute=None
         self._plug_DataPlug=None
         self._anim_DataKey=None
         

@@ -7,16 +7,22 @@ import sys,math
 import cgInTools as cit
 from ...library import baseLB as bLB
 from ...library import jsonLB as jLB
-cit.reloads([bLB,jLB])
+from . import dataLB as dLB
+cit.reloads([bLB,jLB,dLB])
 
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
 
 class SelfDGNode(bLB.SelfOrigin):
-    def __init__(self):
+    def __init__(self,selfDGNode=None):
         super(SelfDGNode,self).__init__()
-        self._node_DataNode=None
-        self._name_DataName=None
-        self._attrName_strs=[]
+        if type(selfDGNode) is SelfDGNode:
+            self._node_DataNode=selfDGNode.getDataNode()
+            self._name_DataName=selfDGNode.getDataName()
+            self._attrName_strs=selfDGNode.getAttributeNames()
+        else:
+            self._node_DataNode=None
+            self._name_DataName=None
+            self._attrName_strs=[]
         self._dataChoice_strs+=[
             "DataNode",
             "DataName",
@@ -29,6 +35,36 @@ class SelfDGNode(bLB.SelfOrigin):
             "searchDataAttributes",
             "searchDataPlugs"
         ]
+    
+    #Single Function
+    def node_query_MObject(self,node):
+        if node == None:
+            return None
+        elif not isinstance(node,str):
+            om2.MGlobal.displayError("Please insert one string in value")
+            sys.exit()
+        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        return node_MObject
+    
+    def node_create_func(self,nodeName_str,nodeType_str):
+        node_MFnDependencyNode=om2.MFnDependencyNode()
+        node_MFnDependencyNode.create(nodeType_str)
+        node_MFnDependencyNode.setName(nodeName_str)
+
+    def findAttr_create_DataAttribute(self,node_MObject,attrName_str):
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        attr_MObject=node_MFnDependencyNode.findAlias(attrName_str)
+        attr_MFnAttribute=om2.MFnAttribute(attr_MObject)
+        attrName_str=attr_MFnAttribute.name
+        plug_DataPlug=dLB.DataAttribute()
+        return plug_DataPlug
+    
+    def findPlug_create_DataPlug(self,node_MObject,attrName_str):
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        plug_MPlug=node_MFnDependencyNode.findPlug(attrName_str,False)
+        plug_DataPlug=dLB.DataPlug(plug_MPlug)
+        return plug_DataPlug
 
     #Setting Function
     def setDataNode(self,variable):
@@ -53,20 +89,32 @@ class SelfDGNode(bLB.SelfOrigin):
         return self._attrName_strs
     
     #Public Function
-    def createNode(self):
-        pass
+    def createNode(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
 
-    def duplicateNode(self):
-        pass
+        self.node_create_func(_node_DataNode.getNodeName(),_node_DataNode.getNodeType())
+
+    def duplicateNode(self,dataNode):
+        _node_DataNode=dataNode or self._node_DataNode
 
     def rename(self):
         pass
 
-    def searchDataAttributes(self):
-        pass
+    def searchDataAttributes(self,dataNode=None,attrNames=None):
+        _node_DataNode=dataNode or self._node_DataNode
+        _attrName_strs=attrNames or self._attrName_strs
 
-    def searchDataPlugs(self):
-        pass
+        node_MObject=self.node_query_MObject(_node_DataNode.getNodeName())
+        attr_DataAttributes=[self.findAttr_create_DataAttribute(node_MObject,_attrName_str) for _attrName_str in _attrName_strs]
+        return attr_DataAttributes
+
+    def searchDataPlugs(self,dataNode=None,attrNames=None):
+        _node_DataNode=dataNode or self._node_DataNode
+        _attrName_strs=attrNames or self._attrName_strs
+
+        node_MObject=self.node_query_MObject(_node_DataNode.getNodeName())
+        plug_DataPlugs=[self.findPlug_create_DataPlug(node_MObject,_attrName_str) for _attrName_str in _attrName_strs]
+        return plug_DataPlugs
 
 class SelfDAGNode(SelfDGNode):
     def __init__(self):
