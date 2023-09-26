@@ -22,18 +22,18 @@ class SelfDGNode(bLB.SelfOrigin):
         else:
             self._node_DataNode=None
             self._name_DataName=None
-            self._attrName_strs=[]
+            self._attrName_str=None
         self._dataChoice_strs+=[
             "DataNode",
             "DataName",
-            "AttributeNames"
+            "AttributeName"
         ]
         self._doIt_strs+=[
             "createNode",
             "duplicateNode",
             "rename",
-            "searchDataAttributes",
-            "searchDataPlugs"
+            "searchDataAttribute",
+            "searchDataPlug"
         ]
     
     #Single Function
@@ -57,8 +57,8 @@ class SelfDGNode(bLB.SelfOrigin):
         attr_MObject=node_MFnDependencyNode.findAlias(attrName_str)
         attr_MFnAttribute=om2.MFnAttribute(attr_MObject)
         attrName_str=attr_MFnAttribute.name
-        plug_DataPlug=dLB.DataAttribute()
-        return plug_DataPlug
+        plug_DataAttribute=dLB.DataAttribute()
+        return plug_DataAttribute
     
     def findPlug_create_DataPlug(self,node_MObject,attrName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
@@ -79,14 +79,11 @@ class SelfDGNode(bLB.SelfOrigin):
     def getDataName(self):
         return self._name_DataName
     
-    def setAttributeNames(self,variables):
-        self._attrName_strs=variables
-        return self._attrName_strs
-    def addAttributeNames(self,variables):
-        self._attrName_strs+=variables
-        return self._attrName_strs
-    def getAttributeNames(self):
-        return self._attrName_strs
+    def setAttributeName(self,variable):
+        self._attrName_str=variable
+        return self._attrName_str
+    def getAttributeName(self):
+        return self._attrName_str
     
     #Public Function
     def createNode(self,dataNode=None):
@@ -100,21 +97,21 @@ class SelfDGNode(bLB.SelfOrigin):
     def rename(self):
         pass
 
-    def searchDataAttributes(self,dataNode=None,attrNames=None):
-        _node_DataNode=dataNode or self._node_DataNode
-        _attrName_strs=attrNames or self._attrName_strs
+    def searchDataAttribute(self,node_DataNode=None,attrName=None):
+        _node_DataNode=node_DataNode or self._node_DataNode
+        _attrName_str=attrName or self._attrName_str
 
         node_MObject=self.node_query_MObject(_node_DataNode.getNodeName())
-        attr_DataAttributes=[self.findAttr_create_DataAttribute(node_MObject,_attrName_str) for _attrName_str in _attrName_strs]
-        return attr_DataAttributes
+        attr_DataAttribute=self.findAttr_create_DataAttribute(node_MObject,_attrName_str)
+        return attr_DataAttribute
 
-    def searchDataPlugs(self,dataNode=None,attrNames=None):
-        _node_DataNode=dataNode or self._node_DataNode
-        _attrName_strs=attrNames or self._attrName_strs
+    def searchDataPlug(self,node_DataNode=None,attrName=None):
+        _node_DataNode=node_DataNode or self._node_DataNode
+        _attrName_str=attrName or self._attrName_str
 
         node_MObject=self.node_query_MObject(_node_DataNode.getNodeName())
-        plug_DataPlugs=[self.findPlug_create_DataPlug(node_MObject,_attrName_str) for _attrName_str in _attrName_strs]
-        return plug_DataPlugs
+        plug_DataPlug=self.findPlug_create_DataPlug(node_MObject,_attrName_str)
+        return plug_DataPlug
 
 class SelfDAGNode(SelfDGNode):
     def __init__(self):

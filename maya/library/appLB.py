@@ -11,11 +11,25 @@ cit.reloads([bLB,jLB])
 
 class AppConnect(bLB.SelfOrigin):
     def __init__(self):
+        self._source_SelfNode=None
+        self._target_SelfNode=None
         self._source_SelfPlug=None
         self._target_SelfPlug=None
         self._proxy_bool=False
 
     #Setting Function
+    def setSourceSelfNode(self,variable):
+        self._source_SelfNode=variable
+        return self._source_SelfNode
+    def getSourceSelfNode(self):
+        return self._source_SelfNode
+        
+    def setTargetSelfNode(self,variable):
+        self._target_SelfNode=variable
+        return self._target_SelfNode
+    def getTargetSelfNode(self):
+        return self._target_SelfNode
+    
     def setSourceSelfPlug(self,variable):
         self._source_SelfPlug=variable
         return self._source_SelfPlug
@@ -29,7 +43,10 @@ class AppConnect(bLB.SelfOrigin):
         return self._target_SelfPlug
     
     #Public Function
-    def connect(self):
+    def connectNode(self):
+        pass
+
+    def connectPlug(self):
         pass
 
 class AppParent(bLB.SelfOrigin):
@@ -50,6 +67,15 @@ class AppParent(bLB.SelfOrigin):
         return self._parent_SelfDAGNode
     def getParentSelfDAGNode(self):
         return self._parent_SelfDAGNode
+    
+    def setChildSelfDAGNodes(self,variables):
+        self._child_SelfDAGNodes=variables
+        return self._child_SelfDAGNodes
+    def addChildSelfDAGNodes(self,variables):
+        self._child_SelfDAGNodes+=variables
+        return self._child_SelfDAGNodes
+    def getChildSelfDAGNodes(self):
+        return self._child_SelfDAGNodes
     
     #Public Function
     def parent(self):

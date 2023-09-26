@@ -20,11 +20,15 @@
         },
         {
             "type":"multi",
-            "menu":"Geometry"
+            "menu":"Node"
         },
         {
             "type":"multi",
             "menu":"Joint"
+        },
+        {
+            "type":"multi",
+            "menu":"Geometry"
         },
         {
             "type":"multi",
@@ -40,10 +44,6 @@
         },
         {
             "type":"multi",
-            "menu":"Guide"
-        }, 
-        {
-            "type":"multi",
             "menu":"Build"
         }, 
         {
@@ -52,19 +52,11 @@
         },
         {
             "type":"multi",
-            "menu":"Object rename"
+            "menu":"DGNode"
         },
         {
             "type":"multi",
-            "menu":"Object position"
-        },
-        {
-            "type":"multi",
-            "menu":"Object mirror"
-        },
-        {
-            "type":"multi",
-            "menu":"Drawing color"
+            "menu":"DAGNode"
         },
         {
             "type":"multi",
@@ -83,9 +75,9 @@
             "menu":"Cv"
         },
         {
-            "type":"multi",
-            "menu":"Connect"
-        }, 
+            "type":"single",
+            "menu":"Job"
+        },
         {
             "type":"multi",
             "menu":"Skin"
@@ -114,6 +106,7 @@
         "Edit":[],
         "Query":[],
         "File":[],
+        "Job":[],
         "Setting":[
             {
                 "label":"Loaded 3DCONNEXION",
@@ -160,7 +153,7 @@
                 "icon":""
             }
         ],
-        "Geometry":[],
+        "Node":[],
         "Joint":[
             {
                 "label":"Select Position Joint",
@@ -170,6 +163,7 @@
                 "icon":""
             }
         ],
+        "Geometry":[],
         "Curve":[
             {
                 "label":"Create Ctrl Window",
@@ -189,24 +183,17 @@
                 "icon":""
             }
         ],
-        "Guide":[],
-        "Connect":[
+        "Build":
+        [
             {
-                "label":"Joint Offset Ctrl",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"connectOffsetCtrlEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Joint Aim Ctrl",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"connectAimCtrlEX",
+                "label":"check Run",
+                "fromFolder":"cgInTools.maya.manager",
+                "importFile":"checkRunMN",
                 "function":"main()",
                 "icon":""
             }
         ],
-        "Object rename":[
+        "DGNode":[
             {
                 "label":"Auto Rename",
                 "fromFolder":"cgInTools.maya.execute",
@@ -220,9 +207,16 @@
                 "importFile":"autoRenameOP",
                 "function":"main()",
                 "icon":""
+            },
+            {
+                "label":"Ctrl Color Change",
+                "fromFolder":"cgInTools.maya.manager",
+                "importFile":"ctrlColorChangeMN",
+                "function":"main()",
+                "icon":""
             }
         ],
-        "Object position":[
+        "DAGNode":[
             {
                 "label":"Center Target Pos",
                 "fromFolder":"cgInTools.maya.execute",
@@ -234,25 +228,6 @@
                 "label":"Window Target Pos",
                 "fromFolder":"cgInTools.maya.manager",
                 "importFile":"targetPositionMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Object mirror":[
-            {
-                "label":"Selection MirrorX",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"selectMirrorX",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Drawing color":
-        [
-            {
-                "label":"Ctrl Color Change",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"ctrlColorChangeMN",
                 "function":"main()",
                 "icon":""
             }
@@ -330,36 +305,6 @@
                 "icon":""
             }
         ],
-        "Animation":[
-            {
-                "label":"Import Anim",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"importAnimEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Import Anim Pack",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"importAnimPackEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Export Anim",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"exportAnimEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Export Anim Pack",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"exportAnimPackEX",
-                "function":"main()",
-                "icon":""
-            }
-        ],
         "Inquery":
         [
             {
@@ -398,12 +343,32 @@
                 "icon":""
             }
         ],
-        "Build":
-        [
+        "Animation":[
             {
-                "label":"check Run",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"checkRunMN",
+                "label":"Import Anim",
+                "fromFolder":"cgInTools.maya.execute",
+                "importFile":"importAnimEX",
+                "function":"main()",
+                "icon":""
+            },
+            {
+                "label":"Import Anim Pack",
+                "fromFolder":"cgInTools.maya.execute",
+                "importFile":"importAnimPackEX",
+                "function":"main()",
+                "icon":""
+            },
+            {
+                "label":"Export Anim",
+                "fromFolder":"cgInTools.maya.execute",
+                "importFile":"exportAnimEX",
+                "function":"main()",
+                "icon":""
+            },
+            {
+                "label":"Export Anim Pack",
+                "fromFolder":"cgInTools.maya.execute",
+                "importFile":"exportAnimPackEX",
                 "function":"main()",
                 "icon":""
             }
