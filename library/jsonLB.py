@@ -4,7 +4,7 @@ import cgInTools as cit
 from . import pathLB as pLB
 cit.reloads([pLB])
 
-class Json(object):
+class SelfJson(object):
     def __init__(self):
         self._json_Path=pLB.Path()
         self._json_Path.setExtension("json")
@@ -51,6 +51,13 @@ class Json(object):
     def getWriteDict(self):
         return self._write_dict
 
+    def setDataPath(self,variable):
+        self._json_Path=variable
+        self._json_Path.setExtension("json")
+        return self._json_Path
+    def getDataPath(self):
+        return self._json_Path
+
     #Public Function
     def read(self,absolute=None,relative=None,file=None,extension=None):
         absolute_path=self._json_Path.queryAbsolutePath(absolute,relative,file,extension)
@@ -63,11 +70,11 @@ class Json(object):
         absolute_path=self._json_Path.queryAbsolutePath(absolute,relative,file,extension)
         self.jsonPath_create_func(absolute_path,_write_dict)
     
-class JsonPack(object):
+class AppJsonPack(object):
     def __init__(self):
         self._jsonPack_Path=pLB.Path()
         self._jsonPack_Path.setExtension("jsonPack")
-        self._writePack_Jsons=[]
+        self._writePack_SelfJsons=[]
 
     #Private Function
     def __readPack_query_dicts(self,absolute,relative,file,extension):
@@ -131,14 +138,21 @@ class JsonPack(object):
     def getExtension(self):
         return self._jsonPack_Path.getExtension()
 
-    def setJsonObjects(self,variables):
-        self._writePack_Jsons=variables
-        return self._writePack_Jsons
-    def addJsonObjects(self,variables):
-        self._writePack_Jsons+=variables
-        return self._writePack_Jsons
-    def getJsonObjects(self):
-        return self._writePack_Jsons
+    def setDataPath(self,variable):
+        self._jsonPack_Path=variable
+        self._jsonPack_Path.setExtension("jsonPack")
+        return self._jsonPack_Path
+    def getDataPath(self):
+        return self._jsonPack_Path
+
+    def setSelfJsons(self,variables):
+        self._writePack_SelfJsons=variables
+        return self._writePack_SelfJsons
+    def addSelfJsons(self,variables):
+        self._writePack_SelfJsons+=variables
+        return self._writePack_SelfJsons
+    def getSelfJsons(self):
+        return self._writePack_SelfJsons
 
     #Public Function
     def readPack(self,absolute=None,relative=None,file=None,extension=None):
@@ -155,12 +169,12 @@ class JsonPack(object):
         _relative_str=relative or self._jsonPack_Path.getRelativeDirectory()
         _file_str=file or self._jsonPack_Path.getFile()
         _extension_str= extension or self._jsonPack_Path.getExtension()
-        _writePack_Jsons=writePack or self._writePack_Jsons
+        _writePack_SelfJsons=writePack or self._writePack_SelfJsons
 
-        self.__writePack_create_func(_absolute_str,_relative_str,_file_str,_extension_str,_writePack_Jsons)
+        self.__writePack_create_func(_absolute_str,_relative_str,_file_str,_extension_str,_writePack_SelfJsons)
 
 def readJson(directory,file):
-    data=Json()
+    data=SelfJson()
     data.setAbsoluteDirectory(directory)
     data.setFile(file)
     data.setExtension("json")
@@ -168,7 +182,7 @@ def readJson(directory,file):
     return json_dict
 
 def writeJson(directory,file,write):
-    data=Json()
+    data=SelfJson()
     data.setAbsoluteDirectory(directory)
     data.setFile(file)
     data.setExtension("json")

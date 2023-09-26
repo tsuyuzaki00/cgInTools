@@ -1,9 +1,10 @@
 import sys,os
+import pymel.core as pm
 import maya.cmds as cmds
 from maya import utils
 
-from cgInTools.maya.execute import mayaMenuEX
-utils.executeDeferred(mayaMenuEX.main)
+from cgInTools._menu import mayaMenu
+utils.executeDeferred(mayaMenu.setUp)
 
 """
 sys.path.append("D:/")
@@ -11,9 +12,9 @@ os.environ["OOMOZI"] = r"D:/"
 """
 
 wrk_path=cmds.workspace(q=True,rd=True)
-folder_str="cgInToolsData"
-cgInToolsData_dir=os.path.join(wrk_path,"scripts",folder_str)
-os.environ['CGINTOOLSDATA_DIRECTORY']=cgInToolsData_dir
+folder_str='mgear_build'
+os.environ['MGEAR_SHIFTER_CUSTOMSTEP_PATH']=os.path.join(wrk_path,"scripts",folder_str)
+print(os.environ['MGEAR_SHIFTER_CUSTOMSTEP_PATH'])
 
 if int(sys.version[0]) == 2:
     try:
