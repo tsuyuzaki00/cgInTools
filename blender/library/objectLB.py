@@ -69,9 +69,13 @@ class SelfObject(SelfOrigin):
         self._rotationMode_str=None
         self._scale_list=None
         self._doParent_str=None
+        self._modifierName_str=None
+        self._modifierType_enum=None
+        self._modifierAttr_str=None
+        self._modifierValue_value=None
 
     #Single Function
-    def selectObject_query_Object(self,objName_str):
+    def activeObject_query_Object(self,objName_str):
         bpyTypes_Object=bpy.data.objects[objName_str]
         bpy.context.view_layer.objects.active=bpyTypes_Object
         bpy.ops.object.mode_set(mode='OBJECT')
@@ -106,6 +110,15 @@ class SelfObject(SelfOrigin):
         scale_list=[scale_vector[0],scale_vector[1],scale_vector[2]]
         return scale_list
 
+    def modifier_create_Modifier(self,node_Object,name_str,modifier_enum):
+        node_ObjectModifiers=node_Object.modifiers
+        node_Modifier=node_ObjectModifiers.new(name_str,modifier_enum)
+        return node_Modifier
+
+    def modifier_edit_Modifier(self,node_Object,name_str,attr_str,value_value):
+        node_typeModifier=node_Object.modifiers[name_str]
+        exec('node_typeModifier.'+str(attr_str)+'='+str(value_value))
+
     #Setting Function
     def setObject(self,variable):
         self._object_str=variable
@@ -115,7 +128,7 @@ class SelfObject(SelfOrigin):
     def setTranslation(self,variable):
         self._translation_list=variable
     def currentTranslation(self):
-        obj_Object=self.selectObject_query_Object(self._object_str)
+        obj_Object=self.activeObject_query_Object(self._object_str)
         self._translation_list=self.translation_query_list(obj_Object)
         return self._translation_list
     def getTranslation(self):
@@ -124,7 +137,7 @@ class SelfObject(SelfOrigin):
     def setRotation(self,variable):
         self._rotation_list=variable
     def currentRotation(self):
-        obj_Object=self.selectObject_query_Object(self._object_str)
+        obj_Object=self.activeObject_query_Object(self._object_str)
         self._rotation_list=self.rotation_query_list(obj_Object)
         return self._rotation_list
     def getRotation(self):
@@ -133,7 +146,7 @@ class SelfObject(SelfOrigin):
     def setRotationMode(self,variable):
         self._rotationMode_str=variable
     def currentRotationMode(self):
-        obj_Object=self.selectObject_query_Object(self._object_str)
+        obj_Object=self.activeObject_query_Object(self._object_str)
         self._rotationMode_str=self.rotationMode_query_str(obj_Object)
         return self._rotationMode_str
     def getRotationMode(self):
@@ -142,7 +155,7 @@ class SelfObject(SelfOrigin):
     def setScale(self,variable):
         self._scale_list=variable
     def currentScale(self):
-        obj_Object=self.selectObject_query_Object(self._object_str)
+        obj_Object=self.activeObject_query_Object(self._object_str)
         self._scale_list=self.scale_query_list(obj_Object)
         return self._scale_list
     def getScale(self):
@@ -152,13 +165,33 @@ class SelfObject(SelfOrigin):
         self._doParent_str=variable
     def getParent(self):
         return self._doParent_str
+    
+    def setModifierName(self,variable):
+        self._modifierName_str=variable
+    def getModifierName(self):
+        return self._modifierName_str
+    
+    def setModifierType(self,variable):
+        self._modifierType_enum=variable
+    def getModifierType(self):
+        return self._modifierType_enum
+    
+    def setModifierAttr(self,variable):
+        self._modifierAttr_str=variable
+    def getModifierAttr(self):
+        return self._modifierAttr_str
+    
+    def setModifierValue(self,variable):
+        self._modifierValue_value=variable
+    def getModifierValue(self):
+        return self._modifierValue_value
 
     #Public Function
     def translation(self,vector=None,objectName=None):
         _object_str=objectName or self._object_str
         _translation_list=vector or self._translation_list
 
-        object_Object=self.selectObject_query_Object(_object_str)
+        object_Object=self.activeObject_query_Object(_object_str)
         self.translation_edit_func(object_Object,_translation_list)
     
     def rotation(self,vector=None,mode=None,objectName=None):
@@ -166,25 +199,44 @@ class SelfObject(SelfOrigin):
         _rotation_list=vector or self._rotation_list
         _rotationMode_str=mode or self._rotationMode_str
 
-        object_Object=self.selectObject_query_Object(_object_str)
+        object_Object=self.activeObject_query_Object(_object_str)
         self.rotation_edit_func(object_Object,_rotation_list,_rotationMode_str)
     
     def scale(self,vector=None,objectName=None):
         _object_str=objectName or self._object_str
         _scale_list=vector or self._scale_list
 
-        object_Object=self.selectObject_query_Object(_object_str)
+        object_Object=self.activeObject_query_Object(_object_str)
         self.scale_edit_func(object_Object,_scale_list)
 
     def parent(self,objectName=None,parentName=None):
         _object_str=objectName or self._object_str
         _doParent_str=parentName or self._doParent_str
 
-        object_Object=self.selectObject_query_Object(_object_str)
-        parent_Object=self.selectObject_query_Object(_doParent_str)
+        object_Object=self.activeObject_query_Object(_object_str)
+        parent_Object=self.activeObject_query_Object(_doParent_str)
 
         object_Object.parent=parent_Object
         object_Object.matrix_parent_inverse=parent_Object.matrix_world.inverted()
+
+    def createModifier(self,objectName=None,modName=None,modType=None):
+        _object_str=objectName or self._object_str
+        _modifierName_str=modName or self._modifierName_str
+        _modifierType_enum=modType or self._modifierType_enum
+
+        node_Object=self.activeObject_query_Object(_object_str)
+
+        self.modifier_create_Modifier(node_Object,_modifierName_str,_modifierType_enum)
+
+    def editModifier(self,objectName=None,modName=None,attrName=None,value=None):
+        _object_str=objectName or self._object_str
+        _modifierName_str=modName or self._modifierName_str
+        _modifierAttr_str=attrName or self._modifierAttr_str
+        _modifierValue_value=value or self._modifierValue_value
+
+        node_Object=self.activeObject_query_Object(_object_str)
+
+        self.modifier_edit_Modifier(node_Object,_modifierName_str,_modifierAttr_str,_modifierValue_value)
 
 class SelfModifiersMesh(SelfOrigin):
     def __init__(self):
@@ -601,6 +653,12 @@ class SelfBoneArmature(SelfOrigin):
     def setHead(self,variable):
         self._head_list=variable
         return self._head_list
+    def addHead(self,variables):
+        if not self._head_list is None:
+            self._head_list=[self._head_list[i]+variables[i] for i in range(3)]
+        else:
+            self._head_list=variables
+        return self._head_list
     def currentHead(self):
         bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
         self._head_list=self.headPos_query_list(bone_EditBone)
@@ -610,6 +668,12 @@ class SelfBoneArmature(SelfOrigin):
     
     def setTail(self,variable):
         self._tail_list=variable
+        return self._tail_list
+    def addTail(self,variables):
+        if not self._tail_list is None:
+            self._tail_list=[self._tail_list[i]+variables[i] for i in range(3)]
+        else:
+            self._tail_list=variables
         return self._tail_list
     def currentTail(self):
         bone_EditBone=self.selectEditBone_query_EditBone(self._armature_str,self._bone_str)
