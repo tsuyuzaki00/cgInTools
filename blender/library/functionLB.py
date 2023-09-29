@@ -42,3 +42,7 @@ def rename(beforeName,afterName):
     for obj in bpy.data.objects:
         if target_string in obj.name:
             obj.name = obj.name.replace(target_string, new_name)
+
+def select_query_strs():
+    selected_strs=[obj.name for obj in bpy.context.selected_objects]
+    return selected_strs
