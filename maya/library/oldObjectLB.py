@@ -153,13 +153,16 @@ class SelfComponent(SelfOrigin):
     def selectComponent_create_MDagPath_MObject(self,node):
         if node == None:
             return None
-        elif not isinstance(node,str):
-            om2.MGlobal.displayError("Please insert one string in value")
-            sys.exit()
-        component_MSelectionList=om2.MSelectionList()
-        component_MSelectionList.add(node)
+        elif isinstance(node,str):
+            component_MSelectionList=om2.MSelectionList()
+            component_MSelectionList.add(node)
+        elif isinstance(node,list):
+            component_MSelectionList=om2.MSelectionList()
+            for n in node:
+                component_MSelectionList.add(n)
         shape_MDagPath,components_MObject=component_MSelectionList.getComponent(0)
         return shape_MDagPath,components_MObject
+        
     
     def shape_create_MDagPath(self,shape):
         if shape == None:
