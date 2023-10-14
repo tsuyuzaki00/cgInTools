@@ -1,27 +1,13 @@
 # -*- coding: iso-8859-15 -*-
 import os,shutil
 
-import cgInTools as cit
-from . import baseLB as bLB
-cit.reloads([bLB])
-
-class DataPath(bLB.SelfOrigin):
+class DataPath(object):
     def __init__(self):
         self._absolute_dir=None
         self._relative_dir=None
         self._file_str=None
         self._extension_ext=None
-
-    #Single Function
-    def mergeDirectory_create_dir(self,upperDirectory_dir,lowerDirectory_dir):
-        if upperDirectory_dir is None:
-            upperDirectory_dir=""
-        if lowerDirectory_dir is None:
-            lowerDirectory_dir=""
-        mergeDirectory_dir=os.path.join(upperDirectory_dir,lowerDirectory_dir)
-        mergeDirectory_dir=mergeDirectory_dir.replace(os.sep,'/')
-        return mergeDirectory_dir
-
+    
     #Setting Function
     def setAbsoluteDirectory(self,variable):
         self._absolute_dir=variable
@@ -53,8 +39,7 @@ class DataPath(bLB.SelfOrigin):
     def getExtension(self):
         return self._extension_ext
 
-
-class SelfPath(bLB.SelfOrigin):
+class SelfPath(object):
     def __init__(self):
         self._path_DataPath=DataPath()
         self._target_DataPath=DataPath()
@@ -101,36 +86,6 @@ class SelfPath(bLB.SelfOrigin):
         return absolutePath_path
 
     #Setting Function
-    def setAbsoluteDirectory(self,variable):
-        _absolute_dir=self._path_DataPath.setAbsoluteDirectory(variable)
-        return _absolute_dir
-    def addAbsoluteDirectory(self,variable):
-        _absolute_dir=self._path_DataPath.addAbsoluteDirectory(variable)
-        return _absolute_dir
-    def getAbsoluteDirectory(self):
-        return self._path_DataPath.getAbsoluteDirectory()
-    
-    def setRelativeDirectory(self,variable):
-        _relative_dir=self._path_DataPath.setRelativeDirectory(variable)
-        return _relative_dir
-    def addRelativeDirectory(self,variable):
-        _relative_dir=self._path_DataPath.addRelativeDirectory(variable)
-        return _relative_dir
-    def getRelativeDirectory(self):
-        return self._path_DataPath.getRelativeDirectory()
-
-    def setFile(self,variable):
-        _file_str=self._path_DataPath.setFile(variable)
-        return _file_str
-    def getFile(self):
-        return self._path_DataPath.getFile()
-    
-    def setExtension(self,variable):
-        _extension_ext=self._path_DataPath.setExtension(variable)
-        return _extension_ext
-    def getExtension(self):
-        return self._path_DataPath.getExtension()
-
     def setDataPath(self,variable):
         self._path_DataPath=variable
         return self._path_DataPath

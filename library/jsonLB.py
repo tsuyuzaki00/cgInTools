@@ -1,14 +1,12 @@
 # -*- coding: iso-8859-15 -*-
 import json
 import cgInTools as cit
-from . import baseLB as bLB
 from . import pathLB as pLB
-cit.reloads([bLB,pLB])
+cit.reloads([pLB])
 
-class SelfJson(bLB.SelfOrigin):
+class SelfJson(object):
     def __init__(self):
         self._json_SelfPath=pLB.SelfPath()
-        self._json_SelfPath.setExtension("json")
         self._write_dict={}
 
     #Single Function
@@ -22,43 +20,19 @@ class SelfJson(bLB.SelfOrigin):
             json.dump(write_dict,f,indent=4,ensure_ascii=False)
 
     #Setting Function
-    def setAbsoluteDirectory(self,variable):
-        _absoluteDirectory_str=self._json_SelfPath.setAbsoluteDirectory(variable)
-        return _absoluteDirectory_str
-    def getAbsoluteDirectory(self):
-        return self._json_SelfPath.getAbsoluteDirectory()
+    def setDataPath(self,variable):
+        variable.setExtension("json")
+        self._json_SelfPath=pLB.SelfPath()
+        self._json_SelfPath.setDataPath(variable)
+        return self._json_SelfPath.getDataPath()
+    def getDataPath(self):
+        return self._json_SelfPath.getDataPath()
     
-    def setRelativeDirectory(self,variable):
-        _relativeDirectory_str=self._json_SelfPath.setRelativeDirectory(variable)
-        return _relativeDirectory_str
-    def getRelativeDirectory(self):
-        return self._json_SelfPath.getRelativeDirectory()
-
-    def setFile(self,variable):
-        _file_str=self._json_SelfPath.setFile(variable)
-        return _file_str
-    def getFile(self):
-        return self._json_SelfPath.getFile()
-
-    def setExtension(self,variable):
-        _extension_str=self._json_SelfPath.setExtension(variable)
-        return _extension_str
-    def getExtension(self):
-        return self._json_SelfPath.getExtension()
-
     def setWriteDict(self,variable):
         self._write_dict=variable
         return self._write_dict
     def getWriteDict(self):
         return self._write_dict
-
-    def setDataPath(self,variable):
-        self._json_SelfPath=pLB.SelfPath()
-        self._json_SelfPath.setDataPath(variable)
-        self._json_SelfPath.setExtension("json")
-        return self._json_SelfPath
-    def getDataPath(self):
-        return self._json_SelfPath.getDataPath()
 
     #Public Function
     def read(self,absolute=None,relative=None,file=None,extension=None):
@@ -72,7 +46,7 @@ class SelfJson(bLB.SelfOrigin):
         absolute_path=self._json_SelfPath.queryAbsolutePath(absolute,relative,file,extension)
         self.jsonPath_create_func(absolute_path,_write_dict)
     
-class AppJsonPack(bLB.SelfOrigin):
+class AppJsonPack(object):
     def __init__(self):
         self._jsonPack_SelfJson=SelfJson()
         self._writePack_SelfJsons=[]
@@ -83,24 +57,28 @@ class AppJsonPack(bLB.SelfOrigin):
 
         read_dicts=[]
         for fileEX_dict in pack_dict["packFiles"]:
-            read_Json=SelfJson()
-            pack_Json.setAbsoluteDirectory(pack_SelfJson.getAbsoluteDirectory())
-            pack_Json.setRelativeDirectory(pack_SelfJson.getRelativeDirectory())
-            read_Json.setFile(fileEX_dict["file"])
-            read_Json.setExtension(fileEX_dict["extension"])
-            read_dict=read_Json.read()
+            read_DataJson=pLB.DataPath()
+            read_DataJson.setAbsoluteDirectory(pack_SelfJson.getDataPath().getAbsoluteDirectory())
+            read_DataJson.setRelativeDirectory(pack_SelfJson.getDataPath().getRelativeDirectory())
+            read_DataJson.setFile(fileEX_dict["file"])
+            read_DataJson.setExtension(fileEX_dict["extension"])
+
+            read_SelfJson=SelfJson()
+            read_SelfJson.setDataPath()
+            read_dict=read_SelfJson.read()
             read_dicts+=read_dict
         return read_dicts
 
     def __writePack_create_func(self,pack_SelfJson,write_SelfJsons):
-        path_DataPath=path_SelfPath.getDataPath()
-
         packFiles=[]
         for write_SelfJson in write_SelfJsons:
             write_SelfJson.write()
-            file_str=write_SelfJson.getFile()
-            extension_str=write_SelfJson.getExtension()
+            
+            write_DataPath=write_SelfJson.getDataPath()
+            file_str=write_DataPath.getFile()
+            extension_str=write_DataPath.getExtension()
             packFiles+={"file":file_str,"extension":extension_str}
+
         write_dict={"packFiles":packFiles}
 
         pack_SelfJson.setWriteDict(write_dict)
@@ -136,17 +114,23 @@ class AppJsonPack(bLB.SelfOrigin):
         self.__writePack_create_func(_jsonPack_SelfJson,_writePack_SelfJsons)
 
 def readJson(directory,file):
-    data=SelfJson()
-    data.setAbsoluteDirectory(directory)
-    data.setFile(file)
-    data.setExtension("json")
-    json_dict=data.read()
+    data_DataPath=pLB.DataPath()
+    data_DataPath.setAbsoluteDirectory(directory)
+    data_DataPath.setFile(file)
+    data_DataPath.setExtension("json")
+
+    data_SelfJson=SelfJson()
+    data_SelfJson.setDataPath(data_DataPath)
+    json_dict=data_SelfJson.read()
     return json_dict
 
 def writeJson(directory,file,write):
-    data=SelfJson()
-    data.setAbsoluteDirectory(directory)
-    data.setFile(file)
-    data.setExtension("json")
-    data.setWriteDict(write)
-    data.write()
+    data_DataPath=pLB.DataPath()
+    data_DataPath.setAbsoluteDirectory(directory)
+    data_DataPath.setFile(file)
+    data_DataPath.setExtension("json")
+
+    data_SelfJson=SelfJson()
+    data_SelfJson.setDataPath(data_DataPath)
+    data_SelfJson.setWriteDict(write)
+    data_SelfJson.write()
