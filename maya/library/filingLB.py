@@ -7,18 +7,22 @@ import maya.api.OpenMaya as om2
 import cgInTools as cit
 from cgInTools.library import jsonLB as jLB
 from cgInTools.library import pathLB as pLB
+from cgInTools.library import baseLB as bLB
 from . import cleanLB as cLB
-cit.reloads([jLB,pLB,cLB])
+cit.reloads([jLB,pLB,bLB,cLB])
 
 RULE_DICT=jLB.readJson(cit.mayaSettings_dir,"library")
 PROJECTFOLDER=cit.mayaDefSetProject_dir
-class Project():
+
+class SelfProject(bLB.SelfOrigin):
     def __init__(self):
         self._defSetProjectFolder=PROJECTFOLDER
-        self._project_Path=pLB.Path()
+        self._project_DataPath=pLB.DataPath()
+        self._project_SelfPath=pLB.SelfPath()
     
     def __str__(self):
-        project_dir=self._project_Path.queryDirectory()
+        self._project_SelfPath.setDataPath(self._project_DataPath)
+        project_dir=self._project_SelfPath.queryDirectory()
         return project_dir
 
     #Single Function
@@ -31,51 +35,54 @@ class Project():
 
     #Setting Function
     def setDirectory(self,variable):
-        _directory_dir=self._project_Path.setAbsoluteDirectory(variable)
+        _directory_dir=self._project_DataPath.setAbsoluteDirectory(variable)
         return _directory_dir
     def currentDirectory(self):
         project_dir=cmds.workspace(q=True,rd=True)
         absoluteDirectorys=project_dir.split("/")[:-2]
         absolute_dir=os.path.join(*absoluteDirectorys)
-        _directory_dir=self._project_Path.setAbsoluteDirectory(absolute_dir)
+        _directory_dir=self._project_DataPath.setAbsoluteDirectory(absolute_dir)
         return _directory_dir
     def getDirectory(self):
-        return self._project_Path.getAbsoluteDirectory()
+        return self._project_DataPath.getAbsoluteDirectory()
     
     def setProjectName(self,variable):
-        _projectName_str=self._project_Path.setRelativeDirectory(variable)
+        _projectName_str=self._project_DataPath.setRelativeDirectory(variable)
         return _projectName_str
     def currentProjectName(self):
         project_dir=cmds.workspace(q=True,rd=True)
         projectName_str=project_dir.split("/")[-2]
-        projectName_str=self._project_Path.setRelativeDirectory(projectName_str)
+        projectName_str=self._project_DataPath.setRelativeDirectory(projectName_str)
         return projectName_str
     def getProjectName(self):
-        return self._project_Path.getRelativeDirectory()
+        return self._project_DataPath.getRelativeDirectory()
 
     #Public Function
     def createProject(self,directory=None,name=None):
         if not directory is None:
-            self._project_Path.setAbsoluteDirectory(directory)
+            self._project_DataPath.setAbsoluteDirectory(directory)
         if not name is None:
-            self._project_Path.setRelativeDirectory(name)
+            self._project_DataPath.setRelativeDirectory(name)
 
-        project_dir=self._project_Path.queryDirectory()
+        self._project_SelfPath.setDataPath(self._project_DataPath)
+        project_dir=self._project_SelfPath.queryDirectory()
         workSpace_dir=self.setProject_edit_str(project_dir,create=True)
         return workSpace_dir
 
     def editProject(self,directory=None,name=None):
         if not directory is None:
-            self._project_Path.setAbsoluteDirectory(directory)
+            self._project_DataPath.setAbsoluteDirectory(directory)
         if not name is None:
-            self._project_Path.setRelativeDirectory(name)
+            self._project_DataPath.setRelativeDirectory(name)
         
-        project_dir=self._project_Path.queryDirectory()
+        self._project_SelfPath.setDataPath(self._project_DataPath)
+        project_dir=self._project_SelfPath.queryDirectory()
         workSpace_dir=self.setProject_edit_str(project_dir)
         return workSpace_dir
 
     def queryProject(self):
-        project_dir=self._project_Path.queryDirectory()
+        self._project_SelfPath.setDataPath(self._project_DataPath)
+        project_dir=self._project_SelfPath.queryDirectory()
         return project_dir
  
 class File():

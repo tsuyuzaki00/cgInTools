@@ -45,6 +45,12 @@ class SelfJson(object):
 
         absolute_path=self._json_SelfPath.queryAbsolutePath(absolute,relative,file,extension)
         self.jsonPath_create_func(absolute_path,_write_dict)
+
+    def check(self,absolute=None,relative=None,file=None,extension=None,write=None):
+        _write_dict=write or self._write_dict
+
+        absolutePath_bool=self._json_SelfPath.checkAbsolutePath(absolute,relative,file,extension)
+        return absolutePath_bool
     
 class AppJsonPack(object):
     def __init__(self):
@@ -124,11 +130,11 @@ def readJson(directory,file):
     json_dict=data_SelfJson.read()
     return json_dict
 
-def writeJson(directory,file,write):
+def writeJson(directory,file,extension="json",write={}):
     data_DataPath=pLB.DataPath()
     data_DataPath.setAbsoluteDirectory(directory)
     data_DataPath.setFile(file)
-    data_DataPath.setExtension("json")
+    data_DataPath.setExtension(extension)
 
     data_SelfJson=SelfJson()
     data_SelfJson.setDataPath(data_DataPath)

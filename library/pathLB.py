@@ -180,6 +180,23 @@ class SelfPath(object):
         os.environ[environRename_str+"_DIRECTORY"]=os.path.join(mergeDirectory_dir)
         return mergeDirectory_dir
 
+    def checkDirectory(self,absolute=None,relative=None):
+        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
+        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
+
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
+        return os.path.isdir(mergeDirectory_dir)
+    
+    def checkAbsolutePath(self,absolute=None,relative=None,file=None,ext=None):
+        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
+        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
+        _file_str=file or self._path_DataPath.getFile()
+        _extension_ext=ext or self._path_DataPath.getExtension()
+
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
+        absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
+        return os.path.exists(absolutePath_path)
+
     def targetDataPathMove(self,target_DataPath=None,path_DataPath=None):
         _path_DataPath=path_DataPath or self._path_DataPath
         _target_DataPath=target_DataPath or self._target_DataPath
@@ -215,3 +232,11 @@ class SelfPath(object):
         absolutePathSource_path=self._dataPathToAbsolutePath_create_path(_source_DataPath)
 
         shutil.copy2(absolutePathSource_path,absolutePath_path)
+
+def actionScriptsData(cgInToolsData_dir,folderName_str):
+    if not os.path.isdir(cgInToolsData_dir):
+        cgInToolsData_dir=os.makedirs(cgInToolsData_dir)
+    folderData_dir=os.path.join(cgInToolsData_dir,folderName_str)
+    if not os.path.isdir(folderData_dir):
+        os.makedirs(folderData_dir)
+    return folderData_dir

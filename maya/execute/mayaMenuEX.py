@@ -1,9 +1,10 @@
 from maya import cmds
 import json,os
 import cgInTools as cit
-from cgInTools.library import jsonLB as jLB
+from ...library import pathLB as pLB
+from ...library import jsonLB as jLB
 
-class AppMenu():
+class SelfMenu():
     def __init__(self):
         self._menu_SelfJson=jLB.SelfJson()
 
@@ -38,24 +39,11 @@ class AppMenu():
                 pass
     
     #Setting Function
-    def setDirectry(self,variable):
-        menu_dir=self._menu_SelfJson.setAbsoluteDirectory(variable)
-        return menu_dir
-    def getDirectory(self):
-        return self._menu_SelfJson.getAbsoluteDirectory()
-
-    def setFile(self,variable):
-        menu_str=self._menu_SelfJson.setFile(variable)
-        return menu_str
-    def getFile(self):
-        return self._menu_SelfJson.getFile()
-
-    def setSelfJson(self,variable):
-        self._menu_SelfJson=variable
-        self._menu_SelfJson.setExtension("json")
-        return self._menu_SelfJson
-    def getSelfJson(self):
-        return self._menu_SelfJson
+    def setDataPath(self,variable):
+        self._menu_SelfJson.setDataPath(variable)
+        return self._menu_SelfJson.getDataPath()
+    def getDataPath(self):
+        return self._menu_SelfJson.getDataPath()
         
     #Public Function
     def doIt(self):
@@ -63,7 +51,11 @@ class AppMenu():
         self._settingsMenu_create_func(json_dict["menuTitle_str"],json_dict["orderMenu_dicts"],json_dict["menuItem_dict"])
         
 def main():
-    menu_AppMenu=AppMenu()
-    menu_AppMenu.setDirectry(cit.mayaSettings_dir)
-    menu_AppMenu.setFile("mayaMenu")
-    menu_AppMenu.doIt()
+    menu_DataPath=pLB.DataPath()
+    menu_DataPath.setAbsoluteDirectory(cit.mayaSettings_dir)
+    menu_DataPath.setFile("mayaMenu")
+    menu_DataPath.setExtension("json")
+
+    menu_SelfMenu=SelfMenu()
+    menu_SelfMenu.setDataPath(menu_DataPath)
+    menu_SelfMenu.doIt()
