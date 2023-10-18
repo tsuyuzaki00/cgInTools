@@ -14,16 +14,13 @@ class DataNode(bLB.SelfOrigin):
         if dataNode is None:
             self._nodeName_str=None
             self._nodeType_str=None
-            self._fullPath_bool=False
         elif type(dataNode) is DataNode:
             self._nodeName_str=dataNode.getNodeName()
             self._nodeType_str=dataNode.getNodeType()
-            self._fullPath_bool=False
         elif type(dataNode) is om2.MObject:
             node_MFnDependencyNode=om2.MFnDependencyNode(dataNode)
             self._nodeName_str=node_MFnDependencyNode.name()
             self._nodeType_str=node_MFnDependencyNode.typeName
-            self._fullPath_bool=False
 
     #Setting Function
     def setNodeName(self,variable):
@@ -44,7 +41,7 @@ class SelfDGNode(bLB.SelfOrigin):
         if type(selfDGNode) is SelfDGNode:
             self._node_DataNode=selfDGNode.getDataNode()
             self._name_DataName=selfDGNode.getDataName()
-            self._attrName_strs=selfDGNode.getAttributeNames()
+            self._attrName_str=None
         else:
             self._node_DataNode=None
             self._name_DataName=None
@@ -123,8 +120,8 @@ class SelfDGNode(bLB.SelfOrigin):
     def rename(self):
         pass
 
-    def searchDataAttribute(self,node_DataNode=None,attrName=None):
-        _node_DataNode=node_DataNode or self._node_DataNode
+    def searchDataAttribute(self,dataNode=None,attrName=None):
+        _node_DataNode=dataNode or self._node_DataNode
         _attrName_str=attrName or self._attrName_str
 
         node_MObject=self.node_query_MObject(_node_DataNode.getNodeName())
@@ -139,6 +136,21 @@ class SelfDGNode(bLB.SelfOrigin):
         plug_DataPlug=self.findPlug_create_DataPlug(node_MObject,_attrName_str)
         return plug_DataPlug
 
+    def queryName(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        nodeName_str=self._node_DataNode.getNodeName()
+        return nodeName_str
+
+    def queryUUID(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        nodeName_str=self._node_DataNode.getNodeName()
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        uuid_MUuid=node_MFnDependencyNode.uuid()
+        return uuid_MUuid
+
 class SelfDAGNode(SelfDGNode):
     def __init__(self):
         super(SelfDAGNode,self).__init__()
@@ -146,7 +158,10 @@ class SelfDAGNode(SelfDGNode):
         #self._name_DataName=None
         #self._attrName_strs=[]
         self._matrix_DataMatrix=None
-        self._fullPath_bool=False
+        self._parent_DataNode=None
+        self._child_DataNodes=[]
+        self._match_DataNode=None
+        self._pivot_DataNode=None
 
         self._dataChoice_strs+=[
             "DataMatrix",
@@ -163,10 +178,6 @@ class SelfDAGNode(SelfDGNode):
     def convertMObject_create_MDagPath(self,node_MObject):
         node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
         return node_MDagPath
-    
-    def fullPath_query_str(self,node_MDagPath):
-        name_str=node_MDagPath.fullPathName()
-        return name_str
     
     def shape_query_MObject(self,node_MDagPath):
         shape_MDagPath=node_MDagPath.extendToShape()
@@ -193,29 +204,6 @@ class SelfDAGNode(SelfDGNode):
         else:
             return childs
 
-    def nodeTypes_query_strs(self,node_MObjects):
-        if node_MObjects == None:
-            return None
-        nodeType_strs=[om2.MFnDependencyNode(node_MObject).typeName for node_MObject in node_MObjects]
-        if nodeType_strs == []:
-            return None
-        else:
-            return nodeType_strs
-    
-    #Multi Function
-    def _fullPathSwitch_query_str(self,node_MObject,fullPath=False):
-        if fullPath:
-            node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
-            name_str=self.fullPath_query_str(node_MDagPath)
-        else:
-            node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-            name_str=node_MFnDependencyNode.name()
-        return name_str
-
-    def _fullPathSwitch_query_strs(self,node_MObjects,fullPath=False):
-        name_strs=[self._fullPathSwitch_query_str(node_MObject,fullPath) for node_MObject in node_MObjects]
-        return name_strs
-
     #Setting Function
     def setDataMatrix(self,variable):
         self._matrix_DataMatrix=variable
@@ -223,67 +211,116 @@ class SelfDAGNode(SelfDGNode):
     def getDataMatrix(self):
         return self._matrix_DataMatrix
     
+    def setParentDataNode(self,variable):
+        self._parent_DataNode=variable
+        return self._parent_DataNode
+    def getParentDataNode(self):
+        return self._parent_DataNode
+    
+    def setChildDataNodes(self,variables):
+        self._child_DataNodes=variable
+        return self._child_DataNodes
+    def addChildDataNodes(self,variables):
+        self._child_DataNodes+=variables
+        return self._child_DataNodes
+    def getChildDataNodes(self):
+        return self._child_DataNodes
+    
+    def setMatchDataNode(self,variable):
+        self._match_DataNode=variable
+        return self._match_DataNode
+    def getMatchDataNode(self):
+        return self._match_DataNode
+    
+    def setPivotDataNode(self,variable):
+        self._pivot_DataNode=variable
+        return self._pivot_DataNode
+    def getPivotDataNode(self):
+        return self._pivot_DataNode
+    
     #Public Function
+    def doParent(self,dataNode=None,parentDataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+        nodeName_str=_node_DataNode.getNodeName()
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+
+        _parent_DataNode=parentDataNode or self._parent_DataNode
+        parentName_str=_parent_DataNode.getNodeName()
+        parent_MObject=self.node_query_MObject(parentName_str)
+        parent_MDagPath=self.convertMObject_create_MDagPath(parent_MObject)
+
+        parent_MDagModifier=om2.MDagModifier()
+        parent_MDagModifier.reparentNode(node_MDagPath,parent_MDagPath)
+        parent_MDagModifier.doIt()
+
+    def doChilds(self,dataNode=None,childDataNodes=None):
+        _node_DataNode=dataNode or self._node_DataNode
+        nodeName_str=_node_DataNode.getNodeName()
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+
+        _child_DataNodes=childDataNodes or self._child_DataNodes
+        for _child_DataNode in _child_DataNodes:
+            childName_str=_child_DataNode.getNodeName()
+            child_MObject=self.node_query_MObject(childName_str)
+            child_MDagPath=self.convertMObject_create_MDagPath(child_MObject)
+
+            child_MDagModifier=om2.MDagModifier()
+            child_MDagModifier.reparentNode(child_MDagPath,node_MDagPath)
+            child_MDagModifier.doIt()
+
     def queryFullPathName(self):
-        pass
+        nodeName_str=self._node_DataNode.getNodeName()
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+
+        name_str=node_MDagPath.fullPathName()
+        return name_str
+
+    def queryShapeSelfDAGNode(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        nodeName_str=_node_DataNode.getNodeName()
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        shape_MObject=self.shape_query_MObject(node_MDagPath)
+        shape_DataNode=DataNode(shape_MObject)
+
+        shape_SelfDAGNode=SelfDAGNode()
+        shape_SelfDAGNode.setDataNode(shape_DataNode)
+        return shape_SelfDAGNode
 
     def queryParentSelfDAGNode(self,dataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
-        _fullPath_bool=fullPath or self._fullPath_bool
 
         nodeName_str=_node_DataNode.getNodeName()
         node_MObject=self.node_query_MObject(nodeName_str)
         node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         parent_MObject=self.parent_query_MObject(node_MDagPath)
-
         parent_DataNode=DataNode(parent_MObject)
-        parent_DataNode.setFullPath(_node_DataNode.getFullPath())
 
         parent_SelfDAGNode=SelfDAGNode()
         parent_SelfDAGNode.setDataNode(parent_DataNode)
         return parent_SelfDAGNode
     
-    def queryChildSelfDAGNodes(self,node=None,fullPath=False):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
+    def queryChildSelfDAGNodes(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
 
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-
+        nodeName_str=_node_DataNode.getNodeName()
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
         child_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=False)
-        self._node_MObject=child_MObjects[_firstAddress_int]
-        node_str=self._fullPathSwitch_query_str(self._node_MObject,_fullPath_bool)
-        return node_str
-        
-    def queryParentDataNode(self,node=None,fullPath=None):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
 
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        parent_MObject=self.parent_query_MObject(node_MDagPath)
-        parent_str=self._fullPathSwitch_query_str(parent_MObject,_fullPath_bool)
-        if parent_str == "world" or parent_str == "":
-            return None
-        else:
-            return parent_str
+        child_SelfDAGNodes=[]
+        for child_MObject in child_MObjects:
+            child_DataNode=DataNode(child_MObject)
+            child_SelfDAGNode=SelfDAGNode()
+            child_SelfDAGNode.setDataNode(child_DataNode)
+            child_SelfDAGNodes.append(child_SelfDAGNode)
 
-    def queryChildDataNodes(self,node=None,fullPath=False):
-        _node_MObject=self.selectNode_create_MObject(node) or self._node_MObject
-        _fullPath_bool=fullPath or self._fullPath_bool
-        _firstOnly_bool=firstOnly or self._firstOnly_bool
-        _firstAddress_int=firstAddress or self._firstAddress_int
-
-        node_MDagPath=self.convertMObject_create_MDagPath(_node_MObject)
-        child_MObjects=self.child_query_MObjects(node_MDagPath)
-        if child_MObjects == None:
-            return None
-        if _firstOnly_bool:
-            child_str=self._fullPathSwitch_query_str(child_MObjects[_firstAddress_int],_fullPath_bool)
-            return child_str
-        else:
-            child_strs=self._fullPathSwitch_query_strs(child_MObjects,_fullPath_bool)
-            return child_strs
-
+        return child_SelfDAGNodes
+    
     def editTransform(self):
         pass
 
