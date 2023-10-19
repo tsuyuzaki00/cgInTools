@@ -21,8 +21,6 @@ class SelfJson(object):
 
     #Setting Function
     def setDataPath(self,variable):
-        variable.setExtension("json")
-        self._json_SelfPath=pLB.SelfPath()
         self._json_SelfPath.setDataPath(variable)
         return self._json_SelfPath.getDataPath()
     def getDataPath(self):
@@ -35,21 +33,22 @@ class SelfJson(object):
         return self._write_dict
 
     #Public Function
-    def read(self,absolute=None,relative=None,file=None,extension=None):
-        absolute_path=self._json_SelfPath.queryAbsolutePath(absolute,relative,file,extension)
+    def read(self,dataPath=None):
+        absolute_path=self._json_SelfPath.queryAbsolutePath(dataPath)
         read_dict=self.jsonPath_query_dict(absolute_path)
         return read_dict
 
-    def write(self,absolute=None,relative=None,file=None,extension=None,write=None):
+    def write(self,dataPath=None,write=None):
         _write_dict=write or self._write_dict
 
-        absolute_path=self._json_SelfPath.queryAbsolutePath(absolute,relative,file,extension)
+        absolute_path=self._json_SelfPath.queryAbsolutePath(dataPath)
         self.jsonPath_create_func(absolute_path,_write_dict)
 
-    def check(self,absolute=None,relative=None,file=None,extension=None,write=None):
-        _write_dict=write or self._write_dict
+    def check(self,dataPath=None):
+        _json_DataPath=dataPath or self._json_SelfPath.getDataPath()
 
-        absolutePath_bool=self._json_SelfPath.checkAbsolutePath(absolute,relative,file,extension)
+        self._json_SelfPath.setDataPath(_json_DataPath)
+        absolutePath_bool=self._json_SelfPath.checkAbsolutePath(dataPath)
         return absolutePath_bool
     
 class AppJsonPack(object):
@@ -119,11 +118,11 @@ class AppJsonPack(object):
 
         self.__writePack_create_func(_jsonPack_SelfJson,_writePack_SelfJsons)
 
-def readJson(directory,file):
+def readJson(directory,file,extension="json"):
     data_DataPath=pLB.DataPath()
     data_DataPath.setAbsoluteDirectory(directory)
     data_DataPath.setFile(file)
-    data_DataPath.setExtension("json")
+    data_DataPath.setExtension(extension)
 
     data_SelfJson=SelfJson()
     data_SelfJson.setDataPath(data_DataPath)

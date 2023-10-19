@@ -7,6 +7,16 @@ class DataPath(object):
         self._relative_dir=None
         self._file_str=None
         self._extension_ext=None
+
+    #Single Function
+    def mergeDirectory_create_dir(self,upperDirectory_dir,lowerDirectory_dir):
+        if upperDirectory_dir is None:
+            upperDirectory_dir=""
+        if lowerDirectory_dir is None:
+            lowerDirectory_dir=""
+        mergeDirectory_dir=os.path.join(upperDirectory_dir,lowerDirectory_dir)
+        mergeDirectory_dir=mergeDirectory_dir.replace(os.sep,'/')
+        return mergeDirectory_dir
     
     #Setting Function
     def setAbsoluteDirectory(self,variable):
@@ -105,97 +115,74 @@ class SelfPath(object):
         return self._source_DataPath
 
     #Public Function
-    def queryDirectory(self,absolute=None,relative=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
+    def queryDirectory(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
         return mergeDirectory_dir
 
-    def queryAbsolutePath(self,absolute=None,relative=None,file=None,ext=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
-        _file_str=file or self._path_DataPath.getFile()
-        _extension_ext=ext or self._path_DataPath.getExtension()
+    def queryAbsolutePath(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
-        absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
+        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
         return absolutePath_path
     
-    def queryRelativePath(self,relative=None,file=None,ext=None):
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
-        _file_str=file or self._path_DataPath.getFile()
-        _extension_ext=ext or self._path_DataPath.getExtension()
-
-        relativePath_path=self.mergePath_create_path(_relative_dir,_file_str,_extension_ext)
+    def queryRelativePath(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
+        
+        relativePath_path=self.mergePath_create_path(_path_DataPath.getRelativeDirectory(),_path_DataPath.getFile(),_path_DataPath.getExtension())
         return relativePath_path
     
-    def querySequencePath(self,absolute=None,relative=None,file=None,ext=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
-        _file_str=file or self._path_DataPath.getFile()
-        _extension_ext=ext or self._path_DataPath.getExtension()
+    def querySequencePath(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
         splitDirectorys=mergeDirectory_dir.split("/")
-        splitDirectorys.append(_file_str)
-        splitDirectorys.append(_extension_ext)
+        splitDirectorys.append(_path_DataPath.getFile())
+        splitDirectorys.append(_path_DataPath.getExtension())
         return splitDirectorys
 
-    def createFileExt(self,absolute=None,relative=None,file=None,ext=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
-        _file_str=file or self._path_DataPath.getFile()
-        _extension_ext=ext or self._path_DataPath.getExtension()
+    def createFileExt(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
-        absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
+        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
         with open(absolutePath_path,'w') as f:
             pass
     
-    def deleteFileExt(self,absolute=None,relative=None,file=None,ext=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
-        _file_str=file or self._path_DataPath.getFile()
-        _extension_ext=ext or self._path_DataPath.getExtension()
+    def deleteFileExt(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
-        absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
+        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
         os.remove(absolutePath_path)
     
-    def createDirectory(self,absolute=None,relative=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
+    def createDirectory(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
         if not os.path.exists(mergeDirectory_dir) and not os.path.isdir(mergeDirectory_dir):
             os.makedirs(mergeDirectory_dir)
 
-    def createEnvironmentVariable(self,directory=None,environName=None):
-        _absolute_dir=directory or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=environName or self._path_DataPath.getRelativeDirectory()
+    def createEnvironmentVariable(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
-        environRename_str=_relative_dir.replace("/","_").replace("\\","_").upper()
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
+        environRename_str=_path_DataPath.getRelativeDirectory().replace("/","_").replace("\\","_").upper()
         os.environ[environRename_str+"_DIRECTORY"]=os.path.join(mergeDirectory_dir)
         return mergeDirectory_dir
 
-    def checkDirectory(self,absolute=None,relative=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
+    def checkDirectory(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
-        return os.path.isdir(mergeDirectory_dir)
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
+        isDirectory_bool=os.path.isdir(mergeDirectory_dir)
+        return isDirectory_bool
     
-    def checkAbsolutePath(self,absolute=None,relative=None,file=None,ext=None):
-        _absolute_dir=absolute or self._path_DataPath.getAbsoluteDirectory()
-        _relative_dir=relative or self._path_DataPath.getRelativeDirectory()
-        _file_str=file or self._path_DataPath.getFile()
-        _extension_ext=ext or self._path_DataPath.getExtension()
+    def checkAbsolutePath(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
 
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_absolute_dir,_relative_dir)
-        absolutePath_path=self.mergePath_create_path(mergeDirectory_dir,_file_str,_extension_ext)
-        return os.path.exists(absolutePath_path)
+        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
+        isAbsolutePath_bool=os.path.exists(absolutePath_path)
+        return isAbsolutePath_bool
 
     def targetDataPathMove(self,target_DataPath=None,path_DataPath=None):
         _path_DataPath=path_DataPath or self._path_DataPath
