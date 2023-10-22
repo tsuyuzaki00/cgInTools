@@ -10,9 +10,9 @@ from maya import cmds
 import cgInTools as cit
 from ...ui import plainTextUI as UI
 from ...library import pathLB as pLB
-fron ...library import jsonLB as jLB
+from ...library import jsonLB as jLB
 from ..library import windowLB as wLB
-#from ..library import jsonLB as jLB
+
 cit.reloads([UI,jLB,wLB])
 
 PATHSET_DIR=pLB.scriptsData_query_dir(os.environ['CGINTOOLSDATA_DIRECTORY'],__file__)
@@ -140,7 +140,4 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
 
 def main():
     viewWindow=SelectionTextWindow(parent=wLB.mayaMainWindow_query_widget())
-    objs=cmds.ls(sl=True)
-    if not objs == []:
-        viewWindow.__setPlainText_create_func(objs)
     viewWindow.show()

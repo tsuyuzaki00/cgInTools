@@ -1,54 +1,116 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
+import sys,math
 
-class Matrix(om2.MMatrix):
+import cgInTools as cit
+from ...library import baseLB as bLB
+cit.reloads([bLB])
+
+class DataMatrix(om2.MMatrix):
     def __init__(self,*matrix):
-        super(Matrix,self).__init__(*matrix)
+        super(DataMatrix,self).__init__(*matrix)
         #self.kIdentity=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-        self._mirrorAxis_str=None
-        self._mirrorOrientation_str=None
-        
-        if not matrix is None:
-            standerd_MMatrix=om2.MMatrix(matrix)
-        self._pivot_MMatrix=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-        self._target_MMatrix=None
-        self._source_MMatrix=None
+        self._MSpace=om2.MSpace.kTransform #1
+        self._rotateOrder=om2.MEulerRotation.kXYZ #0
 
-    #Setting Function
     def setMatrix(self,variable):
         self.kIdentity=om2.MMatrix(variable)
         return self.kIdentity
     def getMatrix(self):
         return self.kIdentity
+    
+    def setMSpace(self,variable):
+        self._MSpace=variable
+    def getMSpace(self):
+        return self._MSpace
 
-    def setPivotMatrix(self,variable):
-        self._pivot_MMatrix=om2.MMatrix(variable)
-        return self._pivot_MMatrix
-    def getPivotMatrix(self):
-        return self._pivot_MMatrix
+    def setRotateOrder(self,variable):
+        self._rotateOrder=variable
+    def getRotateOrder(self):
+        return self._rotateOrder
 
-    def setTargetMatrix(self,variable):
-        self._target_MMatrix=om2.MMatrix(variable)
-        return self._target_MMatrix
-    def getTargetMatrix(self):
-        return self._target_MMatrix
+class SelfMatrix(bLB.SelfOrigin):
+    def __init__(self):
+        super(SelfMatrix,self).__init__()
+        self._matrix_DataMatrix=DataMatrix()
+        self._mirrorDirectionAxis_str="x"
+        self._mirrorPrimaryAxis_str="+x"
+        self._mirrorSecondaryAxis_str="+y"
+        
+        self._pivot_DataMatrix=DataMatrix()
+        self._target_DataMatrix=DataMatrix()
+        self._source_DataMatrix=DataMatrix()
 
-    def setSourceMatrix(self,variable):
-        self._source_MMatrix=om2.MMatrix(variable)
-        return self._source_MMatrix
-    def getSourceMatrix(self):
-        return self._source_MMatrix
+    #Single Function
+    def matchMatrix_edit_DataMatrix(self,source_DataMatrix,target_DataMatrix):
+        transform_DataMatrix=source_DataMatrix*target_DataMatrix
+        return transform_DataMatrix
+
+    #Setting Function
+    def setDataMatrix(self,variable):
+        self._matrix_DataMatrix=variable
+        return self._matrix_DataMatrix
+    def getDataMatrix(self):
+        return self._matrix_DataMatrix
+    
+    def setMirrorDirectionAxis(self,variable):
+        self._mirrorDirectionAxis_str=variable
+        return self._mirrorDirectionAxis_str
+    def getMirrorDirectionAxis(self):
+        return self._mirrorDirectionAxis_str
+    
+    def setMirrorPrimaryAxis(self,variable):
+        self._mirrorPrimaryAxis_str=variable
+        return self._mirrorPrimaryAxis_str
+    def getMirrorPrimaryAxis(self):
+        return self._mirrorPrimaryAxis_str
+    
+    def setMirrorSecondaryAxis(self,variable):
+        self._mirrorSecondaryAxis_str=variable
+        return self._mirrorSecondaryAxis_str
+    def getMirrorSecondaryAxis(self):
+        return self._mirrorSecondaryAxis_str
+
+    def setPivotDataMatrix(self,variable):
+        self._pivot_DataMatrix=variable
+        return self._pivot_DataMatrix
+    def getPivotDataMatrix(self):
+        return self._pivot_DataMatrix
+
+    def setTargetDataMatrix(self,variable):
+        self._target_DataMatrix=variable
+        return self._target_DataMatrix
+    def getTargetDataMatrix(self):
+        return self._target_DataMatrix
+
+    def setSourceDataMatrix(self,variable):
+        self._source_DataMatrix=variable
+        return self._source_DataMatrix
+    def getSourceDataMatrix(self):
+        return self._source_DataMatrix
 
     #Public Function
-    def match(self,matrix=None):
-        pass
+    def matchTargetTransform(self,dataMatrix=None,targetDataMatrix=None):
+        _matrix_DataMatrix=dataMatrix or self._matrix_DataMatrix
+        _target_DataMatrix=targetDataMatrix or self._target_DataMatrix
 
-    def mirror(self,matrix=None,axis=None,orient=None):
-        _matrix=matrix or self.kIdentity
-        _mirrorAxis=axis or self._mirrorAxis_str or "x"
-        _mirrorOrientation=orient or self._mirrorOrientation_str or "x"
-        pass
+
+
+    def matchSourceTransform(self,dataMatrix=None,sourceDataMatrix=None):
+        _matrix_DataMatrix=dataMatrix or self._matrix_DataMatrix
+        _source_DataMatrix=sourceDataMatrix or self._source_DataMatrix
+
+
+
+    def mirror(self,dataMatrix=None,direction=None,primary=None,secondary=None,pivotDataMatrix=None):
+        _matrix_DataMatrix=dataMatrix or self._matrix_DataMatrix
+        _mirrorDirectionAxis_str=direction or self._mirrorDirectionAxis_str
+        _mirrorPrimaryAxis_str=primary or self._mirrorPrimaryAxis_str
+        _mirrorSecondaryAxis_str=secondary or self._mirrorSecondaryAxis_str
+        _pivot_DataMatrix=pivotDataMatrix or self._pivot_DataMatrix
+
+
 
 class SelfMatrixNode(om2.MMatrix):
     def __init__(self,*matrix):

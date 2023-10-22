@@ -83,7 +83,7 @@ def writeSelfObject(directory,file,extension="selfpy",write=None):
     data_SelfObject.setWriteSelfObject(write)
     data_SelfObject.write()
 
-def writeSelfObject(directory,file,extension="selfpyPack",writes=[]):
+def writeSelfObjects(directory,file,extension="selfpyPack",writes=[]):
     data_DataPath=pLB.DataPath()
     data_DataPath.setAbsoluteDirectory(directory)
     data_DataPath.setFile(file)

@@ -1,11 +1,12 @@
 # -*- coding: iso-8859-15 -*-
 import maya.api.OpenMaya as om2
-import sys
+import sys,math
 
 import cgInTools as cit
 from ...library import baseLB as bLB
-cit.reloads([bLB])
-        
+from . import matrixLB as mLB
+cit.reloads([bLB,mLB])
+
 class DataValueInt(bLB.SelfOrigin):
     def __init__(self,dataValueInt=None):
         super(DataValueInt,self).__init__()
@@ -274,6 +275,10 @@ class SelfDAGNode(SelfDGNode):
         #self._node_DataNode=None
         #self._name_DataName=None
         #self._attrName_strs=[]
+        self._translate_MVector=None
+        self._rotate_MEulerRotation=None
+        self._quaternion_MQuaternion=None
+        self._scale_list3=None
         self._matrix_DataMatrix=None
         self._parent_DataNode=None
         self._child_DataNodes=[]
@@ -282,7 +287,6 @@ class SelfDAGNode(SelfDGNode):
 
         self._dataChoice_strs+=[
             "DataMatrix",
-            "FullPath"
         ]
         self._doIt_strs+=[
             "parent",
@@ -321,7 +325,150 @@ class SelfDAGNode(SelfDGNode):
         else:
             return childs
 
+    #Multi Function
+    def _dataNodeToNormalMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        node_MMatrix=node_MFnDagNode.transformationMatrix()
+        node_DataMatrix=mLB.DataMatrix(node_MMatrix)
+        return node_DataMatrix
+    
+    def _dataNodeToWorldMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MMatrix=node_MDagPath.inclusiveMatrix()
+        node_DataMatrix=mLB.DataMatrix(node_MMatrix)
+        return node_DataMatrix
+    
+    def _dataNodeToParentMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MMatrix=node_MDagPath.exclusiveMatrix()
+        node_DataMatrix=mLB.DataMatrix(node_MMatrix)
+        return node_DataMatrix
+    
+    def _dataNodeToInverseNormalMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        normal_MMatrix=node_MFnDagNode.transformationMatrix()
+        normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
+        node_MMatrix=normal_MTransformationMatrix.asMatrixInverse()
+        node_DataMatrix=mLB.DataMatrix(node_MMatrix)
+        return node_DataMatrix
+    
+    def _dataNodeToInverseWorldMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        world_MMatrix=node_MDagPath.inclusiveMatrix()
+        world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
+        node_MMatrix=world_MTransformationMatrix.asMatrixInverse()
+        node_DataMatrix=mLB.DataMatrix(node_MMatrix)
+        return node_DataMatrix
+    
+    def _dataNodeToInverseParentMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        parent_MMatrix=node_MDagPath.exclusiveMatrix()
+        parent_MTransformationMatrix=om2.MTransformationMatrix(parent_MMatrix)
+        node_MMatrix=parent_MTransformationMatrix.asMatrixInverse()
+        node_DataMatrix=mLB.DataMatrix(node_MMatrix)
+        return node_DataMatrix
+
     #Setting Function
+    def setTranslate(self,variable3):
+        self._translate_MVector=om2.MVector(variable3)
+        return self._translate_MVector
+    def addTranslate(self,variable):
+        MVector=om2.MVector(variable)
+        add_MMatrix=om2.MMatrix()
+        add_MMatrix.setElement(3,0,MVector.x)
+        add_MMatrix.setElement(3,1,MVector.y)
+        add_MMatrix.setElement(3,2,MVector.z)
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
+        self._MMatrix=have_MMatrix*add_MMatrix
+        return self._MMatrix
+    def getTranslate(self):
+        MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+        MVector=MTransformationMatrix.translation(self._MSpace)
+        return MVector
+
+    def setRotate(self,variable):
+        radian=[math.radians(variable[0]),math.radians(variable[1]),math.radians(variable[2])]
+        MEulerRotation=om2.MEulerRotation(radian,self._rotateOrder)
+        self._MMatrix=MEulerRotation.asMatrix()
+        return self._MMatrix
+    def addRotate(self,variable):
+        radian=[math.radians(variable[0]),math.radians(variable[1]),math.radians(variable[2])]
+        MEulerRotation=om2.MEulerRotation(radian,self._rotateOrder)
+        add_MMatrix=MEulerRotation.asMatrix()
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
+        self._MMatrix=have_MMatrix*add_MMatrix
+        return self._MMatrix
+    def getRotate(self,radian=True):
+        MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+        MEulerRotation=MTransformationMatrix.rotation(asQuaternion=False)
+        if not radian:
+            MEulerRotation.x=math.degrees(MEulerRotation.x)
+            MEulerRotation.y=math.degrees(MEulerRotation.y)
+            MEulerRotation.z=math.degrees(MEulerRotation.z)
+        return MEulerRotation
+    
+    def setQuaternion(self,variable):
+        MQuaternion=om2.MQuaternion(variable)
+        self._MMatrix=MQuaternion.asMatrix()
+        return self._MMatrix
+    def addQuaternion(self,variable):
+        MQuaternion=om2.MQuaternion(variable)
+        add_MMatrix=MQuaternion.asMatrix()
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix) or self._MMatrix
+        self._MMatrix=have_MMatrix*add_MMatrix
+        return self._MMatrix
+    def getQuaternion(self):
+        MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+        MQuaternion=MTransformationMatrix.rotation(asQuaternion=True)
+        return MQuaternion
+
+    def setAxisAngle(self,bend=(1,0,0),twist=0):
+        bend_MVector=om2.MVector(bend)
+        MQuaternion=om2.MQuaternion(twist,bend)
+        add_MMatrix=MQuaternion.asMatrix()
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)
+        self._MMatrix=have_MMatrix*add_MMatrix
+        return self._MMatrix
+    def addAxisAngle(self,bend=(1,0,0),twist=0):
+        bend_MVector=om2.MVector(bend)
+        MQuaternion=om2.MQuaternion(twist,bend)
+        self._MMatrix=MQuaternion.asMatrix()
+        return self._MMatrix
+    def getAxisAngle(self,radian=True):
+        MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+        MQuaternion=MTransformationMatrix.rotation(asQuaternion=True)
+        bend_MVector,twist_float,=MQuaternion.asAxisAngle()
+        if not radian:
+            twist_float=math.degrees(twist_float)
+        return bend_MVector,twist_float
+
+    def setScale(self,variable):
+        scale_list3=self.vector3_check_vector3(variable)
+        MTransformationMatrix=om2.MTransformationMatrix()
+        MTransformationMatrix.setScale(scale_list3,self._MSpace)
+        self._MMatrix=MTransformationMatrix.asMatrix()
+        return self._MMatrix
+    def addScale(self,variable):
+        scale_list3=self.vector3_check_vector3(variable)
+        MTransformationMatrix=om2.MTransformationMatrix()
+        MTransformationMatrix.setScale(scale_list3,self._MSpace)
+        add_MMatrix=MTransformationMatrix.asMatrix()
+        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix) or self._MMatrix
+        self._MMatrix=have_MMatrix*add_MMatrix
+        return self._MMatrix
+    def getScale(self):
+        MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
+        scale_list=MTransformationMatrix.scale(self._MSpace)
+        return scale_list
+
     def setDataMatrix(self,variable):
         self._matrix_DataMatrix=variable
         return self._matrix_DataMatrix
