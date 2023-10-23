@@ -118,9 +118,10 @@ class AppJsonPack(object):
 
         self.__writePack_create_func(_jsonPack_SelfJson,_writePack_SelfJsons)
 
-def readJson(directory,file="init",extension="json"):
+def readJson(absolute,relative=None,file="init",extension="json"):
     data_DataPath=pLB.DataPath()
-    data_DataPath.setAbsoluteDirectory(directory)
+    data_DataPath.setAbsoluteDirectory(absolute)
+    data_DataPath.setRelativeDirectory(relative)
     data_DataPath.setFile(file)
     data_DataPath.setExtension(extension)
 
@@ -129,9 +130,10 @@ def readJson(directory,file="init",extension="json"):
     json_dict=data_SelfJson.read()
     return json_dict
 
-def writeJson(directory,file="init",extension="json",write={}):
+def writeJson(absolute,relative=None,file="init",extension="json",write={}):
     data_DataPath=pLB.DataPath()
-    data_DataPath.setAbsoluteDirectory(directory)
+    data_DataPath.setAbsoluteDirectory(absolute)
+    data_DataPath.setRelativeDirectory(relative)
     data_DataPath.setFile(file)
     data_DataPath.setExtension(extension)
 

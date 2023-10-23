@@ -1,11 +1,9 @@
 # -*- coding: iso-8859-15 -*-
-
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
-
+import maya.cmds as cmds
 import os
-from maya import cmds
 
 import cgInTools as cit
 from ...ui import plainTextUI as UI

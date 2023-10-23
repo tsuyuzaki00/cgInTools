@@ -219,11 +219,3 @@ class SelfPath(object):
         absolutePathSource_path=self._dataPathToAbsolutePath_create_path(_source_DataPath)
 
         shutil.copy2(absolutePathSource_path,absolutePath_path)
-
-def actionScriptsData(cgInToolsData_dir,folderName_str):
-    if not os.path.isdir(cgInToolsData_dir):
-        cgInToolsData_dir=os.makedirs(cgInToolsData_dir)
-    folderData_dir=os.path.join(cgInToolsData_dir,folderName_str)
-    if not os.path.isdir(folderData_dir):
-        os.makedirs(folderData_dir)
-    return folderData_dir

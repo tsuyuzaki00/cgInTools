@@ -1,23 +1,18 @@
 # -*- coding: iso-8859-15 -*-
-
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
-
+import maya.cmds as cmds
 import os
-from maya import cmds
 
 import cgInTools as cit
 from ...ui import plainTextUI as UI
 from ..library import windowLB as wLB
 from ...library import jsonLB as jLB
-from ...library import pathLB as pLB
-cit.reloads([UI,wLB,jLB,pLB])
+cit.reloads([UI,wLB,jLB])
 
-mayaData_dir=pLB.actionScriptsData(os.environ["MAYACGINTOOLSDATA_DIRECTORY"],"querySelections")
-PATHSET=mayaData_dir
-PATHRESET=cit.mayaSettings_dir
-FILE="init"
+SETFOLDER="querySelections"
+cit.checkScriptsData(SETFOLDER,cit.mayaSettings_dir,os.environ["MAYACGINTOOLSDATA_DIRECTORY"])
 
 class SelectionTextWindow(UI.PlainTextWindowBase):
     def __init__(self,parent):
@@ -28,9 +23,7 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
 
-        self._pathSet=PATHSET
-        self._pathReset=PATHRESET
-        self._file=FILE
+        self._setFolder_str=SETFOLDER
 
     #Single Function
     def convertListToString_edit_str(self,texts):
@@ -56,25 +49,7 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         for text_list in text_lists:
             texts.extend(text_list)
             texts=list(set(texts))
-            texts.sort()
         return texts
-
-    def importJson_query_dict(self,path,file):
-        setting=jLB.Json()
-        setting.setPath(path)
-        setting.setFile(file)
-        settings_dict=setting.read()
-        return settings_dict
-
-    def exportJson_edit_func(self,path,file,selectText_list):
-        write_dict={
-            "selections":selectText_list,
-        }
-        setting=jLB.Json()
-        setting.setPath(path)
-        setting.setFile(file)
-        setting.setWriteDict(write_dict)
-        setting.write()
 
     #Private Function
     def __setPlainText_create_func(self,objs,add=False):
@@ -83,40 +58,42 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
             getText_str=self.textPlain_QPlainTextEdit.toPlainText()
             addTexts=self.convertStringToList_edit_list(getText_str)
             organizeTexts=self.organizeList_edit_list([addTexts,objs])
+        organizeTexts.sort()
         text_str=self.convertListToString_edit_str(organizeTexts)
         self.textPlain_QPlainTextEdit.setPlainText(text_str)
 
-    def __getSelectText_query_list(self):
+    def __getSelectText_query_dict(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()
         texts=self.convertStringToList_edit_list(getText_str)
-        return texts
-
-    #Summary Function
-    def __importJson(self,path,file):
-        settings_dict=self.importJson_query_dict(path,file)
-        self.__setPlainText_create_func(settings_dict["selections"])
-
-    def __exportJson(self,path,file):
-        selectText_list=self.__getSelectText_query_list()
-        self.exportJson_edit_func(path,file,selectText_list)
+        write_dict={
+            "selections":texts,
+        }
+        return write_dict
 
     #Public Function
     def refreshOnClicked(self):
-        self.__importJson(self._pathReset,self._file)
+        settings_dict=jLB.readJson(cit.mayaSettings_dir,self._setFolder_str)
+        self.__setPlainText_create_func(settings_dict.get("selections"))
 
     def restoreOnClicked(self):
-        self.__importJson(self._pathSet,self._file)
+        data_dict=jLB.readJson(os.environ["MAYACGINTOOLSDATA_DIRECTORY"],self._setFolder_str)
+        self.__setPlainText_create_func(data_dict.get("selections"))
 
     def saveOnClicked(self):
-        self.__exportJson(self._pathSet,self._file)
+        write_dict=self.__getSelectText_query_dict()
+        jLB.writeJson(absolute=os.environ["MAYACGINTOOLSDATA_DIRECTORY"],relative=self._setFolder_str,write=write_dict)
 
     def importOnClicked(self):
-        path,file=wLB.mayaFileDialog_query_path_file("import setting",1)
-        self.__importJson(path,file)
+        default_dir=os.path.join(os.environ["MAYACGINTOOLSDATA_DIRECTORY"],self._setFolder_str)
+        import_dir,importFile_str=wLB.mayaFileDialog_query_dir_file(text="import setting",fileMode=1,directory=default_dir)
+        data_dict=jLB.readJson(absolute=import_dir,file=importFile_str)
+        self.__setPlainText_create_func(data_dict.get("selections"))
 
     def exportOnClicked(self):
-        path,file=wLB.mayaFileDialog_query_path_file("export setting",0)
-        self.__exportJson(path,file)
+        default_dir=os.path.join(os.environ["MAYACGINTOOLSDATA_DIRECTORY"],self._setFolder_str)
+        import_dir,importFile_str=wLB.mayaFileDialog_query_dir_file(text="export setting",fileMode=0,directory=default_dir)
+        write_dict=self.__getSelectText_query_dict()
+        jLB.writeJson(absolute=import_dir,file=importFile_str,write=write_dict)
 
     def buttonLeftOnClicked(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()

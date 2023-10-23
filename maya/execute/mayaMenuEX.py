@@ -53,7 +53,8 @@ class SelfMenu():
 def main():
     menu_DataPath=pLB.DataPath()
     menu_DataPath.setAbsoluteDirectory(cit.mayaSettings_dir)
-    menu_DataPath.setFile("mayaMenu")
+    menu_DataPath.setRelativeDirectory("mayaMenu")
+    menu_DataPath.setFile("init")
     menu_DataPath.setExtension("json")
 
     menu_SelfMenu=SelfMenu()
