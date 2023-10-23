@@ -10,12 +10,14 @@ from maya import cmds
 import cgInTools as cit
 from ...ui import plainTextUI as UI
 from ..library import windowLB as wLB
-from ..library import jsonLB as jLB
-cit.reloads([UI,wLB,jLB])
+from ...library import jsonLB as jLB
+from ...library import pathLB as pLB
+cit.reloads([UI,wLB,jLB,pLB])
 
-PATHSET=cit.mayaData_dir
+mayaData_dir=pLB.actionScriptsData(os.environ["MAYACGINTOOLSDATA_DIRECTORY"],"querySelections")
+PATHSET=mayaData_dir
 PATHRESET=cit.mayaSettings_dir
-FILE="querySelections"
+FILE="init"
 
 class SelectionTextWindow(UI.PlainTextWindowBase):
     def __init__(self,parent):
