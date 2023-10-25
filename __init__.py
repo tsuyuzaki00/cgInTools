@@ -25,7 +25,7 @@ def checkScriptsData(folderName_str,setting_dir,cgInToolsData_dir):
     
     if not os.path.isfile(file_path):
         shutil.copy2(setting_path,file_path)
-    return setting_path,file_path
+    return setting_dir,folder_dir
 
 root_dir=os.path.dirname(__file__) #.../cgInTools/
 ui_dir=os.path.join(root_dir,"ui")
@@ -41,6 +41,7 @@ mayaLibrary_dir=os.path.join(maya_dir,"library")
 mayaManager_dir=os.path.join(maya_dir,"manager")
 mayaOption_dir=os.path.join(maya_dir,"option")
 mayaSetup_dir=os.path.join(maya_dir,"setup")
+mayaData_dir=os.environ.get("MAYACGINTOOLSDATA_DIRECTORY")
 
 mgear_dir=os.path.join(maya_dir,"mgear")
 mgearSettings_dir=os.path.join(mgear_dir,"_settings")
@@ -49,6 +50,7 @@ mgearLibrary_dir=os.path.join(mgear_dir,"library")
 mgearManager_dir=os.path.join(mgear_dir,"manager")
 mgearOption_dir=os.path.join(mgear_dir,"option")
 mgearSetup_dir=os.path.join(mgear_dir,"setup")
+mgearData_dir=os.environ.get("MGEARCGINTOOLSDATA_DIRECTORY")
 
 blender_dir=os.path.join(root_dir,"blender")
 blenderSettings_dir=os.path.join(blender_dir,"_settings")
@@ -57,3 +59,4 @@ blenderLibrary_dir=os.path.join(blender_dir,"library")
 blenderManager_dir=os.path.join(blender_dir,"manager")
 blenderOption_dir=os.path.join(blender_dir,"option")
 blenderSetup_dir=os.path.join(blender_dir,"setup")
+blenderData_dir=os.environ.get("BLENDERCGINTOOLSDATA_DIRECTORY")
