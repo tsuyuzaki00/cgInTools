@@ -5,9 +5,9 @@ from mgear.shifter import io
 from mgear.shifter import guide_manager
 
 import cgInTools as cit
-from ...library import pathLB as pLB
 from ...library import jsonLB as jLB
-from ...maya.library import filingLB as fLB
+from ...library import pathLB as pLB
+from ...maya.library import fileLB as fLB
 cit.reloads([pLB,jLB,fLB])
 
 """
@@ -34,29 +34,40 @@ cit.reloads([pLB,jLB,fLB])
 def main():
     json_dict=jLB.readJson(cit.mayaData_dir,["guideBuild"])
     for buildPath_dict in json_dict.get("buildPath_dicts"):
-        guidePath_dict=buildPath_dict.get("SavePath")
+        savePath_dict=buildPath_dict.get("SavePath")
+        save_DataPath=pLB.DataPath()
+        save_DataPath.setAbsoluteDirectory(savePath_dict.get("AbsoluteDirectory"))
+        save_DataPath.setRelativeDirectory(savePath_dict.get("RelativeDirectory"))
+        save_DataPath.setFile(savePath_dict.get("File"))
+        save_DataPath.setExtension(savePath_dict.get("Extension"))
         
-        project=fLB.SelfProject()
-        project.setAbsoluteDirectory(guidePath_dict.get("AbsoluteDirectory"))
-        project.setProjectName(guidePath_dict.get("RelativeDirectory"))
-        workDirectory=project.editProject()
+        guidePath_dict=buildPath_dict.get("GuidePath")
+        guide_DataPath=pLB.DataPath()
+        guide_DataPath.setAbsoluteDirectory(guidePath_dict.get("AbsoluteDirectory"))
+        guide_DataPath.setRelativeDirectory(guidePath_dict.get("RelativeDirectory"))
+        guide_DataPath.setFile(guidePath_dict.get("File"))
+        guide_DataPath.setExtension(guidePath_dict.get("Extension"))
 
-        save=fLB.SelfFile()
-        save.setAbsoluteDirectory(workDirectory)
-        save.setRelativeDirectory("scenes")
-        save.addRelativeDirectory("scenes")
-        save.setFile(buildPath_dict.get("File"))
-        save.save()
+        project_SelfProject=fLB.SelfProject()
+        project_SelfProject.setDataPath(save_DataPath)
+        project_SelfProject.editProject()
+
+        save_SelfFile=fLB.SelfFile()
+        save_SelfFile.setDataPath(save_DataPath)
+        save_SelfFile.save()
 
         mgearBuildDirectory=os.path.join(workDirectory,"mgear_build")
-        os.environ['MGEAR_SHIFTER_CUSTOMSTEP_PATH']=mgearBuildDirectory
         
-        guidePath=os.path.join(mgearBuildDirectory,"guide",share_dict.get("guideFile"))
-        guidePath=os.path.normpath(guidePath)
-        io.import_guide_template(guidePath)
+        guide_SelfPath=pLB.SelfPath()
+        guide_SelfPath.setDataPath(guide_DataPath)
+        mgearBulid_dir=guide_SelfPath.getAbsoluteDirectory()
+        guide_path=guide_SelfPath.queryAbsolutePath()
+        
+        os.environ['MGEAR_SHIFTER_CUSTOMSTEP_PATH']=mgearBulid_dir
+        io.import_guide_template(guide_path)
 
         cmds.select("guide")
         guide_manager.build_from_selection()
 
-        save.save()
+        save_SelfFile.save()
         
