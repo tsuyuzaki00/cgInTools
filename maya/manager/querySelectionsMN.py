@@ -85,14 +85,18 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         jLB.writeJson(absolute=cit.mayaData_dir,relative=self._dataFolder_str,write=write_dict)
 
     def importOnClicked(self):
-        import_dir,importFile_str=wLB.mayaFileDialog_query_dir_file(text="import setting",fileMode=1,directory=self._data_str)
-        data_dict=jLB.readJson(absolute=import_dir,file=importFile_str)
+        import_dict=wLB.mayaPathDialog_query_dict(text="import setting",fileMode=1,directory=self._data_dir)
+        if import_dict is None:
+            return
+        data_dict=jLB.readJson(absolute=import_dict["directory"],file=import_dict["file"])
         self.__setPlainText_create_func(data_dict.get("selections"))
 
     def exportOnClicked(self):
-        import_dir,importFile_str=wLB.mayaFileDialog_query_dir_file(text="export setting",fileMode=0,directory=self._data_str)
+        export_dict=wLB.mayaPathDialog_query_dict(text="export setting",fileMode=0,directory=self._data_dir)
+        if export_dict is None:
+            return
         write_dict=self.__getSelectText_query_dict()
-        jLB.writeJson(absolute=import_dir,file=importFile_str,write=write_dict)
+        jLB.writeJson(absolute=export_dict["directory"],file=export_dict["file"],write=write_dict)
 
     def buttonLeftOnClicked(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()

@@ -7,7 +7,7 @@ from mgear.shifter import guide_manager
 import cgInTools as cit
 from ...library import jsonLB as jLB
 from ...library import pathLB as pLB
-from ...maya.library import fileLB as fLB
+from ...maya.library import projectLB as fLB
 cit.reloads([pLB,jLB,fLB])
 
 """

@@ -109,6 +109,20 @@
         "Job":[],
         "Setting":[
             {
+                "label":"Create Project",
+                "fromFolder":"cgInTools.maya.manager",
+                "importFile":"createProjectMN",
+                "function":"main()",
+                "icon":""
+            },
+            {
+                "label":"Edit Project",
+                "fromFolder":"cgInTools.maya.manager",
+                "importFile":"editProjectMN",
+                "function":"main()",
+                "icon":""
+            },
+            {
                 "label":"Loaded 3DCONNEXION",
                 "fromFolder":"cgInTools.maya.execute",
                 "importFile":"threeDconnexionLoadEX",
