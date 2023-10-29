@@ -19,11 +19,21 @@ def main():
     #OP.main()
     #EX.main()
     node_DataNode=naLB.DataNode()
-    node_DataNode.setName("test")
-    node_DataNode.setType("joint")
+    node_DataNode.setName("pCube1")
+    node_DataNode.setType("transform")
 
-    node_SelfNode=naLB.SelfDGNode()
-    node_SelfNode.setDataNode(node_DataNode)
-    node_SelfNode.createNode()
+    attr_DataAttr=naLB.DataAttribute()
+    attr_DataAttr.setName("Ytest")
+    attr_DataAttr.setShortName("Ytt")
+    attr_DataAttr.setValueType(11)
+    attr_DataAttr.setDefaultValue(0.0)
+
+    plug_DataPlug=naLB.DataPlug()
+    plug_DataPlug.setDataNode(node_DataNode)
+    plug_DataPlug.setDataAttribute(attr_DataAttr)
+
+    plug_SelfPlug=naLB.SelfPlug()
+    plug_SelfPlug.setDataPlug(plug_DataPlug)
+    plug_SelfPlug.createAttr()
 
 main()

@@ -61,29 +61,35 @@ class DataAttribute(bLB.SelfOrigin):
         if dataAttribute is None:
             self._longName_str=None
             self._shortName_str=None
-            self._valueType_str=None
+            self._valueType_str=None # om2.MFnNumericData.kFloat,
             self._value_DataValueType=None
+            self._default_value=None
             self._keyLock_bool=False
             self._valueLock_bool=False
-            self._hide_bool=False
+            self._channelHide_bool=False
+            self._proxyAttr_bool=False
         elif type(dataAttribute) is DataAttribute:
             self._longName_str=dataAttribute.getName()
             self._shortName_str=dataAttribute.getShortName()
             self._valueType_str=dataAttribute.getValueType()
             self._value_DataValueType=dataAttribute.getDataValueType()
+            self._default_value=None
             self._keyLock_bool=dataAttribute.getKeyLockState()
             self._valueLock_bool=dataAttribute.getValueLockState()
-            self._hide_bool=dataAttribute.getHideState()
+            self._channelHide_bool=dataAttribute.getChannelHideState()
+            self._proxyAttr_bool=dataAttribute.getProxyAttrState()
         elif type(dataAttribute) is om2.MObject:
-            attr_MFnAttribute=om2.MFnAttribute(dataAttribute)
+            attr_MFnNumericAttribute=om2.MFnNumericAttribute(dataAttribute)
 
-            self._longName_str=attr_MFnAttribute.name
-            self._shortName_str=attr_MFnAttribute.shortName
-            self._valueType_str=None
+            self._longName_str=attr_MFnNumericAttribute.name
+            self._shortName_str=attr_MFnNumericAttribute.shortName
+            self._valueType_str=attr_MFnNumericAttribute.numericType()
             self._value_DataValueType=None
-            self._keyLock_bool=attr_MFnAttribute.keyable
+            self._default_value=None
+            self._keyLock_bool=not attr_MFnNumericAttribute.keyable
             self._valueLock_bool=False
-            self._hide_bool=attr_MFnAttribute.hidden
+            self._channelHide_bool=not attr_MFnNumericAttribute.channelBox
+            self._proxyAttr_bool=attr_MFnNumericAttribute.isProxyAttribute
 
     #Setting Function
     def setName(self,variable):
@@ -110,6 +116,12 @@ class DataAttribute(bLB.SelfOrigin):
     def getDataValueType(self):
         return self._value_DataValueType
     
+    def setDefaultValue(self,variable):
+        self._default_value=variable
+        return self._default_value
+    def getDefaultValue(self):
+        return self._default_value
+    
     def setKeyLockState(self,variable):
         self._keyLock_bool=variable
         return self._keyLock_bool
@@ -122,11 +134,17 @@ class DataAttribute(bLB.SelfOrigin):
     def getValueLockState(self):
         return self._valueLock_bool
     
-    def setHideState(self,variable):
-        self._hide_bool=variable
-        return self._hide_bool
-    def getHideState(self):
-        return self._hide_bool
+    def setChannelHideState(self,variable):
+        self._channelHide_bool=variable
+        return self._channelHide_bool
+    def getChannelHideState(self):
+        return self._channelHide_bool
+    
+    def setProxyAttrState(self,variable):
+        self._proxyAttr_bool=variable
+        return self._proxyAttr_bool
+    def getProxyAttrState(self):
+        return self._proxyAttr_bool
 
 class DataNode(bLB.SelfOrigin):
     def __init__(self,dataNode=None):
@@ -741,7 +759,30 @@ class SelfPlug(bLB.SelfOrigin):
 
     #Public Function
     def createAttr(self,dataPlug=None):
-        pass
+        _plug_DataPlug=dataPlug or self._plug_DataPlug
+        
+        node_DataNode=_plug_DataPlug.getDataNode()
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+
+        node_DataAttribute=_plug_DataPlug.getDataAttribute()
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.create(
+            node_DataAttribute.getName(),
+            node_DataAttribute.getShortName(),
+            node_DataAttribute.getValueType(),
+            node_DataAttribute.getDefaultValue()
+        )
+        attr_MFnNumericAttribute.channelBox=not node_DataAttribute.getChannelHideState()
+        #attr_MFnNumericAttribute.isProxyAttribute=node_DataAttribute.getProxyAttrState()
+
+        node_MFnDependencyNode.addAttribute(attr_MObject)
+        node_MPlug=node_MFnDependencyNode.findPlug(attr_MObject,False)
+        node_MPlug.isKeyable=not node_DataAttribute.getKeyLockState()
+        node_MPlug.isLocked=node_DataAttribute.getValueLockState()
+        
+        newPlug_DataPlug=DataPlug(node_MPlug)
+        return newPlug_DataPlug
 
     def editAttr(self,value=None,dataPlug=None):
         _plug_DataPlug=dataPlug or self._plug_DataPlug
