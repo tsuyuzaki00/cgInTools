@@ -2,36 +2,36 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 import maya.api.OpenMayaAnim as oma2
-from cgInTools.maya.library import cleanLB as cLB
-import math
+import sys,math
 
-def test():
-    name="surface"
-    control_vertices = [(-0.5,0.0,-0.5),(0.5,0.0,-0.5),(-0.5,0.0,0.5),(0.5,0.0,0.5)]
-    surface_MObject=om2.MFnDagNode().create("transform",name)
-    surface_MFnNurbsSurface=om2.MFnNurbsSurface()
-    surface_MFnNurbsSurface.create(control_vertices,[0.0,1.0],[0.0,1.0],1,1,1,1,False,surface_MObject)
-    surface_MFnDependencyNode=om2.MFnDependencyNode(surface_MObject)
-    object_str=surface_MFnDependencyNode.name()
-    cLB.defaultMaterial_edit_func(object_str)
-
-    surface_MFnDagNode=om2.MFnDagNode(surface_MObject)
-    surface_MDagPath=surface_MFnDagNode.getPath()
-    surface_MDagPath.extendToShape()
-    surface_MFnDagNode=om2.MFnDagNode(surface_MDagPath)
-    surface_MPlug=surface_MFnDagNode.findPlug("create",False)
-
-    makeNurb_MDGModifier=om2.MDGModifier()
-    makeNurb_MObject=makeNurb_MDGModifier.createNode("makeNurbPlane")
-    makeNurb_MDGModifier.doIt()
-
-    makeNurb_MFnDependencyNode=om2.MFnDependencyNode(makeNurb_MObject)
-    makeNurb_MPlug=makeNurb_MFnDependencyNode.findPlug("outputSurface",False)
-    
-    connect_MDGModifier=om2.MDGModifier()
-    connect_MDGModifier.connect(makeNurb_MPlug,surface_MPlug)
-    connect_MDGModifier.doIt()
+def node_query_MObject(nodeName_str):
+    if nodeName_str == None:
+        return None
+    elif not isinstance(nodeName_str,str):
+        om2.MGlobal.displayError("Please insert one string in value")
+        sys.exit()
+    node_MSelectionList=om2.MGlobal.getSelectionListByName(nodeName_str)
+    node_MObject=node_MSelectionList.getDependNode(0)
+    return node_MObject
 
 def main():
-    test()
+    node_MObject=node_query_MObject("pCube1")
+    node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+    
+    attr_MFnAttribute=om2.MFnGenericAttribute()
+
+    #attr_MFnAttribute.addDataType(1)
+    #attr_MTypeId=om2.MTypeId(0x07EFE)
+    #attr_MFnAttribute.addTypeId(attr_MTypeId)
+    attr_MObject=attr_MFnAttribute.create("Zest","zt")
+    attr_MFnAttribute.addNumericType(11)
+
+    node_MFnDependencyNode.addAttribute(attr_MObject)
+    node_MPlug=node_MFnDependencyNode.findPlug(attr_MObject,False)
+    node_MPlug.isChannelBox=False
+    #node_MPlug.isKeyable=True
+    #node_MPlug.isLocked=False
+    #translate_MPlug=node_MFnDependencyNode.findPlug("translate",False)
+    #print(translate_MPlug.isChild)
+
 main()

@@ -773,11 +773,12 @@ class SelfPlug(bLB.SelfOrigin):
             node_DataAttribute.getValueType(),
             node_DataAttribute.getDefaultValue()
         )
-        attr_MFnNumericAttribute.channelBox=not node_DataAttribute.getChannelHideState()
+        #attr_MFnNumericAttribute.channelBox=not node_DataAttribute.getChannelHideState()
         #attr_MFnNumericAttribute.isProxyAttribute=node_DataAttribute.getProxyAttrState()
 
         node_MFnDependencyNode.addAttribute(attr_MObject)
         node_MPlug=node_MFnDependencyNode.findPlug(attr_MObject,False)
+        node_MPlug.isChannelBox=not node_DataAttribute.getChannelHideState()
         node_MPlug.isKeyable=not node_DataAttribute.getKeyLockState()
         node_MPlug.isLocked=node_DataAttribute.getValueLockState()
         
