@@ -8,10 +8,11 @@ from ...library import pathLB as pLB
 from ...library import serializeLB as sLB
 from ...library import _testLB as tLB
 from ..library import nodeAttrLB as naLB
+from ..library import deformLB as dLB
 #from cgInTools.maya.manager import equipmentSettingsMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
 #from cgInTools.maya.execute import exportAnimPackEX as EX
-cit.reloads([pLB,sLB,tLB,naLB])
+cit.reloads([pLB,sLB,tLB,naLB,dLB])
 
 def main():
     #TP.main()
@@ -19,21 +20,16 @@ def main():
     #OP.main()
     #EX.main()
     node_DataNode=naLB.DataNode()
-    node_DataNode.setName("pCube1")
-    node_DataNode.setType("transform")
+    node_DataNode.setName("skinCluster1")
+    node_DataNode.setType("skinCluster")
 
-    attr_DataAttr=naLB.DataAttribute()
-    attr_DataAttr.setName("Ytest")
-    attr_DataAttr.setShortName("Ytt")
-    attr_DataAttr.setValueType(11)
-    attr_DataAttr.setDefaultValue(0.0)
+    deform_SelfDeformation=dLB.SelfDeformation()
+    deform_SelfDeformation.setNode(node_DataNode)
+    deform_DataDeformations=deform_SelfDeformation.queryWeights()
+    for deform_DataDeformation in deform_DataDeformations:
+        for deform_DataWeight in deform_DataDeformation.getDataWeights():
+            print(deform_DataWeight.getIndex())
+            print(deform_DataWeight.getValue())
 
-    plug_DataPlug=naLB.DataPlug()
-    plug_DataPlug.setDataNode(node_DataNode)
-    plug_DataPlug.setDataAttribute(attr_DataAttr)
-
-    plug_SelfPlug=naLB.SelfPlug()
-    plug_SelfPlug.setDataPlug(plug_DataPlug)
-    plug_SelfPlug.createAttr()
 
 main()

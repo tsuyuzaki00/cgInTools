@@ -11,7 +11,8 @@ class SuperClass(object):
 class Template(SuperClass):
     def __init__(self):
         super(Template,self).__init__()
-        self._value=""
+        self._name_value=None
+        self._settings=[]
 
     #Single Function
     def single_mode_func(self):
@@ -40,14 +41,22 @@ class Template(SuperClass):
         pass
 
     #Setting Function
-    def setSetting(self,variable):
-        self._settings=variable
-    def addSetting(self,variable):
-        self._settings.append(variable)
-    def currentSetting(self):
+    def setValue(self,variable):
+        self._name_value=variable
+        return self._name_value
+    def getValue(self):
+        return self._name_value
+
+    def setSettings(self,variables):
+        self._settings=variables
+        return self._settings
+    def addSettings(self,variables):
+        self._settings+=variables
+        return self._settings
+    def currentSettings(self):
         self._settings=self.single_mode_func()
         return self._settings
-    def getSetting(self):
+    def getSettings(self):
         return self._settings
 
     #Public Function
