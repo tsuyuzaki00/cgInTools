@@ -314,7 +314,7 @@ class SelfDAGNode(SelfDGNode):
         ]
     
     #Single Function
-    def convertMObject_create_MDagPath(self,node_MObject):
+    def convertMObject_query_MDagPath(self,node_MObject):
         node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
         return node_MDagPath
     
@@ -343,10 +343,42 @@ class SelfDAGNode(SelfDGNode):
         else:
             return childs
 
+    def convertMDagPathToNormalMatrix_query_MMatrix(self,node_MDagPath):
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        node_MMatrix=node_MFnDagNode.transformationMatrix()
+        return node_MMatrix
+    
+    def convertMDagPathToWorldMatrix_query_MMatrix(self,node_MDagPath):
+        node_MMatrix=node_MDagPath.inclusiveMatrix()
+        return node_MMatrix
+    
+    def convertMDagPathToParentMatrix_query_MMatrix(self,node_MDagPath):
+        node_MMatrix=node_MDagPath.exclusiveMatrix()
+        return node_MMatrix
+    
+    def convertMDagPathToInverseNormalMatrix_query_MMatrix(self,node_MDagPath):
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        normal_MMatrix=node_MFnDagNode.transformationMatrix()
+        normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
+        node_MMatrix=normal_MTransformationMatrix.asMatrixInverse()
+        return node_MMatrix
+    
+    def convertMDagPathToInverseWorldMatrix_query_MMatrix(self,node_MDagPath):
+        world_MMatrix=node_MDagPath.inclusiveMatrix()
+        world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
+        node_MMatrix=world_MTransformationMatrix.asMatrixInverse()
+        return node_MMatrix
+    
+    def convertMDagPathToInverseParentMatrix_query_MMatrix(self,node_MDagPath):
+        parent_MMatrix=node_MDagPath.exclusiveMatrix()
+        parent_MTransformationMatrix=om2.MTransformationMatrix(parent_MMatrix)
+        node_MMatrix=parent_MTransformationMatrix.asMatrixInverse()
+        return node_MMatrix
+    
     #Multi Function
     def _dataNodeToNormalMatrix_query_DataMatrix(self,node_DataNode):
         node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         node_MMatrix=node_MFnDagNode.transformationMatrix()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
@@ -354,21 +386,21 @@ class SelfDAGNode(SelfDGNode):
     
     def _dataNodeToWorldMatrix_query_DataMatrix(self,node_DataNode):
         node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_MMatrix=node_MDagPath.inclusiveMatrix()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
     def _dataNodeToParentMatrix_query_DataMatrix(self,node_DataNode):
         node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_MMatrix=node_MDagPath.exclusiveMatrix()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
     def _dataNodeToInverseNormalMatrix_query_DataMatrix(self,node_DataNode):
         node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         normal_MMatrix=node_MFnDagNode.transformationMatrix()
         normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
@@ -378,7 +410,7 @@ class SelfDAGNode(SelfDGNode):
     
     def _dataNodeToInverseWorldMatrix_query_DataMatrix(self,node_DataNode):
         node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         world_MMatrix=node_MDagPath.inclusiveMatrix()
         world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
         node_MMatrix=world_MTransformationMatrix.asMatrixInverse()
@@ -387,7 +419,7 @@ class SelfDAGNode(SelfDGNode):
     
     def _dataNodeToInverseParentMatrix_query_DataMatrix(self,node_DataNode):
         node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         parent_MMatrix=node_MDagPath.exclusiveMatrix()
         parent_MTransformationMatrix=om2.MTransformationMatrix(parent_MMatrix)
         node_MMatrix=parent_MTransformationMatrix.asMatrixInverse()
@@ -525,12 +557,12 @@ class SelfDAGNode(SelfDGNode):
         _node_DataNode=dataNode or self._node_DataNode
         nodeName_str=_node_DataNode.getName()
         node_MObject=self.node_query_MObject(nodeName_str)
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
 
         _parent_DataNode=parentDataNode or self._parent_DataNode
         parentName_str=_parent_DataNode.getName()
         parent_MObject=self.node_query_MObject(parentName_str)
-        parent_MDagPath=self.convertMObject_create_MDagPath(parent_MObject)
+        parent_MDagPath=self.convertMObject_query_MDagPath(parent_MObject)
 
         parent_MDagModifier=om2.MDagModifier()
         parent_MDagModifier.reparentNode(node_MDagPath,parent_MDagPath)
@@ -540,13 +572,13 @@ class SelfDAGNode(SelfDGNode):
         _node_DataNode=dataNode or self._node_DataNode
         nodeName_str=_node_DataNode.getName()
         node_MObject=self.node_query_MObject(nodeName_str)
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
 
         _child_DataNodes=childDataNodes or self._child_DataNodes
         for _child_DataNode in _child_DataNodes:
             childName_str=_child_DataNode.getName()
             child_MObject=self.node_query_MObject(childName_str)
-            child_MDagPath=self.convertMObject_create_MDagPath(child_MObject)
+            child_MDagPath=self.convertMObject_query_MDagPath(child_MObject)
 
             child_MDagModifier=om2.MDagModifier()
             child_MDagModifier.reparentNode(child_MDagPath,node_MDagPath)
@@ -555,7 +587,7 @@ class SelfDAGNode(SelfDGNode):
     def queryFullPathName(self):
         nodeName_str=self._node_DataNode.getName()
         node_MObject=self.node_query_MObject(nodeName_str)
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
 
         name_str=node_MDagPath.fullPathName()
         return name_str
@@ -565,7 +597,7 @@ class SelfDAGNode(SelfDGNode):
 
         nodeName_str=_node_DataNode.getName()
         node_MObject=self.node_query_MObject(nodeName_str)
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         shape_MObject=self.shape_query_MObject(node_MDagPath)
         shape_DataNode=DataNode(shape_MObject)
 
@@ -578,7 +610,7 @@ class SelfDAGNode(SelfDGNode):
 
         nodeName_str=_node_DataNode.getName()
         node_MObject=self.node_query_MObject(nodeName_str)
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         parent_MObject=self.parent_query_MObject(node_MDagPath)
         parent_DataNode=DataNode(parent_MObject)
 
@@ -591,7 +623,7 @@ class SelfDAGNode(SelfDGNode):
 
         nodeName_str=_node_DataNode.getName()
         node_MObject=self.node_query_MObject(nodeName_str)
-        node_MDagPath=self.convertMObject_create_MDagPath(node_MObject)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         child_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=False)
 
         child_SelfDAGNodes=[]
