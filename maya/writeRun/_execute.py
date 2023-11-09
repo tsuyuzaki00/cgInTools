@@ -8,28 +8,30 @@ from ...library import pathLB as pLB
 from ...library import serializeLB as sLB
 from ...library import _testLB as tLB
 from ..library import nodeAttrLB as naLB
-from ..library import deformLB as dLB
+from ..library import matrixLB as mLB
 #from cgInTools.maya.manager import equipmentSettingsMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
 #from cgInTools.maya.execute import exportAnimPackEX as EX
-cit.reloads([pLB,sLB,tLB,naLB,dLB])
+cit.reloads([pLB,sLB,tLB,naLB,mLB])
 
 def main():
     #TP.main()
     #MN.main()
     #OP.main()
     #EX.main()
-    node_DataNode=naLB.DataNode()
-    node_DataNode.setName("skinCluster1")
-    node_DataNode.setType("skinCluster")
-
-    deform_SelfDeformation=dLB.SelfDeformation()
-    deform_SelfDeformation.setNode(node_DataNode)
-    deform_DataDeformations=deform_SelfDeformation.queryWeights()
-    for deform_DataDeformation in deform_DataDeformations:
-        for deform_DataWeight in deform_DataDeformation.getDataWeights():
-            print(deform_DataWeight.getIndex())
-            print(deform_DataWeight.getValue())
-
+    
+    source_DataNode=naLB.DataNode()
+    source_DataNode.setName("joint1")
+    target_DataNode=naLB.DataNode()
+    target_DataNode.setName("joint2")
+    
+    worldMatrix=cmds.getAttr("pCube1.worldMatrix[0]")
+    source_DataMatrix=mLB.DataMatrix(worldMatrix)
+    
+    source_SelfDAGNode=naLB.SelfDAGNode()
+    source_SelfDAGNode.setDataNode(source_DataNode)
+    #source_SelfDAGNode.setDataMatrix(source_DataMatrix)
+    source_SelfDAGNode.setTargetDataNode(target_DataNode)
+    source_SelfDAGNode.mirrorTargetTransform()
 
 main()

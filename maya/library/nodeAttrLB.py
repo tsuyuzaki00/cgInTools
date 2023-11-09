@@ -159,6 +159,9 @@ class DataNode(bLB.SelfOrigin):
             node_MFnDependencyNode=om2.MFnDependencyNode(dataNode)
             self._nodeName_str=node_MFnDependencyNode.name()
             self._nodeType_str=node_MFnDependencyNode.typeName
+    
+    def __repr__(self):
+        return self._nodeName_str
 
     #Setting Function
     def setName(self,variable):
@@ -300,8 +303,11 @@ class SelfDAGNode(SelfDGNode):
         self._matrix_DataMatrix=None
         self._parent_DataNode=None
         self._child_DataNodes=[]
-        self._match_DataNode=None
+        self._source_DataNode=None
+        self._target_DataNode=None
         self._pivot_DataNode=None
+        self._mirrorAxis_str="x"
+        self._mirrorOrientVector_str="z"
 
         self._dataChoice_strs+=[
             "DataMatrix",
@@ -343,64 +349,23 @@ class SelfDAGNode(SelfDGNode):
         else:
             return childs
 
-    def convertMDagPathToNormalMatrix_query_MMatrix(self,node_MDagPath):
-        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
-        node_MMatrix=node_MFnDagNode.transformationMatrix()
-        return node_MMatrix
-    
-    def convertMDagPathToWorldMatrix_query_MMatrix(self,node_MDagPath):
-        node_MMatrix=node_MDagPath.inclusiveMatrix()
-        return node_MMatrix
-    
-    def convertMDagPathToParentMatrix_query_MMatrix(self,node_MDagPath):
-        node_MMatrix=node_MDagPath.exclusiveMatrix()
-        return node_MMatrix
-    
-    def convertMDagPathToInverseNormalMatrix_query_MMatrix(self,node_MDagPath):
-        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
-        normal_MMatrix=node_MFnDagNode.transformationMatrix()
-        normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
-        node_MMatrix=normal_MTransformationMatrix.asMatrixInverse()
-        return node_MMatrix
-    
-    def convertMDagPathToInverseWorldMatrix_query_MMatrix(self,node_MDagPath):
-        world_MMatrix=node_MDagPath.inclusiveMatrix()
-        world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
-        node_MMatrix=world_MTransformationMatrix.asMatrixInverse()
-        return node_MMatrix
-    
-    def convertMDagPathToInverseParentMatrix_query_MMatrix(self,node_MDagPath):
-        parent_MMatrix=node_MDagPath.exclusiveMatrix()
-        parent_MTransformationMatrix=om2.MTransformationMatrix(parent_MMatrix)
-        node_MMatrix=parent_MTransformationMatrix.asMatrixInverse()
-        return node_MMatrix
-    
-    #Multi Function
-    def _dataNodeToNormalMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+    def convertMDagPathToNormalMatrix_query_DataMatrix(self,node_MDagPath):
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         node_MMatrix=node_MFnDagNode.transformationMatrix()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
-    def _dataNodeToWorldMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+    def convertMDagPathToWorldMatrix_query_DataMatrix(self,node_MDagPath):
         node_MMatrix=node_MDagPath.inclusiveMatrix()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
-    def _dataNodeToParentMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+    def convertMDagPathToParentMatrix_query_DataMatrix(self,node_MDagPath):
         node_MMatrix=node_MDagPath.exclusiveMatrix()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
-    def _dataNodeToInverseNormalMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+    def convertMDagPathToInverseNormalMatrix_query_DataMatrix(self,node_MDagPath):
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         normal_MMatrix=node_MFnDagNode.transformationMatrix()
         normal_MTransformationMatrix=om2.MTransformationMatrix(normal_MMatrix)
@@ -408,22 +373,55 @@ class SelfDAGNode(SelfDGNode):
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
-    def _dataNodeToInverseWorldMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+    def convertMDagPathToInverseWorldMatrix_query_DataMatrix(self,node_MDagPath):
         world_MMatrix=node_MDagPath.inclusiveMatrix()
         world_MTransformationMatrix=om2.MTransformationMatrix(world_MMatrix)
         node_MMatrix=world_MTransformationMatrix.asMatrixInverse()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
-    def _dataNodeToInverseParentMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+    def convertMDagPathToInverseParentMatrix_query_DataMatrix(self,node_MDagPath):
         parent_MMatrix=node_MDagPath.exclusiveMatrix()
         parent_MTransformationMatrix=om2.MTransformationMatrix(parent_MMatrix)
         node_MMatrix=parent_MTransformationMatrix.asMatrixInverse()
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
+        return node_DataMatrix
+    
+    #Private Function
+    def __dataNodeToNormalMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        node_DataMatrix=self.convertMDagPathToNormalMatrix_query_DataMatrix(node_MDagPath)
+        return node_DataMatrix
+    
+    def __dataNodeToWorldMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        node_DataMatrix=self.convertMDagPathToWorldMatrix_query_DataMatrix(node_MDagPath)
+        return node_DataMatrix
+    
+    def __dataNodeToParentMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        node_DataMatrix=self.convertMDagPathToParentMatrix_query_DataMatrix(node_MDagPath)
+        return node_DataMatrix
+    
+    def __dataNodeToInverseNormalMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        node_DataMatrix=self.convertMDagPathToInverseNormalMatrix_query_DataMatrix(node_MDagPath)
+        return node_DataMatrix
+    
+    def __dataNodeToInverseWorldMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        node_DataMatrix=self.convertMDagPathToInverseWorldMatrix_query_DataMatrix(node_MDagPath)
+        return node_DataMatrix
+    
+    def __dataNodeToInverseParentMatrix_query_DataMatrix(self,node_DataNode):
+        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        node_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
 
     #Setting Function
@@ -540,11 +538,17 @@ class SelfDAGNode(SelfDGNode):
     def getChildDataNodes(self):
         return self._child_DataNodes
     
-    def setMatchDataNode(self,variable):
-        self._match_DataNode=variable
-        return self._match_DataNode
-    def getMatchDataNode(self):
-        return self._match_DataNode
+    def setSourceDataNode(self,variable):
+        self._source_DataNode=variable
+        return self._source_DataNode
+    def getSourceDataNode(self):
+        return self._source_DataNode
+    
+    def setTargetDataNode(self,variable):
+        self._target_DataNode=variable
+        return self._target_DataNode
+    def getTargetDataNode(self):
+        return self._target_DataNode
     
     def setPivotDataNode(self,variable):
         self._pivot_DataNode=variable
@@ -552,6 +556,18 @@ class SelfDAGNode(SelfDGNode):
     def getPivotDataNode(self):
         return self._pivot_DataNode
     
+    def setMirrorAxis(self,variable):
+        self._mirrorAxis_str=variable
+        return self._mirrorAxis_str
+    def getMirrorAxis(self):
+        return self._mirrorAxis_str
+
+    def setMirrorOrientVector(self,variable):
+        self._mirrorOrientVector_str=variable
+        return self._mirrorOrientVector_str
+    def getMirrorOrientVector(self):
+        return self._mirrorOrientVector_str
+
     #Public Function
     def doParent(self,dataNode=None,parentDataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
@@ -653,40 +669,66 @@ class SelfDAGNode(SelfDGNode):
     def editShear(self):
         pass
 
-    def matchTransform(self):
+    def matchTargetTransform(self):
         pass
     
-    def matchTranslate(self):
+    def matchTargetTranslate(self):
         pass
 
-    def matchRotation(self):
+    def matchTargetRotation(self):
         pass
     
-    def matchQuaternion(self):
+    def matchTargetQuaternion(self):
         pass
     
-    def matchAimVector(self):
+    def matchTargetAimVector(self):
         pass
     
-    def matchScale(self):
+    def matchTargetScale(self):
         pass
     
-    def matchShear(self):
+    def matchTargetShear(self):
         pass
 
-    def mirrorTransform(self):
-        pass
+    def mirrorTargetTransform(self):
+        _matrix_DataMatrix=self._matrix_DataMatrix
+        _source_DataNode=self._node_DataNode or self._source_DataNode
+        _target_DataNode=self._target_DataNode
+        _mirrorAxis_str=self._mirrorAxis_str
+        _mirrorOrientVector_str=self._mirrorOrientVector_str
 
-    def mirrorTranslate(self):
+        if not _source_DataNode is None:
+            source_MObject=self.node_query_MObject(_source_DataNode.getName())
+            source_MDagPath=self.convertMObject_query_MDagPath(source_MObject)
+            source_DataMatrix=self.convertMDagPathToWorldMatrix_query_DataMatrix(source_MDagPath)
+        else:
+            source_DataMatrix=_matrix_DataMatrix
+
+        target_MObject=self.node_query_MObject(_target_DataNode.getName())
+        target_MDagPath=self.convertMObject_query_MDagPath(target_MObject)
+        target_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(target_MDagPath)
+
+        mirror_SelfMatrix=mLB.SelfMatrix()
+        mirror_SelfMatrix.setDataMatrix(source_DataMatrix)
+        mirror_SelfMatrix.setSubjectDataMatrix(target_DataMatrix)
+        mirror_SelfMatrix.setMirrorAxis(_mirrorAxis_str)
+        mirror_SelfMatrix.setMirrorOrientVector(_mirrorOrientVector_str)
+        mirror_DataMatrix=mirror_SelfMatrix.mirror()
+
+        targetMirror_MTransformationMatrix=om2.MTransformationMatrix(mirror_DataMatrix)
+        targetNode_MFnTransform=om2.MFnTransform(target_MDagPath)
+        targetNode_MFnTransform.setTransformation(targetMirror_MTransformationMatrix)
+
+    def mirrorTargetTranslate(self):
         pass
     
-    def mirrorRotation(self):
+    def mirrorTargetRotation(self):
         pass
 
-    def mirrorQuaternion(self):
+    def mirrorTargetQuaternion(self):
         pass
     
-    def mirrorShear(self):
+    def mirrorTargetShear(self):
         pass
 
 class DataPlug(bLB.SelfOrigin):
