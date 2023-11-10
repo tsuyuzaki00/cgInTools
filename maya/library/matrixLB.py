@@ -126,7 +126,7 @@ class SelfMatrix(bLB.SelfOrigin):
     #Public Function
     def match(self,dataMatrix=None,subjectDataMatrix=None):
         _matrix_DataMatrix=dataMatrix or self._matrix_DataMatrix#worldMatrix
-        _subject_DataMatrix=targetDataMatrix or self._subject_DataMatrix#inverseParentMatrix
+        _subject_DataMatrix=subjectDataMatrix or self._subject_DataMatrix#inverseParentMatrix
 
         matchMatrix_MMatrix=_matrix_DataMatrix*_subject_DataMatrix
         matchMatrix_DataMatrix=DataMatrix(matchMatrix_MMatrix)

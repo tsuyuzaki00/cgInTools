@@ -21,17 +21,17 @@ def main():
     #EX.main()
     
     source_DataNode=naLB.DataNode()
-    source_DataNode.setName("joint1")
+    source_DataNode.setName("pCube1")
     target_DataNode=naLB.DataNode()
-    target_DataNode.setName("joint2")
+    target_DataNode.setName("pCube2")
     
-    worldMatrix=cmds.getAttr("pCube1.worldMatrix[0]")
-    source_DataMatrix=mLB.DataMatrix(worldMatrix)
+    #worldMatrix=cmds.getAttr("pCube1.worldMatrix[0]")
+    #source_DataMatrix=mLB.DataMatrix(worldMatrix)
     
     source_SelfDAGNode=naLB.SelfDAGNode()
     source_SelfDAGNode.setDataNode(source_DataNode)
     #source_SelfDAGNode.setDataMatrix(source_DataMatrix)
     source_SelfDAGNode.setTargetDataNode(target_DataNode)
-    source_SelfDAGNode.mirrorTargetTransform()
+    source_SelfDAGNode.matchTargetTransform()
 
 main()

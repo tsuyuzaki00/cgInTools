@@ -163,6 +163,9 @@ class DataNode(bLB.SelfOrigin):
     def __repr__(self):
         return self._nodeName_str
 
+    def __str__(self):
+        return str(self._nodeName_str)
+
     #Setting Function
     def setName(self,variable):
         self._nodeName_str=variable
@@ -395,7 +398,7 @@ class SelfDAGNode(SelfDGNode):
         return node_DataMatrix
     
     def __dataNodeToWorldMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToWorldMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
@@ -419,7 +422,7 @@ class SelfDAGNode(SelfDGNode):
         return node_DataMatrix
     
     def __dataNodeToInverseParentMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MObject=self.node_query_MObject(node_DataNode.getName())
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
@@ -670,7 +673,29 @@ class SelfDAGNode(SelfDGNode):
         pass
 
     def matchTargetTransform(self):
-        pass
+        _matrix_DataMatrix=self._matrix_DataMatrix
+        _source_DataNode=self._node_DataNode or self._source_DataNode
+        _target_DataNode=self._target_DataNode
+        _mirrorAxis_str=self._mirrorAxis_str
+        _mirrorOrientVector_str=self._mirrorOrientVector_str
+
+        if not _source_DataNode is None:
+            source_DataMatrix=self.__dataNodeToWorldMatrix_query_DataMatrix(_source_DataNode)
+        else:
+            source_DataMatrix=_matrix_DataMatrix
+
+        target_MObject=self.node_query_MObject(_target_DataNode.getName())
+        target_MDagPath=self.convertMObject_query_MDagPath(target_MObject)
+        target_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(target_MDagPath)
+
+        mirror_SelfMatrix=mLB.SelfMatrix()
+        mirror_SelfMatrix.setDataMatrix(source_DataMatrix)
+        mirror_SelfMatrix.setSubjectDataMatrix(target_DataMatrix)
+        mirror_DataMatrix=mirror_SelfMatrix.match()
+
+        targetNode_MFnTransform=om2.MFnTransform(target_MDagPath)
+        targetMirror_MTransformationMatrix=om2.MTransformationMatrix(mirror_DataMatrix)
+        targetNode_MFnTransform.setTransformation(targetMirror_MTransformationMatrix)
     
     def matchTargetTranslate(self):
         pass
@@ -698,15 +723,11 @@ class SelfDAGNode(SelfDGNode):
         _mirrorOrientVector_str=self._mirrorOrientVector_str
 
         if not _source_DataNode is None:
-            source_MObject=self.node_query_MObject(_source_DataNode.getName())
-            source_MDagPath=self.convertMObject_query_MDagPath(source_MObject)
-            source_DataMatrix=self.convertMDagPathToWorldMatrix_query_DataMatrix(source_MDagPath)
+            source_DataMatrix=self.__dataNodeToWorldMatrix_query_DataMatrix(_source_DataNode)
         else:
             source_DataMatrix=_matrix_DataMatrix
 
-        target_MObject=self.node_query_MObject(_target_DataNode.getName())
-        target_MDagPath=self.convertMObject_query_MDagPath(target_MObject)
-        target_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(target_MDagPath)
+        target_DataMatrix=self.__dataNodeToInverseParentMatrix_query_DataMatrix(_target_DataNode)
 
         mirror_SelfMatrix=mLB.SelfMatrix()
         mirror_SelfMatrix.setDataMatrix(source_DataMatrix)
