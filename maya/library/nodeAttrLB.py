@@ -4,6 +4,7 @@ import sys,math
 
 import cgInTools as cit
 from ...library import baseLB as bLB
+from . import dataLB as dLB
 from . import matrixLB as mLB
 cit.reloads([bLB,mLB])
 
@@ -207,7 +208,7 @@ class SelfDGNode(bLB.SelfOrigin):
     def node_query_MObject(self,node):
         if node == None:
             return None
-        elif not isinstance(node,str):
+        elif not type(node) is str and not type(node) is unicode:
             om2.MGlobal.displayError("Please insert one string in value")
             sys.exit()
         node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
@@ -935,6 +936,7 @@ class SelfPlug(bLB.SelfOrigin):
 
 class AppConnect(bLB.SelfOrigin):
     def __init__(self):
+        super(AppConnect,self).__init__()
         self._source_SelfPlug=None
         self._target_SelfPlug=None
         self._proxy_bool=False
@@ -958,6 +960,7 @@ class AppConnect(bLB.SelfOrigin):
 
 class AppParent(bLB.SelfOrigin):
     def __init__(self):
+        super(AppParent,self).__init__()
         self._node_SelfDAGNode=None
         self._parent_SelfDAGNode=None
         self._child_SelfDAGNodes=[]

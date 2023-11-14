@@ -6,47 +6,39 @@ import sys,math
 
 import cgInTools as cit
 from ...library import baseLB as bLB
-from ...library import jsonLB as jLB
-cit.reloads([bLB,jLB])
-
-RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"openLibrary")
+cit.reloads([bLB])
 
 class DataNode(bLB.SelfOrigin):
     def __init__(self,dataNode=None):
         super(DataNode,self).__init__()
-        if type(dataNode) is DataNode:
-            self._nodeName_str=dataNode.getNodeName()
-            self._nodeType_str=dataNode.getNodeType()
+        if dataNode is None:
+            self._nodeName_str=None
+            self._nodeType_str=None
+        elif type(dataNode) is DataNode:
+            self._nodeName_str=dataNode.getName()
+            self._nodeType_str=dataNode.getType()
         elif type(dataNode) is om2.MObject:
             node_MFnDependencyNode=om2.MFnDependencyNode(dataNode)
             self._nodeName_str=node_MFnDependencyNode.name()
             self._nodeType_str=node_MFnDependencyNode.typeName
-        else:
-            self._nodeName_str=None
-            self._nodeType_str=None
+    
+    def __repr__(self):
+        return self._nodeName_str
 
-    #Single Function
-    def node_query_MObject(self,node):
-        if node == None:
-            return None
-        elif not isinstance(node,str):
-            om2.MGlobal.displayError("Please insert one string in value")
-            sys.exit()
-        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
-        node_MObject=node_MSelectionList.getDependNode(0)
-        return node_MObject
+    def __str__(self):
+        return str(self._nodeName_str)
 
     #Setting Function
-    def setNodeName(self,variable):
+    def setName(self,variable):
         self._nodeName_str=variable
         return self._nodeName_str
-    def getNodeName(self):
+    def getName(self):
         return self._nodeName_str
     
-    def setNodeType(self,variable):
+    def setType(self,variable):
         self._nodeType_str=variable
         return self._nodeType_str
-    def getNodeType(self):
+    def getType(self):
         return self._nodeType_str
     
     #Public Function
@@ -60,38 +52,38 @@ class DataNode(bLB.SelfOrigin):
 class DataAttribute(bLB.SelfOrigin):
     def __init__(self,dataAttribute=None):
         super(DataAttribute,self).__init__()
-        if type(dataAttribute) is DataAttribute:
-            self._longName_str=dataAttribute.getLongName()
-            self._shortName_str=dataAttribute.getShortName()
-            self._valueType_str=dataAttribute.getValueType()
-            self._value_DataValueType=dataAttribute.getDataValueType()
-            self._keyLock_bool=dataAttribute.getKeyLockState()
-            self._valueLock_bool=dataAttribute.getValueLockState()
-            self._hide_bool=dataAttribute.getHideState()
-        elif type(dataAttribute) is om2.MObject:
-            attr_MFnAttribute=om2.MFnAttribute(dataAttribute)
-
-            self._longName_str=attr_MFnAttribute.name
-            self._shortName_str=attr_MFnAttribute.shortName
-            self._valueType_str=None
-            self._value_DataValueType=None
-            self._keyLock_bool=attr_MFnAttribute.keyable
-            self._valueLock_bool=False
-            self._hide_bool=attr_MFnAttribute.hidden
-        else:
+        if dataAttribute is None:
             self._longName_str=None
             self._shortName_str=None
-            self._valueType_str=None
             self._value_DataValueType=None
             self._keyLock_bool=False
             self._valueLock_bool=False
-            self._hide_bool=False
+            self._channelHide_bool=False
+            self._proxyAttr_bool=False
+        elif type(dataAttribute) is DataAttribute:
+            self._longName_str=dataAttribute.getName()
+            self._shortName_str=dataAttribute.getShortName()
+            self._value_DataValueType=dataAttribute.getDataValueType()
+            self._keyLock_bool=dataAttribute.getKeyLockState()
+            self._valueLock_bool=dataAttribute.getValueLockState()
+            self._channelHide_bool=dataAttribute.getChannelHideState()
+            self._proxyAttr_bool=dataAttribute.getProxyAttrState()
+        elif type(dataAttribute) is om2.MObject:
+            attr_MFnNumericAttribute=om2.MFnNumericAttribute(dataAttribute)
+
+            self._longName_str=attr_MFnNumericAttribute.name
+            self._shortName_str=attr_MFnNumericAttribute.shortName
+            self._value_DataValueType=None
+            self._keyLock_bool=not attr_MFnNumericAttribute.keyable
+            self._valueLock_bool=False
+            self._channelHide_bool=not attr_MFnNumericAttribute.channelBox
+            self._proxyAttr_bool=attr_MFnNumericAttribute.isProxyAttribute
 
     #Setting Function
-    def setLongName(self,variable):
+    def setName(self,variable):
         self._longName_str=variable
         return self._longName_str
-    def getLongName(self):
+    def getName(self):
         return self._longName_str
     
     def setShortName(self,variable):
@@ -99,12 +91,6 @@ class DataAttribute(bLB.SelfOrigin):
         return self._shortName_str
     def getShortName(self):
         return self._shortName_str
-    
-    def setValueType(self,variable):
-        self._valueType_str=variable
-        return self._valueType_str
-    def getValueType(self):
-        return self._valueType_str
     
     def setDataValueType(self,variable):
         self._value_DataValueType=variable
@@ -153,6 +139,7 @@ class DataValueString(bLB.SelfOrigin):
             pass
         else:
             self._valueType_str=None
+
 class DataValueBoolean(bLB.SelfOrigin):
     def __init__(self,dataValueBoolean=None):
         super(DataValueBoolean,self).__init__()
@@ -160,6 +147,7 @@ class DataValueBoolean(bLB.SelfOrigin):
             pass
         else:
             self._valueType_str=None
+
 class DataValueVector(bLB.SelfOrigin):
     def __init__(self,dataValueVector=None):
         super(DataValueVector,self).__init__()
@@ -179,15 +167,15 @@ class DataValueEnum(bLB.SelfOrigin):
 class DataPlug(bLB.SelfOrigin):
     def __init__(self,dataPlug=None):
         super(DataPlug,self).__init__()
-        if type(dataPlug) is DataPlug:
+        if dataPlug is None:
+            self._node_DataNode=None
+            self._attr_DataAttribute=None
+        elif type(dataPlug) is DataPlug:
             self._node_DataNode=dataPlug.getDataNode()
             self._attr_DataAttribute=dataPlug.getDataAttribute()
         elif type(dataPlug) is om2.MPlug:
             self._node_DataNode=DataNode(dataPlug.node())
             self._attr_DataAttribute=DataAttribute(dataPlug.attribute())
-        else:
-            self._node_DataNode=None
-            self._attr_DataAttribute=None
 
     #Setting Function
     def setDataNode(self,variable):
@@ -202,23 +190,31 @@ class DataPlug(bLB.SelfOrigin):
     def getDataAttribute(self):
         return self._attr_DataAttribute
 
-    #Public Function
-    def searchAttribute(self,dataNode=None,attrName=None):
-        pass
-
-class DataMatrix(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataMatrix,self).__init__()
-        self._matrix_MMatrix=None
-        self._pivot_MMatrix=None
-        self._match_MMatrix=None
+class DataMatrix(om2.MMatrix):
+    def __init__(self,*matrix):
+        super(DataMatrix,self).__init__(*matrix)
+        #self.kIdentity=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
         self._MSpace=om2.MSpace.kTransform #1
         self._rotateOrder=om2.MEulerRotation.kXYZ #0
-        self._mirrorAxis_str=None
-        self._mirrorOrientation_str=None
 
-    def setMatrix(self):
-        pass
+    def setMatrix(self,variable):
+        self.kIdentity=om2.MMatrix(variable)
+        return self.kIdentity
+    def getMatrix(self):
+        matrix=list(self.kIdentity)
+        return matrix
+    def getMMatrix(self):
+        return self.self.kIdentity
+    
+    def setMSpace(self,variable):
+        self._MSpace=variable
+    def getMSpace(self):
+        return self._MSpace
+
+    def setRotateOrder(self,variable):
+        self._rotateOrder=variable
+    def getRotateOrder(self):
+        return self._rotateOrder
 
 class DataJoint(bLB.SelfOrigin):
     def __init__(self):
