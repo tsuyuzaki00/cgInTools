@@ -4,6 +4,7 @@ import maya.cmds as cmds
 import cgInTools as cit
 from ...library import baseLB as bLB
 from ...library import jsonLB as jLB
+from . import dataLB as dLB
 from . import setBaseLB as sbLB
 cit.reloads([bLB,sbLB,jLB])
 
@@ -323,6 +324,12 @@ class SelfNodeName(bLB.SelfOrigin):
         self._node_DataName=None
         self._node_DataNode=None
 
+    #Private Function
+    def __orderName_create_str(self,order_list):
+        selfOrders=[eval("self._"+chengeSelf) for chengeSelf in order_list]
+        orderName="_".join(selfOrders)
+        return orderName
+
     #Setting Function
     def setDataName(self,variables):
         self._node_DataName=variables
@@ -337,14 +344,6 @@ class SelfNodeName(bLB.SelfOrigin):
         return self._node_DataNode
 
     #Public Function
-    def fullAutoRename(self):
-        name_str=""
-        return name_str
-    
-    def autoRename(self):
-        name_str=""
-        return name_str
-    
     def rename(self):
         name_str=""
         return name_str

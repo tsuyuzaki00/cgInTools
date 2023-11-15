@@ -58,7 +58,81 @@ class DataTime(om2.MTime):
         return self.value
     def getTime(self):
         return self.value
-     
+
+class DataName(bLB.SelfOrigin):
+    def __init__(self):
+        self._titleName_str=None
+        self._nodeTypeName_str=None
+        self._sideName_str=None
+        self._numberName_ints=[0]
+        self._hierarchyName_strs=["A"]
+        self._customName_strs=[]
+        #["Title","NodeType","Side","Number_0","Hierarchy_1","Custom_10","Title_Number_0","Title_Hierarchy_2","Side_Number_0","Side_Hierarchy_2"]
+        self._orderName_enums=["Title","NodeType"]
+        #"Number_0","Hierarchy_10"
+        self._increaseName_enum="Number_0"
+
+    #Setting Function
+    def setTitle(self,variable):
+        self._titleName_str=variable
+        return self._titleName_str
+    def getTitle(self):
+        return self._titleName_str
+    
+    def setNodeType(self,variable):
+        self._nodeTypeName_str=variable
+        return self._nodeTypeName_str
+    def getNodeType(self):
+        return self._nodeTypeName_str
+    
+    def setSide(self,variable):
+        self._sideName_str=variable
+        return self._sideName_str
+    def getSide(self):
+        return self._sideName_str
+    
+    def setNumbers(self,variables):
+        self._numberName_ints=variables
+        return self._numberName_ints
+    def addNumbers(self,variables):
+        self._numberName_ints+=variables
+        return self._numberName_ints
+    def getNumbers(self):
+        return self._numberName_ints
+    
+    def setHierarchys(self,variables):
+        self._hierarchyName_strs=variables
+        return self._hierarchyName_strs
+    def addHierarchys(self,variables):
+        self._hierarchyName_strs+=variables
+        return self._hierarchyName_strs
+    def getHierarchys(self):
+        return self._hierarchyName_strs
+    
+    def setCustoms(self,variables):
+        self._customName_strs=variables
+        return self._customName_strs
+    def addCustoms(self,variables):
+        self._customName_strs+=variables
+        return self._customName_strs
+    def getCustoms(self):
+        return self._customName_strs
+    
+    def setOrders(self,variables):
+        self._orderName_enums=variables
+        return self._orderName_enums
+    def addOrders(self,variables):
+        self._orderName_enums+=variables
+        return self._orderName_enums
+    def getOrders(self):
+        return self._orderName_enums
+
+    def setIncrease(self,variable):
+        self._increaseName_enum=variable
+        return self._increaseName_enum
+    def getIncrease(self):
+        return self._increaseName_enum
+    
 class DataValueInt(bLB.SelfOrigin):
     def __init__(self,dataValueInt=None):
         super(DataValueInt,self).__init__()

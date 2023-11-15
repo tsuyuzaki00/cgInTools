@@ -8,12 +8,36 @@ from . import dataLB as dLB
 from . import matrixLB as mLB
 cit.reloads([bLB,mLB])
 
-class SelfDGNode(bLB.SelfOrigin):
+class SelfOpenMayaBase(bLB.SelfOrigin):
+    def __init__(self):
+        super(SelfOpenMayaBase,self).__init__()
+    
+    #Single Function
+    def node_query_MObject(self,node):
+        if node == None:
+            return None
+        elif not type(node) is str and not type(node) is unicode:
+            om2.MGlobal.displayError("TypeError: Please insert one string in value. This is a "+str(type(node))+" type")
+            sys.exit()
+        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        return node_MObject
+    
+    def convertMObject_query_MDagPath(self,node_MObject):
+        node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
+        return node_MDagPath
+    
+    def nodeAttr_query_MPlug(self,node_MObject,attr):
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
+        return node_MPlug
+
+class SelfDGNode(SelfOpenMayaBase):
     def __init__(self,selfDGNode=None):
         super(SelfDGNode,self).__init__()
         if type(selfDGNode) is SelfDGNode:
             self._node_DataNode=selfDGNode.getDataNode()
-            self._name_DataName=selfDGNode.getDataName()
+            self._node_DataName=selfDGNode.getDataName()
             self._attrName_str=None
         else:
             self._node_DataNode=None
@@ -33,21 +57,32 @@ class SelfDGNode(bLB.SelfOrigin):
         ]
     
     #Single Function
-    def node_query_MObject(self,node):
-        if node == None:
-            return None
-        elif not type(node) is str and not type(node) is unicode:
-            om2.MGlobal.displayError("TypeError: Please insert one string in value. This is a "+str(type(node))+" type")
-            sys.exit()
-        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
-        node_MObject=node_MSelectionList.getDependNode(0)
-        return node_MObject
-    
-    def node_create_func(self,nodeName_str,nodeType_str):
+    def node_create_DataNode(self,nodeType_str,nodeName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode()
-        node_MFnDependencyNode.create(nodeType_str)
-        node_MFnDependencyNode.setName(nodeName_str)
-
+        node_MObject=node_MFnDependencyNode.create(nodeType_str,nodeName_str)
+        node_DataNode=dLB.DataNode(node_MObject)
+        return node_DataNode
+    
+    def nameChoice_query_strs(self,name_dataName):
+        orderName_strs=[]
+        for orderName_str in name_dataName.getOrders():
+            if orderName_str is "Title":
+                orderName_strs.append(name_dataName.getTitle())
+            elif orderName_str is "NodeType":
+                orderName_strs.append(name_dataName.getNodeType())
+            elif orderName_str is "Side":
+                orderName_strs.append(name_dataName.getSide())
+            elif orderName_str is "Number":
+                orderName_strs.append(name_dataName.getNumbers()[0])
+            elif orderName_str is "Hierarchy":
+                orderName_strs.append(name_dataName.getHierarchys()[0])
+            elif orderName_str is "Custom":
+                orderName_strs.append(name_dataName.getCustoms()[0])
+            else:
+                continue
+        orderName_strs=[orderName_str for orderName_str in orderName_strs if not orderName_str is None]
+        return orderName_strs
+        
     def findAttr_create_DataAttribute(self,node_MObject,attrName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         attr_MObject=node_MFnDependencyNode.findAlias(attrName_str)
@@ -60,6 +95,12 @@ class SelfDGNode(bLB.SelfOrigin):
         plug_DataPlug=dLB.DataPlug(plug_MPlug)
         return plug_DataPlug
     
+    #Private Function
+    def __orderName_create_str(self,name_dataName):
+        orderName_strs=self.nameChoice_query_strs(name_dataName)
+        orderName_str="_".join(orderName_strs)
+        return orderName_str
+
     #Test Function
     def _queryMObject(self,dataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
@@ -75,10 +116,10 @@ class SelfDGNode(bLB.SelfOrigin):
         return self._node_DataNode
 
     def setDataName(self,variable):
-        self._name_DataName=variable
-        return self._name_DataName
+        self._node_DataName=variable
+        return self._node_DataName
     def getDataName(self):
-        return self._name_DataName
+        return self._node_DataName
     
     def setAttributeName(self,variable):
         self._attrName_str=variable
@@ -87,16 +128,24 @@ class SelfDGNode(bLB.SelfOrigin):
         return self._attrName_str
     
     #Public Function
-    def createNode(self,dataNode=None):
+    def createNode(self,dataNode=None,dataName=None):
         _node_DataNode=dataNode or self._node_DataNode
+        _node_DataName=dataName or self._node_DataName
 
-        self.node_create_func(_node_DataNode.getName(),_node_DataNode.getType())
+        orderName_str=self.__orderName_create_str(_node_DataName)
+        node_MObject=self.node_create_DataNode(_node_DataNode.getType(),orderName_str)
+        return dLB.DataNode(node_MObject)
 
-    def duplicateNode(self,dataNode=None):
+    def rename(self,dataNode=None,dataName=None):
         _node_DataNode=dataNode or self._node_DataNode
-
-    def rename(self):
-        pass
+        _node_DataName=dataName or self._node_DataName
+        
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        orderName_str=self.__orderName_create_str(_node_DataName)
+        node_MFnDependencyNode.setName(orderName_str)
+        rename_MObject=node_MFnDependencyNode.object()
+        return dLB.DataNode(rename_MObject)
 
     def searchDataAttribute(self,dataNode=None,attrName=None):
         _node_DataNode=dataNode or self._node_DataNode
@@ -159,10 +208,6 @@ class SelfDAGNode(SelfDGNode):
         ]
     
     #Single Function
-    def convertMObject_query_MDagPath(self,node_MObject):
-        node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
-        return node_MDagPath
-    
     def shape_query_MObject(self,node_MDagPath):
         shape_MDagPath=node_MDagPath.extendToShape()
         shape_MObject=shape_MDagPath.node()
@@ -630,41 +675,27 @@ class SelfDAGNode(SelfDGNode):
     def mirrorTargetShear(self):
         pass
 
-class SelfPlug(bLB.SelfOrigin):
+class SelfPlug(SelfOpenMayaBase):
     def __init__(self):
+        super(SelfPlug,self).__init__()
         self._plug_DataPlug=None
         self._target_DataPlug=None
         self._source_DataPlug=None
         self._anim_DataKeys=[]
-        self._value_value=None
+        self._value_DataValueType=None
 
-    #Single Function
-    def node_query_MObject(self,node):
-        if node == None:
-            return None
-        elif not isinstance(node,str):
-            om2.MGlobal.displayError("Please insert one string in value")
-            sys.exit()
-        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
-        node_MObject=node_MSelectionList.getDependNode(0)
-        return node_MObject
-
-    def nodeAttr_create_MPlug(self,node_MObject,attr):
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
-        return node_MPlug
-
-    #Multi Function
-    def _dataPlug_create_MPlug(self,plug_DataPlug):
+    #Private Function
+    def __dataPlug_create_MPlug(self,plug_DataPlug):
         plug_DataNode=plug_DataPlug.getDataNode()
         plug_DataAttribute=plug_DataPlug.getDataAttribute()
+
         plug_MObject=self.node_query_MObject(plug_DataNode.getName())
-        plug_MPlug=self.nodeAttr_create_MPlug(plug_MObject,plug_DataAttribute.getName())
+        plug_MPlug=self.nodeAttr_query_MPlug(plug_MObject,plug_DataAttribute.getName())
         return plug_MPlug
 
-    def _connectDataPlug_edit_func(self,source_DataPlug,target_DataPlug):
-        source_MPlug=self._dataPlug_create_MPlug(source_DataPlug)
-        target_MPlug=self._dataPlug_create_MPlug(target_DataPlug)
+    def __connectDataPlug_edit_func(self,source_DataPlug,target_DataPlug):
+        source_MPlug=self.__dataPlug_create_MPlug(source_DataPlug)
+        target_MPlug=self.__dataPlug_create_MPlug(target_DataPlug)
         
         MDGModifier=om2.MDGModifier()
         MDGModifier.connect(source_MPlug,target_MPlug)
@@ -701,16 +732,10 @@ class SelfPlug(bLB.SelfOrigin):
     def setDataValueType(self,variable):
         self._value_DataValueType=variable
         return self._value_DataValueType
-    def currentDataValueType(self,variable):
+    def currentDataValueType(self):
         pass
     def getDataValueType(self):
         return self._value_DataValueType
-    
-    def setValue(self,variable):
-        self._value_value=variable
-        return self._value_value
-    def getValue(self):
-        return self._value_value
 
     #Public Function
     def createAttr(self,dataPlug=None):
@@ -753,39 +778,18 @@ class SelfPlug(bLB.SelfOrigin):
             plug_MPlug.setString(value)
         elif isinstance(value,bool):
             plug_MPlug.setBool(value)
-    
-    def queryAttr(self,dataPlug=None):
-        _plug_DataPlug=dataPlug or self._plug_DataPlug
-
-        plug_MPlug=self._dataPlug_create_MPlug(_plug_DataPlug)
-
-        if valueType == "double" or valueType == "Double":
-            value=node_MPlug.asDouble()
-            return value
-        elif valueType == "int" or valueType == "Int":
-            value=node_MPlug.asInt()
-            return value
-        elif valueType == "float" or valueType == "Float":
-            value=node_MPlug.asFloat()
-            return value
-        elif valueType == "str" or valueType == "Str" or valueType == "string" or valueType == "String":
-            value=node_MPlug.asString()
-            return value
-        elif valueType == "bool" or valueType == "Bool" or valueType == "boolean" or valueType == "Boolean":
-            value=node_MPlug.asBool()
-            return value
 
     def connectTarget(self,dataPlug=None,targetDataPlug=None):
         _plug_DataPlug=dataPlug or self._plug_DataPlug
         _target_DataPlug=targetDataPlug or self._target_DataPlug
 
-        self._connectDataPlug_edit_func(_plug_DataPlug,_target_DataPlug)
+        self.__connectDataPlug_edit_func(_plug_DataPlug,_target_DataPlug)
     
     def connectSource(self,sourceDataPlug=None,dataPlug=None):
         _source_DataPlug=sourceDataPlug or self._source_DataPlug
         _plug_DataPlug=dataPlug or self._plug_DataPlug
 
-        self._connectDataPlug_edit_func(_plug_DataPlug,_source_DataPlug)
+        self.__connectDataPlug_edit_func(_plug_DataPlug,_source_DataPlug)
 
     def createAnimKey(self):
         pass

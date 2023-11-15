@@ -7,12 +7,13 @@ import cgInTools as cit
 from ...library import pathLB as pLB
 from ...library import serializeLB as sLB
 from ...library import _testLB as tLB
+from ..library import dataLB as dLB
 from ..library import nodeAttrLB as naLB
 from ..library import matrixLB as mLB
 #from cgInTools.maya.manager import equipmentSettingsMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
 #from cgInTools.maya.execute import exportAnimPackEX as EX
-cit.reloads([pLB,sLB,tLB,naLB,mLB])
+cit.reloads([pLB,sLB,tLB,dLB,naLB,mLB])
 
 def main():
     #TP.main()
@@ -20,18 +21,18 @@ def main():
     #OP.main()
     #EX.main()
     
-    source_DataNode=naLB.DataNode()
-    source_DataNode.setName("pCube1")
-    target_DataNode=naLB.DataNode()
-    target_DataNode.setName("pCube2")
+    node_DataNode=dLB.DataNode()
+    node_DataNode.setName("test_trs_C")
+    node_DataNode.setType("transform")
+    node_DataName=dLB.DataName()
+    node_DataName.setTitle("test")
+    node_DataName.setNodeType("trs")
+    node_DataName.setSide("C")
+    node_DataName.setOrders(["Side","NodeType","Title"])
     
-    #worldMatrix=cmds.getAttr("pCube1.worldMatrix[0]")
-    #source_DataMatrix=mLB.DataMatrix(worldMatrix)
-    
-    source_SelfDAGNode=naLB.SelfDAGNode()
-    source_SelfDAGNode.setDataNode(source_DataNode)
-    #source_SelfDAGNode.setDataMatrix(source_DataMatrix)
-    source_SelfDAGNode.setTargetDataNode(target_DataNode)
-    source_SelfDAGNode.matchTargetTransform()
+    node_SelfDGNode=naLB.SelfDGNode()
+    node_SelfDGNode.setDataNode(node_DataNode)
+    node_SelfDGNode.setDataName(node_DataName)
+    node_SelfDGNode.rename()
 
 main()
