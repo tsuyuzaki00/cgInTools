@@ -8,178 +8,6 @@ from . import dataLB as dLB
 from . import matrixLB as mLB
 cit.reloads([bLB,mLB])
 
-class DataValueInt(bLB.SelfOrigin):
-    def __init__(self,dataValueInt=None):
-        super(DataValueInt,self).__init__()
-        if type(dataValueInt) is DataValueInt:
-            pass
-        else:
-            self._valueType_str=None
-
-class DataValueFloat(bLB.SelfOrigin):
-    def __init__(self,dataValueFloat=None):
-        super(DataValueFloat,self).__init__()
-        if type(dataValueFloat) is DataValueFloat:
-            pass
-        else:
-            self._valueType_str=None
-
-class DataValueString(bLB.SelfOrigin):
-    def __init__(self,dataValueString=None):
-        super(DataValueString,self).__init__()
-        if type(dataValueString) is DataValueString:
-            pass
-        else:
-            self._valueType_str=None
-
-class DataValueBoolean(bLB.SelfOrigin):
-    def __init__(self,dataValueBoolean=None):
-        super(DataValueBoolean,self).__init__()
-        if type(dataValueBoolean) is DataValueBoolean:
-            pass
-        else:
-            self._valueType_str=None
-
-class DataValueVector(bLB.SelfOrigin):
-    def __init__(self,dataValueVector=None):
-        super(DataValueVector,self).__init__()
-        if type(dataValueVector) is DataValueVector:
-            pass
-        else:
-            self._valueType_str=None
-
-class DataValueEnum(bLB.SelfOrigin):
-    def __init__(self,dataValueEnum=None):
-        super(DataValueEnum,self).__init__()
-        if dataValueEnum is None:
-            self._valueType_str=None
-        elif type(dataValueEnum) is DataValueEnum:
-            pass
-
-class DataAttribute(bLB.SelfOrigin):
-    def __init__(self,dataAttribute=None):
-        super(DataAttribute,self).__init__()
-        if dataAttribute is None:
-            self._longName_str=None
-            self._shortName_str=None
-            self._valueType_str=None # om2.MFnNumericData.kFloat,
-            self._value_DataValueType=None
-            self._default_value=None
-            self._keyLock_bool=False
-            self._valueLock_bool=False
-            self._channelHide_bool=False
-            self._proxyAttr_bool=False
-        elif type(dataAttribute) is DataAttribute:
-            self._longName_str=dataAttribute.getName()
-            self._shortName_str=dataAttribute.getShortName()
-            self._valueType_str=dataAttribute.getValueType()
-            self._value_DataValueType=dataAttribute.getDataValueType()
-            self._default_value=None
-            self._keyLock_bool=dataAttribute.getKeyLockState()
-            self._valueLock_bool=dataAttribute.getValueLockState()
-            self._channelHide_bool=dataAttribute.getChannelHideState()
-            self._proxyAttr_bool=dataAttribute.getProxyAttrState()
-        elif type(dataAttribute) is om2.MObject:
-            attr_MFnNumericAttribute=om2.MFnNumericAttribute(dataAttribute)
-
-            self._longName_str=attr_MFnNumericAttribute.name
-            self._shortName_str=attr_MFnNumericAttribute.shortName
-            self._valueType_str=attr_MFnNumericAttribute.numericType()
-            self._value_DataValueType=None
-            self._default_value=None
-            self._keyLock_bool=not attr_MFnNumericAttribute.keyable
-            self._valueLock_bool=False
-            self._channelHide_bool=not attr_MFnNumericAttribute.channelBox
-            self._proxyAttr_bool=attr_MFnNumericAttribute.isProxyAttribute
-
-    #Setting Function
-    def setName(self,variable):
-        self._longName_str=variable
-        return self._longName_str
-    def getName(self):
-        return self._longName_str
-    
-    def setShortName(self,variable):
-        self._shortName_str=variable
-        return self._shortName_str
-    def getShortName(self):
-        return self._shortName_str
-
-    def setValueType(self,variable):
-        self._valueType_str=variable
-        return self._valueType_str
-    def getValueType(self):
-        return self._valueType_str
-    
-    def setDataValueType(self,variable):
-        self._value_DataValueType=variable
-        return self._value_DataValueType
-    def getDataValueType(self):
-        return self._value_DataValueType
-    
-    def setDefaultValue(self,variable):
-        self._default_value=variable
-        return self._default_value
-    def getDefaultValue(self):
-        return self._default_value
-    
-    def setKeyLockState(self,variable):
-        self._keyLock_bool=variable
-        return self._keyLock_bool
-    def getKeyLockState(self):
-        return self._keyLock_bool
-    
-    def setValueLockState(self,variable):
-        self._valueLock_bool=variable
-        return self._valueLock_bool
-    def getValueLockState(self):
-        return self._valueLock_bool
-    
-    def setChannelHideState(self,variable):
-        self._channelHide_bool=variable
-        return self._channelHide_bool
-    def getChannelHideState(self):
-        return self._channelHide_bool
-    
-    def setProxyAttrState(self,variable):
-        self._proxyAttr_bool=variable
-        return self._proxyAttr_bool
-    def getProxyAttrState(self):
-        return self._proxyAttr_bool
-
-class DataNode(bLB.SelfOrigin):
-    def __init__(self,dataNode=None):
-        super(DataNode,self).__init__()
-        if dataNode is None:
-            self._nodeName_str=None
-            self._nodeType_str=None
-        elif type(dataNode) is DataNode:
-            self._nodeName_str=dataNode.getName()
-            self._nodeType_str=dataNode.getType()
-        elif type(dataNode) is om2.MObject:
-            node_MFnDependencyNode=om2.MFnDependencyNode(dataNode)
-            self._nodeName_str=node_MFnDependencyNode.name()
-            self._nodeType_str=node_MFnDependencyNode.typeName
-    
-    def __repr__(self):
-        return self._nodeName_str
-
-    def __str__(self):
-        return str(self._nodeName_str)
-
-    #Setting Function
-    def setName(self,variable):
-        self._nodeName_str=variable
-        return self._nodeName_str
-    def getName(self):
-        return self._nodeName_str
-    
-    def setType(self,variable):
-        self._nodeType_str=variable
-        return self._nodeType_str
-    def getType(self):
-        return self._nodeType_str
-
 class SelfDGNode(bLB.SelfOrigin):
     def __init__(self,selfDGNode=None):
         super(SelfDGNode,self).__init__()
@@ -209,7 +37,7 @@ class SelfDGNode(bLB.SelfOrigin):
         if node == None:
             return None
         elif not type(node) is str and not type(node) is unicode:
-            om2.MGlobal.displayError("Please insert one string in value")
+            om2.MGlobal.displayError("TypeError: Please insert one string in value. This is a "+str(type(node))+" type")
             sys.exit()
         node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
         node_MObject=node_MSelectionList.getDependNode(0)
@@ -223,14 +51,21 @@ class SelfDGNode(bLB.SelfOrigin):
     def findAttr_create_DataAttribute(self,node_MObject,attrName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         attr_MObject=node_MFnDependencyNode.findAlias(attrName_str)
-        plug_DataAttribute=DataAttribute(attr_MObject)
+        plug_DataAttribute=dLB.DataAttribute(attr_MObject)
         return plug_DataAttribute
     
     def findPlug_create_DataPlug(self,node_MObject,attrName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         plug_MPlug=node_MFnDependencyNode.findPlug(attrName_str,False)
-        plug_DataPlug=DataPlug(plug_MPlug)
+        plug_DataPlug=dLB.DataPlug(plug_MPlug)
         return plug_DataPlug
+    
+    #Test Function
+    def _queryMObject(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
+        return node_MObject
 
     #Setting Function
     def setDataNode(self,variable):
@@ -267,7 +102,7 @@ class SelfDGNode(bLB.SelfOrigin):
         _node_DataNode=dataNode or self._node_DataNode
         _attrName_str=attrName or self._attrName_str
 
-        node_MObject=self.node_query_MObject(_node_DataNode.getName())
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         attr_DataAttribute=self.findAttr_create_DataAttribute(node_MObject,_attrName_str)
         return attr_DataAttribute
 
@@ -275,7 +110,7 @@ class SelfDGNode(bLB.SelfOrigin):
         _node_DataNode=node_DataNode or self._node_DataNode
         _attrName_str=attrName or self._attrName_str
 
-        node_MObject=self.node_query_MObject(_node_DataNode.getName())
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         plug_DataPlug=self.findPlug_create_DataPlug(node_MObject,_attrName_str)
         return plug_DataPlug
 
@@ -393,40 +228,48 @@ class SelfDAGNode(SelfDGNode):
     
     #Private Function
     def __dataNodeToNormalMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MObject=self.node_query_MObject(str(node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToNormalMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
     
     def __dataNodeToWorldMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MObject=self.node_query_MObject(str(node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToWorldMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
     
     def __dataNodeToParentMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MObject=self.node_query_MObject(str(node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToParentMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
     
     def __dataNodeToInverseNormalMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MObject=self.node_query_MObject(str(node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToInverseNormalMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
     
     def __dataNodeToInverseWorldMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode)
+        node_MObject=self.node_query_MObject(str(node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToInverseWorldMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
     
     def __dataNodeToInverseParentMatrix_query_DataMatrix(self,node_DataNode):
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
+        node_MObject=self.node_query_MObject(str(node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
+
+    #Test Function
+    def _queryMDagPath(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        return node_MDagPath
 
     #Setting Function
     def setTranslate(self,variable3):
@@ -575,13 +418,12 @@ class SelfDAGNode(SelfDGNode):
     #Public Function
     def doParent(self,dataNode=None,parentDataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
-        nodeName_str=_node_DataNode.getName()
-        node_MObject=self.node_query_MObject(nodeName_str)
+        _parent_DataNode=parentDataNode or self._parent_DataNode
+        
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
 
-        _parent_DataNode=parentDataNode or self._parent_DataNode
-        parentName_str=_parent_DataNode.getName()
-        parent_MObject=self.node_query_MObject(parentName_str)
+        parent_MObject=self.node_query_MObject(str(_parent_DataNode))
         parent_MDagPath=self.convertMObject_query_MDagPath(parent_MObject)
 
         parent_MDagModifier=om2.MDagModifier()
@@ -590,23 +432,23 @@ class SelfDAGNode(SelfDGNode):
 
     def doChilds(self,dataNode=None,childDataNodes=None):
         _node_DataNode=dataNode or self._node_DataNode
-        nodeName_str=_node_DataNode.getName()
-        node_MObject=self.node_query_MObject(nodeName_str)
+        _child_DataNodes=childDataNodes or self._child_DataNodes
+        
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
 
-        _child_DataNodes=childDataNodes or self._child_DataNodes
         for _child_DataNode in _child_DataNodes:
-            childName_str=_child_DataNode.getName()
-            child_MObject=self.node_query_MObject(childName_str)
+            child_MObject=self.node_query_MObject(str(_child_DataNode))
             child_MDagPath=self.convertMObject_query_MDagPath(child_MObject)
 
             child_MDagModifier=om2.MDagModifier()
             child_MDagModifier.reparentNode(child_MDagPath,node_MDagPath)
             child_MDagModifier.doIt()
 
-    def queryFullPathName(self):
-        nodeName_str=self._node_DataNode.getName()
-        node_MObject=self.node_query_MObject(nodeName_str)
+    def queryFullPathName(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
 
         name_str=node_MDagPath.fullPathName()
@@ -615,11 +457,10 @@ class SelfDAGNode(SelfDGNode):
     def queryShapeSelfDAGNode(self,dataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
 
-        nodeName_str=_node_DataNode.getName()
-        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         shape_MObject=self.shape_query_MObject(node_MDagPath)
-        shape_DataNode=DataNode(shape_MObject)
+        shape_DataNode=dLB.DataNode(shape_MObject)
 
         shape_SelfDAGNode=SelfDAGNode()
         shape_SelfDAGNode.setDataNode(shape_DataNode)
@@ -628,11 +469,10 @@ class SelfDAGNode(SelfDGNode):
     def queryParentSelfDAGNode(self,dataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
 
-        nodeName_str=_node_DataNode.getName()
-        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         parent_MObject=self.parent_query_MObject(node_MDagPath)
-        parent_DataNode=DataNode(parent_MObject)
+        parent_DataNode=dLB.DataNode(parent_MObject)
 
         parent_SelfDAGNode=SelfDAGNode()
         parent_SelfDAGNode.setDataNode(parent_DataNode)
@@ -641,20 +481,55 @@ class SelfDAGNode(SelfDGNode):
     def queryChildSelfDAGNodes(self,dataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
 
-        nodeName_str=_node_DataNode.getName()
-        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MObject=self.node_query_MObject(str(_node_DataNode))
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         child_MObjects=self.child_query_MObjects(node_MDagPath,shapeOnly=False)
 
         child_SelfDAGNodes=[]
         for child_MObject in child_MObjects:
-            child_DataNode=DataNode(child_MObject)
+            child_DataNode=dLB.DataNode(child_MObject)
             child_SelfDAGNode=SelfDAGNode()
             child_SelfDAGNode.setDataNode(child_DataNode)
             child_SelfDAGNodes.append(child_SelfDAGNode)
 
         return child_SelfDAGNodes
     
+    def queryNormalDataMatrix(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_DataMatrix=self.__dataNodeToNormalMatrix_query_DataMatrix(_node_DataNode)
+        return node_DataMatrix
+    
+    def queryWorldDataMatrix(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_DataMatrix=self.__dataNodeToWorldMatrix_query_DataMatrix(_node_DataNode)
+        return node_DataMatrix
+    
+    def queryParentDataMatrix(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_DataMatrix=self.__dataNodeToParentMatrix_query_DataMatrix(_node_DataNode)
+        return node_DataMatrix
+    
+    def queryInverseNormalDataMatrix(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_DataMatrix=self.__dataNodeToInverseNormalMatrix_query_DataMatrix(_node_DataNode)
+        return node_DataMatrix
+    
+    def queryInverseWorldDataMatrix(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_DataMatrix=self.__dataNodeToInverseWorldMatrix_query_DataMatrix(_node_DataNode)
+        return node_DataMatrix
+    
+    def queryInverseParentDataMatrix(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_DataMatrix=self.__dataNodeToInverseParentMatrix_query_DataMatrix(_node_DataNode)
+        return node_DataMatrix
+
     def editTransform(self):
         pass
 
@@ -673,19 +548,19 @@ class SelfDAGNode(SelfDGNode):
     def editShear(self):
         pass
 
-    def matchTargetTransform(self):
-        _matrix_DataMatrix=self._matrix_DataMatrix
-        _source_DataNode=self._node_DataNode or self._source_DataNode
-        _target_DataNode=self._target_DataNode
-        _mirrorAxis_str=self._mirrorAxis_str
-        _mirrorOrientVector_str=self._mirrorOrientVector_str
+    def matchTargetTransform(self,sourceNode=None,targetNode=None,mirrorAxis=None,mirrorOrientVector=None,matrix=None):
+        _matrix_DataMatrix=matrix or self._matrix_DataMatrix
+        _source_DataNode=sourceNode or self._node_DataNode or self._source_DataNode
+        _target_DataNode=targetNode or self._target_DataNode
+        _mirrorAxis_str=mirrorAxis or self._mirrorAxis_str
+        _mirrorOrientVector_str=mirrorOrientVector or self._mirrorOrientVector_str
 
-        if not _source_DataNode is None:
-            source_DataMatrix=self.__dataNodeToWorldMatrix_query_DataMatrix(_source_DataNode)
-        else:
+        if not _matrix_DataMatrix is None:
             source_DataMatrix=_matrix_DataMatrix
+        else:
+            source_DataMatrix=self.__dataNodeToWorldMatrix_query_DataMatrix(_source_DataNode)
 
-        target_MObject=self.node_query_MObject(_target_DataNode.getName())
+        target_MObject=self.node_query_MObject(str(_target_DataNode))
         target_MDagPath=self.convertMObject_query_MDagPath(target_MObject)
         target_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(target_MDagPath)
 
@@ -716,19 +591,21 @@ class SelfDAGNode(SelfDGNode):
     def matchTargetShear(self):
         pass
 
-    def mirrorTargetTransform(self):
-        _matrix_DataMatrix=self._matrix_DataMatrix
-        _source_DataNode=self._node_DataNode or self._source_DataNode
-        _target_DataNode=self._target_DataNode
-        _mirrorAxis_str=self._mirrorAxis_str
-        _mirrorOrientVector_str=self._mirrorOrientVector_str
+    def mirrorTargetTransform(self,sourceNode=None,targetNode=None,mirrorAxis=None,mirrorOrientVector=None,matrix=None):
+        _matrix_DataMatrix=matrix or self._matrix_DataMatrix
+        _source_DataNode=sourceNode or self._node_DataNode or self._source_DataNode
+        _target_DataNode=targetNode or self._target_DataNode
+        _mirrorAxis_str=mirrorAxis or self._mirrorAxis_str
+        _mirrorOrientVector_str=mirrorOrientVector or self._mirrorOrientVector_str
 
-        if not _source_DataNode is None:
-            source_DataMatrix=self.__dataNodeToWorldMatrix_query_DataMatrix(_source_DataNode)
-        else:
+        if not _matrix_DataMatrix is None:
             source_DataMatrix=_matrix_DataMatrix
+        else:
+            source_DataMatrix=self.__dataNodeToWorldMatrix_query_DataMatrix(_source_DataNode)
 
-        target_DataMatrix=self.__dataNodeToInverseParentMatrix_query_DataMatrix(_target_DataNode)
+        target_MObject=self.node_query_MObject(str(_target_DataNode))
+        target_MDagPath=self.convertMObject_query_MDagPath(target_MObject)
+        target_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(target_MDagPath)
 
         mirror_SelfMatrix=mLB.SelfMatrix()
         mirror_SelfMatrix.setDataMatrix(source_DataMatrix)
@@ -752,32 +629,6 @@ class SelfDAGNode(SelfDGNode):
     
     def mirrorTargetShear(self):
         pass
-
-class DataPlug(bLB.SelfOrigin):
-    def __init__(self,dataPlug=None):
-        super(DataPlug,self).__init__()
-        if dataPlug is None:
-            self._node_DataNode=None
-            self._attr_DataAttribute=None
-        elif type(dataPlug) is DataPlug:
-            self._node_DataNode=dataPlug.getDataNode()
-            self._attr_DataAttribute=dataPlug.getDataAttribute()
-        elif type(dataPlug) is om2.MPlug:
-            self._node_DataNode=DataNode(dataPlug.node())
-            self._attr_DataAttribute=DataAttribute(dataPlug.attribute())
-
-    #Setting Function
-    def setDataNode(self,variable):
-        self._node_DataNode=variable
-        return self._node_DataNode
-    def getDataNode(self):
-        return self._node_DataNode
-    
-    def setDataAttribute(self,variable):
-        self._attr_DataAttribute=variable
-        return self._attr_DataAttribute
-    def getDataAttribute(self):
-        return self._attr_DataAttribute
 
 class SelfPlug(bLB.SelfOrigin):
     def __init__(self):
@@ -808,7 +659,7 @@ class SelfPlug(bLB.SelfOrigin):
         plug_DataNode=plug_DataPlug.getDataNode()
         plug_DataAttribute=plug_DataPlug.getDataAttribute()
         plug_MObject=self.node_query_MObject(plug_DataNode.getName())
-        plug_MPlug=self.nodeAttr_create_MPlug(plug_MObject,plug_DataAttribute.getLongName())
+        plug_MPlug=self.nodeAttr_create_MPlug(plug_MObject,plug_DataAttribute.getName())
         return plug_MPlug
 
     def _connectDataPlug_edit_func(self,source_DataPlug,target_DataPlug):
@@ -847,6 +698,14 @@ class SelfPlug(bLB.SelfOrigin):
     def getAnimDataKeys(self):
         return self._anim_DataKeys
     
+    def setDataValueType(self,variable):
+        self._value_DataValueType=variable
+        return self._value_DataValueType
+    def currentDataValueType(self,variable):
+        pass
+    def getDataValueType(self):
+        return self._value_DataValueType
+    
     def setValue(self,variable):
         self._value_value=variable
         return self._value_value
@@ -878,7 +737,7 @@ class SelfPlug(bLB.SelfOrigin):
         node_MPlug.isKeyable=not node_DataAttribute.getKeyLockState()
         node_MPlug.isLocked=node_DataAttribute.getValueLockState()
         
-        newPlug_DataPlug=DataPlug(node_MPlug)
+        newPlug_DataPlug=dLB.DataPlug(node_MPlug)
         return newPlug_DataPlug
 
     def editAttr(self,value=None,dataPlug=None):

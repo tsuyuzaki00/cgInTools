@@ -39,6 +39,16 @@ class Template(SuperClass):
         self._inheritance_mode_func()
         self._superValue
         pass
+    
+    #Test Function
+    def _test(self):
+        self.single_mode_func()
+        self._multi_mode_func()
+        self.inheritance_mode_func()
+        self._inheritance_mode_func()
+        self.__private_mode_func()
+        self._value
+        self._superValue
 
     #Setting Function
     def setValue(self,variable):
