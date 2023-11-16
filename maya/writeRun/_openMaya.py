@@ -14,24 +14,20 @@ def node_query_MObject(nodeName_str):
     node_MObject=node_MSelectionList.getDependNode(0)
     return node_MObject
 
+def convertMObject_query_MDagPath(node_MObject):
+    node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
+    return node_MDagPath
+
+def nodeAttr_query_MPlug(node_MObject,attr_str):
+    node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+    node_MPlug=node_MFnDependencyNode.findPlug(attr_str,False)
+    return node_MPlug
+
 def main():
     node_MObject=node_query_MObject("pCube1")
-    node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
     
-    attr_MFnAttribute=om2.MFnGenericAttribute()
-
-    #attr_MFnAttribute.addDataType(1)
-    #attr_MTypeId=om2.MTypeId(0x07EFE)
-    #attr_MFnAttribute.addTypeId(attr_MTypeId)
-    attr_MObject=attr_MFnAttribute.create("Zest","zt")
-    attr_MFnAttribute.addNumericType(11)
-
-    node_MFnDependencyNode.addAttribute(attr_MObject)
-    node_MPlug=node_MFnDependencyNode.findPlug(attr_MObject,False)
-    node_MPlug.isChannelBox=False
-    #node_MPlug.isKeyable=True
-    #node_MPlug.isLocked=False
-    #translate_MPlug=node_MFnDependencyNode.findPlug("translate",False)
-    #print(translate_MPlug.isChild)
+    node_MDagModifier=om2.MDagModifier()
+    newNode_MObject=node_MDagModifier.createNode("mesh",node_MObject)
+    node_MDagModifier.doIt()
 
 main()

@@ -27,9 +27,9 @@ class SelfOpenMayaBase(bLB.SelfOrigin):
         node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
         return node_MDagPath
     
-    def nodeAttr_query_MPlug(self,node_MObject,attr):
+    def nodeAttr_query_MPlug(self,node_MObject,attr_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        node_MPlug=node_MFnDependencyNode.findPlug(attr,False)
+        node_MPlug=node_MFnDependencyNode.findPlug(attr_str,False)
         return node_MPlug
 
 class SelfDGNode(SelfOpenMayaBase):

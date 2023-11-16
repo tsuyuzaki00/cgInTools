@@ -352,3 +352,22 @@ class DataFace(bLB.SelfOrigin):
     def __init__(self):
         super(DataFace,self).__init__()
 
+class DataWeightValue(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataWeightValue,self).__init__()
+        self._valueWeight_float=None
+        self._indexWeight_int=None
+
+class DataWeightContainer(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataWeightContainer,self).__init__()
+        self._indexContainer_int=None
+        self._container_DataWeightValues=[]
+
+class DataBind(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataBind,self).__init__()
+        self._geometry_DataNode=None
+        self._joint_DataNodes=[]
+        self._container_DataWeightContainers=[]
+

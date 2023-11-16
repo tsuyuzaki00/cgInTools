@@ -23,16 +23,16 @@ def main():
     
     node_DataNode=dLB.DataNode()
     node_DataNode.setName("test_trs_C")
-    node_DataNode.setType("transform")
+    node_DataNode.setType("mesh")
     node_DataName=dLB.DataName()
     node_DataName.setTitle("test")
     node_DataName.setNodeType("trs")
     node_DataName.setSide("C")
-    node_DataName.setOrders(["Side","NodeType","Title"])
+    node_DataName.setOrders(["Title","NodeType"])
     
     node_SelfDGNode=naLB.SelfDGNode()
     node_SelfDGNode.setDataNode(node_DataNode)
     node_SelfDGNode.setDataName(node_DataName)
-    node_SelfDGNode.rename()
+    node_SelfDGNode.createNode()
 
 main()
