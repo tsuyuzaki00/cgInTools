@@ -6,7 +6,7 @@ from ..library import windowLB as wLB
 cit.reloads([pLB,pjLB,wLB])
 
 def main():
-    project_dict=wLB.mayaDirDialog_query_dict("Edit")
+    project_dict=wLB.mayaDirDialog_query_dict("Edit",upRoot=True)
     if project_dict is None:
         return
 
