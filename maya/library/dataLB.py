@@ -8,56 +8,72 @@ import cgInTools as cit
 from ...library import baseLB as bLB
 cit.reloads([bLB])
 
-class DataMatrix(om2.MMatrix):
-    def __init__(self,*matrix):
-        super(DataMatrix,self).__init__(*matrix)
-        #self.kIdentity=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-        self._MSpace=om2.MSpace.kTransform #1
-        self._rotateOrder=om2.MEulerRotation.kXYZ #0
+#Single Data
+class DataValueBoolean(bLB.SelfOrigin):
+    def __init__(self,dataValueBoolean=None):
+        super(DataValueBoolean,self).__init__()
+        if type(dataValueBoolean) is DataValueBoolean:
+            pass
+        else:
+            self._valueType_str=None
+class DataValueInt(bLB.SelfOrigin):
+    def __init__(self,dataValueInt=None):
+        super(DataValueInt,self).__init__()
+        if type(dataValueInt) is DataValueInt:
+            pass
+        else:
+            self._valueType_str=None
 
-    def setMatrix(self,variable):
-        self.kIdentity=om2.MMatrix(variable)
-        return self.kIdentity
-    def getMatrix(self):
-        matrix=list(self.kIdentity)
-        return matrix
-    def getMMatrix(self):
-        return self.self.kIdentity
+class DataValueFloat(bLB.SelfOrigin):
+    def __init__(self,dataValueFloat=None):
+        super(DataValueFloat,self).__init__()
+        if type(dataValueFloat) is DataValueFloat:
+            pass
+        else:
+            self._valueType_str=None
+
+class DataValueString(bLB.SelfOrigin):
+    def __init__(self,dataValueString=None):
+        super(DataValueString,self).__init__()
+        if type(dataValueString) is DataValueString:
+            pass
+        else:
+            self._valueType_str=None
+
+class DataValueWeight(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataValueWeight,self).__init__()
+        self._valueWeight_float=None
+        self._indexWeight_int=None
+
+    #Setting Function
+    def setValueWeight(self,variable):
+        self._valueWeight_float=variable
+        return self._valueWeight_float
+    def getValueWeight(self):
+        return self._valueWeight_float
     
-    def setMSpace(self,variable):
-        self._MSpace=variable
-    def getMSpace(self):
-        return self._MSpace
-
-    def setRotateOrder(self,variable):
-        self._rotateOrder=variable
-    def getRotateOrder(self):
-        return self._rotateOrder
-
-class DataTime(om2.MTime):
-    def __init__(self,*time):
-        super(DataTime,self).__init__(*time)
-        # self.unit=int(Unit Type constant)
-        # self.value=float
-        
-    def setUnitType(self,variable):
-        self.unit=variable
-        return self.unit
-    def currentUnitType(self):
-        self.unit=self.uiUnit
-        return self.unit
-    def getUnitType(self):
-        return self.unit
+    def setIndexWeight(self,variable):
+        self._indexWeight_int=variable
+        return self._indexWeight_int
+    def getIndexWeight(self):
+        return self._indexWeight_int
     
-    def setTime(self,variable):
-        self.value=variable
-        return self.value
-    def currentTime(self):
-        current_MTime=oma2.MAnimControl.currentTime()
-        self.value=current_MTime.value
-        return self.value
-    def getTime(self):
-        return self.value
+class DataValueVector(bLB.SelfOrigin):
+    def __init__(self,dataValueVector=None):
+        super(DataValueVector,self).__init__()
+        if type(dataValueVector) is DataValueVector:
+            pass
+        else:
+            self._valueType_str=None
+
+class DataValueEnum(bLB.SelfOrigin):
+    def __init__(self,dataValueEnum=None):
+        super(DataValueEnum,self).__init__()
+        if type(dataValueEnum) is DataValueEnum:
+            pass
+        else:
+            self._valueType_str=None
 
 class DataName(bLB.SelfOrigin):
     def __init__(self):
@@ -132,55 +148,116 @@ class DataName(bLB.SelfOrigin):
         return self._increaseName_enum
     def getIncrease(self):
         return self._increaseName_enum
+
+class DataMatrix(om2.MMatrix):
+    def __init__(self,*matrix):
+        super(DataMatrix,self).__init__(*matrix)
+        #self.kIdentity=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
+        self._MSpace=om2.MSpace.kTransform #1
+        self._rotateOrder=om2.MEulerRotation.kXYZ #0
+
+    def setMatrix(self,variable):
+        self.kIdentity=om2.MMatrix(variable)
+        return self.kIdentity
+    def getMatrix(self):
+        matrix=list(self.kIdentity)
+        return matrix
+    def getMMatrix(self):
+        return self.self.kIdentity
     
-class DataValueInt(bLB.SelfOrigin):
-    def __init__(self,dataValueInt=None):
-        super(DataValueInt,self).__init__()
-        if type(dataValueInt) is DataValueInt:
-            pass
-        else:
-            self._valueType_str=None
+    def setMSpace(self,variable):
+        self._MSpace=variable
+    def getMSpace(self):
+        return self._MSpace
 
-class DataValueFloat(bLB.SelfOrigin):
-    def __init__(self,dataValueFloat=None):
-        super(DataValueFloat,self).__init__()
-        if type(dataValueFloat) is DataValueFloat:
-            pass
-        else:
-            self._valueType_str=None
+    def setRotateOrder(self,variable):
+        self._rotateOrder=variable
+    def getRotateOrder(self):
+        return self._rotateOrder
 
-class DataValueString(bLB.SelfOrigin):
-    def __init__(self,dataValueString=None):
-        super(DataValueString,self).__init__()
-        if type(dataValueString) is DataValueString:
-            pass
-        else:
-            self._valueType_str=None
+class DataTime(om2.MTime):
+    def __init__(self,*time):
+        super(DataTime,self).__init__(*time)
+        # self.unit=int(Unit Type constant)
+        # self.value=float
+        
+    def setUnitType(self,variable):
+        self.unit=variable
+        return self.unit
+    def currentUnitType(self):
+        self.unit=self.uiUnit
+        return self.unit
+    def getUnitType(self):
+        return self.unit
+    
+    def setTime(self,variable):
+        self.value=variable
+        return self.value
+    def currentTime(self):
+        current_MTime=oma2.MAnimControl.currentTime()
+        self.value=current_MTime.value
+        return self.value
+    def getTime(self):
+        return self.value
 
-class DataValueBoolean(bLB.SelfOrigin):
-    def __init__(self,dataValueBoolean=None):
-        super(DataValueBoolean,self).__init__()
-        if type(dataValueBoolean) is DataValueBoolean:
-            pass
-        else:
-            self._valueType_str=None
+class DataVertex(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataVertex,self).__init__()
 
-class DataValueVector(bLB.SelfOrigin):
-    def __init__(self,dataValueVector=None):
-        super(DataValueVector,self).__init__()
-        if type(dataValueVector) is DataValueVector:
-            pass
-        else:
-            self._valueType_str=None
+class DataEdge(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataVertex,self).__init__()
 
-class DataValueEnum(bLB.SelfOrigin):
-    def __init__(self,dataValueEnum=None):
-        super(DataValueEnum,self).__init__()
-        if type(dataValueEnum) is DataValueEnum:
-            pass
-        else:
-            self._valueType_str=None
+class DataFace(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataFace,self).__init__()
 
+class DataKey(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataKey,self).__init__()
+        self._inputValue_value=None
+        self._outputValue_value=None
+        self._inTanType_str=None
+        self._outTanType_str=None
+
+    #Setting Function
+    def setInputValue(self,variable):
+        self._inputValue_value=variable
+        return self._inputValue_value
+    def getInputValue(self):
+        return self._inputValue_value
+    
+    def setOutputValue(self,variable):
+        self._outputValue_value=variable
+        return self._outputValue_value
+    def getOutputValue(self):
+        return self._outputValue_value
+    
+    def setInputTanType(self,variable):
+        self._inputTanType_str=variable
+        return self._inputTanType_str
+    def getInputTanType(self):
+        return self._inputTanType_str
+    
+    def setOutputTanType(self,variable):
+        self._outputTanType_str=variable
+        return self._outputTanType_str
+    def getOutputTanType(self):
+        return self._outputTanType_str
+
+#Array Data
+class DataValueWeightArray(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataValueWeightArray,self).__init__()
+        self._indexContainer_int=None
+        self._valueWeight_DataValueWeights=[]
+
+class DataKeyArray(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataKeyArray,self).__init__()
+        self._key_DataKeys=[]
+
+#Action Data
 class DataAttribute(bLB.SelfOrigin):
     def __init__(self,dataAttribute=None):
         super(DataAttribute,self).__init__()
@@ -248,6 +325,27 @@ class DataAttribute(bLB.SelfOrigin):
     def getHideState(self):
         return self._hide_bool
 
+class DataBind(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataBind,self).__init__()
+        self._geometry_DataGeometry=None
+        self._joint_DataJoints=[]
+        self._weight_DataValueWeightArrays=[]
+
+class DataKeyable(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataKeyable,self).__init__()
+        self._plug_DataPlug=None
+        self._key_DataKeyArrays=[]
+
+class DataDrivenKey(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataDrivenKey,self).__init__()
+        self._plug_DataPlug=None
+        self._source_DataPlug=None
+        self._key_DataKeyArrays=[]
+
+#Object Data
 class DataNode(bLB.SelfOrigin):
     def __init__(self,dataNode=None):
         super(DataNode,self).__init__()
@@ -312,62 +410,30 @@ class DataPlug(bLB.SelfOrigin):
     def getDataAttribute(self):
         return self._attr_DataAttribute
 
-class DataJoint(bLB.SelfOrigin):
+class DataTransform(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataTransform,self).__init__()
+
+class DataJoint(DataNode):
     def __init__(self):
         super(DataJoint,self).__init__()
 
-class DataLight(bLB.SelfOrigin):
+class DataLight(DataNode):
     def __init__(self):
         super(DataLight,self).__init__()
 
-class DataCamera(bLB.SelfOrigin):
+class DataCamera(DataNode):
     def __init__(self):
         super(DataCamera,self).__init__()
 
-class DataGeometry(bLB.SelfOrigin):
+class DataGeometry(DataNode):
     def __init__(self):
         super(DataGeometry,self).__init__()
 
-class DataCurve(bLB.SelfOrigin):
+class DataCurve(DataNode):
     def __init__(self):
         super(DataCurve,self).__init__()
 
-class DataSurface(bLB.SelfOrigin):
+class DataSurface(DataNode):
     def __init__(self):
         super(DataSurface,self).__init__()
-
-class DataKey(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataKey,self).__init__()
-
-class DataVertex(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataVertex,self).__init__()
-
-class DataEdge(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataVertex,self).__init__()
-
-class DataFace(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataFace,self).__init__()
-
-class DataWeightValue(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataWeightValue,self).__init__()
-        self._valueWeight_float=None
-        self._indexWeight_int=None
-
-class DataWeightContainer(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataWeightContainer,self).__init__()
-        self._indexContainer_int=None
-        self._container_DataWeightValues=[]
-
-class DataBind(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataBind,self).__init__()
-        self._geometry_DataNode=None
-        self._joint_DataNodes=[]
-        self._container_DataWeightContainers=[]
-
