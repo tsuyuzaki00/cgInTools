@@ -1,14 +1,13 @@
 # -*- coding: iso-8859-15 -*-
 
 import cgInTools as cit
-from . import pathLB as pLB
 from . import jsonLB as jLB
 from . import serializeLB as sLB
-cit.reloads([pLB,jLB,sLB])
+cit.reloads([jLB,sLB])
 
 class SelfOrigin(object):
     def __init__(self):
-        self._origin_DataPath=pLB.DataPath()
+        self._origin_DataPath=None
         self._data_dict={}
         self._dataChoice_strs=["DoIts"]
         self._doIt_strs=[]

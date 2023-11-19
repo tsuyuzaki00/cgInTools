@@ -5,9 +5,18 @@ import maya.api.OpenMayaAnim as oma2
 
 import cgInTools as cit
 from ...library import baseLB as bLB
-cit.reloads([bLB])
+from ...library import pathLB as pLB
+cit.reloads([bLB,pLB])
 
 #Definition Data
+class DataPath(pLB.DataPath):
+    def __init__(self,dataPath=None):
+        super(DataPath,self).__init__(dataPath)
+        #self._absolute_dir=None
+        #self._relative_dir=None
+        #self._file_str=None
+        #self._extension_ext=None
+
 class DataAttribute(bLB.SelfOrigin):
     def __init__(self,dataAttribute=None):
         super(DataAttribute,self).__init__()
@@ -18,10 +27,11 @@ class DataAttribute(bLB.SelfOrigin):
             self._longName_str=dataAttribute.getName()
             self._shortName_str=dataAttribute.getShortName()
         elif type(dataAttribute) is om2.MObject:
-            attr_MFnNumericAttribute=om2.MFnNumericAttribute(dataAttribute)
+            attr_MFnAttribute=om2.MFnAttribute(dataAttribute)
 
-            self._longName_str=attr_MFnNumericAttribute.name
-            self._shortName_str=attr_MFnNumericAttribute.shortName
+            self._longName_str=attr_MFnAttribute.name
+            self._shortName_str=attr_MFnAttribute.shortName
+            
 
     #Setting Function
     def setName(self,variable):
@@ -35,41 +45,209 @@ class DataAttribute(bLB.SelfOrigin):
         return self._shortName_str
     def getShortName(self):
         return self._shortName_str
-    
+
+
 class DataAttributeBoolean(DataAttribute):
-    def __init__(self,dataValueBoolean=None):
-        super(DataAttributeBoolean,self).__init__()
-        if type(dataValueBoolean) is DataAttributeBoolean:
-            pass
-        else:
-            self._valueType_str=None
-class DataValueInt(DataAttribute):
-    def __init__(self,dataValueInt=None):
-        super(DataValueInt,self).__init__()
-        if type(dataValueInt) is DataValueInt:
-            pass
-        else:
-            self._valueType_str=None
+    def __init__(self,dataAttributeBoolean=None):
+        super(DataAttributeBoolean,self).__init__(dataAttributeBoolean)
+        #self._longName_str=None
+        #self._shortName_str=None
+        self.__valueType_int=om2.MFnNumericData().kBoolean #1
+        if dataAttributeBoolean is None:
+            self._valueBoolean_bool=None
+        elif type(dataAttributeBoolean) is DataAttributeBoolean:
+            self._valueBoolean_bool=dataAttributeBoolean.getValue()
 
-class DataValueFloat(DataAttribute):
-    def __init__(self,dataValueFloat=None):
-        super(DataValueFloat,self).__init__()
-        if type(dataValueFloat) is DataValueFloat:
-            pass
-        else:
-            self._valueType_str=None
+    def setValue(self,variable):
+        self._valueBoolean_bool=variable
+        return self._valueBoolean_bool
+    def getValue(self):
+        return self._valueBoolean_bool
 
-class DataValueString(DataAttribute):
-    def __init__(self,dataValueString=None):
-        super(DataValueString,self).__init__()
-        if type(dataValueString) is DataValueString:
-            pass
-        else:
-            self._valueType_str=None
+    def getValueType(self):
+        return self.__valueType_int
+class DataAttributeInt(DataAttribute):
+    def __init__(self,dataAttributeInt=None):
+        super(DataAttributeInt,self).__init__(dataAttributeInt)
+        #self._longName_str=None
+        #self._shortName_str=None
+        self.__valueType_int=om2.MFnNumericData().kInt #7
+        if dataAttributeInt is None:
+            self._valueInt_int=None
+            self._limitMax_int=None
+            self._limitMin_int=None
+        elif type(dataAttributeInt) is DataAttributeInt:
+            self._valueInt_int=dataAttributeInt.getValue()
+            self._limitMax_int=dataAttributeInt.getMax()
+            self._limitMin_int=dataAttributeInt.getMin()
 
-class DataValueWeight(DataAttribute):
+    def setValue(self,variable):
+        self._valueInt_int=variable
+        return self._valueInt_int
+    def getValue(self):
+        return self._valueInt_int
+    
+    def setMax(self,variable):
+        self._limitMax_int=variable
+        return self._limitMax_int
+    def getMax(self):
+        return self._limitMax_int
+    
+    def setMin(self,variable):
+        self._limitMin_int=variable
+        return self._limitMin_int
+    def getMin(self):
+        return self._limitMin_int
+    
+
+    def getValueType(self):
+        return self.__valueType_int
+
+class DataAttributeFloat(DataAttribute):
+    def __init__(self,dataAttributeFloat=None):
+        super(DataAttributeFloat,self).__init__(dataAttributeFloat)
+        #self._longName_str=None
+        #self._shortName_str=None
+        self.__valueType_int=om2.MFnNumericData().kFloat #11
+        if dataAttributeFloat is None:
+            self._valueFloat_float=None
+            self._limitMax_float=None
+            self._limitMin_float=None
+        elif type(dataAttributeFloat) is DataAttributeFloat:
+            self._valueFloat_float=dataAttributeFloat.getValue()
+            self._limitMax_float=dataAttributeFloat.getMax()
+            self._limitMin_float=dataAttributeFloat.getMin()
+
+    def setValue(self,variable):
+        self._valueFloat_float=variable
+        return self._valueFloat_float
+    def getValue(self):
+        return self._valueFloat_float
+
+    def setMax(self,variable):
+        self._limitMax_float=variable
+        return self._limitMax_float
+    def getMax(self):
+        return self._limitMax_float
+    
+    def setMin(self,variable):
+        self._limitMin_float=variable
+        return self._limitMin_float
+    def getMin(self):
+        return self._limitMin_float
+    
+    def getValueType(self):
+        return self.__valueType_int
+    
+class DataAttributeVector(DataAttribute):
+    def __init__(self,dataAttributeVector=None):
+        super(DataAttributeVector,self).__init__()
+        #self._longName_str=None
+        #self._shortName_str=None
+        self.__valueType_int=om2.MFnNumericData().k3Float  #13
+        if dataAttributeVector is None:
+            self._valueVector_tuple3=[0.0,0.0,0.0]
+            self._limitMax_floats=[]
+            self._limitMin_floats=[]
+        elif type(dataAttributeVector) is DataAttributeVector:
+            self._valueVector_tuple3=dataAttributeVector.getValue()
+            self._limitMax_float=dataAttributeVector.getMax()
+            self._limitMin_float=dataAttributeVector.getMin()
+
+    #Setting Function
+    def setValue(self,variables):
+        self._valueVector_tuple3=variables
+        return self._valueVector_tuple3
+    def getValue(self):
+        return self._valueVector_tuple3
+    
+    def setMax(self,variables):
+        self._limitMax_floats=variables
+        return self._limitMax_floats
+    def getMax(self):
+        return self._limitMax_floats
+    
+    def setMin(self,variables):
+        self._limitMin_floats=variables
+        return self._limitMin_floats
+    def getMin(self):
+        return self._limitMin_floats
+    
+
+    def setVectorX(self,variable):
+        self._valueVector_tuple3[0]=variable
+        return self._valueVector_tuple3[0]
+    def getVectorX(self):
+        return self._valueVector_tuple3[0]
+    
+    def setVectorY(self,variable):
+        self._valueVector_tuple3[1]=variable
+        return self._valueVector_tuple3[1]
+    def getVectorY(self):
+        return self._valueVector_tuple3[1]
+    
+    def setVectorZ(self,variable):
+        self._valueVector_tuple3[2]=variable
+        return self._valueVector_tuple3[2]
+    def getVectorZ(self):
+        return self._valueVector_tuple3[2]
+    
+    def getValueType(self):
+        return self.__valueType_int
+
+class DataAttributeString(DataAttribute):
+    def __init__(self,dataAttributeString=None):
+        super(DataAttributeString,self).__init__(dataAttributeString)
+        #self._longName_str=None
+        #self._shortName_str=None
+        self.__valueType_int=om2.MFnData().kString #4
+        if dataAttributeString is None:
+            self._valueString_str=None
+        elif type(dataAttributeString) is DataAttributeString:
+            self._valueString_str=dataAttributeString.getValue()
+    
+    def setValue(self,variable):
+        self._valueString_str=variable
+        return self._valueString_str
+    def getValue(self):
+        return self._valueString_str
+    
+    def getValueType(self):
+        return self.__valueType_int
+
+class DataAttributeEnum(DataAttribute):
+    def __init__(self,dataAttributeEnum=None):
+        super(DataAttributeEnum,self).__init__()
+        #self._longName_str=None
+        #self._shortName_str=None
+        if dataAttributeEnum is None:
+            self._fieldEnum_strs=[]
+            self._valueEnum_str=None
+        elif type(dataAttributeEnum) is DataAttributeEnum:
+            self._fieldEnum_strs=dataAttributeEnum.getField()
+            self._valueEnum_str=dataAttributeEnum.getEnum()
+
+    #Setting Function
+    def setField(self,variables):
+        self._fieldEnum_strs=variables
+        return self._fieldEnum_strs
+    def addField(self,variables):
+        self._fieldEnum_strs+=variables
+        return self._fieldEnum_strs
+    def getField(self):
+        return self._fieldEnum_strs
+
+    def setEnum(self,variable):
+        self._valueEnum_str=variable
+        return self._valueEnum_str
+    def getEnum(self):
+        return self._valueEnum_str
+
+class DataAttributeWeight(DataAttribute):
     def __init__(self):
-        super(DataValueWeight,self).__init__()
+        super(DataAttributeWeight,self).__init__()
+        #self._longName_str=None
+        #self._shortName_str=None
         self._valueWeight_float=None
         self._indexWeight_int=None
 
@@ -85,22 +263,6 @@ class DataValueWeight(DataAttribute):
         return self._indexWeight_int
     def getIndexWeight(self):
         return self._indexWeight_int
-    
-class DataValueVector(DataAttribute):
-    def __init__(self,dataValueVector=None):
-        super(DataValueVector,self).__init__()
-        if type(dataValueVector) is DataValueVector:
-            pass
-        else:
-            self._valueType_str=None
-
-class DataValueEnum(DataAttribute):
-    def __init__(self,dataValueEnum=None):
-        super(DataValueEnum,self).__init__()
-        if type(dataValueEnum) is DataValueEnum:
-            pass
-        else:
-            self._valueType_str=None
 
 class DataName(bLB.SelfOrigin):
     def __init__(self):
@@ -227,18 +389,6 @@ class DataTime(om2.MTime):
     def getTime(self):
         return self.value
 
-class DataVertex(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataVertex,self).__init__()
-
-class DataEdge(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataVertex,self).__init__()
-
-class DataFace(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataFace,self).__init__()
-
 class DataKey(bLB.SelfOrigin):
     def __init__(self):
         super(DataKey,self).__init__()
@@ -271,6 +421,18 @@ class DataKey(bLB.SelfOrigin):
         return self._outputTanType_str
     def getOutputTanType(self):
         return self._outputTanType_str
+
+class DataVertex(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataVertex,self).__init__()
+
+class DataEdge(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataVertex,self).__init__()
+
+class DataFace(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataFace,self).__init__()
 
 #Array Data
 class DataValueWeightArray(bLB.SelfOrigin):
@@ -329,12 +491,21 @@ class DataPlug(bLB.SelfOrigin):
         if dataPlug is None:
             self._node_DataNode=None
             self._attr_DataAttribute=None
+            self._keyLock_bool=False
+            self._valueLock_bool=False
+            self._channelHide_bool=False
         elif type(dataPlug) is DataPlug:
             self._node_DataNode=dataPlug.getDataNode()
             self._attr_DataAttribute=dataPlug.getDataAttribute()
+            self._keyLock_bool=dataPlug.getKeyLockState()
+            self._valueLock_bool=dataPlug.getValueLockState()
+            self._channelHide_bool=dataPlug.getHideState()
         elif type(dataPlug) is om2.MPlug:
-            self._node_DataNode=DataNode(dataPlug.node())
-            self._attr_DataAttribute=DataAttribute(dataPlug.attribute())
+            self._node_DataNode=DataNode(dataPlug.node())# MObject
+            self._attr_DataAttribute=DataAttribute(dataPlug.attribute())# MObject
+            self._keyLock_bool=not dataPlug.isKeyable
+            self._valueLock_bool=dataPlug.isLocked
+            self._channelHide_bool=not dataPlug.isChannelBox
 
     #Setting Function
     def setDataNode(self,variable):
@@ -362,10 +533,10 @@ class DataPlug(bLB.SelfOrigin):
         return self._valueLock_bool
     
     def setHideState(self,variable):
-        self._hide_bool=variable
-        return self._hide_bool
+        self._channelHide_bool=variable
+        return self._channelHide_bool
     def getHideState(self):
-        return self._hide_bool
+        return self._channelHide_bool
 
 class DataPlugArray(bLB.SelfOrigin):
     def __init__(self):
@@ -374,6 +545,20 @@ class DataPlugArray(bLB.SelfOrigin):
         self._target_DataPlugs=[]
 
 #Action Data
+class DataCreatePlug(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataCreatePlug,self).__init__()
+        self._create_DataPlugs=[]
+
+    def setDataPlugs(self,variables):
+        self._create_DataPlugs=variables
+        return self._create_DataPlugs
+    def addDataPlugs(self,variables):
+        self._create_DataPlugs+=variables
+        return self._create_DataPlugs
+    def getDataPlugs(self):
+        return self._create_DataPlugs
+
 class DataEditPlug(bLB.SelfOrigin):
     def __init__(self):
         super(DataEditPlug,self).__init__()

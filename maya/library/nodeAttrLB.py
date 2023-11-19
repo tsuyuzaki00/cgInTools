@@ -35,13 +35,15 @@ class SelfOpenMayaBase(bLB.SelfOrigin):
 class SelfDGNode(SelfOpenMayaBase):
     def __init__(self,selfDGNode=None):
         super(SelfDGNode,self).__init__()
-        if type(selfDGNode) is SelfDGNode:
-            self._node_DataNode=selfDGNode.getDataNode()
-            self._node_DataName=selfDGNode.getDataName()
-            self._attrName_str=None
-        else:
+        if selfDGNode is None:
             self._node_DataNode=None
             self._name_DataName=None
+            self._plug_DataPlugs=[]
+            self._attrName_str=None
+        elif type(selfDGNode) is SelfDGNode:
+            self._node_DataNode=selfDGNode.getDataNode()
+            self._name_DataName=selfDGNode.getDataName()
+            self._plug_DataPlugs=selfDGNode.getDataPlugs()
             self._attrName_str=None
         self._dataChoice_strs+=[
             "DataNode",
@@ -95,6 +97,70 @@ class SelfDGNode(SelfOpenMayaBase):
         plug_DataPlug=dLB.DataPlug(plug_MPlug)
         return plug_DataPlug
     
+    def booleanAttr_create_MObject(self,attr_DataAttributeBoolean):
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.create(
+            attr_DataAttributeBoolean.getName(),
+            attr_DataAttributeBoolean.getShortName(),
+            attr_DataAttributeBoolean.getValueType(),
+            attr_DataAttributeBoolean.getValue()
+        )
+        return attr_MObject
+    
+    def intAttr_create_MObject(self,attr_DataAttributeInt):
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.create(
+            attr_DataAttributeInt.getName(),
+            attr_DataAttributeInt.getShortName(),
+            attr_DataAttributeInt.getValueType(),
+            attr_DataAttributeInt.getValue()
+        )
+        if type(attr_DataAttributeInt.getMax()) is int:
+            attr_MFnNumericAttribute.setMax(attr_DataAttributeInt.getMax())
+        if type(attr_DataAttributeInt.getMin()) is int:
+            attr_MFnNumericAttribute.setMin(attr_DataAttributeInt.getMin())
+        return attr_MObject
+    
+    def floatAttr_create_MObject(self,attr_DataAttributeFloat):
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.create(
+            attr_DataAttributeFloat.getName(),
+            attr_DataAttributeFloat.getShortName(),
+            attr_DataAttributeFloat.getValueType(),
+            attr_DataAttributeFloat.getValue()
+        )
+        if type(attr_DataAttributeFloat.getMax()) is float:
+            attr_MFnNumericAttribute.setMax(attr_DataAttributeFloat.getMax())
+        if type(attr_DataAttributeFloat.getMin()) is float:
+            attr_MFnNumericAttribute.setMin(attr_DataAttributeFloat.getMin())
+        return attr_MObject
+    
+    def stringAttr_create_MObject(self,attr_DataAttributeString):
+        attr_MFnStringData=om2.MFnStringData()
+        defaultValue_MObject=attr_MFnStringData.create(attr_DataAttributeString.getValue())
+
+        attr_MFnTypedAttribute=om2.MFnTypedAttribute()
+        attr_MObject=attr_MFnTypedAttribute.create(
+            attr_DataAttributeString.getName(),
+            attr_DataAttributeString.getShortName(),
+            attr_DataAttributeString.getValueType(),
+            defaultValue_MObject
+        )
+        return attr_MObject
+    
+    def vectorAttr_create_MObject(self,attr_DataAttributeVector):
+        attr_MFnNumericData=om2.MFnNumericData()
+        defaultValue_MObject=attr_MFnNumericData.create(attr_DataAttributeVector.getValueType())
+        attr_MFnNumericData.setData(attr_DataAttributeVector.getValue())
+
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.createPoint(
+            attr_DataAttributeVector.getName(),
+            attr_DataAttributeVector.getShortName()
+        )
+        return attr_MObject
+    
+
     #Private Function
     def __orderName_create_str(self,name_dataName):
         orderName_strs=self.nameChoice_query_strs(name_dataName)
@@ -121,6 +187,15 @@ class SelfDGNode(SelfOpenMayaBase):
     def getDataName(self):
         return self._node_DataName
     
+    def setDataPlugs(self,variables):
+        self._plug_DataPlugs=variables
+        return self._plug_DataPlugs
+    def addDataPlugs(self,variables):
+        self._plug_DataPlugs+=variables
+        return self._plug_DataPlugs
+    def getDataPlugs(self):
+        return self._plug_DataPlugs
+
     def setAttributeName(self,variable):
         self._attrName_str=variable
         return self._attrName_str
@@ -136,6 +211,59 @@ class SelfDGNode(SelfOpenMayaBase):
         node_MObject=self.node_create_DataNode(_node_DataNode.getType(),orderName_str)
         return dLB.DataNode(node_MObject)
 
+    def createAttr(self,dataPlugs=[]):
+        _plug_DataPlugs=dataPlugs or self._plug_DataPlugs
+
+        for _plug_DataPlug in _plug_DataPlugs:
+            node_DataNode=_plug_DataPlug.getDataNode()
+            attr_DataAttribute=_plug_DataPlug.getDataAttribute()
+
+            node_MObject=self.node_query_MObject(node_DataNode.getName())
+            node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+
+            if type(attr_DataAttribute) is dLB.DataAttributeBoolean:
+                attr_MObject=self.booleanAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeInt:
+                attr_MObject=self.intAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeFloat:
+                attr_MObject=self.floatAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeString:
+                attr_MObject=self.stringAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeVector:
+                attr_MObject=self.vectorAttr_create_MObject(attr_DataAttribute)
+            else:
+                continue
+
+            node_MFnDependencyNode.addAttribute(attr_MObject)
+            node_MPlug=node_MFnDependencyNode.findPlug(attr_MObject,False)
+            node_MPlug.isChannelBox=not _plug_DataPlug.getHideState()
+            node_MPlug.isKeyable=not _plug_DataPlug.getKeyLockState()
+            node_MPlug.isLocked=_plug_DataPlug.getValueLockState()
+
+    def editAttr(self,dataPlugs=[]):
+        _plug_DataPlugs=dataPlugs or self._plug_DataPlugs
+
+        for _plug_DataPlug in _plug_DataPlugs:
+            node_DataNode=_plug_DataPlug.getDataNode()
+            attr_DataAttribute=_plug_DataPlug.getDataAttribute()
+
+            node_MObject=self.node_query_MObject(node_DataNode.getName())
+            node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+
+            node_MPlug=node_MFnDependencyNode.findPlug(attr_DataAttribute.getName(),False)
+            
+            if type(attr_DataAttribute) is dLB.DataAttributeBoolean:
+                node_MPlug.setBool(attr_DataAttribute.getValue())
+            elif type(attr_DataAttribute) is dLB.DataAttributeInt:
+                node_MPlug.setInt(attr_DataAttribute.getValue())
+            elif type(attr_DataAttribute) is dLB.DataAttributeFloat:
+                node_MPlug.setFloat(attr_DataAttribute.getValue())
+            elif type(attr_DataAttribute) is dLB.DataAttributeString:
+                node_MPlug.setString(attr_DataAttribute.getValue())
+            elif type(attr_DataAttribute) is dLB.DataAttributeVector:
+                array_MPlug=node_MPlug.array()
+            
+    
     def rename(self,dataNode=None,dataName=None):
         _node_DataNode=dataNode or self._node_DataNode
         _node_DataName=dataName or self._node_DataName

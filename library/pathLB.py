@@ -1,12 +1,22 @@
 # -*- coding: iso-8859-15 -*-
 import os,shutil
+import cgInTools as cit
+from . import baseLB as bLB
+cit.reloads([bLB])
 
-class DataPath(object):
-    def __init__(self):
-        self._absolute_dir=None
-        self._relative_dir=None
-        self._file_str=None
-        self._extension_ext=None
+class DataPath(bLB.SelfOrigin):
+    def __init__(self,dataPath=None):
+        super(DataPath,self).__init__()
+        if dataPath is None:
+            self._absolute_dir=None
+            self._relative_dir=None
+            self._file_str=None
+            self._extension_ext=None
+        elif type(dataPath) is DataPath:
+            self._absolute_dir=dataPath.getAbsoluteDirectory()
+            self._relative_dir=dataPath.getRelativeDirectory()
+            self._file_str=dataPath.getFile()
+            self._extension_ext=dataPath.getExtension()
 
     #Single Function
     def mergeDirectory_create_dir(self,upperDirectory_dir,lowerDirectory_dir):
@@ -49,7 +59,7 @@ class DataPath(object):
     def getExtension(self):
         return self._extension_ext
 
-class SelfPath(object):
+class SelfPath(bLB.SelfOrigin):
     def __init__(self):
         self._path_DataPath=DataPath()
         self._target_DataPath=DataPath()
