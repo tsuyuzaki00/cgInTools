@@ -2,21 +2,48 @@
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 import maya.api.OpenMayaAnim as oma2
-import sys,math
 
 import cgInTools as cit
 from ...library import baseLB as bLB
 cit.reloads([bLB])
 
-#Single Data
-class DataValueBoolean(bLB.SelfOrigin):
+#Definition Data
+class DataAttribute(bLB.SelfOrigin):
+    def __init__(self,dataAttribute=None):
+        super(DataAttribute,self).__init__()
+        if dataAttribute is None:
+            self._longName_str=None
+            self._shortName_str=None
+        elif type(dataAttribute) is DataAttribute:
+            self._longName_str=dataAttribute.getName()
+            self._shortName_str=dataAttribute.getShortName()
+        elif type(dataAttribute) is om2.MObject:
+            attr_MFnNumericAttribute=om2.MFnNumericAttribute(dataAttribute)
+
+            self._longName_str=attr_MFnNumericAttribute.name
+            self._shortName_str=attr_MFnNumericAttribute.shortName
+
+    #Setting Function
+    def setName(self,variable):
+        self._longName_str=variable
+        return self._longName_str
+    def getName(self):
+        return self._longName_str
+    
+    def setShortName(self,variable):
+        self._shortName_str=variable
+        return self._shortName_str
+    def getShortName(self):
+        return self._shortName_str
+    
+class DataAttributeBoolean(DataAttribute):
     def __init__(self,dataValueBoolean=None):
-        super(DataValueBoolean,self).__init__()
-        if type(dataValueBoolean) is DataValueBoolean:
+        super(DataAttributeBoolean,self).__init__()
+        if type(dataValueBoolean) is DataAttributeBoolean:
             pass
         else:
             self._valueType_str=None
-class DataValueInt(bLB.SelfOrigin):
+class DataValueInt(DataAttribute):
     def __init__(self,dataValueInt=None):
         super(DataValueInt,self).__init__()
         if type(dataValueInt) is DataValueInt:
@@ -24,7 +51,7 @@ class DataValueInt(bLB.SelfOrigin):
         else:
             self._valueType_str=None
 
-class DataValueFloat(bLB.SelfOrigin):
+class DataValueFloat(DataAttribute):
     def __init__(self,dataValueFloat=None):
         super(DataValueFloat,self).__init__()
         if type(dataValueFloat) is DataValueFloat:
@@ -32,7 +59,7 @@ class DataValueFloat(bLB.SelfOrigin):
         else:
             self._valueType_str=None
 
-class DataValueString(bLB.SelfOrigin):
+class DataValueString(DataAttribute):
     def __init__(self,dataValueString=None):
         super(DataValueString,self).__init__()
         if type(dataValueString) is DataValueString:
@@ -40,7 +67,7 @@ class DataValueString(bLB.SelfOrigin):
         else:
             self._valueType_str=None
 
-class DataValueWeight(bLB.SelfOrigin):
+class DataValueWeight(DataAttribute):
     def __init__(self):
         super(DataValueWeight,self).__init__()
         self._valueWeight_float=None
@@ -59,7 +86,7 @@ class DataValueWeight(bLB.SelfOrigin):
     def getIndexWeight(self):
         return self._indexWeight_int
     
-class DataValueVector(bLB.SelfOrigin):
+class DataValueVector(DataAttribute):
     def __init__(self,dataValueVector=None):
         super(DataValueVector,self).__init__()
         if type(dataValueVector) is DataValueVector:
@@ -67,7 +94,7 @@ class DataValueVector(bLB.SelfOrigin):
         else:
             self._valueType_str=None
 
-class DataValueEnum(bLB.SelfOrigin):
+class DataValueEnum(DataAttribute):
     def __init__(self,dataValueEnum=None):
         super(DataValueEnum,self).__init__()
         if type(dataValueEnum) is DataValueEnum:
@@ -257,94 +284,6 @@ class DataKeyArray(bLB.SelfOrigin):
         super(DataKeyArray,self).__init__()
         self._key_DataKeys=[]
 
-#Action Data
-class DataAttribute(bLB.SelfOrigin):
-    def __init__(self,dataAttribute=None):
-        super(DataAttribute,self).__init__()
-        if dataAttribute is None:
-            self._longName_str=None
-            self._shortName_str=None
-            self._value_DataValueType=None
-            self._keyLock_bool=False
-            self._valueLock_bool=False
-            self._channelHide_bool=False
-            self._proxyAttr_bool=False
-        elif type(dataAttribute) is DataAttribute:
-            self._longName_str=dataAttribute.getName()
-            self._shortName_str=dataAttribute.getShortName()
-            self._value_DataValueType=dataAttribute.getDataValueType()
-            self._keyLock_bool=dataAttribute.getKeyLockState()
-            self._valueLock_bool=dataAttribute.getValueLockState()
-            self._channelHide_bool=dataAttribute.getChannelHideState()
-            self._proxyAttr_bool=dataAttribute.getProxyAttrState()
-        elif type(dataAttribute) is om2.MObject:
-            attr_MFnNumericAttribute=om2.MFnNumericAttribute(dataAttribute)
-
-            self._longName_str=attr_MFnNumericAttribute.name
-            self._shortName_str=attr_MFnNumericAttribute.shortName
-            self._value_DataValueType=None
-            self._keyLock_bool=not attr_MFnNumericAttribute.keyable
-            self._valueLock_bool=False
-            self._channelHide_bool=not attr_MFnNumericAttribute.channelBox
-            self._proxyAttr_bool=attr_MFnNumericAttribute.isProxyAttribute
-
-    #Setting Function
-    def setName(self,variable):
-        self._longName_str=variable
-        return self._longName_str
-    def getName(self):
-        return self._longName_str
-    
-    def setShortName(self,variable):
-        self._shortName_str=variable
-        return self._shortName_str
-    def getShortName(self):
-        return self._shortName_str
-    
-    def setDataValueType(self,variable):
-        self._value_DataValueType=variable
-        return self._value_DataValueType
-    def getDataValueType(self):
-        return self._value_DataValueType
-    
-    def setKeyLockState(self,variable):
-        self._keyLock_bool=variable
-        return self._keyLock_bool
-    def getKeyLockState(self):
-        return self._keyLock_bool
-    
-    def setValueLockState(self,variable):
-        self._valueLock_bool=variable
-        return self._valueLock_bool
-    def getValueLockState(self):
-        return self._valueLock_bool
-    
-    def setHideState(self,variable):
-        self._hide_bool=variable
-        return self._hide_bool
-    def getHideState(self):
-        return self._hide_bool
-
-class DataBind(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataBind,self).__init__()
-        self._geometry_DataGeometry=None
-        self._joint_DataJoints=[]
-        self._weight_DataValueWeightArrays=[]
-
-class DataKeyable(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataKeyable,self).__init__()
-        self._plug_DataPlug=None
-        self._key_DataKeyArrays=[]
-
-class DataDrivenKey(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataDrivenKey,self).__init__()
-        self._plug_DataPlug=None
-        self._source_DataPlug=None
-        self._key_DataKeyArrays=[]
-
 #Object Data
 class DataNode(bLB.SelfOrigin):
     def __init__(self,dataNode=None):
@@ -410,30 +349,54 @@ class DataPlug(bLB.SelfOrigin):
     def getDataAttribute(self):
         return self._attr_DataAttribute
 
-class DataTransform(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataTransform,self).__init__()
+    def setKeyLockState(self,variable):
+        self._keyLock_bool=variable
+        return self._keyLock_bool
+    def getKeyLockState(self):
+        return self._keyLock_bool
+    
+    def setValueLockState(self,variable):
+        self._valueLock_bool=variable
+        return self._valueLock_bool
+    def getValueLockState(self):
+        return self._valueLock_bool
+    
+    def setHideState(self,variable):
+        self._hide_bool=variable
+        return self._hide_bool
+    def getHideState(self):
+        return self._hide_bool
 
-class DataJoint(DataNode):
+class DataPlugArray(bLB.SelfOrigin):
     def __init__(self):
-        super(DataJoint,self).__init__()
+        super(DataPlugArray,self).__init__()
+        self._source_DataPlug=None
+        self._target_DataPlugs=[]
 
-class DataLight(DataNode):
+#Action Data
+class DataEditPlug(bLB.SelfOrigin):
     def __init__(self):
-        super(DataLight,self).__init__()
+        super(DataEditPlug,self).__init__()
+        self._edit_DataPlugs=[]
 
-class DataCamera(DataNode):
+class DataConnectPlug(bLB.SelfOrigin):
     def __init__(self):
-        super(DataCamera,self).__init__()
+        super(DataConnectPlug,self).__init__()
+        self._connect_DataPlugArrays=[]
 
-class DataGeometry(DataNode):
+class DataBind(bLB.SelfOrigin):
     def __init__(self):
-        super(DataGeometry,self).__init__()
+        super(DataBind,self).__init__()
+        self._joint_DataNodes=[]
+        self._skicWeight_DataValueWeightArrays=[]
 
-class DataCurve(DataNode):
+class DataKeyable(bLB.SelfOrigin):
     def __init__(self):
-        super(DataCurve,self).__init__()
+        super(DataKeyable,self).__init__()
+        self._keyable_DataKeyArrays=[]
 
-class DataSurface(DataNode):
+class DataDrivenKey(bLB.SelfOrigin):
     def __init__(self):
-        super(DataSurface,self).__init__()
+        super(DataDrivenKey,self).__init__()
+        self._source_DataPlug=None
+        self._drivenKey_DataKeyArrays=[]
