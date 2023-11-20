@@ -159,7 +159,6 @@ class SelfDGNode(SelfOpenMayaBase):
             attr_DataAttributeVector.getShortName()
         )
         return attr_MObject
-    
 
     #Private Function
     def __orderName_create_str(self,name_dataName):

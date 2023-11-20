@@ -1,12 +1,13 @@
 # -*- coding: iso-8859-15 -*-
 
-import cgInTools as cit
-from . import jsonLB as jLB
-from . import serializeLB as sLB
-cit.reloads([jLB,sLB])
-
 class SelfOrigin(object):
     def __init__(self):
+        # Avoiding circular import errors in python2
+        import cgInTools as cit
+        from . import jsonLB as jLB
+        from . import serializeLB as sLB
+        cit.reloads([jLB,sLB])
+
         self._origin_DataPath=None
         self._data_dict={}
         self._dataChoice_strs=["DoIts"]

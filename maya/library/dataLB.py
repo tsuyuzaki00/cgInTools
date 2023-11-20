@@ -46,7 +46,6 @@ class DataAttribute(bLB.SelfOrigin):
     def getShortName(self):
         return self._shortName_str
 
-
 class DataAttributeBoolean(DataAttribute):
     def __init__(self,dataAttributeBoolean=None):
         super(DataAttributeBoolean,self).__init__(dataAttributeBoolean)
@@ -66,6 +65,7 @@ class DataAttributeBoolean(DataAttribute):
 
     def getValueType(self):
         return self.__valueType_int
+
 class DataAttributeInt(DataAttribute):
     def __init__(self,dataAttributeInt=None):
         super(DataAttributeInt,self).__init__(dataAttributeInt)
@@ -339,8 +339,8 @@ class DataName(bLB.SelfOrigin):
         return self._increaseName_enum
 
 class DataMatrix(om2.MMatrix):
-    def __init__(self,*matrix):
-        super(DataMatrix,self).__init__(*matrix)
+    def __init__(self,*args):
+        super(DataMatrix,self).__init__(*args)
         #self.kIdentity=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
         self._MSpace=om2.MSpace.kTransform #1
         self._rotateOrder=om2.MEulerRotation.kXYZ #0
@@ -364,9 +364,35 @@ class DataMatrix(om2.MMatrix):
     def getRotateOrder(self):
         return self._rotateOrder
 
+class DataMatrixMix(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataMatrixMix,self).__init__()
+        self._world_DataMatrix=None
+        self._local_DataMatrix=None
+        self._parent_DataMatrix=None
+
+    #Setting Function
+    def setWorldDataMatrix(self,variable):
+        self._world_DataMatrix=variable
+        return self._world_DataMatrix
+    def getWorldDataMatrix(self):
+        return self._world_DataMatrix
+    
+    def setLocalDataMatrix(self,variable):
+        self._local_DataMatrix=variable
+        return self._local_DataMatrix
+    def getLocalDataMatrix(self):
+        return self._local_DataMatrix
+    
+    def setParentDataMatrix(self,variable):
+        self._parent_DataMatrix=variable
+        return self._parent_DataMatrix
+    def getParentDataMatrix(self):
+        return self._parent_DataMatrix
+
 class DataTime(om2.MTime):
-    def __init__(self,*time):
-        super(DataTime,self).__init__(*time)
+    def __init__(self,*args):
+        super(DataTime,self).__init__(*args)
         # self.unit=int(Unit Type constant)
         # self.value=float
         
@@ -388,6 +414,22 @@ class DataTime(om2.MTime):
         return self.value
     def getTime(self):
         return self.value
+
+class DataVector(om2.MVector):
+    def __init__(self,*args):
+        super(DataVector,self).__init__(*args)
+
+class DataEulerRotation(om2.MEulerRotation):
+    def __init__(self,*args):
+        super(DataEulerRotation,self).__init__(*args)
+
+class DataQuaternion(om2.MQuaternion):
+    def __init__(self,*args):
+        super(DataQuaternion,self).__init__(*args)
+
+class DataScale(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataScale,self).__init__()
 
 class DataKey(bLB.SelfOrigin):
     def __init__(self):
@@ -434,17 +476,71 @@ class DataFace(bLB.SelfOrigin):
     def __init__(self):
         super(DataFace,self).__init__()
 
-#Array Data
-class DataValueWeightArray(bLB.SelfOrigin):
+#DefinitionArray Data
+class DataAttributeWeightArray(bLB.SelfOrigin):
     def __init__(self):
-        super(DataValueWeightArray,self).__init__()
-        self._indexContainer_int=None
-        self._valueWeight_DataValueWeights=[]
+        super(DataAttributeWeightArray,self).__init__()
+        self._indexWeightArray_int=None
+        self._attrWeight_DataAttributeWeights=[]
+
+    def __len__(self):
+        return len(self._attrWeight_DataAttributeWeights)
+
+    def __getitem__(self,index):
+        return self._attrWeight_DataAttributeWeights[index]
+
+    def __setitem__(self,index,value):
+        self._attrWeight_DataAttributeWeights[index]=value
+
+    def __delitem__(self,index):
+        del self._attrWeight_DataAttributeWeights[index]
+
+    def __iter__(self):
+        return iter(self._attrWeight_DataAttributeWeights)
+
+    def setIndexWeightArray(self,variable):
+        self._indexWeightArray_int=variable
+        return self._indexWeightArray_int
+    def getIndexWeightArray(self):
+        return self._indexWeightArray_int
+
+    def setDataAttributeWeights(self,variables):
+        self._attrWeight_DataAttributeWeights=variables
+        return self._attrWeight_DataAttributeWeights
+    def addDataAttributeWeights(self,variables):
+        self._attrWeight_DataAttributeWeights+=variables
+        return self._attrWeight_DataAttributeWeights
+    def getDataAttributeWeights(self):
+        return self._attrWeight_DataAttributeWeights
 
 class DataKeyArray(bLB.SelfOrigin):
     def __init__(self):
         super(DataKeyArray,self).__init__()
         self._key_DataKeys=[]
+    
+    def __len__(self):
+        return len(self._key_DataKeys)
+
+    def __getitem__(self,index):
+        return self._key_DataKeys[index]
+
+    def __setitem__(self,index,value):
+        self._key_DataKeys[index]=value
+
+    def __delitem__(self,index):
+        del self._key_DataKeys[index]
+
+    def __iter__(self):
+        return iter(self._key_DataKeys)
+
+    def setDataKeys(self,variables):
+        self._key_DataKeys=variables
+        return self._key_DataKeys
+    def addDataKeys(self,variables):
+        self._key_DataKeys+=variables
+        return self._key_DataKeys
+    def getDataKeys(self):
+        return self._key_DataKeys
 
 #Object Data
 class DataNode(bLB.SelfOrigin):
@@ -453,18 +549,30 @@ class DataNode(bLB.SelfOrigin):
         if dataNode is None:
             self._nodeName_str=None
             self._nodeType_str=None
+            self._nodeUUID_str=None
         elif type(dataNode) is DataNode:
             self._nodeName_str=dataNode.getName()
             self._nodeType_str=dataNode.getType()
+            self._nodeUUID_str=dataNode.getUUID()
         elif type(dataNode) is om2.MObject:
             node_MFnDependencyNode=om2.MFnDependencyNode(dataNode)
             self._nodeName_str=node_MFnDependencyNode.name()
             self._nodeType_str=node_MFnDependencyNode.typeName
+            self._nodeUUID_str=node_MFnDependencyNode.uuid()
     
     def __str__(self):
         return str(self._nodeName_str)
-
+    
     #Setting Function
+    def findNode(self,variable):
+        node_MSelectionList=om2.MGlobal.getSelectionListByName(variable)
+        node_MObject=node_MSelectionList.getDependNode(0)
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+
+        self._nodeName_str=node_MFnDependencyNode.name()
+        self._nodeType_str=node_MFnDependencyNode.typeName
+        self._nodeUUID_str=node_MFnDependencyNode.uuid()
+
     def setName(self,variable):
         self._nodeName_str=variable
         return self._nodeName_str
@@ -477,13 +585,11 @@ class DataNode(bLB.SelfOrigin):
     def getType(self):
         return self._nodeType_str
     
-    #Public Function
-    def searchNode(self,nodeName=None):
-        _nodeName_str=nodeName or self._nodeName_str
-
-        node_MObject=self.node_query_MObject(_nodeName_str)
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        self._nodeType_str=node_MFnDependencyNode.typeName
+    def setUUID(self,variable):
+        self._nodeUUID_str=variable
+        return self._nodeUUID_str
+    def getUUID(self):
+        return self._nodeUUID_str
 
 class DataPlug(bLB.SelfOrigin):
     def __init__(self,dataPlug=None):
@@ -538,50 +644,236 @@ class DataPlug(bLB.SelfOrigin):
     def getHideState(self):
         return self._channelHide_bool
 
+class DataPlugConnection(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataPlugConnection,self).__init__()
+        self._source_DataPlugs=[]
+        self._target_DataPlugs=[]
+
+    def setSourceDataPlugs(self,variables):
+        self._source_DataPlugs=variables
+        return self._source_DataPlugs
+    def addSourceDataPlugs(self,variables):
+        self._source_DataPlugs+=variables
+        return self._source_DataPlugs
+    def getSourceDataPlugs(self):
+        return self._source_DataPlugs
+    
+    def setTargetDataPlugs(self,variables):
+        self._target_DataPlugs=variables
+        return self._target_DataPlugs
+    def addTargetDataPlugs(self,variables):
+        self._target_DataPlugs+=variables
+        return self._target_DataPlugs
+    def getTargetDataPlugs(self):
+        return self._target_DataPlugs
+
+class DataWeight(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataWeight,self).__init__()
+        DataAttributeWeightArrays=[]
+
+
+class DataMesh(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataMesh,self).__init__()
+
+class DataSurface(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataSurface,self).__init__()
+
+class DataCurve(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataCurve,self).__init__()
+
+#ObjectArray Data
+class DataNodeArray():
+    def __init__(self):
+        super(DataNodeArray,self).__init__()
+        self._node_DataNodes=[]
+
+    def __len__(self):
+        return len(self._node_DataNodes)
+
+    def __getitem__(self,index):
+        return self._node_DataNodes[index]
+
+    def __setitem__(self,index,value):
+        self._node_DataNodes[index]=value
+
+    def __delitem__(self,index):
+        del self._node_DataNodes[index]
+
+    def __iter__(self):
+        return iter(self._node_DataNodes)
+
+    #Setting Function
+    def setDataNodes(self,variables):
+        self._node_DataNodes=variables
+        return self._node_DataNodes
+    def addDataNodes(self,variables):
+        self._node_DataNodes+=variables
+        return self._node_DataNodes
+    def getDataNodes(self):
+        return self._node_DataNodes
+
 class DataPlugArray(bLB.SelfOrigin):
     def __init__(self):
         super(DataPlugArray,self).__init__()
-        self._source_DataPlug=None
-        self._target_DataPlugs=[]
+        self._plug_DataPlugs=[]
+
+    def __len__(self):
+        return len(self._plug_DataPlugs)
+
+    def __getitem__(self,index):
+        return self._plug_DataPlugs[index]
+
+    def __setitem__(self,index,value):
+        self._plug_DataPlugs[index]=value
+
+    def __delitem__(self,index):
+        del self._plug_DataPlugs[index]
+
+    def __iter__(self):
+        return iter(self._plug_DataPlugs)
+
+    #Setting Function
+    def setDataPlugs(self,variables):
+        self._plug_DataPlugs=variables
+        return self._plug_DataPlugs
+    def addDataPlugs(self,variables):
+        self._plug_DataPlugs+=variables
+        return self._plug_DataPlugs
+    def getDataPlugs(self):
+        return self._plug_DataPlugs
+
+class DataPlugConnectionArray(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataPlugConnectionArray,self).__init__()
+        self._connection_DataPlugConnections=[]
+
+    def __len__(self):
+        return len(self._connection_DataPlugConnections)
+
+    def __getitem__(self,index):
+        return self._connection_DataPlugConnections[index]
+
+    def __setitem__(self,index,value):
+        self._connection_DataPlugConnections[index]=value
+
+    def __delitem__(self,index):
+        del self._connection_DataPlugConnections[index]
+
+    def __iter__(self):
+        return iter(self._connection_DataPlugConnections)
+
+    #Setting Function
+    def setDataPlugConnections(self,variables):
+        self._connection_DataPlugConnections=variables
+        return self._connection_DataPlugConnections
+    def addDataPlugConnections(self,variables):
+        self._connection_DataPlugConnections+=variables
+        return self._connection_DataPlugConnections
+    def getDataPlugConnections(self):
+        return self._connection_DataPlugConnections
 
 #Action Data
-class DataCreatePlug(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataCreatePlug,self).__init__()
-        self._create_DataPlugs=[]
-
-    def setDataPlugs(self,variables):
-        self._create_DataPlugs=variables
-        return self._create_DataPlugs
-    def addDataPlugs(self,variables):
-        self._create_DataPlugs+=variables
-        return self._create_DataPlugs
-    def getDataPlugs(self):
-        return self._create_DataPlugs
-
-class DataEditPlug(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataEditPlug,self).__init__()
-        self._edit_DataPlugs=[]
-
-class DataConnectPlug(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataConnectPlug,self).__init__()
-        self._connect_DataPlugArrays=[]
-
 class DataBind(bLB.SelfOrigin):
     def __init__(self):
         super(DataBind,self).__init__()
+        self._mesh_DataNode=None
         self._joint_DataNodes=[]
-        self._skicWeight_DataValueWeightArrays=[]
+        self._skicWeight_DataAttributeWeightArrays=[]
+    
+    #Setting Function
+    def setDataNodeToMeshType(self,variable):
+        self._mesh_DataNode=variable
+        return self._mesh_DataNode
+    def getDataNodeToMeshType(self):
+        return self._mesh_DataNode
+
+    def setDataNodeToJointTypes(self,variables):
+        self._joint_DataNodes=variables
+        return self._joint_DataNodes
+    def addDataNodeToJointTypes(self,variables):
+        self._joint_DataNodes+=variables
+        return self._joint_DataNodes
+    def getDataNodeToJointTypes(self):
+        return self._joint_DataNodes
+    
+    def setDataAttributeWeightArrays(self,variables):
+        self._skicWeight_DataAttributeWeightArrays=variables
+        return self._skicWeight_DataAttributeWeightArrays
+    def addDataAttributeWeightArrays(self,variables):
+        self._skicWeight_DataAttributeWeightArrays+=variables
+        return self._skicWeight_DataAttributeWeightArrays
+    def getDataAttributeWeightArrays(self):
+        return self._skicWeight_DataAttributeWeightArrays
 
 class DataKeyable(bLB.SelfOrigin):
     def __init__(self):
         super(DataKeyable,self).__init__()
+        self._node_DataNode=None
         self._keyable_DataKeyArrays=[]
+
+    #Setting Function
+    def setDataNode(self,variable):
+        self._node_DataNode=variable
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
+
+    def setDataKeyArrays(self,variables):
+        self._keyable_DataKeyArrays=variables
+        return self._keyable_DataKeyArrays
+    def addDataKeyArrays(self,variables):
+        self._keyable_DataKeyArrays+=variables
+        return self._keyable_DataKeyArrays
+    def getDataKeyArrays(self):
+        return self._keyable_DataKeyArrays
+
+class DataKeyableWithMatrix(DataKeyable):
+    def __init__(self):
+        super(DataKeyable,self).__init__()
+        #self._node_DataNode=None
+        #self._keyable_DataKeyArrays=[]
+        self._matrix_DataMatrixs=[]
+
+    #Setting Function
+    def setDataMatrix(self,variable):
+        self._matrix_DataMatrix=variable
+        return self._matrix_DataMatrix
+    def getDataMatrix(self):
+        return self._matrix_DataMatrix
 
 class DataDrivenKey(bLB.SelfOrigin):
     def __init__(self):
         super(DataDrivenKey,self).__init__()
-        self._source_DataPlug=None
+        self._node_DataNode=None
+        self._source_DataPlugs=[]
         self._drivenKey_DataKeyArrays=[]
+
+    #Setting Function
+    def setDataNode(self,variable):
+        self._node_DataNode=variable
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
+
+    def setDataPlugs(self,variables):
+        self._source_DataPlugs=variables
+        return self._source_DataPlugs
+    def addDataPlugs(self,variables):
+        self._source_DataPlugs+=variables
+        return self._source_DataPlugs
+    def getDataPlugs(self):
+        return self._source_DataPlugs
+
+    def setDataKeyArrays(self,variables):
+        self._drivenKey_DataKeyArrays=variables
+        return self._drivenKey_DataKeyArrays
+    def addDataKeyArrays(self,variables):
+        self._drivenKey_DataKeyArrays+=variables
+        return self._drivenKey_DataKeyArrays
+    def getDataKeyArrays(self):
+        return self._drivenKey_DataKeyArrays
