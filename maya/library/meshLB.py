@@ -1,28 +1,15 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
-
-class SelfMeshVertex(object):
-    def __init__(self):
-        self.point_Point=None
-        pass
-
-class SelfMeshEdge(object):
-    def __init__(self):
-        self.vertex_SelfMeshVertexs=[]
-        pass
-
-class SelfMeshFace(object):
-    def __init__(self):
-        self.vertex_SelfMeshVertexs=[]
-        self.edge_SelfMeshEdges=[]
-        pass
-
+from . import dataLB as dLB
 
 class SelfMeshPolygon(object):
     def __init__(self):
         self._name_str=None
-        self._polygons=None#[[Point,Point,Point,Point],[Point,Point,Point,Point]]
+        self._basis3D_DataPointArray=None
+        self._mesh_DataMesh=None
+        self._basis2D_DataPointArray=None
+        self._shell_DataShell=None
 
     #Single Function
     def allVertex_query_Points(self,polygons):
@@ -38,20 +25,29 @@ class SelfMeshPolygon(object):
         sorted_Points=sorted(unique_Points,key=lambda x: x.getID())
         return sorted_Points
 
-    def polygonCount_query_ints(self,polygons):
-        polygonCounts=[len(polygon) for polygon in polygons]
-        return polygonCounts
+    def excludeSameVertex_query_DataPoints(self,dataMesh):
+        vertex_DataVertexs=[vertex_DataVertex for face_DataFace in dataMesh.getDataFaces() for vertex_DataVertex in face_DataFace.getDataVertexs()]
+        
+        vertex_DataVertexs=sorted(vertex_DataVertexs,key=lambda x: x.getID())
+        vertex_DataVertexs=list(set(vertex_DataVertexs))
+        basisPoint_DataPoints=[vertex_DataVertex.getDataPoint() for vertex_DataVertex in vertex_DataVertexs]
+
+        return basisPoint_DataPoints
+
+    def faceInVertexCount_query_ints(self,dataMesh):
+        faceInVertexCount_ints=[len(face_DataFace.getDataVertexs()) for face_DataFace in dataMesh.getDataFaces()]
+        return faceInVertexCount_ints
     
-    def pointID_query_ints(self,polygons):
+    def vertexID_query_ints(self,dataMesh):
         """
-        pointIDs=[]
-        for polygon in polygons:
-            for point in polygon:
-                id_int=point.getID()
-                pointIDs.append(id_int)
+        vertexID_ints=[]
+        for face_DataFace in dataMesh.getDataFaces():
+            for vertex_DataVertex in face_DataFace.getDataVertexs():
+                vertexID_int=vertex_DataVertex.getID()
+                vertexID_ints.append(vertexID_int)
         """
-        pointIDs=[point.getID() for polygon in polygons for point in polygon]
-        return pointIDs
+        vertexID_ints=[vertex_DataVertex.getID() for face_DataFace in dataMesh.getDataFaces() for vertex_DataVertex in face_DataFace.getDataVertexs()]
+        return vertexID_ints
 
     #Setting Function
     def setName(self,variables):
@@ -60,22 +56,41 @@ class SelfMeshPolygon(object):
     def getName(self):
         return self._name_str
 
-    def setPolygons(self,variables):
-        self._polygons=variables
-        return self._polygons
-    def getPolygons(self):
-        return self._polygons
+    def setDataPointArrayInBasis3D(self,variable):
+        self._basis3D_DataPointArray=variable
+        return self._basis3D_DataPointArray
+    def getDataPointArrayInBasis3D(self):
+        return self._basis3D_DataPointArray
+    
+    def setDataPointArrayInBasis2D(self,variable):
+        self._basis2D_DataPointArray=variable
+        return self._basis2D_DataPointArray
+    def getDataPointArrayInBasis2D(self):
+        return self._basis2D_DataPointArray
+
+    def setDataMesh(self,variable):
+        self._mesh_DataMesh=variable
+        return self._mesh_DataMesh
+    def getDataMesh(self):
+        return self._mesh_DataMesh
+
+    def setDataShell(self,variable):
+        self._shell_DataShell=variable
+        return self._shell_DataShell
+    def getDataShell(self):
+        return self._shell_DataShell
 
     #Public Function
     def create(self):
-        trans_fn=om2.MFnTransform()
-        trans_obj=trans_fn.create()
-        _name_str=trans_fn.setName(self._name_str)
-        fn_mesh=om2.MFnMesh()
+        trans_MFnTransform=om2.MFnTransform()
+        trans_MObject=trans_MFnTransform.create()
+        transName_str=trans_MFnTransform.setName(self._name_str)
+        mesh_MFnMesh=om2.MFnMesh()
+        
+        basisPoint_DataPoints=self._basis3D_DataPointArray.getDataPoints()
+        #basisPoint_DataPoints=self.excludeSameVertex_query_DataPoints(self._mesh_DataMesh)
+        polygonCount_ints=self.faceInVertexCount_query_ints(self._mesh_DataMesh)
+        polygonEnclose_ints=self.vertexID_query_ints(self._mesh_DataMesh)
 
-        vertices=self.allVertex_query_Points(self._polygons)
-        polygonCounts=self.polygonCount_query_ints(self._polygons)
-        polygonConnects=self.pointID_query_ints(self._polygons)
-
-        fn_mesh.create(vertices,polygonCounts,polygonConnects,parent=trans_obj)
-        fn_mesh.setName(_name_str+'Shape')
+        mesh_MFnMesh.create(basisPoint_DataPoints,polygonCount_ints,polygonEnclose_ints,parent=trans_MObject)
+        mesh_MFnMesh.setName(transName_str+'Shape')

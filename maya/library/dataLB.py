@@ -415,19 +415,19 @@ class DataTime(om2.MTime):
     def getTime(self):
         return self.value
 
-class DataVector(om2.MVector):
+class DataTranslate(om2.MVector):
     def __init__(self,*args):
-        super(DataVector,self).__init__(*args)
+        super(DataTranslate,self).__init__(*args)
 
-class DataEulerRotation(om2.MEulerRotation):
+class DataRotation(om2.MEulerRotation):
     def __init__(self,*args):
-        super(DataEulerRotation,self).__init__(*args)
+        super(DataRotation,self).__init__(*args)
 
 class DataQuaternion(om2.MQuaternion):
     def __init__(self,*args):
         super(DataQuaternion,self).__init__(*args)
 
-class DataScale(bLB.SelfOrigin):
+class DataScale(object):
     def __init__(self):
         super(DataScale,self).__init__()
 
@@ -464,17 +464,113 @@ class DataKey(bLB.SelfOrigin):
     def getOutputTanType(self):
         return self._outputTanType_str
 
+class DataPoint(om2.MPoint):
+    def __init__(self,*args):
+        super(DataPoint,self).__init__(*args)
+        #self.kOrigin=maya.api.OpenMaya.MPoint(0, 0, 0, 1)
+        #self.kTolerance=1
+        #self.w=None
+        #self.x=None
+        #self.y=None
+        #self.z=None
+        self._index_int=None
+
+    def setPoint(self,variables):
+        self.kOrigin=om2.MPoint(variables)
+        return self.kOrigin
+    def getPoint(self):
+        return self.kOrigin
+    
+    def setPointX(self,variable):
+        self.x=variable
+        return self.x
+    def getPointX(self):
+        return self.x
+    
+    def setPointY(self,variable):
+        self.y=variable
+        return self.y
+    def getPointY(self):
+        return self.y
+    
+    def setPointZ(self,variable):
+        self.z=variable
+        return self.z
+    def getPointZ(self):
+        return self.z
+    
+    def setPointW(self,variable):
+        self.w=variable
+        return self.w
+    def getPointW(self):
+        return self.w
+
+    def setID(self,variable):
+        self._index_int=variable
+        return self._index_int
+    def getID(self):
+        return self._index_int
+
 class DataVertex(bLB.SelfOrigin):
     def __init__(self):
         super(DataVertex,self).__init__()
+        self._vertex_DataPoint=None
+        self._index_int=None
+
+    def setDataPoint(self,variable):
+        self._vertex_DataPoint=variable
+        return self._vertex_DataPoint
+    def getDataPoint(self):
+        return self._vertex_DataPoint
+
+    def setID(self,variable):
+        self._index_int=variable
+        return self._index_int
+    def getID(self):
+        return self._index_int
 
 class DataEdge(bLB.SelfOrigin):
     def __init__(self):
-        super(DataVertex,self).__init__()
+        super(DataEdge,self).__init__()
+        self._edge_DataVertex2=[]
+        self._index_int=None
+
+    def setDataVertex2(self,variable2):
+        self._edge_DataVertex2=variable2
+        return self._edge_DataVertex2
+    def getDataVertex2(self):
+        return self._edge_DataVertex2
+
+    def setID(self,variable):
+        self._index_int=variable
+        return self._index_int
+    def getID(self):
+        return self._index_int
 
 class DataFace(bLB.SelfOrigin):
     def __init__(self):
         super(DataFace,self).__init__()
+        self._vertexFace_DataVertexs=[]
+        self._edgeFace_DataEdges=[]
+        self._index_int=None
+
+    def setDataVertexs(self,variables):
+        self._vertexFace_DataVertexs=variables
+        return self._vertexFace_DataVertexs
+    def getDataVertexs(self):
+        return self._vertexFace_DataVertexs
+    
+    def setDataEdges(self,variables):
+        self._edgeFace_DataEdges=variables
+        return self._edgeFace_DataEdges
+    def getDataEdges(self):
+        return self._edgeFace_DataEdges
+
+    def setID(self,variable):
+        self._index_int=variable
+        return self._index_int
+    def getID(self):
+        return self._index_int
 
 #DefinitionArray Data
 class DataAttributeWeightArray(bLB.SelfOrigin):
@@ -541,6 +637,35 @@ class DataKeyArray(bLB.SelfOrigin):
         return self._key_DataKeys
     def getDataKeys(self):
         return self._key_DataKeys
+
+class DataPointArray(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataPointArray,self).__init__()
+        self._point_DataPoints=[]
+    
+    def __len__(self):
+        return len(self._point_DataPoints)
+
+    def __getitem__(self,index):
+        return self._point_DataPoints[index]
+
+    def __setitem__(self,index,value):
+        self._point_DataPoints[index]=value
+
+    def __delitem__(self,index):
+        del self._point_DataPoints[index]
+
+    def __iter__(self):
+        return iter(self._point_DataPoints)
+
+    def setDataPoints(self,variables):
+        self._point_DataPoints=variables
+        return self._point_DataPoints
+    def addDataPoints(self,variables):
+        self._point_DataPoints+=variables
+        return self._point_DataPoints
+    def getDataPoints(self):
+        return self._point_DataPoints
 
 #Object Data
 class DataNode(bLB.SelfOrigin):
@@ -671,12 +796,24 @@ class DataPlugConnection(bLB.SelfOrigin):
 class DataWeight(bLB.SelfOrigin):
     def __init__(self):
         super(DataWeight,self).__init__()
-        DataAttributeWeightArrays=[]
+        self._weight_DataAttributeWeightArrays=[]
 
+    def setDataAttributeWeightArrays(self,variable):
+        self._weight_DataAttributeWeightArrays=variable
+        return self._weight_DataAttributeWeightArrays
+    def getDataAttributeWeightArrays(self):
+        return self._weight_DataAttributeWeightArrays
 
 class DataMesh(bLB.SelfOrigin):
     def __init__(self):
         super(DataMesh,self).__init__()
+        self._polygon_DataFaces=[]
+
+    def setDataFaces(self,variables):
+        self._polygon_DataFaces=variables
+        return self._polygon_DataFaces
+    def getDataFaces(self):
+        return self._polygon_DataFaces
 
 class DataSurface(bLB.SelfOrigin):
     def __init__(self):
@@ -786,19 +923,19 @@ class DataBind(bLB.SelfOrigin):
         self._skicWeight_DataAttributeWeightArrays=[]
     
     #Setting Function
-    def setDataNodeToMeshType(self,variable):
+    def setMeshDataNode(self,variable):
         self._mesh_DataNode=variable
         return self._mesh_DataNode
-    def getDataNodeToMeshType(self):
+    def getMeshDataNode(self):
         return self._mesh_DataNode
 
-    def setDataNodeToJointTypes(self,variables):
+    def setJointDataNode(self,variables):
         self._joint_DataNodes=variables
         return self._joint_DataNodes
-    def addDataNodeToJointTypes(self,variables):
+    def addJointDataNode(self,variables):
         self._joint_DataNodes+=variables
         return self._joint_DataNodes
-    def getDataNodeToJointTypes(self):
+    def getJointDataNode(self):
         return self._joint_DataNodes
     
     def setDataAttributeWeightArrays(self,variables):
@@ -845,6 +982,72 @@ class DataKeyableWithMatrix(DataKeyable):
         return self._matrix_DataMatrix
     def getDataMatrix(self):
         return self._matrix_DataMatrix
+
+class DataMatch(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataMatch,self).__init__()
+        self._node_DataNode=None
+        self._match_DataNode=None
+        self._match_DataMatrix=None
+
+    #Setting Function
+    def setDataNode(self,variable):
+        self._node_DataNode=variable
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
+
+    def setMatchDataNode(self,variable):
+        self._match_DataNode=variable
+        return self._match_DataNode
+    def getMatchDataNode(self):
+        return self._match_DataNode
+    
+    def setMatchDataMatrix(self,variable):
+        self._match_DataMatrix=variable
+        return self._match_DataMatrix
+    def getMatchDataMatrix(self):
+        return self._match_DataMatrix
+
+class DataMirror(bLB.SelfOrigin):
+    def __init__(self):
+        super(DataMirror,self).__init__()
+        self._node_DataNode=None
+        self._pivot_DataNode=None
+        self._pivot_DataMatrix=None
+        self._mirrorAxis_str="x"
+        self._mirrorOrientVector_str="z"
+
+    #Setting Function
+    def setDataNode(self,variable):
+        self._node_DataNode=variable
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
+    
+    def setPivotDataNode(self,variable):
+        self._pivot_DataNode=variable
+        return self._pivot_DataNode
+    def getPivotDataNode(self):
+        return self._pivot_DataNode
+    
+    def setPivotDataMatrix(self,variable):
+        self._pivot_DataMatrix=variable
+        return self._pivot_DataMatrix
+    def getPivotDataMatrix(self):
+        return self._pivot_DataMatrix
+    
+    def setMirrorAxis(self,variable):
+        self._mirrorAxis_str=variable
+        return self._mirrorAxis_str
+    def getMirrorAxis(self):
+        return self._mirrorAxis_str
+
+    def setMirrorOrientVector(self,variable):
+        self._mirrorOrientVector_str=variable
+        return self._mirrorOrientVector_str
+    def getMirrorOrientVector(self):
+        return self._mirrorOrientVector_str
 
 class DataDrivenKey(bLB.SelfOrigin):
     def __init__(self):

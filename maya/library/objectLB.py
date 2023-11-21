@@ -143,30 +143,30 @@ class ObjectDGNode(bLB.SelfOrigin):
         self.node_create_func(_node_DataNode.getNodeName(),_node_DataNode.getNodeType())
 
     def rename(self,dataName=None):
+        _name_DataName=dataName or self._name_DataName
+
+    def createAttr(self,dataPlug=None):
         pass
 
-    def createAttr(self,):
+    def createAttrArray(self,dataPlugArray=None):
         pass
 
-    def createAttrArray(self):
+    def editAttribute(self,dataPlug=None):
         pass
 
-    def editAttribute(self):
-        pass
-
-    def editAttributeArray(self):
+    def editAttributeArray(self,dataPlugArray=None):
         pass
     
-    def editConnection(self):
+    def editConnection(self,dataPlugConnection=None):
         pass
 
-    def editConnectionArray(self):
+    def editConnectionArray(self,dataPlugConnectionArray=None):
         pass
     
-    def editKeyable(self):
+    def editKeyable(self,dataKeyable=None):
         pass
     
-    def editDrivenKey(self):
+    def editDrivenKey(self,dataDrivenKey=None):
         pass
 
     def queryAttribute(self):
@@ -190,42 +190,95 @@ class ObjectDGNode(bLB.SelfOrigin):
 class ObjectDAGNode(ObjectDGNode):
     def __init__(self,objectDAGNode=None):
         super(ObjectDAGNode,self).__init__(objectDAGNode)
-        #self._node_DataNode=None
-        #self._name_DataName=None
-        #self._create_DataNode=None
-        #self._create_DataPlug=None
-        #self._create_DataPlugArray=None
-        #self._edit_DataPlug=None
-        #self._edit_DataPlugArray=None
-        #self._connect_DataPlugConnection=None
-        #self._connect_DataPlugConnectionArray=None
-        #self._keyable_DataKeyable=None
-        #self._drivenkey_DataDrivenKey=None
-        if objectDGNode is None:
+        if objectDAGNode is None:
             self._parent_DataNode=None
             self._child_DataNodeArray=None
             self._shape_DataNodeArray=None
             self._edit_DataMatrix=None
-            self._translate_MVector=None
-            self._rotate_MEulerRotation=None
-            self._quaternion_MQuaternion=None
-            self._scale_list3=None
-            self._match_DataNode=None
-            self._match_DataMatrix=None
-            self._pivot_DataNode=None
-            self._pivot_DataMatrix=None
-            self._mirrorAxis_str="x"
-            self._mirrorOrientVector_str="z"
+            self._translate_DataTranslate=None
+            self._rotate_DataRotation=None
+            self._quaternion_DataQuaternion=None
+            self._scale_DataScale=None
+            self._match_DataMatch=None
+            self._mirror_DataMirror=None
+        elif type(objectDAGNode) is objectDAGNode:
+            self._parent_DataNode=objectDAGNode.getDataNodeForParent()
+            self._child_DataNodeArray=objectDAGNode.getDataNodeForChildArray()
+            self._shape_DataNodeArray=objectDAGNode.getDataNodeForShapeArray()
+            self._edit_DataMatrix=objectDAGNode.getDataMatrix()
+            self._translate_DataTranslate=objectDAGNode.getDataTranslate()
+            self._rotate_DataRotation=objectDAGNode.getDataRotation()
+            self._quaternion_DataQuaternion=objectDAGNode.getDataQuaternion()
+            self._scale_DataScale=objectDAGNode.getDataScale()
+            self._match_DataMatch=objectDAGNode.getDataMatch()
+            self._mirror_DataMirror=objectDAGNode.getDataMirror()
 
         self._dataChoice_strs+=[
+            "DataNodeForParent",
+            "DataNodeArrayForChild",
+            "DataNodeArrayForShape",
             "DataMatrix",
+            "DataTranslate",
+            "DataRotation",
+            "DataQuaternion",
+            "DataScale",
+            "DataMatch",
+            "DataMirror"
         ]
         self._doIt_strs+=[
-            "parent",
-            "replaceByParent",
-            "replaceByChild",
-            "replaceByShape"
+            "editParent",
+            "editChilds",
+            "editShapes",
+            "editTransform",
+            "editTransformByMatrix",
+            "editTranslate",
+            "editTranslateByMatrix",
+            "editRotation",
+            "editRotationByMatrix",
+            "editQuaternion",
+            "editAimVector",
+            "editScale",
+            "editScaleByMatrix",
+            "editShear",
+            "matchTransform",
+            "matchTransformByMatrix",
+            "matchTranslate",
+            "matchTranslateByMatrix",
+            "matchRotation",
+            "matchRotationByMatrix",
+            "matchQuaternion",
+            "matchAimVector",
+            "matchScale",
+            "matchScaleByMatrix",
+            "matchShear",
+            "mirrorTransform",
+            "mirrorTranslate",
+            "mirrorRotation",
+            "mirrorQuaternion",
+            "mirrorScale",
+            "queryFullPathName",
+            "queryParent",
+            "queryParentOfDataNode",
+            "queryChilds",
+            "queryChildOfDataNodes",
+            "queryShapes",
+            "queryShapeOfDataNodes",
+            "queryTranslate",
+            "queryDataTranslate",
+            "queryRotation",
+            "queryDataRotation",
+            "queryQuaternion",
+            "queryDataQuaternion",
+            "queryScale",
+            "queryDataScale",
+            "queryNormalDataMatrix",
+            "queryWorldDataMatrix",
+            "queryParentDataMatrix",
+            "queryInverseNormalDataMatrix",
+            "queryInverseWorldDataMatrix",
+            "queryInverseParentDataMatrix"
         ]
+    
     #Setting Function
     def setDataNodeForParent(self,variable):
         self._parent_DataNode=variable
@@ -233,62 +286,60 @@ class ObjectDAGNode(ObjectDGNode):
     def getDataNodeForParent(self):
         return self._parent_DataNode
     
-    def setDataNodeArrayForChild(self,variable):
-        self._child_DataNodes=variable
-        return self._child_DataNodes
-    def getDataNodeArrayForChild(self):
-        return self._child_DataNodes
+    def setDataNodeArrayForChildArray(self,variable):
+        self._child_DataNodeArray=variable
+        return self._child_DataNodeArray
+    def getDataNodeArrayForChildArray(self):
+        return self._child_DataNodeArray
     
-    def setDataNodeArrayForShape(self,variable):
+    def setDataNodeArrayForShapeArray(self,variable):
         self._shape_DataNodeArray=variable
         return self._shape_DataNodeArray
-    def getDataNodeArrayForShape(self):
+    def getDataNodeArrayForShapeArray(self):
         return self._shape_DataNodeArray
 
-
-
-    def setDataMatrixForEdit(self,variable):
+    def setDataMatrix(self,variable):
         self._edit_DataMatrix=variable
         return self._edit_DataMatrix
-    def getDataMatrixForEdit(self):
+    def getDataMatrix(self):
         return self._edit_DataMatrix
     
-    def setDataNodeForMatch(self,variable):
-        self._match_DataNode=variable
-        return self._match_DataNode
-    def getDataNodeForMatch(self):
-        return self._match_DataNode
+    def setDataTranslate(self,variable):
+        self._translate_DataTranslate=variable
+        return self._translate_DataTranslate
+    def getDataTranslate(self):
+        return self._translate_DataTranslate
     
-    def setDataMatrixForMatch(self,variable):
-        self._match_DataMatrix=variable
-        return self._match_DataMatrix
-    def getDataMatrixForMatch(self):
-        return self._match_DataMatrix
+    def setDataRotation(self,variable):
+        self._rotate_DataRotation=variable
+        return self._rotate_DataRotation
+    def getDataRotation(self):
+        return self._rotate_DataRotation
     
-    def setDataNodeForPivot(self,variable):
-        self._match_DataNode=variable
-        return self._match_DataNode
-    def getDataNodeForPivot(self):
-        return self._match_DataNode
-
-    def setDataMatrixForPivot(self,variable):
-        self._match_DataMatrix=variable
-        return self._match_DataMatrix
-    def getDataMatrixForPivot(self):
-        return self._match_DataMatrix
+    def setDataQuaternion(self,variable):
+        self._quaternion_DataQuaternion=variable
+        return self._quaternion_DataQuaternion
+    def getDataQuaternion(self):
+        return self._quaternion_DataQuaternion
     
-    def setMirrorAxis(self,variable):
-        self._mirrorAxis_str=variable
-        return self._mirrorAxis_str
-    def getMirrorAxis(self):
-        return self._mirrorAxis_str
+    def setDataScale(self,variable):
+        self._scale_DataScale=variable
+        return self._scale_DataScale
+    def getDataScale(self):
+        return self._scale_DataScale
 
-    def setMirrorOrientVector(self,variable):
-        self._mirrorOrientVector_str=variable
-        return self._mirrorOrientVector_str
-    def getMirrorOrientVector(self):
-        return self._mirrorOrientVector_str
-
+    def setDataMatch(self,variable):
+        self._match_DataMatch=variable
+        return self._match_DataMatch
+    def getDataMatch(self):
+        return self._match_DataMatch
+    
+    def setDataMirror(self,variable):
+        self._mirror_DataMirror=variable
+        return self._mirror_DataMirror
+    def getDataMirror(self):
+        return self._mirror_DataMirror
+    
     #Public Function
     def editParent(self):
         pass
@@ -371,13 +422,7 @@ class ObjectDAGNode(ObjectDGNode):
     def mirrorTranslate(self):
         pass
     
-    def mirrorTranslateByMatrix(self):
-        pass
-    
     def mirrorRotation(self):
-        pass
-    
-    def mirrorRotationByMatrix(self):
         pass
 
     def mirrorQuaternion(self):
@@ -386,31 +431,49 @@ class ObjectDAGNode(ObjectDGNode):
     def mirrorScale(self):
         pass
 
-    def mirrorScaleByMatrix(self):
-        pass
-
     def queryFullPathName(self):
         pass
     
     def queryParent(self):
         pass
+    
+    def queryParentOfDataNode(self):
+        pass
 
     def queryChilds(self):
+        pass
+    
+    def queryChildOfDataNodes(self):
         pass
 
     def queryShapes(self):
         pass
+    
+    def queryShapeOfDataNodes(self):
+        pass
 
     def queryTranslate(self):
+        pass
+    
+    def queryDataTranslate(self):
         pass
 
     def queryRotation(self):
         pass
+    
+    def queryDataRotation(self):
+        pass
 
     def queryQuaternion(self):
         pass
+    
+    def queryDataQuaternion(self):
+        pass
 
     def queryScale(self):
+        pass
+    
+    def queryDataScale(self):
         pass
 
     def queryNormalDataMatrix(self,dataNode=None):
@@ -446,8 +509,6 @@ class ObjectDAGNode(ObjectDGNode):
 class ObjectJoint(ObjectDAGNode):
     def __init__(self,objectJoint=None):
         super(ObjectJoint,self).__init__(objectJoint)
-        #self._node_DataNode=None
-        #self._name_DataName=None
         if objectJoint is None:
             pass
 
@@ -461,22 +522,17 @@ class ObjectJoint(ObjectDAGNode):
 class ObjectLight(ObjectDAGNode):
     def __init__(self):
         super(ObjectLight,self).__init__()
-        #self._node_DataNode=None
-        #self._name_DataName=None
 
 class ObjectCamera(ObjectDAGNode):
     def __init__(self):
         super(ObjectCamera,self).__init__()
-        #self._node_DataNode=None
-        #self._name_DataName=None
 
 class ObjectGeometry(ObjectDAGNode):
     def __init__(self):
         super(ObjectGeometry,self).__init__()
-        #self._node_DataNode=None
-        #self._name_DataName=None
         self._create_DataMesh=None
         self._edit_DataMesh=None
+        self._material_DataMaterial=None
         self._skin_DataBind=None
         self._skin_DataWeight=None
 
@@ -493,11 +549,17 @@ class ObjectGeometry(ObjectDAGNode):
     def getDataMeshForEdit(self):
         return self._edit_DataMesh
 
+    def setDataMaterial(self,variable):
+        self._material_DataMaterial=variable
+        return self._material_DataMaterial
+    def getDataMaterial(self):
+        return self._material_DataMaterial
+
     def setDataBind(self,variable):
-        self._bind_DataBind=variable
-        return self._bind_DataBind
+        self._skin_DataBind=variable
+        return self._skin_DataBind
     def getDataBind(self):
-        return self._bind_DataBind
+        return self._skin_DataBind
 
     def setDataWeightForSkin(self,variables):
         self._skin_DataWeight=variables
@@ -521,8 +583,6 @@ class ObjectGeometry(ObjectDAGNode):
 class ObjectSurface(ObjectDAGNode):
     def __init__(self):
         super(ObjectSurface,self).__init__()
-        #self._node_DataNode=None
-        #self._name_DataName=None
         self._create_DataSurface=None
         self._edit_DataSurface=None
         self._skin_DataBind=None
@@ -542,10 +602,10 @@ class ObjectSurface(ObjectDAGNode):
         return self._edit_DataSurface
     
     def setDataBind(self,variable):
-        self._bind_DataBind=variable
-        return self._bind_DataBind
+        self._skin_DataBind=variable
+        return self._skin_DataBind
     def getDataBind(self):
-        return self._bind_DataBind
+        return self._skin_DataBind
 
     def setDataWeightForSkin(self,variables):
         self._skin_DataWeight=variables
@@ -570,11 +630,6 @@ class ObjectSurface(ObjectDAGNode):
 class ObjectCurve(ObjectDAGNode):
     def __init__(self):
         super(ObjectCurve,self).__init__()
-        #self._node_DataNode=None
-        #self._name_DataName=None
-        #self._attrName_strs=[]
-        #self._matrix_DataMatrix=None
-        #self._fullPath_bool=False
         self._create_DataCurve=None
         self._edit_DataCurve=None
         self._skin_DataBind=None
@@ -594,10 +649,10 @@ class ObjectCurve(ObjectDAGNode):
         return self._edit_DataCurve
 
     def setDataBind(self,variable):
-        self._bind_DataBind=variable
-        return self._bind_DataBind
+        self._skin_DataBind=variable
+        return self._skin_DataBind
     def getDataBind(self):
-        return self._bind_DataBind
+        return self._skin_DataBind
 
     def setDataWeightForSkin(self,variables):
         self._skin_DataWeight=variables
