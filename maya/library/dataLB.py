@@ -415,6 +415,39 @@ class DataTime(om2.MTime):
     def getTime(self):
         return self.value
 
+class DataVector(om2.MVector):
+    def __init__(self,*args):
+        super(DataVector,self).__init__(*args)
+        #self.kOneVector=(1,1,1)
+        #self.x=None
+        #self.y=None
+        #self.z=None
+
+    def setVector(self,variables):
+        self.kOneVector=om2.MVector(variables)
+        return self.kOneVector
+    def getVector(self):
+        return self.kOneVector
+    
+    def setVectorX(self,variable):
+        self.x=variable
+        return self.x
+    def getVectorX(self):
+        return self.x
+    
+    def setVectorY(self,variable):
+        self.y=variable
+        return self.y
+    def getVectorY(self):
+        return self.y
+    
+    def setVectorZ(self,variable):
+        self.z=variable
+        return self.z
+    def getVectorZ(self):
+        return self.z
+    
+
 class DataTranslate(om2.MVector):
     def __init__(self,*args):
         super(DataTranslate,self).__init__(*args)
@@ -515,6 +548,7 @@ class DataVertex(bLB.SelfOrigin):
     def __init__(self):
         super(DataVertex,self).__init__()
         self._vertex_DataPoint=None
+        self._vector_DataVector=None
         self._index_int=None
 
     def setDataPoint(self,variable):
@@ -522,6 +556,12 @@ class DataVertex(bLB.SelfOrigin):
         return self._vertex_DataPoint
     def getDataPoint(self):
         return self._vertex_DataPoint
+
+    def setDataVector(self,variable):
+        self._vector_DataVector=variable
+        return self._vector_DataVector
+    def getDataVector(self):
+        return self._vector_DataVector
 
     def setID(self,variable):
         self._index_int=variable

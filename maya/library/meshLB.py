@@ -38,16 +38,30 @@ class SelfMeshPolygon(object):
         faceInVertexCount_ints=[len(face_DataFace.getDataVertexs()) for face_DataFace in dataMesh.getDataFaces()]
         return faceInVertexCount_ints
     
-    def vertexID_query_ints(self,dataMesh):
-        """
-        vertexID_ints=[]
+    def pointID_query_ints(self,dataMesh):
+        pointID_ints=[vertex_DataVertex.getDataPoint().getID() for face_DataFace in dataMesh.getDataFaces() for vertex_DataVertex in face_DataFace.getDataVertexs()]
+        return pointID_ints
+
+    def uvValues_query_list_list(self,dataMesh):
+        faceCount_int=len(dataMesh.getDataFaces())
+        uValues=[0,0,1,1]*faceCount_int
+        vValues=[0,1,1,0]*faceCount_int
+        return uValues,vValues
+
+    def vertexNormal_query_DataVectors(self,dataMesh):
+        vertexNormal_DataVectors=[vertex_DataVertex.getDataVector() for face_DataFace in dataMesh.getDataFaces() for vertex_DataVertex in face_DataFace.getDataVertexs()]
+        return vertexNormal_DataVectors
+
+    def faceID_query_ints(self,dataMesh):
+        faceCount_int=len(dataMesh.getDataFaces())
         for face_DataFace in dataMesh.getDataFaces():
-            for vertex_DataVertex in face_DataFace.getDataVertexs():
-                vertexID_int=vertex_DataVertex.getID()
-                vertexID_ints.append(vertexID_int)
-        """
-        vertexID_ints=[vertex_DataVertex.getID() for face_DataFace in dataMesh.getDataFaces() for vertex_DataVertex in face_DataFace.getDataVertexs()]
-        return vertexID_ints
+            vertex_DataVertexs=face_DataFace.getDataVertexs()
+            vertexCount_int=len(vertex_DataVertexs)
+        
+        faceID_ints=[]
+        for num in range(faceCount_int):
+            faceID_ints+=[num]*vertexCount_int
+        return faceID_ints
 
     #Setting Function
     def setName(self,variables):
@@ -90,7 +104,15 @@ class SelfMeshPolygon(object):
         basisPoint_DataPoints=self._basis3D_DataPointArray.getDataPoints()
         #basisPoint_DataPoints=self.excludeSameVertex_query_DataPoints(self._mesh_DataMesh)
         polygonCount_ints=self.faceInVertexCount_query_ints(self._mesh_DataMesh)
-        polygonEnclose_ints=self.vertexID_query_ints(self._mesh_DataMesh)
+        polygonConnects_ints=self.pointID_query_ints(self._mesh_DataMesh)
+        uValues,vValues=self.uvValues_query_list_list(self._mesh_DataMesh)
+        vertexNormal_DataVectors=self.vertexNormal_query_DataVectors(self._mesh_DataMesh)
+        faceID_ints=self.faceID_query_ints(self._mesh_DataMesh)
 
-        mesh_MFnMesh.create(basisPoint_DataPoints,polygonCount_ints,polygonEnclose_ints,parent=trans_MObject)
+        mesh_MFnMesh.create(basisPoint_DataPoints,polygonCount_ints,polygonConnects_ints,uValues,vValues,parent=trans_MObject)
         mesh_MFnMesh.setName(transName_str+'Shape')
+        mesh_MFnMesh.assignUVs(polygonCount_ints,polygonConnects_ints)
+        mesh_MFnMesh.setFaceVertexNormals(vertexNormal_DataVectors,faceID_ints,polygonConnects_ints)
+
+        cmds.select(transName_str)
+        cmds.hyperShade(a='standardSurface1')
