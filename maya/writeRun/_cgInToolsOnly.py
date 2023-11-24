@@ -1,10 +1,9 @@
 # -*- coding: iso-8859-15 -*-
 import cgInTools as cit
 from ..library import dataLB as dLB
-from ..library import objectLB as oLB
-from ..library import appLB as aLB
+from ..library import selfLB as sLB
 from cgInTools.maya.library import meshLB as mLB
-cit.reloads([dLB,oLB,aLB,mLB])
+cit.reloads([dLB,sLB,mLB])
 
 def createDataFaces(point_tuples,face_dicts):
     point_DataPoints=[]

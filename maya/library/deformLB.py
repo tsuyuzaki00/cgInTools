@@ -103,8 +103,8 @@ class SelfDeformation(bLB.SelfOrigin):
         return deform_DataDeformations
 
     #Multi Function
-    def weights_edit_func(ffdName_str,ffdWeight_dict):
-        ffd_MObject=node_query_MObject(ffdName_str)
+    def weights_edit_func(self,ffdName_str,ffdWeight_dict):
+        ffd_MObject=self.node_query_MObject(ffdName_str)
         ffd_MFnDependencyNode=om2.MFnDependencyNode(ffd_MObject)
         ffd_MPlug=ffd_MFnDependencyNode.findPlug("weightList",False)
 
@@ -147,4 +147,4 @@ class SelfDeformation(bLB.SelfOrigin):
         nodeName_str=_bindNode_DataNode.getName()
         node_MObject=self.node_query_MObject(nodeName_str)
         node_MPlug=self.convertMObject_query_MPlug(node_MObject,"weightList")
-        
+    

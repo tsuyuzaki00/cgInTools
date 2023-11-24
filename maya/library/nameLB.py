@@ -4,11 +4,23 @@ import maya.cmds as cmds
 import cgInTools as cit
 from ...library import baseLB as bLB
 from ...library import jsonLB as jLB
+from . import appLB as aLB
 from . import dataLB as dLB
 from . import setBaseLB as sbLB
 cit.reloads([bLB,sbLB,jLB])
 
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"library")
+
+class AppName(object):
+    def __init__(self):
+        self._name_DataName=None
+
+    
+
+class AppNodeName(aLB.AppOpenMayaBase):
+    def __init__(self):
+        super(AppNodeName,self).__init__()
+
 
 class Naming(sbLB.BaseName):
     def __init__(self):

@@ -1,13 +1,13 @@
 # -*- coding: iso-8859-15 -*-
 import json
 import cgInTools as cit
+from . import dataLB as dLB
 from . import pathLB as pLB
 cit.reloads([pLB])
 
-class SelfJson(object):
+class AppJson(object):
     def __init__(self):
-        self._json_SelfPath=pLB.SelfPath()
-        self._write_dict={}
+        self._json_DataJson=None#dLB.DataJson()
 
     #Single Function
     def jsonPath_query_dict(self,path):
@@ -20,124 +20,137 @@ class SelfJson(object):
             json.dump(write_dict,f,indent=4,ensure_ascii=False)
 
     #Setting Function
-    def setDataPath(self,variable):
-        self._json_SelfPath.setDataPath(variable)
-        return self._json_SelfPath.getDataPath()
-    def getDataPath(self):
-        return self._json_SelfPath.getDataPath()
+    def setDataJson(self,variable):
+        self._json_DataJson=variable
+        return self._json_DataJson
+    def getDataJson(self):
+        return self._json_DataJson
     
-    def setWriteDict(self,variable):
-        self._write_dict=variable
-        return self._write_dict
-    def getWriteDict(self):
-        return self._write_dict
-
     #Public Function
-    def read(self,dataPath=None):
-        absolute_path=self._json_SelfPath.queryAbsolutePath(dataPath)
+    def read(self,dataJson=None):
+        _json_DataJson=dataJson or self._json_DataJson
+        
+        json_AppPath=pLB.AppPath()
+        absolute_path=json_AppPath.queryAbsolutePath(_json_DataJson)
         read_dict=self.jsonPath_query_dict(absolute_path)
         return read_dict
 
-    def write(self,dataPath=None,write=None):
-        _write_dict=write or self._write_dict
+    def write(self,dataJson=None):
+        _json_DataJson=dataJson or self._json_DataJson
 
-        absolute_path=self._json_SelfPath.queryAbsolutePath(dataPath)
-        self.jsonPath_create_func(absolute_path,_write_dict)
+        json_AppPath=pLB.AppPath()
+        json_AppPath.setDataPath(_json_DataJson)
+        absolute_path=json_AppPath.queryAbsolutePath()
+        self.jsonPath_create_func(absolute_path,_json_DataJson.getJsonDict())
 
-    def check(self,dataPath=None):
-        _json_DataPath=dataPath or self._json_SelfPath.getDataPath()
+    def check(self,dataJson=None):
+        _json_DataJson=dataJson or self._json_DataJson
 
-        self._json_SelfPath.setDataPath(_json_DataPath)
-        absolutePath_bool=self._json_SelfPath.checkAbsolutePath(dataPath)
+        json_AppPath=pLB.AppPath()
+        json_AppPath.setDataPath(_json_DataJson)
+        absolutePath_bool=json_AppPath.checkAbsolutePath()
         return absolutePath_bool
     
-class AppJsonPack(object):
+class AppJsonArray(object):
     def __init__(self):
-        self._jsonPack_SelfJson=SelfJson()
-        self._writePack_SelfJsons=[]
+        self._jsonPack_DataJsonArray=None
 
     #Private Function
-    def __readPack_query_dicts(self,pack_SelfJson):
-        pack_dict=pack_SelfJson.read()
+    def __readPack_query_dicts(self,_jsonPack_DataJsonArray):
+        pack_DataPath=_jsonPack_DataJsonArray.getDataPath()
+        pack_AppPath=pLB.AppPath()
+        pack_AppPath.setDataPath(pack_DataPath)
+        if pack_DataPath.getFile() is None or pack_DataPath.getExtension() is None:
+            folder_DataPathArray=pack_AppPath.queryInFolder()
+            read_dicts=[]
+            for folder_DataPath in folder_DataPathArray:
+                read_AppJson=AppJson()
+                read_AppJson.setDataJson(folder_DataPath)
+                read_dict=read_AppJson.read()
+                read_dicts.append(read_dict)
+            return read_dicts
+        elif pack_AppPath.checkAbsolutePath():
+            pack_DataPath=pack_AppPath.getDataPath()
+            read_AppJson=AppJson()
+            read_AppJson.setDataJson(pack_DataPath)
+            pack_dict=read_AppJson.read()
 
-        read_dicts=[]
-        for fileEX_dict in pack_dict["packFiles"]:
-            read_DataJson=pLB.DataPath()
-            read_DataJson.setAbsoluteDirectory(pack_SelfJson.getDataPath().getAbsoluteDirectory())
-            read_DataJson.setRelativeDirectory(pack_SelfJson.getDataPath().getRelativeDirectory())
-            read_DataJson.setFile(fileEX_dict["file"])
-            read_DataJson.setExtension(fileEX_dict["extension"])
+            read_dicts=[]
+            for fileExt_dict in pack_dict["packFiles"]:
+                read_DataJson=dLB.DataPath()
+                read_DataJson.setAbsoluteDirectory(pack_DataPath.getAbsoluteDirectory())
+                read_DataJson.setRelativeDirectory(pack_DataPath.getRelativeDirectory())
+                read_DataJson.setFile(fileExt_dict["file"])
+                read_DataJson.setExtension(fileExt_dict["extension"])
 
-            read_SelfJson=SelfJson()
-            read_SelfJson.setDataPath()
-            read_dict=read_SelfJson.read()
-            read_dicts+=read_dict
-        return read_dicts
-
-    def __writePack_create_func(self,pack_SelfJson,write_SelfJsons):
-        packFiles=[]
-        for write_SelfJson in write_SelfJsons:
-            write_SelfJson.write()
+                read_dicts.append(read_dict)
+            return read_dicts
             
-            write_DataPath=write_SelfJson.getDataPath()
-            file_str=write_DataPath.getFile()
-            extension_str=write_DataPath.getExtension()
-            packFiles+={"file":file_str,"extension":extension_str}
+    def __writePack_create_func(self,write_DataJsonArray):
+        pack_DataPath=write_DataJsonArray.getDataPath()
+        if pack_DataPath.getFile() is None or pack_DataPath.getExtension() is None:
+            for write_DataJson in write_DataJsonArray:
+                write_AppJson=AppJson()
+                write_AppJson.setDataJson(write_DataJson)
+                write_AppJson.write()
+        elif type(pack_DataPath.getFile()) is str and type(pack_DataPath.getExtension()) is str:
+            write_dicts=[]
+            for write_DataJson in write_DataJsonArray:
+                write_AppJson=AppJson()
+                write_AppJson.setDataJson(write_DataJson)
+                write_AppJson.write()
+                
+                write_DataJson.setDataChoices(["File","Extension"])
+                write_dict=write_DataJson.getDataDict()
+                write_dicts.append(write_dict)
+            
+            pack_DataJson=dLB.DataJson()
+            pack_DataJson.setDataPath(pack_DataPath)
+            pack_DataJson.setJsonDict({"packFiles":write_dicts})
 
-        write_dict={"packFiles":packFiles}
-
-        pack_SelfJson.setWriteDict(write_dict)
-        pack_SelfJson.write()
+            pack_AppPath=AppJson()
+            pack_AppPath.setDataJson(pack_DataJson)
+            pack_AppPath.write()
     
     #Setting Function
-    def setPackSelfJson(self,variable):
-        self._jsonPack_SelfJson=variable
-        return self._jsonPack_SelfJson
-    def getPackSelfJson(self):
-        return self._jsonPack_SelfJson
-
-    def setSelfJsons(self,variables):
-        self._writePack_SelfJsons=variables
-        return self._writePack_SelfJsons
-    def addSelfJsons(self,variables):
-        self._writePack_SelfJsons+=variables
-        return self._writePack_SelfJsons
-    def getSelfJsons(self):
-        return self._writePack_SelfJsons
+    def setDataJsonArray(self,variables):
+        self._jsonPack_DataJsonArray=variables
+        return self._jsonPack_DataJsonArray
+    def getDataJsonArray(self):
+        return self._jsonPack_DataJsonArray
 
     #Public Function
-    def readPack(self,jsonPack_SelfJson=None):
-        _jsonPack_SelfJson=jsonPack_SelfJson or self._jsonPack_SelfJson
+    def readPack(self,dataJsonArray=None):
+        _jsonPack_DataJsonArray=dataJsonArray or self._jsonPack_DataJsonArray
 
-        readPack_dicts=self.__readPack_query_dicts(_jsonPack_SelfJson)
+        readPack_dicts=self.__readPack_query_dicts(_jsonPack_DataJsonArray)
         return readPack_dicts
 
-    def writePack(self,jsonPack_SelfJson=None,write_SelfJsons=None):
-        _jsonPack_SelfJson=jsonPack_SelfJson or self._jsonPack_SelfJson
-        _writePack_SelfJsons=write_SelfJsons or self._writePack_SelfJsons
+    def writePack(self,dataJsonArray=None):
+        _jsonPack_DataJsonArray=dataJsonArray or self._jsonPack_DataJsonArray
 
-        self.__writePack_create_func(_jsonPack_SelfJson,_writePack_SelfJsons)
+        self.__writePack_create_func(_jsonPack_DataJsonArray)
 
 def readJson(absolute,relative=None,file="init",extension="json"):
-    data_DataPath=pLB.DataPath()
-    data_DataPath.setAbsoluteDirectory(absolute)
-    data_DataPath.setRelativeDirectory(relative)
-    data_DataPath.setFile(file)
-    data_DataPath.setExtension(extension)
+    json_DataPath=dLB.DataPath()
+    json_DataPath.setAbsoluteDirectory(absolute)
+    json_DataPath.setRelativeDirectory(relative)
+    json_DataPath.setFile(file)
+    json_DataPath.setExtension(extension)
 
-    data_SelfJson=SelfJson()
-    data_SelfJson.setDataPath(data_DataPath)
-    json_dict=data_SelfJson.read()
+    json_AppJson=AppJson()
+    json_AppJson.setDataJson(json_DataPath)
+    json_dict=json_AppJson.read()
     return json_dict
 
 def writeJson(absolute,relative=None,file="init",extension="json",write={}):
-    data_DataPath=pLB.DataPath()
-    data_DataPath.setAbsoluteDirectory(absolute)
-    data_DataPath.setRelativeDirectory(relative)
-    data_DataPath.setFile(file)
-    data_DataPath.setExtension(extension)
+    json_DataJson=dLB.DataJson()
+    json_DataJson.setAbsoluteDirectory(absolute)
+    json_DataJson.setRelativeDirectory(relative)
+    json_DataJson.setFile(file)
+    json_DataJson.setExtension(extension)
+    json_DataJson.setJsonDict(write)
 
-    data_SelfJson=SelfJson()
-    data_SelfJson.setDataPath(data_DataPath)
-    data_SelfJson.setWriteDict(write)
-    data_SelfJson.write()
+    json_AppJson=AppJson()
+    json_AppJson.setDataJson(json_DataJson)
+    json_AppJson.write()

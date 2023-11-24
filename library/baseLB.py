@@ -1,13 +1,10 @@
 # -*- coding: iso-8859-15 -*-
-
+import cgInTools as cit
+from . import jsonLB as jLB
+from . import serializeLB as sLB
+cit.reloads([jLB,sLB])
 class SelfOrigin(object):
     def __init__(self):
-        # Avoiding circular import errors in python2
-        import cgInTools as cit
-        from . import jsonLB as jLB
-        from . import serializeLB as sLB
-        cit.reloads([jLB,sLB])
-
         self._origin_DataPath=None
         self._data_dict={}
         self._dataChoice_strs=["DoIts"]
@@ -73,7 +70,7 @@ class SelfOrigin(object):
     def readData(self,dataPath=None):
         _origin_DataPath=dataPath or self._origin_DataPath
 
-        read_SelfSerialize=sLB.SelfSerialize()
+        read_SelfSerialize=sLB.AppSerialize()
         read_SelfSerialize.setDataPath(_origin_DataPath)
         read_SelfObject=read_SelfSerialize.read()
         return read_SelfObject
@@ -81,7 +78,7 @@ class SelfOrigin(object):
     def writeData(self,dataPath=None):
         _origin_DataPath=dataPath or self._origin_DataPath
 
-        write_SelfSerialize=sLB.SelfSerialize()
+        write_SelfSerialize=sLB.AppSerialize()
         write_SelfSerialize.setDataPath(_origin_DataPath)
         write_SelfSerialize.setWriteSelfObject(self)
         write_SelfSerialize.write()
@@ -89,7 +86,7 @@ class SelfOrigin(object):
     def readJson(self,dataPath=None):
         _origin_DataPath=dataPath or self._origin_DataPath
 
-        write_SelfJson=jLB.SelfJson()
+        write_SelfJson=jLB.AppJson()
         write_SelfJson.setDataPath(_origin_DataPath)
         read_dict=write_SelfJson.read()
         return read_dict
@@ -100,7 +97,7 @@ class SelfOrigin(object):
 
         write_dict=self.writeDict(_dataChoice_strs)
         
-        write_SelfJson=jLB.SelfJson()
+        write_SelfJson=jLB.AppJson()
         write_SelfJson.setDataPath(_origin_DataPath)
         write_SelfJson.setWriteDict(write_dict)
         write_SelfJson.write()

@@ -1,62 +1,90 @@
 # -*- coding: iso-8859-15 -*-
+import math
 import maya.api.OpenMaya as om2
-import sys,math
 
 import cgInTools as cit
-from ...library import baseLB as bLB
+from . import appLB as aLB
 from . import dataLB as dLB
 from . import matrixLB as mLB
-cit.reloads([bLB,mLB])
+cit.reloads([aLB,dLB,mLB])
 
-class SelfOpenMayaBase(bLB.SelfOrigin):
+class AppNode(aLB.AppOpenMayaBase):
     def __init__(self):
-        super(SelfOpenMayaBase,self).__init__()
-    
-    #Single Function
-    def node_query_MObject(self,node):
-        if node == None:
-            return None
-        elif not type(node) is str and not type(node) is unicode:
-            om2.MGlobal.displayError("TypeError: Please insert one string in value. This is a "+str(type(node))+" type")
-            sys.exit()
-        node_MSelectionList=om2.MGlobal.getSelectionListByName(node)
-        node_MObject=node_MSelectionList.getDependNode(0)
-        return node_MObject
-    
-    def convertMObject_query_MDagPath(self,node_MObject):
-        node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
-        return node_MDagPath
-    
-    def nodeAttr_query_MPlug(self,node_MObject,attr_str):
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        node_MPlug=node_MFnDependencyNode.findPlug(attr_str,False)
-        return node_MPlug
+        super(AppNode,self).__init__()
+        self._main_DataNode=None
+        self._sub_DataNodes=[]
 
-class SelfDGNode(SelfOpenMayaBase):
+    #Single Function
+    def node_create_DataNode(self,nodeType_str,nodeName_str):
+        node_MFnDependencyNode=om2.MFnDependencyNode()
+        node_MObject=node_MFnDependencyNode.create(nodeType_str,nodeName_str)
+        node_DataNode=dLB.DataNode(node_MObject)
+        return node_DataNode
+    
+    def parent_query_MObject(self,node_MDagPath):
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        parent_MObject=node_MFnDagNode.parent(0)
+        return parent_MObject
+
+    def child_query_MObjects(self,node_MDagPath,shapeOnly=False):
+        childs=[]
+        for num in range(node_MDagPath.childCount()):
+            child_MObject=node_MDagPath.child(num)
+            if shapeOnly:
+                if child_MObject.hasFn(om2.MFn.kShape):
+                    childs.append(child_MObject)
+            else:
+                if not child_MObject.hasFn(om2.MFn.kShape):
+                    childs.append(child_MObject)
+        if childs == []:
+            return None
+        else:
+            return childs
+
+    #Setting Function
+    def setMainDataNode(self,variable):
+        self._main_DataNode=variable
+        return self._main_DataNode
+    def getMainDataNode(self):
+        return self._main_DataNode
+    
+    def setSubDataNodes(self,variables):
+        self._sub_DataNodes=variables
+        return self._sub_DataNodes
+    def getSubDataNodes(self):
+        return self._sub_DataNodes
+    
+    def create(self):
+        self.node_create_DataNode(self._main_DataNode.getType(),self._main_DataNode.getName())
+
+    def moveParent(self):
+        pass
+
+    def addChilds(self):
+        pass
+
+    def removeChilds(self):
+        pass
+
+    def queryParent(self):
+        pass
+
+    def queryChilds(self):
+        pass
+
+class AppDGNode(aLB.AppOpenMayaBase):
     def __init__(self,selfDGNode=None):
-        super(SelfDGNode,self).__init__()
+        super(AppDGNode,self).__init__()
         if selfDGNode is None:
             self._node_DataNode=None
             self._name_DataName=None
             self._plug_DataPlugs=[]
             self._attrName_str=None
-        elif type(selfDGNode) is SelfDGNode:
+        elif type(selfDGNode) is AppDGNode:
             self._node_DataNode=selfDGNode.getDataNode()
             self._name_DataName=selfDGNode.getDataName()
             self._plug_DataPlugs=selfDGNode.getDataPlugs()
             self._attrName_str=None
-        self._dataChoice_strs+=[
-            "DataNode",
-            "DataName",
-            "AttributeName"
-        ]
-        self._doIt_strs+=[
-            "createNode",
-            "duplicateNode",
-            "rename",
-            "searchDataAttribute",
-            "searchDataPlug"
-        ]
     
     #Single Function
     def node_create_DataNode(self,nodeType_str,nodeName_str):
@@ -305,7 +333,7 @@ class SelfDGNode(SelfOpenMayaBase):
         uuid_MUuid=node_MFnDependencyNode.uuid()
         return uuid_MUuid
 
-class SelfDAGNode(SelfDGNode):
+class AppDAGNode(AppDGNode):
     def __init__(self):
         super(SelfDAGNode,self).__init__()
         #self._node_DataNode=None
@@ -802,184 +830,3 @@ class SelfDAGNode(SelfDGNode):
     def mirrorTargetShear(self):
         pass
 
-class SelfPlug(SelfOpenMayaBase):
-    def __init__(self):
-        super(SelfPlug,self).__init__()
-        self._plug_DataPlug=None
-        self._target_DataPlug=None
-        self._source_DataPlug=None
-        self._anim_DataKeys=[]
-        self._value_DataValueType=None
-
-    #Private Function
-    def __dataPlug_create_MPlug(self,plug_DataPlug):
-        plug_DataNode=plug_DataPlug.getDataNode()
-        plug_DataAttribute=plug_DataPlug.getDataAttribute()
-
-        plug_MObject=self.node_query_MObject(plug_DataNode.getName())
-        plug_MPlug=self.nodeAttr_query_MPlug(plug_MObject,plug_DataAttribute.getName())
-        return plug_MPlug
-
-    def __connectDataPlug_edit_func(self,source_DataPlug,target_DataPlug):
-        source_MPlug=self.__dataPlug_create_MPlug(source_DataPlug)
-        target_MPlug=self.__dataPlug_create_MPlug(target_DataPlug)
-        
-        MDGModifier=om2.MDGModifier()
-        MDGModifier.connect(source_MPlug,target_MPlug)
-        MDGModifier.doIt()
-
-    #Setting Function
-    def setDataPlug(self,variable):
-        self._plug_DataPlug=variable
-        return self._plug_DataPlug
-    def getDataPlug(self):
-        return self._plug_DataPlug
-    
-    def setTargetDataPlug(self,variable):
-        self._target_DataPlug=variable
-        return self._target_DataPlug
-    def getTargetDataPlug(self):
-        return self._target_DataPlug
-
-    def setSourceDataPlug(self,variable):
-        self._source_DataPlug=variable
-        return self._source_DataPlug
-    def getSourceDataPlug(self):
-        return self._source_DataPlug
-
-    def setAnimDataKeys(self,variables):
-        self._anim_DataKeys=variables
-        return self._anim_DataKeys
-    def addAnimDataKeys(self,variables):
-        self._anim_DataKeys+=variables
-        return self._anim_DataKeys
-    def getAnimDataKeys(self):
-        return self._anim_DataKeys
-    
-    def setDataValueType(self,variable):
-        self._value_DataValueType=variable
-        return self._value_DataValueType
-    def currentDataValueType(self):
-        pass
-    def getDataValueType(self):
-        return self._value_DataValueType
-
-    #Public Function
-    def createAttr(self,dataPlug=None):
-        _plug_DataPlug=dataPlug or self._plug_DataPlug
-        
-        node_DataNode=_plug_DataPlug.getDataNode()
-        node_MObject=self.node_query_MObject(node_DataNode.getName())
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-
-        node_DataAttribute=_plug_DataPlug.getDataAttribute()
-        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
-        attr_MObject=attr_MFnNumericAttribute.create(
-            node_DataAttribute.getName(),
-            node_DataAttribute.getShortName(),
-            node_DataAttribute.getValueType(),
-            node_DataAttribute.getDefaultValue()
-        )
-        #attr_MFnNumericAttribute.channelBox=not node_DataAttribute.getChannelHideState()
-        #attr_MFnNumericAttribute.isProxyAttribute=node_DataAttribute.getProxyAttrState()
-
-        node_MFnDependencyNode.addAttribute(attr_MObject)
-        node_MPlug=node_MFnDependencyNode.findPlug(attr_MObject,False)
-        node_MPlug.isChannelBox=not node_DataAttribute.getChannelHideState()
-        node_MPlug.isKeyable=not node_DataAttribute.getKeyLockState()
-        node_MPlug.isLocked=node_DataAttribute.getValueLockState()
-        
-        newPlug_DataPlug=dLB.DataPlug(node_MPlug)
-        return newPlug_DataPlug
-
-    def editAttr(self,value=None,dataPlug=None):
-        _plug_DataPlug=dataPlug or self._plug_DataPlug
-
-        plug_MPlug=self._dataPlug_create_MPlug(_plug_DataPlug)
-
-        if isinstance(value,int):
-            plug_MPlug.setInt(value)
-        elif isinstance(value,float):
-            plug_MPlug.setFloat(value)
-        elif isinstance(value,str):
-            plug_MPlug.setString(value)
-        elif isinstance(value,bool):
-            plug_MPlug.setBool(value)
-
-    def connectTarget(self,dataPlug=None,targetDataPlug=None):
-        _plug_DataPlug=dataPlug or self._plug_DataPlug
-        _target_DataPlug=targetDataPlug or self._target_DataPlug
-
-        self.__connectDataPlug_edit_func(_plug_DataPlug,_target_DataPlug)
-    
-    def connectSource(self,sourceDataPlug=None,dataPlug=None):
-        _source_DataPlug=sourceDataPlug or self._source_DataPlug
-        _plug_DataPlug=dataPlug or self._plug_DataPlug
-
-        self.__connectDataPlug_edit_func(_plug_DataPlug,_source_DataPlug)
-
-    def createAnimKey(self):
-        pass
-
-    def deleteAnimKey(self):
-        pass
-
-class AppConnect(bLB.SelfOrigin):
-    def __init__(self):
-        super(AppConnect,self).__init__()
-        self._source_SelfPlug=None
-        self._target_SelfPlug=None
-        self._proxy_bool=False
-
-    #Setting Function
-    def setSourceSelfPlug(self,variable):
-        self._source_SelfPlug=variable
-        return self._source_SelfPlug
-    def getSourceSelfPlug(self):
-        return self._source_SelfPlug
-        
-    def setTargetSelfPlug(self,variable):
-        self._target_SelfPlug=variable
-        return self._target_SelfPlug
-    def getTargetSelfPlug(self):
-        return self._target_SelfPlug
-    
-    #Public Function
-    def connectPlug(self):
-        pass
-
-class AppParent(bLB.SelfOrigin):
-    def __init__(self):
-        super(AppParent,self).__init__()
-        self._node_SelfDAGNode=None
-        self._parent_SelfDAGNode=None
-        self._child_SelfDAGNodes=[]
-
-    #Setting Function
-    def setSelfDAGNode(self,variable):
-        self._node_SelfDAGNode=variable
-        return self._node_SelfDAGNode
-    def getSelfDAGNode(self):
-        return self._node_SelfDAGNode
-        
-    def setParentSelfDAGNode(self,variable):
-        self._parent_SelfDAGNode=variable
-        return self._parent_SelfDAGNode
-    def getParentSelfDAGNode(self):
-        return self._parent_SelfDAGNode
-    
-    def setChildSelfDAGNodes(self,variables):
-        self._child_SelfDAGNodes=variables
-        return self._child_SelfDAGNodes
-    def addChildSelfDAGNodes(self,variables):
-        self._child_SelfDAGNodes+=variables
-        return self._child_SelfDAGNodes
-    def getChildSelfDAGNodes(self):
-        return self._child_SelfDAGNodes
-    
-    #Public Function
-    def parent(self):
-        pass
-
-    def childs(self):
-        pass

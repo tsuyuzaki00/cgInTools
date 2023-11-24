@@ -1,69 +1,14 @@
 # -*- coding: iso-8859-15 -*-
 import os,shutil
 import cgInTools as cit
-from . import baseLB as bLB
-cit.reloads([bLB])
+from . import dataLB as dLB
+cit.reloads([dLB])
 
-class DataPath(bLB.SelfOrigin):
-    def __init__(self,dataPath=None):
-        super(DataPath,self).__init__()
-        if dataPath is None:
-            self._absolute_dir=None
-            self._relative_dir=None
-            self._file_str=None
-            self._extension_ext=None
-        elif type(dataPath) is DataPath:
-            self._absolute_dir=dataPath.getAbsoluteDirectory()
-            self._relative_dir=dataPath.getRelativeDirectory()
-            self._file_str=dataPath.getFile()
-            self._extension_ext=dataPath.getExtension()
-
-    #Single Function
-    def mergeDirectory_create_dir(self,upperDirectory_dir,lowerDirectory_dir):
-        if upperDirectory_dir is None:
-            upperDirectory_dir=""
-        if lowerDirectory_dir is None:
-            lowerDirectory_dir=""
-        mergeDirectory_dir=os.path.join(upperDirectory_dir,lowerDirectory_dir)
-        mergeDirectory_dir=mergeDirectory_dir.replace(os.sep,'/')
-        return mergeDirectory_dir
-    
-    #Setting Function
-    def setAbsoluteDirectory(self,variable):
-        self._absolute_dir=variable
-        return self._absolute_dir
-    def addAbsoluteDirectory(self,variable):
-        self._absolute_dir=self.mergeDirectory_create_dir(self._absolute_dir,variable)
-        return self._absolute_dir
-    def getAbsoluteDirectory(self):
-        return self._absolute_dir
-    
-    def setRelativeDirectory(self,variable):
-        self._relative_dir=variable
-        return self._relative_dir
-    def addRelativeDirectory(self,variable):
-        self._relative_dir=self.mergeDirectory_create_dir(self._relative_dir,variable)
-        return self._relative_dir
-    def getRelativeDirectory(self):
-        return self._relative_dir
-
-    def setFile(self,variable):
-        self._file_str=variable
-        return self._file_str
-    def getFile(self):
-        return self._file_str
-    
-    def setExtension(self,variable):
-        self._extension_ext=variable
-        return self._extension_ext
-    def getExtension(self):
-        return self._extension_ext
-
-class SelfPath(bLB.SelfOrigin):
+class AppPath(object):
     def __init__(self):
-        self._path_DataPath=DataPath()
-        self._target_DataPath=DataPath()
-        self._source_DataPath=DataPath()
+        self._path_DataPath=None#dLB.DataPath()
+        self._target_DataPath=None#dLB.DataPath()
+        self._source_DataPath=None#dLB.DataPath()
 
     def __str__(self):
         absolutePath_path=self.queryAbsolutePath()
@@ -99,6 +44,11 @@ class SelfPath(bLB.SelfOrigin):
             mergePath_path=mergePath_path.replace(os.sep,'/')
         return mergePath_path
 
+    def folder_query_dicts(self,directory_dir):
+        fileExt_strs=[f for f in os.listdir(directory_dir) if os.path.isfile(os.path.join(directory_dir,f)) and not f in "init.json"]
+        fileExt_dicts=[{"file":fileExt_str.split(".")[0],"extension":fileExt_str.split(".")[-1]} for fileExt_str in fileExt_strs]
+        return fileExt_dicts
+
     #Multi Function
     def _dataPathToAbsolutePath_create_path(self,path_DataPath):
         mergeDirectory_dir=self.mergeDirectory_create_dir(path_DataPath.getAbsoluteDirectory(),path_DataPath.getRelativeDirectory())
@@ -125,33 +75,6 @@ class SelfPath(bLB.SelfOrigin):
         return self._source_DataPath
 
     #Public Function
-    def queryDirectory(self,dataPath=None):
-        _path_DataPath=dataPath or self._path_DataPath
-
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
-        return mergeDirectory_dir
-
-    def queryAbsolutePath(self,dataPath=None):
-        _path_DataPath=dataPath or self._path_DataPath
-
-        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
-        return absolutePath_path
-    
-    def queryRelativePath(self,dataPath=None):
-        _path_DataPath=dataPath or self._path_DataPath
-        
-        relativePath_path=self.mergePath_create_path(_path_DataPath.getRelativeDirectory(),_path_DataPath.getFile(),_path_DataPath.getExtension())
-        return relativePath_path
-    
-    def querySequencePath(self,dataPath=None):
-        _path_DataPath=dataPath or self._path_DataPath
-
-        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
-        splitDirectorys=mergeDirectory_dir.split("/")
-        splitDirectorys.append(_path_DataPath.getFile())
-        splitDirectorys.append(_path_DataPath.getExtension())
-        return splitDirectorys
-
     def createFileExt(self,dataPath=None):
         _path_DataPath=dataPath or self._path_DataPath
 
@@ -229,3 +152,49 @@ class SelfPath(bLB.SelfOrigin):
         absolutePathSource_path=self._dataPathToAbsolutePath_create_path(_source_DataPath)
 
         shutil.copy2(absolutePathSource_path,absolutePath_path)
+
+    def queryDirectory(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
+
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
+        return mergeDirectory_dir
+
+    def queryAbsolutePath(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
+
+        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
+        return absolutePath_path
+    
+    def queryRelativePath(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
+        
+        relativePath_path=self.mergePath_create_path(_path_DataPath.getRelativeDirectory(),_path_DataPath.getFile(),_path_DataPath.getExtension())
+        return relativePath_path
+    
+    def querySequencePath(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
+
+        mergeDirectory_dir=self.mergeDirectory_create_dir(_path_DataPath.getAbsoluteDirectory(),_path_DataPath.getRelativeDirectory())
+        splitDirectorys=mergeDirectory_dir.split("/")
+        splitDirectorys.append(_path_DataPath.getFile())
+        splitDirectorys.append(_path_DataPath.getExtension())
+        return splitDirectorys
+
+    def queryInFolder(self,dataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
+
+        absolute_dir=_path_DataPath.getAbsoluteDirectory()
+        relative_dir=_path_DataPath.getRelativeDirectory()
+        directory_dir=self.mergeDirectory_create_dir(absolute_dir,relative_dir)
+        fileExt_dicts=self.folder_query_dicts(directory_dir)
+
+        folder_DataPathArray=dLB.DataPathArray
+        for fileExt_dict in fileExt_dicts:
+            folder_DataPath=dLB.DataPath()
+            folder_DataPath.setAbsoluteDirectory(absolute_dir)
+            folder_DataPath.setRelativeDirectory(relative_dir)
+            folder_DataPath.setFile(fileExt_dict.get("file"))
+            folder_DataPath.setExtension(fileExt_dict.get("extension"))
+        
+            folder_DataPathArray.addDataPaths(folder_DataPath)
+        return folder_DataPathArray

@@ -5,18 +5,9 @@ import maya.api.OpenMayaAnim as oma2
 
 import cgInTools as cit
 from ...library import baseLB as bLB
-from ...library import pathLB as pLB
-cit.reloads([bLB,pLB])
+cit.reloads([bLB])
 
 #Definition Data
-class DataPath(pLB.DataPath):
-    def __init__(self,dataPath=None):
-        super(DataPath,self).__init__(dataPath)
-        #self._absolute_dir=None
-        #self._relative_dir=None
-        #self._file_str=None
-        #self._extension_ext=None
-
 class DataAttribute(bLB.SelfOrigin):
     def __init__(self,dataAttribute=None):
         super(DataAttribute,self).__init__()
@@ -32,7 +23,6 @@ class DataAttribute(bLB.SelfOrigin):
             self._longName_str=attr_MFnAttribute.name
             self._shortName_str=attr_MFnAttribute.shortName
             
-
     #Setting Function
     def setName(self,variable):
         self._longName_str=variable
@@ -49,8 +39,6 @@ class DataAttribute(bLB.SelfOrigin):
 class DataAttributeBoolean(DataAttribute):
     def __init__(self,dataAttributeBoolean=None):
         super(DataAttributeBoolean,self).__init__(dataAttributeBoolean)
-        #self._longName_str=None
-        #self._shortName_str=None
         self.__valueType_int=om2.MFnNumericData().kBoolean #1
         if dataAttributeBoolean is None:
             self._valueBoolean_bool=None
@@ -65,12 +53,9 @@ class DataAttributeBoolean(DataAttribute):
 
     def getValueType(self):
         return self.__valueType_int
-
 class DataAttributeInt(DataAttribute):
     def __init__(self,dataAttributeInt=None):
         super(DataAttributeInt,self).__init__(dataAttributeInt)
-        #self._longName_str=None
-        #self._shortName_str=None
         self.__valueType_int=om2.MFnNumericData().kInt #7
         if dataAttributeInt is None:
             self._valueInt_int=None
@@ -106,8 +91,6 @@ class DataAttributeInt(DataAttribute):
 class DataAttributeFloat(DataAttribute):
     def __init__(self,dataAttributeFloat=None):
         super(DataAttributeFloat,self).__init__(dataAttributeFloat)
-        #self._longName_str=None
-        #self._shortName_str=None
         self.__valueType_int=om2.MFnNumericData().kFloat #11
         if dataAttributeFloat is None:
             self._valueFloat_float=None
@@ -138,12 +121,10 @@ class DataAttributeFloat(DataAttribute):
     
     def getValueType(self):
         return self.__valueType_int
-    
+
 class DataAttributeVector(DataAttribute):
     def __init__(self,dataAttributeVector=None):
         super(DataAttributeVector,self).__init__()
-        #self._longName_str=None
-        #self._shortName_str=None
         self.__valueType_int=om2.MFnNumericData().k3Float  #13
         if dataAttributeVector is None:
             self._valueVector_tuple3=[0.0,0.0,0.0]
@@ -198,8 +179,6 @@ class DataAttributeVector(DataAttribute):
 class DataAttributeString(DataAttribute):
     def __init__(self,dataAttributeString=None):
         super(DataAttributeString,self).__init__(dataAttributeString)
-        #self._longName_str=None
-        #self._shortName_str=None
         self.__valueType_int=om2.MFnData().kString #4
         if dataAttributeString is None:
             self._valueString_str=None
@@ -218,8 +197,6 @@ class DataAttributeString(DataAttribute):
 class DataAttributeEnum(DataAttribute):
     def __init__(self,dataAttributeEnum=None):
         super(DataAttributeEnum,self).__init__()
-        #self._longName_str=None
-        #self._shortName_str=None
         if dataAttributeEnum is None:
             self._fieldEnum_strs=[]
             self._valueEnum_str=None
@@ -246,8 +223,6 @@ class DataAttributeEnum(DataAttribute):
 class DataAttributeWeight(DataAttribute):
     def __init__(self):
         super(DataAttributeWeight,self).__init__()
-        #self._longName_str=None
-        #self._shortName_str=None
         self._valueWeight_float=None
         self._indexWeight_int=None
 
@@ -451,6 +426,34 @@ class DataVector(om2.MVector):
 class DataTranslate(om2.MVector):
     def __init__(self,*args):
         super(DataTranslate,self).__init__(*args)
+        #self.kOneVector=(1,1,1)
+        #self.x=None
+        #self.y=None
+        #self.z=None
+
+    def setTranslate(self,variables):
+        self.kOneVector=om2.MVector(variables)
+        return self.kOneVector
+    def getTranslate(self):
+        return self.kOneVector
+    
+    def setTranslateX(self,variable):
+        self.x=variable
+        return self.x
+    def getTranslateX(self):
+        return self.x
+    
+    def setTranslateY(self,variable):
+        self.y=variable
+        return self.y
+    def getTranslateY(self):
+        return self.y
+    
+    def setTranslateZ(self,variable):
+        self.z=variable
+        return self.z
+    def getTranslateZ(self):
+        return self.z
 
 class DataRotation(om2.MEulerRotation):
     def __init__(self,*args):
@@ -613,6 +616,7 @@ class DataFace(bLB.SelfOrigin):
         return self._index_int
 
 #DefinitionArray Data
+
 class DataAttributeWeightArray(bLB.SelfOrigin):
     def __init__(self):
         super(DataAttributeWeightArray,self).__init__()
@@ -809,29 +813,23 @@ class DataPlug(bLB.SelfOrigin):
     def getHideState(self):
         return self._channelHide_bool
 
-class DataPlugConnection(bLB.SelfOrigin):
+class DataPlugPair(bLB.SelfOrigin):
     def __init__(self):
-        super(DataPlugConnection,self).__init__()
-        self._source_DataPlugs=[]
-        self._target_DataPlugs=[]
+        super(DataPlugPair,self).__init__()
+        self._source_DataPlug=None
+        self._target_DataPlug=None
 
-    def setSourceDataPlugs(self,variables):
-        self._source_DataPlugs=variables
-        return self._source_DataPlugs
-    def addSourceDataPlugs(self,variables):
-        self._source_DataPlugs+=variables
-        return self._source_DataPlugs
+    def setSourceDataPlugs(self,variable):
+        self._source_DataPlug=variable
+        return self._source_DataPlug
     def getSourceDataPlugs(self):
-        return self._source_DataPlugs
+        return self._source_DataPlug
     
-    def setTargetDataPlugs(self,variables):
-        self._target_DataPlugs=variables
-        return self._target_DataPlugs
-    def addTargetDataPlugs(self,variables):
-        self._target_DataPlugs+=variables
-        return self._target_DataPlugs
+    def setTargetDataPlugs(self,variable):
+        self._target_DataPlug=variable
+        return self._target_DataPlug
     def getTargetDataPlugs(self):
-        return self._target_DataPlugs
+        return self._target_DataPlug
 
 class DataWeight(bLB.SelfOrigin):
     def __init__(self):
@@ -924,35 +922,35 @@ class DataPlugArray(bLB.SelfOrigin):
     def getDataPlugs(self):
         return self._plug_DataPlugs
 
-class DataPlugConnectionArray(bLB.SelfOrigin):
+class DataPlugPairArray(bLB.SelfOrigin):
     def __init__(self):
-        super(DataPlugConnectionArray,self).__init__()
-        self._connection_DataPlugConnections=[]
+        super(DataPlugPairArray,self).__init__()
+        self._connection_DataPlugPairs=[]
 
     def __len__(self):
-        return len(self._connection_DataPlugConnections)
+        return len(self._connection_DataPlugPairs)
 
     def __getitem__(self,index):
-        return self._connection_DataPlugConnections[index]
+        return self._connection_DataPlugPairs[index]
 
     def __setitem__(self,index,value):
-        self._connection_DataPlugConnections[index]=value
+        self._connection_DataPlugPairs[index]=value
 
     def __delitem__(self,index):
-        del self._connection_DataPlugConnections[index]
+        del self._connection_DataPlugPairs[index]
 
     def __iter__(self):
-        return iter(self._connection_DataPlugConnections)
+        return iter(self._connection_DataPlugPairs)
 
     #Setting Function
-    def setDataPlugConnections(self,variables):
-        self._connection_DataPlugConnections=variables
-        return self._connection_DataPlugConnections
-    def addDataPlugConnections(self,variables):
-        self._connection_DataPlugConnections+=variables
-        return self._connection_DataPlugConnections
-    def getDataPlugConnections(self):
-        return self._connection_DataPlugConnections
+    def setDataPlugPairs(self,variables):
+        self._connection_DataPlugPairs=variables
+        return self._connection_DataPlugPairs
+    def addDataPlugPairs(self,variables):
+        self._connection_DataPlugPairs+=variables
+        return self._connection_DataPlugPairs
+    def getDataPlugPairs(self):
+        return self._connection_DataPlugPairs
 
 #Action Data
 class DataBind(bLB.SelfOrigin):
