@@ -5,8 +5,8 @@ import maya.api.OpenMaya as om2
 import cgInTools as cit
 from . import appLB as aLB
 from . import dataLB as dLB
-from . import matrixLB as mLB
-cit.reloads([aLB,dLB,mLB])
+from . import matrixLB as mdLB
+cit.reloads([aLB,dLB,mdLB])
 
 class AppNode(aLB.AppOpenMayaBase):
     def __init__(self):

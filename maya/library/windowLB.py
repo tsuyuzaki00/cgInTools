@@ -19,10 +19,10 @@ def mayaMixinWindow_query_widget():
     omui.MQtUtil.addWidgetToMayaLayout(int(ptr),int(restored_control))
 
 # fileMode 0=Export 1=Import
-def mayaPathDialog_query_dict(word,fileMode,extension="json",directory=None):
+def mayaPathDialog_query_dict(text,fileMode,extension="json",directory=None):
     default_dir=directory or cmds.workspace(q=True,rd=True)
     path_list=cmds.fileDialog2(
-        fileFilter=word+" ."+extension+"(*."+extension+")",
+        fileFilter=text+" ."+extension+"(*."+extension+")",
         ds=2,
         fm=fileMode,
         dir=default_dir,
@@ -35,7 +35,7 @@ def mayaPathDialog_query_dict(word,fileMode,extension="json",directory=None):
     return {"directory":directory_dir,"file":file_str}
 
 # fileMode 0=Export 1=Import
-def mayaDirDialog_query_dict(word,directory=None,upRoot=False):
+def mayaDirDialog_query_dict(text,directory=None,upRoot=False):
     if upRoot:
         wrkspace_dir=cmds.workspace(q=True,rd=True)
         root_dir=os.path.abspath(os.path.join(wrkspace_dir,os.pardir))
@@ -43,8 +43,8 @@ def mayaDirDialog_query_dict(word,directory=None,upRoot=False):
     else:
         default_dir=directory or cmds.workspace(q=True,rd=True)
     path_list=cmds.fileDialog2(
-        cap=word+" Directory",
-        okc=word,
+        cap=text+" Directory",
+        okc=text,
         fileFilter="Folder Name",
         ds=2,
         fm=3,

@@ -8,12 +8,12 @@ from ...library import pathLB as pLB
 from ...library import serializeLB as sLB
 from ...library import _testLB as tLB
 from ..library import dataLB as dLB
-from ..library import nodeAttrLB as naLB
+from ..library import nodeLB as nLB
 from ..library import matrixLB as mLB
 #from cgInTools.maya.manager import equipmentSettingsMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
 #from cgInTools.maya.execute import exportAnimPackEX as EX
-cit.reloads([pLB,sLB,tLB,dLB,naLB,mLB])
+cit.reloads([pLB,sLB,tLB,dLB,nLB,mLB])
 
 def main():
     #TP.main()
@@ -61,7 +61,7 @@ def main():
         plug_DataPlug.setDataAttribute(attr_DataAttribute)
         plug_DataPlugs.append(plug_DataPlug)
     
-    node_SelfDGNode=naLB.SelfDGNode()
+    node_SelfDGNode=nLB.SelfDGNode()
     node_SelfDGNode.setDataPlugs(plug_DataPlugs)
     node_SelfDGNode.editAttr()
     

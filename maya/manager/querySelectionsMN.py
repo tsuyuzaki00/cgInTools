@@ -27,28 +27,28 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         self.buttonRight_QPushButton.setText("Select Add")
 
     #Single Function
-    def convertListToString_edit_str(self,texts):
+    def convertListToString_edit_str(self,text_strs=[]):
         text_str=""
-        if not texts is []:
-            for num,text in enumerate(texts):
+        if not text_strs is []:
+            for num,text in enumerate(text_strs):
                 if num == 0:
                     text_str="[\n"
                 text_str+='    "'+text+'",\n'
-                if num == len(texts)-1:
+                if num == len(text_strs)-1:
                     text_str=text_str.rstrip(",\n")
                     text_str+="\n]"
         return text_str
 
-    def convertStringToList_edit_list(self,listText_str):
+    def convertStringToList_edit_list(self,listText_str=""):
         text_list=[]
         if not listText_str is "":
             text_list=eval(listText_str)
         return text_list
 
-    def organizeList_edit_list(self,text_lists=[[],[]]):
+    def organizeList_edit_list(self,text_list2s=[[],[]]):
         texts=[]
-        for text_list in text_lists:
-            texts.extend(text_list)
+        for text_list2 in text_list2s:
+            texts.extend(text_list2)
             texts=list(set(texts))
         return texts
 
@@ -65,10 +65,8 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
 
     def __getSelectText_query_dict(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()
-        texts=self.convertStringToList_edit_list(getText_str)
-        write_dict={
-            "selections":texts,
-        }
+        text_strs=self.convertStringToList_edit_list(getText_str)
+        write_dict={"selections":text_strs}
         return write_dict
 
     #Public Function

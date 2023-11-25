@@ -1,391 +1,388 @@
 {
-    "menuTitle_str":"cgInTools",
-    "orderMenu_dicts":
+    "Name":"cgInTools",
+    "DataMenuParamArrays":
     [
         {
-            "type":"single",
-            "menu":"Chack"
+            "Name":"Check",
+            "Type":"single",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"multi",
-            "menu":"Setting"
+            "Name":"Setting",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Create Project",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"createProjectMN",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Edit Project",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"editProjectMN",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Loaded 3DCONNEXION",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"threeDconnexionLoadEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"VSCode MayaPort",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"mayaPortEX",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Cleaning"
+            "Name":"Cleaning",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Geometry Reset",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"freezeResetHisDelEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"UnKnown Delete",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"unknownDelEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Garbage Reference Delete",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"garbageReferenceEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Reset Material",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"resetMaterialEX",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"single",
-            "menu":"Create"
+            "Name":"Create",
+            "Type":"single",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"multi",
-            "menu":"Node"
+            "Name":"Node",
+            "Type":"multi",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"multi",
-            "menu":"Joint"
+            "Name":"Joint",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Select Position Joint",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"selectPosJointEX",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Geometry"
+            "Name":"Geometry",
+            "Type":"multi",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"multi",
-            "menu":"Curve"
+
+            "Name":"Curve",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Create Ctrl Window",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"selectSetCtrlMN",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Surface"
+            "Name":"Surface",
+            "Type":"multi",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"multi",
-            "menu":"Render"
+            "Name":"Render",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Equipment Setting",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"equipmentSettingsMN",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Build"
-        }, 
-        {
-            "type":"single",
-            "menu":"Edit"
+            "Name":"Build",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"check Run",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"checkRunMN",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"DGNode"
+            "Name":"Edit",
+            "Type":"single",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"multi",
-            "menu":"DAGNode"
+            "Name":"DGNode",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Auto Rename",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"autoRenameEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":true,
+                    "FromFolder":"cgInTools.maya.option",
+                    "ImportFile":"autoRenameOP",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Ctrl Color Change",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"ctrlColorChangeMN",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Vertex"
+            "Name":"DAGNode",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Center Target Pos",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"autoRenameEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Window Target Pos",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"targetPositionMN",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Edge"
+            "Name":"Vertex",
+            "Type":"multi",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"multi",
-            "menu":"Face"
+            "Name":"Edge",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Corner Edge Select",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"geometryCornerEdgeEX",
+                    "Function":"main()",
+                    "Icon":"cornerEdge.png"
+                },
+                {
+                    "Label":true,
+                    "FromFolder":"cgInTools.maya.option",
+                    "ImportFile":"geometryCornerEdgeOP",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Cv"
+
+            "Name":"Face",
+            "Type":"multi",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"single",
-            "menu":"Job"
+
+            "Name":"Cv",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Replace Curve",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"replaceCurvesEX",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Skin"
+            "Name":"Job",
+            "Type":"single",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"single",
-            "menu":"Query"
+            "Name":"Skin",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Rename Skc Select Geo",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"renameSkcInGeoEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Multi Copy Skin Weight",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"multiCopySkinWeightEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Multi Remove Target Joints",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"multiRemoveTargetJointsEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Remove From InfluenceUI",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"infJntRemoveEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Paint Weight Value",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"paintWeightValueMN",
+                    "Function":"main()",
+                    "Icon":"skinPaintValue.png"
+                },
+                {
+                    "Label":"Weight By Joint",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"skinWeightByJointMN",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Inquery"
+            "Name":"Query",
+            "Type":"single",
+            "DataMenuParamArray":[]
         },
         {
-            "type":"single",
-            "menu":"File"
+            "Name":"Inquery",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Selections Query",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"querySelectionsMN",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"NodeType Query",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"queryNodeTypeMN",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"ShapeColor Query",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"queryShapeColorMN",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"KeyAttr Query",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"queryKeyAttrMN",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Matrix Query",
+                    "FromFolder":"cgInTools.maya.manager",
+                    "ImportFile":"queryMatrixMN",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         },
         {
-            "type":"multi",
-            "menu":"Animation"
+            "Name":"File",
+            "Type":"single",
+            "DataMenuParamArray":[]
+        },
+        {
+
+            "Name":"Animation",
+            "Type":"multi",
+            "DataMenuParamArray":[
+                {
+                    "Label":"Import Anim",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"importAnimEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Import Anim Pack",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"importAnimPackEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Export Anim",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"exportAnimEX",
+                    "Function":"main()",
+                    "Icon":""
+                },
+                {
+                    "Label":"Export Anim Pack",
+                    "FromFolder":"cgInTools.maya.execute",
+                    "ImportFile":"exportAnimPackEX",
+                    "Function":"main()",
+                    "Icon":""
+                }
+            ]
         }
-    ],
-    "menuItem_dict":
-    {
-        "Chack":[],
-        "Create":[],
-        "Edit":[],
-        "Query":[],
-        "File":[],
-        "Job":[],
-        "Setting":[
-            {
-                "label":"Create Project",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"createProjectMN",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Edit Project",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"editProjectMN",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Loaded 3DCONNEXION",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"threeDconnexionLoadEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"VSCode MayaPort",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"mayaPortEX",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Cleaning":[
-            {
-                "label":"Geometry Reset",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"freezeResetHisDelEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"UnKnown Delete",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"unknownDelEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Garbage Reference Delete",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"garbageReferenceEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Reset Material",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"resetMaterialEX",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Node":[],
-        "Joint":[
-            {
-                "label":"Select Position Joint",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"selectPosJointEX",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Geometry":[],
-        "Curve":[
-            {
-                "label":"Create Ctrl Window",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"selectSetCtrlMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Surface":[],
-        "Render":[
-            {
-                "label":"Equipment Setting",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"equipmentSettingsMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Build":
-        [
-            {
-                "label":"check Run",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"checkRunMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "DGNode":[
-            {
-                "label":"Auto Rename",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"autoRenameEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":true,
-                "fromFolder":"cgInTools.maya.option",
-                "importFile":"autoRenameOP",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Ctrl Color Change",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"ctrlColorChangeMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "DAGNode":[
-            {
-                "label":"Center Target Pos",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"autoRenameEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Window Target Pos",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"targetPositionMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Vertex":[],
-        "Edge":[
-            {
-                "label":"Corner Edge Select",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"geometryCornerEdgeEX",
-                "function":"main()",
-                "icon":"cornerEdge.png"
-            },
-            {
-                "label":true,
-                "fromFolder":"cgInTools.maya.option",
-                "importFile":"geometryCornerEdgeOP",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Face":[],
-        "Cv":
-        [
-            {
-                "label":"Replace Curve",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"replaceCurvesEX",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Skin":
-        [
-            {
-                "label":"Rename Skc Select Geo",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"renameSkcInGeoEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Multi Copy Skin Weight",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"multiCopySkinWeightEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Multi Remove Target Joints",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"multiRemoveTargetJointsEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Remove From InfluenceUI",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"infJntRemoveEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Paint Weight Value",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"paintWeightValueMN",
-                "function":"main()",
-                "icon":"skinPaintValue.png"
-            },
-            {
-                "label":"Weight By Joint",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"skinWeightByJointMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Inquery":
-        [
-            {
-                "label":"Selections Query",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"querySelectionsMN",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"NodeType Query",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"queryNodeTypeMN",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"ShapeColor Query",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"queryShapeColorMN",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"KeyAttr Query",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"queryKeyAttrMN",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Matrix Query",
-                "fromFolder":"cgInTools.maya.manager",
-                "importFile":"queryMatrixMN",
-                "function":"main()",
-                "icon":""
-            }
-        ],
-        "Animation":[
-            {
-                "label":"Import Anim",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"importAnimEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Import Anim Pack",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"importAnimPackEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Export Anim",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"exportAnimEX",
-                "function":"main()",
-                "icon":""
-            },
-            {
-                "label":"Export Anim Pack",
-                "fromFolder":"cgInTools.maya.execute",
-                "importFile":"exportAnimPackEX",
-                "function":"main()",
-                "icon":""
-            }
-        ]
-    }
+    ]
 }
