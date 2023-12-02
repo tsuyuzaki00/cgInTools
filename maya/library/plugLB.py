@@ -10,22 +10,158 @@ class AppPlug(aLB.AppOpenMayaBase):
     def __init__(self):
         super(AppPlug,self).__init__()
         self._plug_DataPlugArray=None
-        self._plugPair_DataPlugPairArray=None
+        self._plug_DataPlugConnectArray=None
 
     #Single Function
+    def booleanAttr_create_MObject(self,attr_DataAttributeBoolean):
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.create(
+            attr_DataAttributeBoolean.getName(),
+            attr_DataAttributeBoolean.getShortName(),
+            attr_DataAttributeBoolean.getValueType(),
+            attr_DataAttributeBoolean.getValue()
+        )
+        return attr_MObject
+    
+    def intAttr_create_MObject(self,attr_DataAttributeInt):
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.create(
+            attr_DataAttributeInt.getName(),
+            attr_DataAttributeInt.getShortName(),
+            attr_DataAttributeInt.getValueType(),
+            attr_DataAttributeInt.getValue()
+        )
+        if type(attr_DataAttributeInt.getMax()) is int:
+            attr_MFnNumericAttribute.setMax(attr_DataAttributeInt.getMax())
+        if type(attr_DataAttributeInt.getMin()) is int:
+            attr_MFnNumericAttribute.setMin(attr_DataAttributeInt.getMin())
+        return attr_MObject
+    
+    def floatAttr_create_MObject(self,attr_DataAttributeFloat):
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.create(
+            attr_DataAttributeFloat.getName(),
+            attr_DataAttributeFloat.getShortName(),
+            attr_DataAttributeFloat.getValueType(),
+            attr_DataAttributeFloat.getValue()
+        )
+        if type(attr_DataAttributeFloat.getMax()) is float:
+            attr_MFnNumericAttribute.setMax(attr_DataAttributeFloat.getMax())
+        if type(attr_DataAttributeFloat.getMin()) is float:
+            attr_MFnNumericAttribute.setMin(attr_DataAttributeFloat.getMin())
+        return attr_MObject
+    
+    def stringAttr_create_MObject(self,attr_DataAttributeString):
+        attr_MFnStringData=om2.MFnStringData()
+        defaultValue_MObject=attr_MFnStringData.create(attr_DataAttributeString.getValue())
+
+        attr_MFnTypedAttribute=om2.MFnTypedAttribute()
+        attr_MObject=attr_MFnTypedAttribute.create(
+            attr_DataAttributeString.getName(),
+            attr_DataAttributeString.getShortName(),
+            attr_DataAttributeString.getValueType(),
+            defaultValue_MObject
+        )
+        return attr_MObject
+    
+    def vectorAttr_create_MObject(self,attr_DataAttributeVector):
+        attr_MFnNumericData=om2.MFnNumericData()
+        defaultValue_MObject=attr_MFnNumericData.create(attr_DataAttributeVector.getValueType())
+        attr_MFnNumericData.setData(attr_DataAttributeVector.getValue())
+
+        attr_MFnNumericAttribute=om2.MFnNumericAttribute()
+        attr_MObject=attr_MFnNumericAttribute.createPoint(
+            attr_DataAttributeVector.getName(),
+            attr_DataAttributeVector.getShortName()
+        )
+        return attr_MObject
+
+    #Multi Function
+    def _convertDataPlug_query_MPlug(self,plug_DataPlug):
+        plug_MObject=self.node_query_MObject(str(plug_DataPlug.getDataNode()))
+        plug_MPlug=self.nodeAttr_query_MPlug(plug_MObject,str(plug_DataPlug.getDataAttribute()))
+        return plug_MPlug
+    
+    #Private Function
+    def __connectDataPlug_edit_func(self,source_DataPlug,target_DataPlug):
+        source_MPlug=self._convertDataPlug_query_MPlug(source_DataPlug)
+        target_MPlug=self._convertDataPlug_query_MPlug(target_DataPlug)
+
+        MDGModifier=om2.MDGModifier()
+        MDGModifier.connect(source_MPlug,target_MPlug)
+        MDGModifier.doIt()
+
+    #Setting Function
     def setDataPlugArray(self,variable):
         self._plug_DataPlugArray=variable
         return self._plug_DataPlugArray
     def getDataPlugArray(self):
         return self._plug_DataPlugArray
     
-    def setDataPlugPairArray(self,variable):
-        self._plug_DataPlugPairArray=variable
-        return self._plug_DataPlugPairArray
-    def getDataPlugPairArray(self):
-        return self._plug_DataPlugPairArray
+    def setDataPlugConnectArray(self,variable):
+        self._plug_DataPlugConnectArray=variable
+        return self._plug_DataPlugConnectArray
+    def getDataPlugConnectArray(self):
+        return self._plug_DataPlugConnectArray
     
+    #Public Function
+    def create(self,dataPlugArray=None):
+        _plug_DataPlugArray=dataPlugArray or self._plug_DataPlugArray
 
+        for _plug_DataPlug in _plug_DataPlugArray:
+            node_DataNode=_plug_DataPlug.getDataNode()
+            attr_DataAttribute=_plug_DataPlug.getDataAttribute()
+
+            node_MObject=self.node_query_MObject(node_DataNode.getName())
+            node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+
+            if type(attr_DataAttribute) is dLB.DataAttributeBoolean:
+                attr_MObject=self.booleanAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeInt:
+                attr_MObject=self.intAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeFloat:
+                attr_MObject=self.floatAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeString:
+                attr_MObject=self.stringAttr_create_MObject(attr_DataAttribute)
+            elif type(attr_DataAttribute) is dLB.DataAttributeVector:
+                attr_MObject=self.vectorAttr_create_MObject(attr_DataAttribute)
+            else:
+                continue
+
+            node_MFnDependencyNode.addAttribute(attr_MObject)
+            node_MPlug=node_MFnDependencyNode.findPlug(attr_MObject,False)
+            node_MPlug.isChannelBox=not _plug_DataPlug.getHideState()
+            node_MPlug.isKeyable=not _plug_DataPlug.getKeyLockState()
+            node_MPlug.isLocked=_plug_DataPlug.getValueLockState()
+
+    def edit(self,dataPlugArray=None):
+        pass
+
+    def connect(self,dataPlugConnectArray=None):
+        _plug_DataPlugConnectArray=dataPlugConnectArray or self._plug_DataPlugConnectArray
+
+        plug_DataPlug=_plug_DataPlugConnectArray.getDataPlug()
+        source_DataPlug=_plug_DataPlugConnectArray.getSourceDataPlug()
+        self.__connectDataPlug_edit_func(source_DataPlug,plug_DataPlug)
+        
+        target_DataPlugs=_plug_DataPlugConnectArray.getTargetDataPlugs()
+        for target_DataPlug in target_DataPlugs:
+            self.__connectDataPlug_edit_func(plug_DataPlug,target_DataPlug)
+    
+    def sourceConnect(self,dataPlugConnectArray=None):
+        _plug_DataPlugConnectArray=dataPlugConnectArray or self._plug_DataPlugConnectArray
+
+        plug_DataPlug=_plug_DataPlugConnectArray.getDataPlug()
+        source_DataPlug=_plug_DataPlugConnectArray.getSourceDataPlug()
+        self.__connectDataPlug_edit_func(source_DataPlug,plug_DataPlug)
+    
+    def targetConnect(self,dataPlugConnectArray=None):
+        _plug_DataPlugConnectArray=dataPlugConnectArray or self._plug_DataPlugConnectArray
+
+        plug_DataPlug=_plug_DataPlugConnectArray.getDataPlug()
+        target_DataPlugs=_plug_DataPlugConnectArray.getTargetDataPlugs()
+        for target_DataPlug in target_DataPlugs:
+            self.__connectDataPlug_edit_func(plug_DataPlug,target_DataPlug)
 
 class SelfPlug(aLB.AppOpenMayaBase):
     def __init__(self):
@@ -147,39 +283,4 @@ class SelfPlug(aLB.AppOpenMayaBase):
         pass
 
     def deleteAnimKey(self):
-        pass
-
-    def __init__(self):
-        super(AppParent,self).__init__()
-        self._node_SelfDAGNode=None
-        self._parent_SelfDAGNode=None
-        self._child_SelfDAGNodes=[]
-
-    #Setting Function
-    def setSelfDAGNode(self,variable):
-        self._node_SelfDAGNode=variable
-        return self._node_SelfDAGNode
-    def getSelfDAGNode(self):
-        return self._node_SelfDAGNode
-        
-    def setParentSelfDAGNode(self,variable):
-        self._parent_SelfDAGNode=variable
-        return self._parent_SelfDAGNode
-    def getParentSelfDAGNode(self):
-        return self._parent_SelfDAGNode
-    
-    def setChildSelfDAGNodes(self,variables):
-        self._child_SelfDAGNodes=variables
-        return self._child_SelfDAGNodes
-    def addChildSelfDAGNodes(self,variables):
-        self._child_SelfDAGNodes+=variables
-        return self._child_SelfDAGNodes
-    def getChildSelfDAGNodes(self):
-        return self._child_SelfDAGNodes
-    
-    #Public Function
-    def parent(self):
-        pass
-
-    def childs(self):
         pass

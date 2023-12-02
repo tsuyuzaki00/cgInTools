@@ -3,7 +3,8 @@ import cgInTools as cit
 from ...library import baseLB as bLB
 from . import dataLB as dLB
 from . import mayaMenuLB as mmLB
-cit.reloads([bLB,dLB,mmLB])
+from . import nodeLB as nLB
+cit.reloads([bLB,dLB,mmLB,nLB])
 
 class SelfMenu(bLB.SelfOrigin):
     def __init__(self,selfMenu=None):
@@ -42,8 +43,8 @@ class SelfDGNode(bLB.SelfOrigin):
             self._create_DataPlugArray=None
             self._edit_DataPlug=None
             self._edit_DataPlugArray=None
-            self._connect_DataPlugPair=None
-            self._connect_DataPlugPairArray=None
+            self._connect_DataPlugConnect=None
+            self._connect_DataPlugConnectArray=None
             self._keyable_DataKeyable=None
             self._drivenkey_DataDrivenKey=None
         elif type(selfDGNode) is SelfDGNode:
@@ -54,8 +55,8 @@ class SelfDGNode(bLB.SelfOrigin):
             self._create_DataPlugArray=selfDGNode.getDataPlugArrayForCreate()
             self._edit_DataPlug=selfDGNode.getDataPlugForEdit()
             self._edit_DataPlugArray=selfDGNode.getDataPlugArrayForEdit()
-            self._connect_DataPlugPair=selfDGNode.getDataPlugPair()
-            self._connect_DataPlugPairArray=selfDGNode.getDataPlugPairArray()
+            self._connect_DataPlugConnect=selfDGNode.getDataPlugConnect()
+            self._connect_DataPlugConnectArray=selfDGNode.getDataPlugConnectArray()
             self._keyable_DataKeyable=selfDGNode.getDataKeyable()
             self._drivenkey_DataDrivenKey=selfDGNode.getDataDrivenKey()
 
@@ -67,8 +68,8 @@ class SelfDGNode(bLB.SelfOrigin):
             "DataPlugArrayForCreate",
             "DataPlugForEdit",
             "DataPlugArrayForEdit",
-            "DataPlugPair",
-            "DataPlugPairArray",
+            "DataPlugConnect",
+            "DataPlugConnectArray",
             "DataKeyable",
             "DataDrivenKey"
         ]
@@ -134,17 +135,17 @@ class SelfDGNode(bLB.SelfOrigin):
     def getDataPlugArrayForEdit(self):
         return self._edit_DataPlugArray
 
-    def setDataPlugPair(self,variable):
-        self._connect_DataPlugPair=variable
-        return self._connect_DataPlugPair
-    def getDataPlugPair(self):
-        return self._connect_DataPlugPair
+    def setDataPlugConnect(self,variable):
+        self._connect_DataPlugConnect=variable
+        return self._connect_DataPlugConnect
+    def getDataPlugConnect(self):
+        return self._connect_DataPlugConnect
     
-    def setDataPlugPairArray(self,variable):
-        self._connect_DataPlugPairArray=variable
-        return self._connect_DataPlugPairArray
-    def getDataPlugPairArray(self):
-        return self._connect_DataPlugPairArray
+    def setDataPlugConnectArray(self,variable):
+        self._connect_DataPlugConnectArray=variable
+        return self._connect_DataPlugConnectArray
+    def getDataPlugConnectArray(self):
+        return self._connect_DataPlugConnectArray
     
     def setDataKeyable(self,variable):
         self._keyable_DataKeyable=variable
@@ -160,9 +161,12 @@ class SelfDGNode(bLB.SelfOrigin):
 
     #Public Function
     def createNode(self,dataNode=None):
-        _node_DataNode=dataNode or self._node_DataNode
+        _create_DataNode=dataNode or self._create_DataNode
 
-        self.node_create_func(_node_DataNode.getNodeName(),_node_DataNode.getNodeType())
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(_create_DataNode)
+        node_DataNode=node_AppNode.create()
+        return node_DataNode
 
     def rename(self,dataName=None):
         _name_DataName=dataName or self._name_DataName

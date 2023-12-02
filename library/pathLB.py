@@ -6,25 +6,24 @@ cit.reloads([dLB])
 
 class AppPath(object):
     def __init__(self):
-        self._path_DataPath=None#dLB.DataPath()
-        self._target_DataPath=None#dLB.DataPath()
-        self._source_DataPath=None#dLB.DataPath()
+        self._path_DataPath=None
+        self._destination_DataPath=None
 
     def __str__(self):
         absolutePath_path=self.queryAbsolutePath()
         return absolutePath_path
 
     def __rshift__(self,variable):
-        self.targetDataPathMove(variable)
+        self.destinationDataPathMove(destination_DataPath=variable)
 
     def __irshift__(self,variable):
-        self.targetDataPathCopy(variable)
+        self.destinationDataPathCopy(destination_DataPath=variable)
 
     def __lshift__(self,variable):
-        self.sourceDataPathMove(variable)
+        self.destinationDataPathMove(dataPath=variable)
     
     def __ilshift__(self,variable):
-        self.sourceDataPathCopy(variable)
+        self.destinationDataPathCopy(dataPath=variable)
 
     #Single Function
     def mergeDirectory_create_dir(self,upperDirectory_dir,lowerDirectory_dir):
@@ -62,18 +61,12 @@ class AppPath(object):
     def getDataPath(self):
         return self._path_DataPath
     
-    def setTargetDataPath(self,variable):
-        self._target_DataPath=variable
-        return self._target_DataPath
-    def getTargetDataPath(self):
-        return self._target_DataPath
-
-    def setSourceDataPath(self,variable):
-        self._source_DataPath=variable
-        return self._source_DataPath
-    def getSourceDataPath(self):
-        return self._source_DataPath
-
+    def setDestinationDataPath(self,variable):
+        self._destination_DataPath=variable
+        return self._destination_DataPath
+    def getDestinationDataPath(self):
+        return self._destination_DataPath
+    
     #Public Function
     def createFileExt(self,dataPath=None):
         _path_DataPath=dataPath or self._path_DataPath
@@ -117,41 +110,23 @@ class AppPath(object):
         isAbsolutePath_bool=os.path.exists(absolutePath_path)
         return isAbsolutePath_bool
 
-    def targetDataPathMove(self,target_DataPath=None,path_DataPath=None):
-        _path_DataPath=path_DataPath or self._path_DataPath
-        _target_DataPath=target_DataPath or self._target_DataPath
+    def destinationDataPathMove(self,dataPath=None,destination_DataPath=None):
+        _path_DataPath=dataPath or self._path_DataPath
+        _destination_DataPath=destination_DataPath or self._destination_DataPath
 
         absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
-        absolutePathTarget_path=self._dataPathToAbsolutePath_create_path(_target_DataPath)
+        absolutePathTarget_path=self._dataPathToAbsolutePath_create_path(_destination_DataPath)
 
         shutil.move(absolutePath_path,absolutePathTarget_path)
 
-    def targetDataPathCopy(self,target_DataPath=None,path_DataPath=None):
-        _path_DataPath=path_DataPath or self._path_DataPath
-        _target_DataPath=target_DataPath or self._target_DataPath
+    def destinationDataPathCopy(self,dataPath=None,destination_DataPath=None,):
+        _path_DataPath=dataPath or self._path_DataPath
+        _destination_DataPath=destination_DataPath or self._destination_DataPath
 
         absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
-        absolutePathTarget_path=self._dataPathToAbsolutePath_create_path(_target_DataPath)
+        absolutePathTarget_path=self._dataPathToAbsolutePath_create_path(_destination_DataPath)
         
         shutil.copy2(absolutePath_path,absolutePathTarget_path)
-
-    def sourceDataPathMove(self,source_DataPath=None,path_DataPath=None):
-        _path_DataPath=path_DataPath or self._path_DataPath
-        _source_DataPath=source_DataPath or self._source_DataPath
-
-        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
-        absolutePathSource_path=self._dataPathToAbsolutePath_create_path(_source_DataPath)
-
-        shutil.move(absolutePathSource_path,absolutePath_path)
-
-    def sourceDataPathCopy(self,source_DataPath=None,path_DataPath=None):
-        _path_DataPath=path_DataPath or self._path_DataPath
-        _source_DataPath=source_DataPath or self._source_DataPath
-
-        absolutePath_path=self._dataPathToAbsolutePath_create_path(_path_DataPath)
-        absolutePathSource_path=self._dataPathToAbsolutePath_create_path(_source_DataPath)
-
-        shutil.copy2(absolutePathSource_path,absolutePath_path)
 
     def queryDirectory(self,dataPath=None):
         _path_DataPath=dataPath or self._path_DataPath

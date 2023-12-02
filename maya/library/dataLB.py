@@ -62,7 +62,10 @@ class DataAttribute(bLB.SelfOrigin):
 
             self._longName_str=attr_MFnAttribute.name
             self._shortName_str=attr_MFnAttribute.shortName
-            
+    
+    def __str__(self):
+        return str(self._longName_str)
+
     #Setting Function
     def setName(self,variable):
         self._longName_str=variable
@@ -740,6 +743,8 @@ class DataAttributeWeightArray(bLB.SelfOrigin):
 class DataKeyArray(bLB.SelfOrigin):
     def __init__(self):
         super(DataKeyArray,self).__init__()
+        self._input_DataAttribute=None
+        self._output_DataAttribute=None
         self._key_DataKeys=[]
     
     def __len__(self):
@@ -922,23 +927,34 @@ class DataPlug(bLB.SelfOrigin):
     def getHideState(self):
         return self._channelHide_bool
 
-class DataPlugPair(bLB.SelfOrigin):
+class DataPlugConnect(bLB.SelfOrigin):
     def __init__(self):
-        super(DataPlugPair,self).__init__()
+        super(DataPlugConnect,self).__init__()
+        self._plug_DataPlug=None
         self._source_DataPlug=None
-        self._target_DataPlug=None
+        self._target_DataPlugs=[]
 
-    def setSourceDataPlugs(self,variable):
+    #Setting Function
+    def setDataPlug(self,variable):
+        self._plug_DataPlug=variable
+        return self._plug_DataPlug
+    def getDataPlug(self):
+        return self._plug_DataPlug
+    
+    def setSourceDataPlug(self,variable):
         self._source_DataPlug=variable
         return self._source_DataPlug
-    def getSourceDataPlugs(self):
+    def getSourceDataPlug(self):
         return self._source_DataPlug
     
-    def setTargetDataPlugs(self,variable):
-        self._target_DataPlug=variable
-        return self._target_DataPlug
+    def setTargetDataPlugs(self,variables):
+        self._target_DataPlugs=variables
+        return self._target_DataPlugs
+    def addTargetDataPlugs(self,variables):
+        self._target_DataPlugs+=variables
+        return self._target_DataPlugs
     def getTargetDataPlugs(self):
-        return self._target_DataPlug
+        return self._target_DataPlugs
 
 class DataWeight(bLB.SelfOrigin):
     def __init__(self):
@@ -1031,35 +1047,35 @@ class DataPlugArray(bLB.SelfOrigin):
     def getDataPlugs(self):
         return self._plug_DataPlugs
 
-class DataPlugPairArray(bLB.SelfOrigin):
+class DataPlugConnectArray(bLB.SelfOrigin):
     def __init__(self):
-        super(DataPlugPairArray,self).__init__()
-        self._connection_DataPlugPairs=[]
+        super(DataPlugConnectArray,self).__init__()
+        self._connection_DataPlugConnects=[]
 
     def __len__(self):
-        return len(self._connection_DataPlugPairs)
+        return len(self._connection_DataPlugConnects)
 
     def __getitem__(self,index):
-        return self._connection_DataPlugPairs[index]
+        return self._connection_DataPlugConnects[index]
 
     def __setitem__(self,index,value):
-        self._connection_DataPlugPairs[index]=value
+        self._connection_DataPlugConnects[index]=value
 
     def __delitem__(self,index):
-        del self._connection_DataPlugPairs[index]
+        del self._connection_DataPlugConnects[index]
 
     def __iter__(self):
-        return iter(self._connection_DataPlugPairs)
+        return iter(self._connection_DataPlugConnects)
 
     #Setting Function
-    def setDataPlugPairs(self,variables):
-        self._connection_DataPlugPairs=variables
-        return self._connection_DataPlugPairs
-    def addDataPlugPairs(self,variables):
-        self._connection_DataPlugPairs+=variables
-        return self._connection_DataPlugPairs
-    def getDataPlugPairs(self):
-        return self._connection_DataPlugPairs
+    def setDataPlugConnects(self,variables):
+        self._connection_DataPlugConnects=variables
+        return self._connection_DataPlugConnects
+    def addDataPlugConnects(self,variables):
+        self._connection_DataPlugConnects+=variables
+        return self._connection_DataPlugConnects
+    def getDataPlugConnects(self):
+        return self._connection_DataPlugConnects
 
 #Action Data
 class DataBind(bLB.SelfOrigin):

@@ -26,3 +26,33 @@ class AppOpenMayaBase(object):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         node_MPlug=node_MFnDependencyNode.findPlug(attr_str,False)
         return node_MPlug
+
+    def findAttr_query_MObject(self,node_MObject,attrName_str):
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        attr_MObject=node_MFnDependencyNode.findAlias(attrName_str)
+        return attr_MObject
+    
+    def node_create_MObject(self,nodeType_str,nodeName_str):
+        node_MFnDependencyNode=om2.MFnDependencyNode()
+        node_MObject=node_MFnDependencyNode.create(nodeType_str,nodeName_str)
+        return node_MObject
+    
+    def parent_query_MObject(self,node_MDagPath):
+        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
+        parent_MObject=node_MFnDagNode.parent(0)
+        return parent_MObject
+
+    def child_query_MObjects(self,node_MDagPath,shapeOnly=False):
+        childs=[]
+        for num in range(node_MDagPath.childCount()):
+            child_MObject=node_MDagPath.child(num)
+            if shapeOnly:
+                if child_MObject.hasFn(om2.MFn.kShape):
+                    childs.append(child_MObject)
+            else:
+                if not child_MObject.hasFn(om2.MFn.kShape):
+                    childs.append(child_MObject)
+        if childs == []:
+            return None
+        else:
+            return childs

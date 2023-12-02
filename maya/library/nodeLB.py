@@ -11,57 +11,56 @@ cit.reloads([aLB,dLB,mdLB])
 class AppNode(aLB.AppOpenMayaBase):
     def __init__(self):
         super(AppNode,self).__init__()
-        self._main_DataNode=None
-        self._sub_DataNodes=[]
+        self._node_DataNode=None
+        self._parent_DataNode=None
+        self._child_DataNodes=[]
 
     #Single Function
-    def node_create_DataNode(self,nodeType_str,nodeName_str):
-        node_MFnDependencyNode=om2.MFnDependencyNode()
-        node_MObject=node_MFnDependencyNode.create(nodeType_str,nodeName_str)
-        node_DataNode=dLB.DataNode(node_MObject)
-        return node_DataNode
     
-    def parent_query_MObject(self,node_MDagPath):
-        node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
-        parent_MObject=node_MFnDagNode.parent(0)
-        return parent_MObject
 
-    def child_query_MObjects(self,node_MDagPath,shapeOnly=False):
-        childs=[]
-        for num in range(node_MDagPath.childCount()):
-            child_MObject=node_MDagPath.child(num)
-            if shapeOnly:
-                if child_MObject.hasFn(om2.MFn.kShape):
-                    childs.append(child_MObject)
-            else:
-                if not child_MObject.hasFn(om2.MFn.kShape):
-                    childs.append(child_MObject)
-        if childs == []:
-            return None
-        else:
-            return childs
+    #Multi Function
+    def _parent_edit_func(self,node_str,parent_str):
+        node_MObject=self.node_query_MObject(node_str)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        
+        parent_MObject=self.node_query_MObject(parent_str)
+        parent_MDagPath=self.convertMObject_query_MDagPath(parent_MObject)
+
+        parent_MDagModifier=om2.MDagModifier()
+        parent_MDagModifier.reparentNode(node_MDagPath,parent_MDagPath)
+        parent_MDagModifier.doIt()
 
     #Setting Function
-    def setMainDataNode(self,variable):
-        self._main_DataNode=variable
-        return self._main_DataNode
-    def getMainDataNode(self):
-        return self._main_DataNode
+    def setDataNode(self,variable):
+        self._node_DataNode=variable
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
     
-    def setSubDataNodes(self,variables):
-        self._sub_DataNodes=variables
-        return self._sub_DataNodes
-    def getSubDataNodes(self):
-        return self._sub_DataNodes
+    def setParentDataNode(self,variables):
+        self._parent_DataNode=variables
+        return self._parent_DataNode
+    def getParentDataNode(self):
+        return self._parent_DataNode
     
+    def setChildDataNodes(self,variables):
+        self._child_DataNodes=variables
+        return self._child_DataNodes
+    def getChildDataNodes(self):
+        return self._child_DataNodes
+    
+    #Public Function
     def create(self):
-        self.node_create_DataNode(self._main_DataNode.getType(),self._main_DataNode.getName())
+        node_MObject=self.node_create_MObject(self._node_DataNode.getType(),self._node_DataNode.getName())
+        node_DataNode=dLB.DataNode(node_MObject)
+        return node_DataNode
 
     def moveParent(self):
-        pass
+        self._parent_edit_func(self._node_DataNode.getName(),self._parent_DataNode.getName())
 
     def addChilds(self):
-        pass
+        for _child_DataNode in self._child_DataNodes:
+            self._parent_edit_func(_child_DataNode.getName(),self._node_DataNode.getName())
 
     def removeChilds(self):
         pass
@@ -69,7 +68,13 @@ class AppNode(aLB.AppOpenMayaBase):
     def queryParent(self):
         pass
 
-    def queryChilds(self):
+    def queryFullPathParent(self):
+        pass
+
+    def queryChildren(self):
+        pass
+
+    def queryFullPathChildren(self):
         pass
 
 class AppDGNode(aLB.AppOpenMayaBase):
