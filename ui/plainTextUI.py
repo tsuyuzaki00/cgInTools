@@ -2,7 +2,7 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 
-from ._reference import mainWindowUI as UI
+from . import baseUI as UI
 
 class PlainTextWindowBase(UI.MainWindowBase):
     def __init__(self,*args,**kwargs):

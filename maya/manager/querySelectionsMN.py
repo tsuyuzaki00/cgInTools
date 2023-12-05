@@ -70,33 +70,33 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         return write_dict
 
     #Public Function
-    def refreshOnClicked(self):
+    def refreshClicked(self):
         settings_dict=jLB.readJson(cit.mayaSettings_dir,self._dataFolder_str)
         self.__setPlainText_create_func(settings_dict.get("selections"))
 
-    def restoreOnClicked(self):
+    def restoreClicked(self):
         data_dict=jLB.readJson(cit.mayaData_dir,self._dataFolder_str)
         self.__setPlainText_create_func(data_dict.get("selections"))
 
-    def saveOnClicked(self):
+    def saveClicked(self):
         write_dict=self.__getSelectText_query_dict()
         jLB.writeJson(absolute=cit.mayaData_dir,relative=self._dataFolder_str,write=write_dict)
 
-    def importOnClicked(self):
+    def importClicked(self):
         import_dict=wLB.mayaPathDialog_query_dict(text="import setting",fileMode=1,directory=self._data_dir)
         if import_dict is None:
             return
         data_dict=jLB.readJson(absolute=import_dict["directory"],file=import_dict["file"])
         self.__setPlainText_create_func(data_dict.get("selections"))
 
-    def exportOnClicked(self):
+    def exportClicked(self):
         export_dict=wLB.mayaPathDialog_query_dict(text="export setting",fileMode=0,directory=self._data_dir)
         if export_dict is None:
             return
         write_dict=self.__getSelectText_query_dict()
         jLB.writeJson(absolute=export_dict["directory"],file=export_dict["file"],write=write_dict)
 
-    def buttonLeftOnClicked(self):
+    def buttonLeftClicked(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()
         if not getText_str == "":
             text_strs=eval(getText_str)
@@ -104,12 +104,12 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
                 if cmds.objExists(text_str):
                     cmds.select(text_str,add=True)
 
-    def buttonCenterOnClicked(self):
+    def buttonCenterClicked(self):
         objs=cmds.ls(sl=True)
         if not objs == []:
             self.__setPlainText_create_func(objs)
 
-    def buttonRightOnClicked(self):
+    def buttonRightClicked(self):
         objs=cmds.ls(sl=True)
         if not objs == []:
             self.__setPlainText_create_func(objs,add=True)

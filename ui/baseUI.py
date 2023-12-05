@@ -16,25 +16,25 @@ class MainWindowBase(QMainWindow):
 
         self.refresh_QAction=QAction("Refresh Settings",self)
         fileMenu_QAction.addAction(self.refresh_QAction)
-        self.refresh_QAction.triggered.connect(self.refreshOnClicked)
+        self.refresh_QAction.triggered.connect(self.refreshClicked)
 
         self.restore_QAction=QAction("Restore Settings",self)
         fileMenu_QAction.addAction(self.restore_QAction)
-        self.restore_QAction.triggered.connect(self.restoreOnClicked)
+        self.restore_QAction.triggered.connect(self.restoreClicked)
         
         self.save_QAction=QAction("Save Settings",self)
         fileMenu_QAction.addAction(self.save_QAction)
-        self.save_QAction.triggered.connect(self.saveOnClicked)
+        self.save_QAction.triggered.connect(self.saveClicked)
         
         fileMenu_QAction.addSeparator()
         
         self.import_QAction=QAction("Import Settings",self)
         fileMenu_QAction.addAction(self.import_QAction)
-        self.import_QAction.triggered.connect(self.importOnClicked)
+        self.import_QAction.triggered.connect(self.importClicked)
         
         self.export_QAction=QAction("Export Settings",self)
         fileMenu_QAction.addAction(self.export_QAction)
-        self.export_QAction.triggered.connect(self.exportOnClicked)
+        self.export_QAction.triggered.connect(self.exportClicked)
 
     def mainUI_create_QGridLayout(self):
         main_QBoxLayout=QBoxLayout(QBoxLayout.TopToBottom,self)
@@ -51,38 +51,38 @@ class MainWindowBase(QMainWindow):
 
         self.buttonLeft_QPushButton=QPushButton("left",self)
         button_QHBoxLayout.addWidget(self.buttonLeft_QPushButton)
-        self.buttonLeft_QPushButton.clicked.connect(self.buttonLeftOnClicked)
+        self.buttonLeft_QPushButton.clicked.connect(self.buttonLeftClicked)
 
         self.buttonCenter_QPushButton=QPushButton("center",self)
         button_QHBoxLayout.addWidget(self.buttonCenter_QPushButton)
-        self.buttonCenter_QPushButton.clicked.connect(self.buttonCenterOnClicked)
+        self.buttonCenter_QPushButton.clicked.connect(self.buttonCenterClicked)
         
         self.buttonRight_QPushButton=QPushButton("right",self)
         button_QHBoxLayout.addWidget(self.buttonRight_QPushButton)
-        self.buttonRight_QPushButton.clicked.connect(self.buttonRightOnClicked)
+        self.buttonRight_QPushButton.clicked.connect(self.buttonRightClicked)
         
         return custom_QGridLayout
     
     #Public Function
-    def refreshOnClicked(self):
+    def refreshClicked(self):
         print("refresh")
-    def restoreOnClicked(self):
+    def restoreClicked(self):
         print("restore")
-    def saveOnClicked(self):
+    def saveClicked(self):
         print("save")
-    def importOnClicked(self):
+    def importClicked(self):
         print("import")
-    def exportOnClicked(self):
+    def exportClicked(self):
         print("export")
 
-    def buttonLeftOnClicked(self):
+    def buttonLeftClicked(self):
         print("left")
-    def buttonCenterOnClicked(self):
+    def buttonCenterClicked(self):
         print("center")
-    def buttonRightOnClicked(self):
+    def buttonRightClicked(self):
         print("right")
     
-    def buttonOnClicked(self):
+    def buttonClicked(self):
         print("base")
 
 #viewWindow=MainWindowBase()
