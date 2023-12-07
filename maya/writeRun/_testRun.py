@@ -2,4 +2,4 @@
 
 import cgInTools as cit
 from cgInTools.maya.manager import createNodesMN as TL
-cit.reloads([TL]); TL
+cit.reloads([TL]); TL.main()

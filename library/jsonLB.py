@@ -154,3 +154,7 @@ def writeJson(absolute,relative=None,file="init",extension="json",write={}):
     json_AppJson=AppJson()
     json_AppJson.setDataJson(json_DataJson)
     json_AppJson.write()
+
+def textParaGraph(text_dict,indent=4):
+    text_str=json.dumps(text_dict,indent=indent)
+    return text_str

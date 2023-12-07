@@ -1,15 +1,21 @@
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
-
+import json
 class MainWindowBase(QMainWindow):
     def __init__(self,*args,**kwargs):
         super(MainWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
         self.menuUI_create_func()
-        self.custom_QGridLayout=self.mainUI_create_QGridLayout()
+        self.mainUI_create_QGridLayout()
     
     #Single Function
+    def convertString_query_dict(self,dictText_str):
+        text_dict={}
+        if not dictText_str is "" and not dictText_str is None:
+            text_dict=eval(dictText_str)
+        return text_dict
+
     def menuUI_create_func(self):
         mainWindow_QMenuBar=self.menuBar()
         fileMenu_QAction=mainWindow_QMenuBar.addMenu("File")
@@ -39,15 +45,23 @@ class MainWindowBase(QMainWindow):
     def mainUI_create_QGridLayout(self):
         main_QBoxLayout=QBoxLayout(QBoxLayout.TopToBottom,self)
 
-        custom_QGridLayout=QGridLayout(self)
-        main_QBoxLayout.addLayout(custom_QGridLayout)
-        
-        button_QHBoxLayout=QHBoxLayout(self)
-        main_QBoxLayout.addLayout(button_QHBoxLayout)
+        UIText_QTabWidget=QTabWidget(self)
+        main_QBoxLayout.addWidget(UIText_QTabWidget)
 
+        custom_QWidget=QWidget()
+        self.custom_QGridLayout=QGridLayout(self)
+        custom_QWidget.setLayout(self.custom_QGridLayout)
+        UIText_QTabWidget.addTab(custom_QWidget,"UI")
+
+        self.textPlain_QPlainTextEdit=QPlainTextEdit(self)
+        UIText_QTabWidget.addTab(self.textPlain_QPlainTextEdit,"Text")
+        
         central_QWidget=QWidget()
         central_QWidget.setLayout(main_QBoxLayout)
         self.setCentralWidget(central_QWidget)
+        
+        button_QHBoxLayout=QHBoxLayout(self)
+        main_QBoxLayout.addLayout(button_QHBoxLayout)
 
         self.buttonLeft_QPushButton=QPushButton("left",self)
         button_QHBoxLayout.addWidget(self.buttonLeft_QPushButton)
@@ -60,8 +74,16 @@ class MainWindowBase(QMainWindow):
         self.buttonRight_QPushButton=QPushButton("right",self)
         button_QHBoxLayout.addWidget(self.buttonRight_QPushButton)
         self.buttonRight_QPushButton.clicked.connect(self.buttonRightClicked)
-        
-        return custom_QGridLayout
+    
+    #Multi Function
+    def _setText_query_dict(self,text_dict):
+        text_str=json.dumps(text_dict,indent=4).replace(": null",": None")
+        self.textPlain_QPlainTextEdit.setPlainText(text_str)
+
+    def _getText_query_dict(self):
+        getText_str=self.textPlain_QPlainTextEdit.toPlainText()
+        write_dict=self.convertString_query_dict(getText_str)
+        return write_dict
     
     #Public Function
     def refreshClicked(self):
