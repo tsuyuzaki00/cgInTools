@@ -16,9 +16,8 @@ class AppNode(aLB.AppOpenMayaBase):
         self._child_DataNodes=[]
 
     #Single Function
-    
 
-    #Multi Function
+    #Inheritance Function
     def _parent_edit_func(self,node_str,parent_str):
         node_MObject=self.node_query_MObject(node_str)
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)

@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
+import maya.api.OpenMaya as om2
 
 import cgInTools as cit
 from ...library import baseLB as bLB
@@ -11,16 +12,183 @@ cit.reloads([bLB,sbLB,jLB])
 
 RULES_DICT=jLB.readJson(cit.mayaSettings_dir,"library")
 
-class AppName(object):
+class AppName(aLB.AppOpenMayaBase):
     def __init__(self):
         self._name_DataName=None
 
+    #Single Function
+    def orderNames_create_str(self,name_DataName):
+        order_strs=name_DataName.getOrders()
+        partsName_strs=[]
+        for order_str in order_strs:
+            if order_str is None:
+                continue
+            orderSplit_strs=order_str.split("_")
+            if len(orderSplit_strs) is 1:
+                partsName_value=eval('name_DataName.get'+orderSplit_strs[0]+'()')
+            elif len(orderSplit_strs) is 2:
+                partsName_value=eval('name_DataName.get'+orderSplit_strs[0]+'()['+orderSplit_strs[-1]+']')
+            elif len(orderSplit_strs) is 3:
+                partsName_value=eval('name_DataName.get'+orderSplit_strs[0]+'()')
+                sequence_value=eval('name_DataName.get'+orderSplit_strs[1]+'()['+orderSplit_strs[-1]+']')
+                if partsName_value is None:
+                    partsName_value=sequence_value
+                else:
+                    partsName_value=partsName_value+str(sequence_value)
+            partsName_strs.append(partsName_value)
+        cleanName_strs=[str(partsName_str) for partsName_str in partsName_strs if partsName_str is not None]
+        name_str="_".join(cleanName_strs)
+        return name_str
     
+    def nextAlphabet_edit_str(self,alphabet_str):
+        if alphabet_str == "Z":
+            return "A"
+        elif alphabet_str == "z":
+            return "a"
+        else:
+            return chr(ord(alphabet_str)+1)
 
-class AppNodeName(aLB.AppOpenMayaBase):
+    #Setting Function
+    def setDataName(self,variable):
+        self._name_DataName=variable
+        return self._name_DataName
+    def getDataName(self):
+        return self._name_DataName
+
+    #Public Function
+    def create(self,dataName=None):
+        _name_DataName=dataName or self._name_DataName
+
+        name_str=self.orderNames_create_str(_name_DataName)
+        return name_str
+    
+    def nextIncrease(self,dataName=None):
+        _name_DataName=dataName or self._name_DataName
+
+        increase_strs=_name_DataName.getIncrease().split("_")
+        if "Numbers" in increase_strs:
+            number_ints=_name_DataName.getNumbers()
+            number_int=number_ints[int(increase_strs[-1])]
+            number_ints[int(increase_strs[-1])]=number_int+1
+            _name_DataName.setNumbers(number_ints)
+            return _name_DataName
+        elif "Hierarchys" in increase_strs:
+            increase_strs=_name_DataName.getIncrease().split("_")
+            hierarchy_strs=_name_DataName.getHierarchys()
+            hierarchy_str=hierarchy_strs[int(increase_strs[-1])]
+            hierarchy_strs[int(increase_strs[-1])]=self.nextAlphabet_edit_str(hierarchy_str)
+            _name_DataName.setHierarchys(hierarchy_strs)
+            return _name_DataName
+        else:
+            return None
+
+class AppNodeName(AppName):
     def __init__(self):
         super(AppNodeName,self).__init__()
+        self._node_DataNode=None
 
+    #Single Function
+    def sideName_query_str(self,obj,dist=1):
+        boundingBox=cmds.xform(obj,q=True,bb=True,ws=True)
+        minX=boundingBox[0]
+        maxX=boundingBox[3]
+        if minX > dist and maxX > dist:
+            return "L"
+        elif minX < -dist and maxX < -dist:
+            return "R"
+        else:
+            return "C"
+
+    def nodeType_query_str(self,obj):
+        objType_str=cmds.objectType(obj)
+        if objType_str=="transform":
+            shape_list = cmds.listRelatives(obj,s=True)
+            if shape_list==None:
+                return "none"
+            else :
+                shapeType_str=cmds.objectType(shape_list[0])
+                return shapeType_str
+        else :
+            objType_str=cmds.objectType(obj)
+            return objType_str
+
+    #Inheritance Function
+    def _nodeRename_edit_str(self,nodeName_str,rename_str):
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        node_MFnDependencyNode.setName(rename_str)
+        return node_MFnDependencyNode.name()
+
+    #Setting Function
+    def setDataNode(self,variable):
+        self._node_DataNode=variable
+        return self._node_DataNode
+    def getDataNode(self):
+        return self._node_DataNode
+    
+    #Public Function
+    def rename(self,dataName=None,dataNode=None):
+        _name_DataName=dataName or self._name_DataName
+        _node_DataNode=dataNode or self._node_DataNode
+
+        name_str=self.orderNames_create_str(_name_DataName)
+        while cmds.objExists(name_str):
+            next_DataName=self.nextIncrease()
+            if next_DataName is None:
+                break
+            else:
+                name_str=self.orderNames_create_str(next_DataName)
+        
+        rename_str=self._nodeRename_edit_str(_node_DataNode.getName(),name_str)
+        return rename_str
+
+    def editRename(self,dataName=None,dataNode=None):
+        _name_DataName=dataName or self._name_DataName
+        _node_DataNode=dataNode or self._node_DataNode
+
+        if _name_DataName.getTitle() is None:
+            
+            _name_DataName.setTitle()
+        if _name_DataName.getNodeType() is None:
+
+            _name_DataName.setNodeType()
+        if _name_DataName.getSide() is None:
+            
+            _name_DataName.setSide()
+
+        name_str=self.orderNames_create_str(_name_DataName)
+        while cmds.objExists(name_str):
+            next_DataName=self.nextIncrease()
+            if next_DataName is None:
+                break
+            else:
+                name_str=self.orderNames_create_str(next_DataName)
+        
+        rename_str=self._nodeRename_edit_str(_node_DataNode.getName(),name_str)
+        return rename_str
+
+    def autoRename(self,dataNode=None,order_strs=["Title","NodeType"]):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        _name_DataName=dLB.DataName()
+        _name_DataName.setOrders(order_strs)
+        
+        _name_DataName.setTitle()
+        
+        _name_DataName.setNodeType()
+        
+        _name_DataName.setSide()
+
+        name_str=self.orderNames_create_str(_name_DataName)
+        while cmds.objExists(name_str):
+            next_DataName=self.nextIncrease()
+            if next_DataName is None:
+                break
+            else:
+                name_str=self.orderNames_create_str(next_DataName)
+        
+        rename_str=self._nodeRename_edit_str(_node_DataNode.getName(),name_str)
+        return rename_str
 
 class Naming(sbLB.BaseName):
     def __init__(self):
@@ -264,98 +432,3 @@ class Naming(sbLB.BaseName):
             evalSelf=eval("self._"+_markNaming_dict["attrString"])
             mark.setStringName(evalSelf)
             mark.addAttr()
-
-class DataName(bLB.SelfOrigin):
-    def __init__(self):
-        self._titleName_str=None
-        self._nodeTypeName_str=None
-        self._sideName_str=None
-        self._numberName_ints=[]
-        self._hierarchyName_strs=[]
-        self._customName_strs=[]
-        self._orderName_enums=[]
-
-    #Setting Function
-    def setTitle(self,variable):
-        self._titleName_str=variable
-        return self._titleName_str
-    def getTitle(self):
-        return self._titleName_str
-    
-    def setNodeType(self,variable):
-        self._nodeTypeName_str=variable
-        return self._nodeTypeName_str
-    def getNodeType(self):
-        return self._nodeTypeName_str
-    
-    def setSide(self,variable):
-        self._sideName_str=variable
-        return self._sideName_str
-    def getSide(self):
-        return self._sideName_str
-    
-    def setNumbers(self,variables):
-        self._numberName_ints=variables
-        return self._numberName_ints
-    def addNumbers(self,variables):
-        self._numberName_ints+=variables
-        return self._numberName_ints
-    def getNumbers(self):
-        return self._numberName_ints
-    
-    def setHierarchys(self,variables):
-        self._hierarchyName_strs=variables
-        return self._hierarchyName_strs
-    def addHierarchys(self,variables):
-        self._hierarchyName_strs+=variables
-        return self._hierarchyName_strs
-    def getHierarchys(self):
-        return self._hierarchyName_strs
-    
-    def setCustoms(self,variables):
-        self._customName_strs=variables
-        return self._customName_strs
-    def addCustoms(self,variables):
-        self._customName_strs+=variables
-        return self._customName_strs
-    def getCustoms(self):
-        return self._customName_strs
-    
-    def setOrders(self,variables):
-        self._orderName_enums=variables
-        return self._orderName_enums
-    def addOrders(self,variables):
-        self._orderName_enums+=variables
-        return self._orderName_enums
-    def getOrders(self):
-        return self._orderName_enums
-
-class SelfNodeName(bLB.SelfOrigin):
-    def __init__(self):
-        super(SelfNodeName,self).__init__()
-        self._node_DataName=None
-        self._node_DataNode=None
-
-    #Private Function
-    def __orderName_create_str(self,order_list):
-        selfOrders=[eval("self._"+chengeSelf) for chengeSelf in order_list]
-        orderName="_".join(selfOrders)
-        return orderName
-
-    #Setting Function
-    def setDataName(self,variables):
-        self._node_DataName=variables
-        return self._node_DataName
-    def getDataName(self):
-        return self._node_DataName
-    
-    def setDataNode(self,variables):
-        self._node_DataNode=variables
-        return self._node_DataNode
-    def getDataNode(self):
-        return self._node_DataNode
-
-    #Public Function
-    def rename(self):
-        name_str=""
-        return name_str

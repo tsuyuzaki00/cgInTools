@@ -8,7 +8,7 @@ from ...library import pathLB as pLB
 from ...library import serializeLB as sLB
 from ...library import _testLB as tLB
 from ..library import dataLB as dLB
-from ..library import nodeLB as nLB
+from ..library import nameLB as nLB
 from ..library import matrixLB as mLB
 #from cgInTools.maya.manager import equipmentSettingsMN as MN
 #from cgInTools.maya.option import autoRenameOP as OP
@@ -20,50 +20,24 @@ def main():
     #MN.main()
     #OP.main()
     #EX.main()
-    
-    node_DataNode=dLB.DataNode()
-    node_DataNode.setName("pCube1")
-    node_DataNode.setType("transform")
+    test_DataName=dLB.DataName()
+    test_DataName.setTitle("spine")
+    test_DataName.setNodeType("jnt")
+    #test_DataName.setSide("C")
+    test_DataName.setNumbers([0])
+    test_DataName.setHierarchys(["A"])
+    test_DataName.setOrders(["Title_Hierarchys_0","NodeType","Side_Numbers_0"])
+    test_DataName.setIncrease("Numbers_0")
 
-    translateX_DataAttribute=dLB.DataAttributeFloat()
-    translateX_DataAttribute.setName("translateX")
-    translateX_DataAttribute.setValue(10)
+    for joint in ["joint1","joint2","joint3","joint4"]:
+        test_DataNode=dLB.DataNode()
+        test_DataNode.setName(joint)
 
-    bool_DataAttribute=dLB.DataAttributeBoolean()
-    bool_DataAttribute.setName("booleanSan")
-    bool_DataAttribute.setShortName("bsan")
-    bool_DataAttribute.setValue(False)
-    int_DataAttribute=dLB.DataAttributeInt()
-    int_DataAttribute.setName("intSan")
-    int_DataAttribute.setShortName("isan")
-    int_DataAttribute.setValue(0)
-    #int_DataAttribute.setMax(20)
-    #int_DataAttribute.setMin(0)
-    float_DataAttribute=dLB.DataAttributeFloat()
-    float_DataAttribute.setName("floatSan")
-    float_DataAttribute.setShortName("fsan")
-    float_DataAttribute.setValue(5.64)
-    #float_DataAttribute.setMax(20.0)
-    #float_DataAttribute.setMin(0.0)
-    str_DataAttribute=dLB.DataAttributeString()
-    str_DataAttribute.setName("stringSan")
-    str_DataAttribute.setShortName("ssan")
-    str_DataAttribute.setValue("hoge")
-    vector_DataAttribute=dLB.DataAttributeVector()
-    vector_DataAttribute.setName("vectorSan")
-    vector_DataAttribute.setShortName("vsan")
-    vector_DataAttribute.setValue([0.0,0.0,0.0])
-    
-    plug_DataPlugs=[]
-    for attr_DataAttribute in [int_DataAttribute,float_DataAttribute,bool_DataAttribute,str_DataAttribute,translateX_DataAttribute]:
-        plug_DataPlug=dLB.DataPlug()
-        plug_DataPlug.setDataNode(node_DataNode)
-        plug_DataPlug.setDataAttribute(attr_DataAttribute)
-        plug_DataPlugs.append(plug_DataPlug)
-    
-    node_SelfDGNode=nLB.SelfDGNode()
-    node_SelfDGNode.setDataPlugs(plug_DataPlugs)
-    node_SelfDGNode.editAttr()
-    
+        test_AppName=nLB.AppNodeName()
+        test_AppName.setDataName(test_DataName)
+        test_AppName.setDataNode(test_DataNode)
+        test=test_AppName.rename()
+        print(test)
+
 
 main()

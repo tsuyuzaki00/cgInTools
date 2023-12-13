@@ -48,10 +48,12 @@ class SelfOrigin(object):
         for setFunction in setFunctions:
             if _data_dict.get(setFunction) is None:
                 continue
-            elif type(_data_dict[setFunction]) is str:
+            elif type(_data_dict.get(setFunction)) is dict:
+                continue
+            elif type(_data_dict.get(setFunction)) is str:
                 variable='"'+_data_dict.get(setFunction)+'"'
             else:
-                variable=str(_data_dict[setFunction])
+                variable=str(_data_dict.get(setFunction))
             eval('self.set'+setFunction+'('+variable+')')
 
     def writeDict(self,dataChoices=None):
