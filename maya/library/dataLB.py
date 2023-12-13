@@ -291,10 +291,10 @@ class DataName(bLB.SelfOrigin):
         self._numberName_ints=[0]
         self._hierarchyName_strs=["A"]
         self._customName_strs=[]
-        #["Title","NodeType","Side","Number_0","Hierarchy_1","Custom_10","Title_Number_0","Title_Hierarchy_2","Side_Number_0","Side_Hierarchy_2"]
+        #["Title","NodeType","Side","Numbers_0","Hierarchys_1","Customs_10","Title_Numbers_0","Title_Hierarchys_2","Side_Numbers_0","Side_Hierarchys_2"]
         self._orderName_enums=["Title","NodeType"]
         #"Number_0","Hierarchy_10"
-        self._increaseName_enum="Number_0"
+        self._increaseName_enum="Numbers_0"
 
     #Setting Function
     def setTitle(self,variable):

@@ -1,9 +1,12 @@
 # -*- coding: iso-8859-15 -*-
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
-from . import dataLB as dLB
 
-class SelfMeshPolygon(object):
+import cgInTools as cit
+from . import appLB as aLB
+from . import dataLB as dLB
+cit.reloads([aLB,dLB])
+class AppMeshPolygon(object):
     def __init__(self):
         self._name_str=None
         self._basis3D_DataPointArray=None
@@ -106,13 +109,14 @@ class SelfMeshPolygon(object):
         polygonCount_ints=self.faceInVertexCount_query_ints(self._mesh_DataMesh)
         polygonConnects_ints=self.pointID_query_ints(self._mesh_DataMesh)
         uValues,vValues=self.uvValues_query_list_list(self._mesh_DataMesh)
-        vertexNormal_DataVectors=self.vertexNormal_query_DataVectors(self._mesh_DataMesh)
-        faceID_ints=self.faceID_query_ints(self._mesh_DataMesh)
+        #vertexNormal_DataVectors=self.vertexNormal_query_DataVectors(self._mesh_DataMesh)
+        #faceID_ints=self.faceID_query_ints(self._mesh_DataMesh)
 
         mesh_MFnMesh.create(basisPoint_DataPoints,polygonCount_ints,polygonConnects_ints,uValues,vValues,parent=trans_MObject)
         mesh_MFnMesh.setName(transName_str+'Shape')
         mesh_MFnMesh.assignUVs(polygonCount_ints,polygonConnects_ints)
-        mesh_MFnMesh.setFaceVertexNormals(vertexNormal_DataVectors,faceID_ints,polygonConnects_ints)
-
-        cmds.select(transName_str)
-        cmds.hyperShade(a='standardSurface1')
+        mesh_MFnMesh.unlockFaceVertexNormals([0],[0])
+        #mesh_MFnMesh.setFaceVertexNormals(vertexNormal_DataVectors,faceID_ints,polygonConnects_ints)
+        
+        cmds.lockNode("initialShadingGroup",l=False,lu=False)
+        cmds.sets(transName_str,e=True,forceElement="initialShadingGroup")

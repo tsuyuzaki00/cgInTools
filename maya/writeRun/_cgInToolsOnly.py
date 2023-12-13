@@ -63,7 +63,7 @@ def main():
     mesh_DataMesh=dLB.DataMesh()
     mesh_DataMesh.setDataFaces(face_DataFaces)
 
-    mesh=mLB.SelfMeshPolygon()
+    mesh=mLB.AppMeshPolygon()
     mesh.setName("meshData")
     mesh.setDataPointArrayInBasis3D(basis3D_DataPointArray)
     mesh.setDataMesh(mesh_DataMesh)
