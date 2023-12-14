@@ -1,14 +1,20 @@
 # -*- coding: iso-8859-15 -*-
-import cgInTools as cit
-from . import jsonLB as jLB
-from . import serializeLB as sLB
-cit.reloads([jLB,sLB])
+
 class SelfOrigin(object):
     def __init__(self):
         self._origin_DataPath=None
         self._data_dict={}
         self._dataChoice_strs=["DoIts"]
         self._doIt_strs=[]
+        #Python2
+        import cgInTools as cit
+        from . import dataLB as dLB
+        from . import jsonLB as jLB
+        from . import serializeLB as sLB
+        cit.reloads([dLB,jLB,sLB])
+        self.dLB=dLB
+        self.jLB=jLB
+        self.sLB=sLB
     
     #Setting Function
     def setDataPath(self,variable):
@@ -72,7 +78,7 @@ class SelfOrigin(object):
     def readData(self,dataPath=None):
         _origin_DataPath=dataPath or self._origin_DataPath
 
-        read_SelfSerialize=sLB.AppSerialize()
+        read_SelfSerialize=self.sLB.AppSerialize()
         read_SelfSerialize.setDataPath(_origin_DataPath)
         read_SelfObject=read_SelfSerialize.read()
         return read_SelfObject
@@ -80,7 +86,7 @@ class SelfOrigin(object):
     def writeData(self,dataPath=None):
         _origin_DataPath=dataPath or self._origin_DataPath
 
-        write_SelfSerialize=sLB.AppSerialize()
+        write_SelfSerialize=self.sLB.AppSerialize()
         write_SelfSerialize.setDataPath(_origin_DataPath)
         write_SelfSerialize.setWriteSelfObject(self)
         write_SelfSerialize.write()
@@ -88,8 +94,8 @@ class SelfOrigin(object):
     def readJson(self,dataPath=None):
         _origin_DataPath=dataPath or self._origin_DataPath
 
-        write_SelfJson=jLB.AppJson()
-        write_SelfJson.setDataPath(_origin_DataPath)
+        write_SelfJson=self.jLB.AppJson()
+        write_SelfJson.setDataJson(_origin_DataPath)
         read_dict=write_SelfJson.read()
         return read_dict
     
@@ -99,9 +105,12 @@ class SelfOrigin(object):
 
         write_dict=self.writeDict(_dataChoice_strs)
         
-        write_SelfJson=jLB.AppJson()
-        write_SelfJson.setDataPath(_origin_DataPath)
-        write_SelfJson.setWriteDict(write_dict)
+        write_DataJson=self.dLB.DataJson()
+        write_DataJson.setDataPath(_origin_DataPath)
+        write_DataJson.setJsonDict(write_dict)
+
+        write_SelfJson=self.jLB.AppJson()
+        write_SelfJson.setDataJson(write_DataJson)
         write_SelfJson.write()
 
     def doIt(self,doIts=None):

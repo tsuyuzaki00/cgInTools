@@ -86,33 +86,51 @@ class AppNodeName(AppName):
     def __init__(self):
         super(AppNodeName,self).__init__()
         self._node_DataNode=None
+        self._nodeName_dict=RULES_DICT["nodeName_dict"]
 
     #Single Function
-    def sideName_query_str(self,obj,dist=1):
-        boundingBox=cmds.xform(obj,q=True,bb=True,ws=True)
-        minX=boundingBox[0]
-        maxX=boundingBox[3]
-        if minX > dist and maxX > dist:
+    def smashNumber_edit_str(self,name_str):
+        while name_str[-1].isdigit():
+            name_str=name_str[:-1]
+            if name_str == "":
+                return None
+        return name_str
+    
+    def smashAlphabet_edit_str(self,name_str):
+        while name_str[-1].isupper():
+            name_str=name_str[:-1]
+            if name_str == "":
+                return None
+        return name_str
+
+    #Inheritance Function
+    def sideName_query_str(self,nodeName_str,dist=1):
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        node_MFnTransform=om2.MFnTransform(node_MDagPath)
+        node_MVector=node_MFnTransform.translation(om2.MSpace.kWorld)
+        if node_MVector.x > dist and node_MVector.x > dist:
             return "L"
-        elif minX < -dist and maxX < -dist:
+        elif node_MVector.x < -dist and node_MVector.x < -dist:
             return "R"
         else:
             return "C"
 
-    def nodeType_query_str(self,obj):
-        objType_str=cmds.objectType(obj)
-        if objType_str=="transform":
-            shape_list = cmds.listRelatives(obj,s=True)
-            if shape_list==None:
+    def nodeType_query_str(self,nodeName_str):
+        node_MObject=self.node_query_MObject(nodeName_str)
+        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
+        if node_MFnDependencyNode.typeName == "transform":
+            try:
+                node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+                shape_MDagPath=node_MDagPath.extendToShape()
+                shape_MFnDagNode=om2.MFnDagNode(shape_MDagPath)
+                nodeType_str=shape_MFnDagNode.typeName
+            except RuntimeError:
                 return "none"
-            else :
-                shapeType_str=cmds.objectType(shape_list[0])
-                return shapeType_str
-        else :
-            objType_str=cmds.objectType(obj)
-            return objType_str
-
-    #Inheritance Function
+        else:
+            nodeType_str=node_MFnDependencyNode.typeName
+        return nodeType_str
+        
     def _nodeRename_edit_str(self,nodeName_str,rename_str):
         node_MObject=self.node_query_MObject(nodeName_str)
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
@@ -147,14 +165,19 @@ class AppNodeName(AppName):
         _node_DataNode=dataNode or self._node_DataNode
 
         if _name_DataName.getTitle() is None:
-            
-            _name_DataName.setTitle()
-        if _name_DataName.getNodeType() is None:
+            nameSplits=_node_DataNode.getName().split("_")
+            smashNumber_str=self.smashNumber_edit_str(nameSplits[0])
+            smashAlphabet_str=self.smashAlphabet_edit_str(smashNumber_str)
+            _name_DataName.setTitle(smashAlphabet_str)
 
-            _name_DataName.setNodeType()
+        if _name_DataName.getNodeType() is None:
+            nodeType_str=self.nodeType_query_str(_node_DataNode.getName())
+            typeName_str=self._nodeName_dict.get(nodeType_str)
+            _name_DataName.setNodeType(typeName_str)
+
         if _name_DataName.getSide() is None:
-            
-            _name_DataName.setSide()
+            side_str=self.sideName_query_str(_node_DataNode.getName())
+            _name_DataName.setSide(side_str)
 
         name_str=self.orderNames_create_str(_name_DataName)
         while cmds.objExists(name_str):
@@ -167,17 +190,23 @@ class AppNodeName(AppName):
         rename_str=self._nodeRename_edit_str(_node_DataNode.getName(),name_str)
         return rename_str
 
-    def autoRename(self,dataNode=None,order_strs=["Title","NodeType"]):
+    def autoRename(self,dataNode=None,order_strs=["Title","NodeType","Numbers_0"]):
         _node_DataNode=dataNode or self._node_DataNode
 
         _name_DataName=dLB.DataName()
         _name_DataName.setOrders(order_strs)
+
+        nameSplits=_node_DataNode.getName().split("_")
+        smashNumber_str=self.smashNumber_edit_str(nameSplits[0])
+        smashAlphabet_str=self.smashAlphabet_edit_str(smashNumber_str)
+        _name_DataName.setTitle(smashAlphabet_str)
         
-        _name_DataName.setTitle()
+        nodeType_str=self.nodeType_query_str(_node_DataNode.getName())
+        typeName_str=self._nodeName_dict.get(nodeType_str)
+        _name_DataName.setNodeType(typeName_str)
         
-        _name_DataName.setNodeType()
-        
-        _name_DataName.setSide()
+        side_str=self.sideName_query_str(_node_DataNode.getName())
+        _name_DataName.setSide(side_str)
 
         name_str=self.orderNames_create_str(_name_DataName)
         while cmds.objExists(name_str):
@@ -194,7 +223,6 @@ class Naming(sbLB.BaseName):
     def __init__(self):
         super(Naming,self).__init__()
         self._nodeName_dict=RULES_DICT["nodeName_dict"]
-        self._markNaming_dicts=RULES_DICT["markNaming_dicts"]
 
     #Single Function
     def nodeType_query_str(self,obj):
@@ -258,23 +286,19 @@ class Naming(sbLB.BaseName):
             self.scene=sceneName
         return self.scene
     
-    def smashNumber_edit_str(self,name):
-        if name == None:
-            return None
-        while name[-1].isdigit():
-            name=name[:-1]
-            if name=="":
+    def smashNumber_edit_str(self,name_str):
+        while name_str[-1].isdigit():
+            name_str=name_str[:-1]
+            if name_str == "":
                 return None
-        return name
+        return name_str
     
-    def smashAlphabet_edit_str(self,name):
-        if name == None:
-            return None
-        while name[-1].isupper():
-            name=name[:-1]
-            if name=="":
+    def smashAlphabet_edit_str(self,name_str):
+        while name_str[-1].isupper():
+            name_str=name_str[:-1]
+            if name_str == "":
                 return None
-        return name
+        return name_str
 
     def getAlphabet_query_str(self,obj):
         splitObjs=obj.split("_")

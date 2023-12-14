@@ -21,23 +21,22 @@ def main():
     #OP.main()
     #EX.main()
     test_DataName=dLB.DataName()
-    test_DataName.setTitle("spine")
-    test_DataName.setNodeType("jnt")
+    #test_DataName.setTitle("spine")
+    #test_DataName.setNodeType("jnt")
     #test_DataName.setSide("C")
     test_DataName.setNumbers([0])
     test_DataName.setHierarchys(["A"])
-    test_DataName.setOrders(["Title_Hierarchys_0","NodeType","Side_Numbers_0"])
+    test_DataName.setOrders(["Title","NodeType","Side"])
     test_DataName.setIncrease("Numbers_0")
 
-    for joint in ["joint1","joint2","joint3","joint4"]:
-        test_DataNode=dLB.DataNode()
-        test_DataNode.setName(joint)
+    test_DataNode=dLB.DataNode()
+    test_DataNode.setName("joint1")
 
-        test_AppName=nLB.AppNodeName()
-        test_AppName.setDataName(test_DataName)
-        test_AppName.setDataNode(test_DataNode)
-        test=test_AppName.rename()
-        print(test)
+    test_AppName=nLB.AppNodeName()
+    test_AppName.setDataName(test_DataName)
+    test_AppName.setDataNode(test_DataNode)
+    test=test_AppName.editRename()
+    #print(test)
 
 
 main()
