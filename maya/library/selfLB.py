@@ -4,7 +4,8 @@ from ...library import baseLB as bLB
 from . import dataLB as dLB
 from . import mayaMenuLB as mmLB
 from . import nodeLB as nLB
-cit.reloads([bLB,dLB,mmLB,nLB])
+from . import nameLB as naLB
+cit.reloads([bLB,dLB,mmLB,nLB,naLB])
 
 class SelfMenu(bLB.SelfOrigin):
     def __init__(self,selfMenu=None):
@@ -160,16 +161,47 @@ class SelfDGNode(bLB.SelfOrigin):
         return self._drivenkey_DataDrivenKey
 
     #Public Function
-    def createNode(self,dataNode=None):
+    def createNode(self,dataNode=None,dataName=None):
+        _create_DataNode=dataNode or self._create_DataNode
+        _name_DataName=dataName or self._name_DataName
+
+        name_AppName=naLB.AppName()
+        name_AppName.setDataName(_name_DataName)
+        name_str=name_AppName.create()
+        _create_DataNode.setName(name_str)
+
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(_create_DataNode)
+        self._node_DataNode=node_AppNode.create()
+        return self._node_DataNode
+    
+    def createNodeNormal(self,dataNode=None):
         _create_DataNode=dataNode or self._create_DataNode
 
         node_AppNode=nLB.AppNode()
         node_AppNode.setDataNode(_create_DataNode)
-        node_DataNode=node_AppNode.create()
-        return node_DataNode
+        self._node_DataNode=node_AppNode.create()
+        return self._node_DataNode
 
-    def rename(self,dataName=None):
+    def rename(self,dataNode=None,dataName=None):
+        _node_DataNode=dataNode or self._node_DataNode
         _name_DataName=dataName or self._name_DataName
+
+        rename_AppNodeName=naLB.AppNodeName()
+        rename_AppNodeName.setDataNode(_node_DataNode)
+        rename_AppNodeName.setDataName(_name_DataName)
+        rename_str=rename_AppNodeName.rename()
+        return rename_str
+    
+    def editRename(self,dataNode=None,dataName=None):
+        _node_DataNode=dataNode or self._node_DataNode
+        _name_DataName=dataName or self._name_DataName
+
+        rename_AppNodeName=naLB.AppNodeName()
+        rename_AppNodeName.setDataNode(_node_DataNode)
+        rename_AppNodeName.setDataName(_name_DataName)
+        rename_str=rename_AppNodeName.editRename()
+        return rename_str
 
     def createAttr(self,dataPlug=None):
         pass

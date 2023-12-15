@@ -104,7 +104,7 @@ class AppNodeName(AppName):
         return name_str
 
     #Inheritance Function
-    def sideName_query_str(self,nodeName_str,dist=1):
+    def _sideName_query_str(self,nodeName_str,dist=1):
         node_MObject=self.node_query_MObject(nodeName_str)
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_MFnTransform=om2.MFnTransform(node_MDagPath)
@@ -116,7 +116,7 @@ class AppNodeName(AppName):
         else:
             return "C"
 
-    def nodeType_query_str(self,nodeName_str):
+    def _nodeType_query_str(self,nodeName_str):
         node_MObject=self.node_query_MObject(nodeName_str)
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         if node_MFnDependencyNode.typeName == "transform":
@@ -171,12 +171,12 @@ class AppNodeName(AppName):
             _name_DataName.setTitle(smashAlphabet_str)
 
         if _name_DataName.getNodeType() is None:
-            nodeType_str=self.nodeType_query_str(_node_DataNode.getName())
+            nodeType_str=self._nodeType_query_str(_node_DataNode.getName())
             typeName_str=self._nodeName_dict.get(nodeType_str)
             _name_DataName.setNodeType(typeName_str)
 
         if _name_DataName.getSide() is None:
-            side_str=self.sideName_query_str(_node_DataNode.getName())
+            side_str=self._sideName_query_str(_node_DataNode.getName())
             _name_DataName.setSide(side_str)
 
         name_str=self.orderNames_create_str(_name_DataName)
@@ -201,11 +201,11 @@ class AppNodeName(AppName):
         smashAlphabet_str=self.smashAlphabet_edit_str(smashNumber_str)
         _name_DataName.setTitle(smashAlphabet_str)
         
-        nodeType_str=self.nodeType_query_str(_node_DataNode.getName())
+        nodeType_str=self._nodeType_query_str(_node_DataNode.getName())
         typeName_str=self._nodeName_dict.get(nodeType_str)
         _name_DataName.setNodeType(typeName_str)
         
-        side_str=self.sideName_query_str(_node_DataNode.getName())
+        side_str=self._sideName_query_str(_node_DataNode.getName())
         _name_DataName.setSide(side_str)
 
         name_str=self.orderNames_create_str(_name_DataName)
