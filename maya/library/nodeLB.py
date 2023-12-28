@@ -5,8 +5,8 @@ import maya.api.OpenMaya as om2
 import cgInTools as cit
 from . import appLB as aLB
 from . import dataLB as dLB
-from . import matrixLB as mdLB
-cit.reloads([aLB,dLB,mdLB])
+from . import matrixLB as mLB
+cit.reloads([aLB,dLB,mLB])
 
 class AppNode(aLB.AppOpenMayaBase):
     def __init__(self):
@@ -339,7 +339,7 @@ class AppDGNode(aLB.AppOpenMayaBase):
 
 class AppDAGNode(AppDGNode):
     def __init__(self):
-        super(SelfDAGNode,self).__init__()
+        super(AppDAGNode,self).__init__()
         #self._node_DataNode=None
         #self._name_DataName=None
         #self._attrName_strs=[]
@@ -466,14 +466,6 @@ class AppDAGNode(AppDGNode):
         node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
         node_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(node_MDagPath)
         return node_DataMatrix
-
-    #Test Function
-    def _queryMDagPath(self,dataNode=None):
-        _node_DataNode=dataNode or self._node_DataNode
-
-        node_MObject=self.node_query_MObject(str(_node_DataNode))
-        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
-        return node_MDagPath
 
     #Setting Function
     def setTranslate(self,variable3):
@@ -666,7 +658,7 @@ class AppDAGNode(AppDGNode):
         shape_MObject=self.shape_query_MObject(node_MDagPath)
         shape_DataNode=dLB.DataNode(shape_MObject)
 
-        shape_SelfDAGNode=SelfDAGNode()
+        shape_SelfDAGNode=AppDAGNode()
         shape_SelfDAGNode.setDataNode(shape_DataNode)
         return shape_SelfDAGNode
 
@@ -678,7 +670,7 @@ class AppDAGNode(AppDGNode):
         parent_MObject=self.parent_query_MObject(node_MDagPath)
         parent_DataNode=dLB.DataNode(parent_MObject)
 
-        parent_SelfDAGNode=SelfDAGNode()
+        parent_SelfDAGNode=AppDAGNode()
         parent_SelfDAGNode.setDataNode(parent_DataNode)
         return parent_SelfDAGNode
     
@@ -692,7 +684,7 @@ class AppDAGNode(AppDGNode):
         child_SelfDAGNodes=[]
         for child_MObject in child_MObjects:
             child_DataNode=dLB.DataNode(child_MObject)
-            child_SelfDAGNode=SelfDAGNode()
+            child_SelfDAGNode=AppDAGNode()
             child_SelfDAGNode.setDataNode(child_DataNode)
             child_SelfDAGNodes.append(child_SelfDAGNode)
 
@@ -735,7 +727,29 @@ class AppDAGNode(AppDGNode):
         return node_DataMatrix
 
     def editTransform(self):
-        pass
+        _node_DataNode=self._node_DataNode
+        _matrix_DataMatrix=self._translate_MVector
+        self._rotate_MEulerRotation
+        self._quaternion_MQuaternion
+        self._scale_list3
+
+        node_MObject=self.node_query_MObject(_node_DataNode.getName())
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+
+        node_MFnTransform=om2.MFnTransform(node_MDagPath)
+        node_MTransformationMatrix=om2.MTransformationMatrix(_matrix_DataMatrix)
+        node_MFnTransform.setTransformation(node_MTransformationMatrix)
+    
+    def editTransformByMatrix(self):
+        _node_DataNode=self._node_DataNode
+        _matrix_DataMatrix=self._matrix_DataMatrix
+
+        node_MObject=self.node_query_MObject(_node_DataNode.getName())
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+
+        node_MFnTransform=om2.MFnTransform(node_MDagPath)
+        node_MTransformationMatrix=om2.MTransformationMatrix(_matrix_DataMatrix)
+        node_MFnTransform.setTransformation(node_MTransformationMatrix)
 
     def editTranslate(self):
         pass
@@ -752,12 +766,10 @@ class AppDAGNode(AppDGNode):
     def editShear(self):
         pass
 
-    def matchTargetTransform(self,sourceNode=None,targetNode=None,mirrorAxis=None,mirrorOrientVector=None,matrix=None):
+    def matchTransform(self,sourceNode=None,targetNode=None,matrix=None):
         _matrix_DataMatrix=matrix or self._matrix_DataMatrix
         _source_DataNode=sourceNode or self._node_DataNode or self._source_DataNode
         _target_DataNode=targetNode or self._target_DataNode
-        _mirrorAxis_str=mirrorAxis or self._mirrorAxis_str
-        _mirrorOrientVector_str=mirrorOrientVector or self._mirrorOrientVector_str
 
         if not _matrix_DataMatrix is None:
             source_DataMatrix=_matrix_DataMatrix
@@ -768,34 +780,34 @@ class AppDAGNode(AppDGNode):
         target_MDagPath=self.convertMObject_query_MDagPath(target_MObject)
         target_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(target_MDagPath)
 
-        mirror_SelfMatrix=mLB.SelfMatrix()
-        mirror_SelfMatrix.setDataMatrix(source_DataMatrix)
-        mirror_SelfMatrix.setSubjectDataMatrix(target_DataMatrix)
-        mirror_DataMatrix=mirror_SelfMatrix.match()
+        mirror_AppMatrix=mLB.AppMatrix()
+        mirror_AppMatrix.setDataMatrix(source_DataMatrix)
+        mirror_AppMatrix.setSubjectDataMatrix(target_DataMatrix)
+        mirror_DataMatrix=mirror_AppMatrix.match()
 
         targetNode_MFnTransform=om2.MFnTransform(target_MDagPath)
         targetMirror_MTransformationMatrix=om2.MTransformationMatrix(mirror_DataMatrix)
         targetNode_MFnTransform.setTransformation(targetMirror_MTransformationMatrix)
     
-    def matchTargetTranslate(self):
+    def matchTranslate(self):
         pass
 
-    def matchTargetRotation(self):
+    def matchRotation(self):
         pass
     
-    def matchTargetQuaternion(self):
+    def matchQuaternion(self):
         pass
     
-    def matchTargetAimVector(self):
+    def matchAimVector(self):
         pass
     
-    def matchTargetScale(self):
+    def matchScale(self):
         pass
     
-    def matchTargetShear(self):
+    def matchShear(self):
         pass
 
-    def mirrorTargetTransform(self,sourceNode=None,targetNode=None,mirrorAxis=None,mirrorOrientVector=None,matrix=None):
+    def mirrorTransform(self,sourceNode=None,targetNode=None,mirrorAxis=None,mirrorOrientVector=None,matrix=None):
         _matrix_DataMatrix=matrix or self._matrix_DataMatrix
         _source_DataNode=sourceNode or self._node_DataNode or self._source_DataNode
         _target_DataNode=targetNode or self._target_DataNode
@@ -811,12 +823,12 @@ class AppDAGNode(AppDGNode):
         target_MDagPath=self.convertMObject_query_MDagPath(target_MObject)
         target_DataMatrix=self.convertMDagPathToInverseParentMatrix_query_DataMatrix(target_MDagPath)
 
-        mirror_SelfMatrix=mLB.SelfMatrix()
-        mirror_SelfMatrix.setDataMatrix(source_DataMatrix)
-        mirror_SelfMatrix.setSubjectDataMatrix(target_DataMatrix)
-        mirror_SelfMatrix.setMirrorAxis(_mirrorAxis_str)
-        mirror_SelfMatrix.setMirrorOrientVector(_mirrorOrientVector_str)
-        mirror_DataMatrix=mirror_SelfMatrix.mirror()
+        mirror_AppMatrix=mLB.AppMatrix()
+        mirror_AppMatrix.setDataMatrix(source_DataMatrix)
+        mirror_AppMatrix.setSubjectDataMatrix(target_DataMatrix)
+        mirror_AppMatrix.setMirrorAxis(_mirrorAxis_str)
+        mirror_AppMatrix.setMirrorOrientVector(_mirrorOrientVector_str)
+        mirror_DataMatrix=mirror_AppMatrix.mirror()
 
         targetMirror_MTransformationMatrix=om2.MTransformationMatrix(mirror_DataMatrix)
         targetNode_MFnTransform=om2.MFnTransform(target_MDagPath)

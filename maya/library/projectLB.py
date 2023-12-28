@@ -5,24 +5,24 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
 import cgInTools as cit
+from ...library import dataLB as dLB
 from ...library import jsonLB as jLB
 from ...library import pathLB as pLB
-from ...library import baseLB as bLB
 from . import cleanLB as cLB
-cit.reloads([jLB,pLB,bLB,cLB])
+cit.reloads([jLB,pLB,dLB,cLB])
 
 RULE_DICT=jLB.readJson(cit.mayaSettings_dir,"library")
 PROJECTFOLDER=cit.mayaDefSetProject_dir
 
-class SelfProject(bLB.SelfOrigin):
+class AppProject(object):
     def __init__(self):
         self._defSetProjectFolder=PROJECTFOLDER
-        self._project_DataPath=pLB.DataPath()
-        self._project_SelfPath=pLB.SelfPath()
+        self._project_DataPath=None
+        self._project_AppPath=pLB.AppPath()
     
     def __str__(self):
-        self._project_SelfPath.setDataPath(self._project_DataPath)
-        project_dir=self._project_SelfPath.queryDirectory()
+        self._project_AppPath.setDataPath(self._project_DataPath)
+        project_dir=self._project_AppPath.queryDirectory()
         return project_dir
 
     #Single Function
@@ -68,25 +68,25 @@ class SelfProject(bLB.SelfOrigin):
     def createProject(self,dataPath=None):
         _project_DataPath=dataPath or self._project_DataPath
 
-        self._project_SelfPath.setDataPath(_project_DataPath)
-        project_dir=self._project_SelfPath.queryDirectory()
+        self._project_AppPath.setDataPath(_project_DataPath)
+        project_dir=self._project_AppPath.queryDirectory()
         workSpace_dir=self.setProject_edit_str(project_dir,create=True)
         return workSpace_dir
 
     def editProject(self,dataPath=None):
         _project_DataPath=dataPath or self._project_DataPath
         
-        self._project_SelfPath.setDataPath(_project_DataPath)
-        project_dir=self._project_SelfPath.queryDirectory()
+        self._project_AppPath.setDataPath(_project_DataPath)
+        project_dir=self._project_AppPath.queryDirectory()
         workSpace_dir=self.setProject_edit_str(project_dir)
         return workSpace_dir
 
     def queryProject(self):
-        self._project_SelfPath.setDataPath(self._project_DataPath)
-        project_dir=self._project_SelfPath.queryDirectory()
+        self._project_AppPath.setDataPath(self._project_DataPath)
+        project_dir=self._project_AppPath.queryDirectory()
         return project_dir
  
-class SelfFile():
+class AppFile(object):
     def __init__(self):
         self._file_DataPath=pLB.DataPath()
         self._file_SelfPath=pLB.SelfPath()
@@ -143,7 +143,7 @@ class SelfFile():
             cmds.rename(grp+"_original",grp)
 
     #Multi Function
-    def _judgeFileType_create_func(objs,path,file,extension,fileType_dict):
+    def _judgeFileType_create_func(self,objs,path,file,extension,fileType_dict):
         fileType=fileType_dict[extension]
         if extension is "ma" or extension is "mb":
             self.exportMAMB_create_func(objs,path,file,extension,fileType)

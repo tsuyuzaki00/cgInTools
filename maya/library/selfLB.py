@@ -5,7 +5,8 @@ from . import dataLB as dLB
 from . import mayaMenuLB as mmLB
 from . import nodeLB as nLB
 from . import nameLB as naLB
-cit.reloads([bLB,dLB,mmLB,nLB,naLB])
+from . import projectLB as pjLB
+cit.reloads([bLB,dLB,mmLB,nLB,naLB,pjLB])
 
 class SelfMenu(bLB.SelfOrigin):
     def __init__(self,selfMenu=None):
@@ -412,7 +413,13 @@ class SelfDAGNode(SelfDGNode):
         pass
     
     def editTransformByMatrix(self):
-        pass
+        _node_DataNode=self._node_DataNode
+        _edit_DataMatrix=self._edit_DataMatrix
+
+        edit_AppDAGNode=nLB.AppDAGNode()
+        edit_AppDAGNode.setDataNode(_node_DataNode)
+        edit_AppDAGNode.setDataMatrix(_edit_DataMatrix)
+        edit_AppDAGNode.editTransform()
 
     def editTranslate(self):
         pass
@@ -741,3 +748,42 @@ class SelfCurve(SelfDAGNode):
 
     def editSkinWeight(self):
         pass
+
+class SelfProject(bLB.SelfOrigin):
+    def __init__(self):
+        super(SelfProject,self).__init__()
+        self._project_DataPath=None
+
+    #Setting Function
+    def setDataPath(self,variable):
+        self._project_DataPath=variable
+        return self._project_DataPath
+    def currentDataPath(self):
+        current_AppProject=pjLB.AppProject()
+        self._project_DataPath=current_AppProject.currentDataPath()
+        return self._project_DataPath
+    def getDataPath(self):
+        return self._project_DataPath
+
+    #Public Function
+    def createProject(self,dataPath=None):
+        _project_DataPath=dataPath or self._project_DataPath
+        
+        project_AppProject=pjLB.AppProject()
+        project_AppProject.setDataPath(_project_DataPath)
+        workSpace_dir=project_AppProject.createProject()
+        return workSpace_dir
+
+    def editProject(self,dataPath=None):
+        _project_DataPath=dataPath or self._project_DataPath
+
+        project_AppProject=pjLB.AppProject()
+        project_AppProject.setDataPath(_project_DataPath)
+        workSpace_dir=project_AppProject.editProject()
+        return workSpace_dir
+
+    def queryProject(self):
+        project_AppProject=pjLB.AppProject()
+        project_AppProject.setDataPath(self._project_DataPath)
+        workSpace_dir=project_AppProject.queryProject()
+        return workSpace_dir

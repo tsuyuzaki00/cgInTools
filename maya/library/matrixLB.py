@@ -33,7 +33,7 @@ class DataMatrix(om2.MMatrix):
     def getRotateOrder(self):
         return self._rotateOrder
 
-class SelfMatrix(bLB.SelfOrigin):
+class AppMatrix(bLB.SelfOrigin):
     def __init__(self):
         super(SelfMatrix,self).__init__()
         self._matrix_DataMatrix=DataMatrix()
