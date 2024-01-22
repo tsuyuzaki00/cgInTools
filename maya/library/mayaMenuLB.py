@@ -53,11 +53,11 @@ class AppMenu():
     def setDataMenu(self,variable):
         self._menu_DataMenu=variable
         return self._menu_DataMenu
-    def getDataPath(self):
+    def getDataMenu(self):
         return self._menu_DataMenu
         
     #Public Function
     def create(self):
         menuName_str=self._menu_DataMenu.getName()
-        menu_DataMenuParamArrays=self._menu_DataMenu.getDataMeunParamArrays()
+        menu_DataMenuParamArrays=self._menu_DataMenu.getDataMenuParamArrays()
         self._settingsMenu_create_func(menuName_str,menu_DataMenuParamArrays)

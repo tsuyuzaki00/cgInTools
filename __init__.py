@@ -14,17 +14,15 @@ def reloads(ps=[]):
 def checkScriptsData(folderName_str,setting_dir,cgInToolsData_dir):
     setting_dir=os.path.join(setting_dir,folderName_str)
     folder_dir=os.path.join(cgInToolsData_dir,folderName_str)
-    
-    file_strs=[file_str for file_str in os.listdir(setting_dir) if "init" in file_str]
-
     if not os.path.isdir(folder_dir):
         os.makedirs(folder_dir)
-
-    file_path=os.path.join(folder_dir,file_strs[0])
-    setting_path=os.path.join(setting_dir,file_strs[0])
     
-    if not os.path.isfile(file_path):
-        shutil.copy2(setting_path,file_path)
+    file_strs=[file_str for file_str in os.listdir(setting_dir) if "init" in file_str or "execute" in file_str]
+    for file_str in file_strs:
+        file_path=os.path.join(folder_dir,file_str)
+        if not os.path.isfile(file_path):
+            setting_path=os.path.join(setting_dir,file_str)
+            shutil.copy2(setting_path,file_path)
     return setting_dir,folder_dir
 
 root_dir=os.path.dirname(__file__) #.../cgInTools/

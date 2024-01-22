@@ -6,12 +6,12 @@ import maya.api.OpenMaya as om2
 
 import cgInTools as cit
 from ...library import dataLB as dLB
-from ...library import jsonLB as jLB
+from ...library import functionLB as fLB
 from ...library import pathLB as pLB
 from . import cleanLB as cLB
-cit.reloads([jLB,pLB,dLB,cLB])
+cit.reloads([fLB,pLB,dLB,cLB])
 
-RULE_DICT=jLB.readJson(cit.mayaSettings_dir,"library")
+RULE_DICT=fLB.readJson(cit.mayaSettings_dir,"rules","library")
 PROJECTFOLDER=cit.mayaDefSetProject_dir
 
 class AppProject(object):

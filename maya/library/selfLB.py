@@ -9,12 +9,12 @@ from . import projectLB as pjLB
 cit.reloads([bLB,dLB,mmLB,nLB,naLB,pjLB])
 
 class SelfMenu(bLB.SelfOrigin):
-    def __init__(self,selfMenu=None):
-        super(SelfMenu,self).__init__()
-        if selfMenu is None:
+    def __init__(self,selfObject=None):
+        super(SelfMenu,self).__init__(selfObject)
+        if selfObject is None:
             self._menu_DataMenu=None
-        elif type(selfMenu) is SelfMenu:
-            self._menu_DataMenu=selfMenu.getDataMenu()
+        elif isinstance(selfObject,SelfMenu):
+            self._menu_DataMenu=selfObject.getDataMenu()
 
     #Setting Function
     def setDataMenu(self,variable):
@@ -31,13 +31,13 @@ class SelfMenu(bLB.SelfOrigin):
         menu_AppMenu.setDataMenu(_menu_DataMenu)
         menu_AppMenu.create()
 
-    def updata(self,dataMenu):
+    def updata(self,dataMenu=None):
         pass
 
 class SelfDGNode(bLB.SelfOrigin):
-    def __init__(self,selfDGNode=None):
-        super(SelfDGNode,self).__init__()
-        if selfDGNode is None:
+    def __init__(self,selfObject=None):
+        super(SelfDGNode,self).__init__(selfObject)
+        if selfObject is None:
             self._node_DataNode=None
             self._name_DataName=None
             self._create_DataNode=None
@@ -45,54 +45,22 @@ class SelfDGNode(bLB.SelfOrigin):
             self._create_DataPlugArray=None
             self._edit_DataPlug=None
             self._edit_DataPlugArray=None
-            self._connect_DataPlugConnect=None
-            self._connect_DataPlugConnectArray=None
-            self._keyable_DataKeyable=None
-            self._drivenkey_DataDrivenKey=None
-        elif type(selfDGNode) is SelfDGNode:
-            self._node_DataNode=selfDGNode.getDataNode()
-            self._name_DataName=selfDGNode.getDataName()
-            self._create_DataNode=selfDGNode.getDataNodeForCreate()
-            self._create_DataPlug=selfDGNode.getDataPlugForCreate()
-            self._create_DataPlugArray=selfDGNode.getDataPlugArrayForCreate()
-            self._edit_DataPlug=selfDGNode.getDataPlugForEdit()
-            self._edit_DataPlugArray=selfDGNode.getDataPlugArrayForEdit()
-            self._connect_DataPlugConnect=selfDGNode.getDataPlugConnect()
-            self._connect_DataPlugConnectArray=selfDGNode.getDataPlugConnectArray()
-            self._keyable_DataKeyable=selfDGNode.getDataKeyable()
-            self._drivenkey_DataDrivenKey=selfDGNode.getDataDrivenKey()
-
-        self._dataChoice_strs+=[
-            "DataNode",
-            "DataName",
-            "DataNodeForCreate",
-            "DataPlugForCreate",
-            "DataPlugArrayForCreate",
-            "DataPlugForEdit",
-            "DataPlugArrayForEdit",
-            "DataPlugConnect",
-            "DataPlugConnectArray",
-            "DataKeyable",
-            "DataDrivenKey"
-        ]
-        self._doIt_strs+=[
-            "createNode",
-            "rename",
-            "createAttr",
-            "createAttrArray",
-            "editAttr",
-            "editAttrArray",
-            "editPair",
-            "editPairArray",
-            "editKeyable",
-            "editDrivenKey",
-            "queryAttr",
-            "queryAttrArray",
-            "queryPair",
-            "queryPairArray",
-            "queryKeyable",
-            "queryDrivenKey"
-        ]
+            self._connect_DataConnectPlug=None
+            self._connect_DataConnectPlugArray=None
+            self._anim_DataKeyable=None
+            self._driven_DataKeyable=None
+        elif isinstance(selfObject,SelfDGNode):
+            self._node_DataNode=selfObject.getDataNode()
+            self._name_DataName=selfObject.getDataName()
+            self._create_DataNode=selfObject.getCreateDataNode()
+            self._create_DataPlug=selfObject.getCreateDataPlug()
+            self._create_DataPlugArray=selfObject.getCreateDataPlugArray()
+            self._edit_DataPlug=selfObject.getEditDataPlug()
+            self._edit_DataPlugArray=selfObject.getEditDataPlugArray()
+            self._connect_DataPlugConnect=selfObject.getDataConnectPlug()
+            self._connect_DataPlugConnectArray=selfObject.getDataConnectPlugArray()
+            self._anim_DataKeyable=selfObject.getAnimDataKeyable()
+            self._driven_DataKeyable=selfObject.getDrivenDataKeyable()
 
     #Setting Function
     def setDataNode(self,variable):
@@ -107,66 +75,66 @@ class SelfDGNode(bLB.SelfOrigin):
     def getDataName(self):
         return self._name_DataName
 
-    def setDataNodeForCreate(self,variable):
+    def setCreateDataNode(self,variable):
         self._create_DataNode=variable
         return self._create_DataNode
-    def getDataNodeForCreate(self):
+    def getCreateDataNode(self):
         return self._create_DataNode
     
-    def setDataPlugForCreate(self,variable):
+    def setCreateDataPlug(self,variable):
         self._create_DataPlug=variable
         return self._create_DataPlug
-    def getDataPlugForCreate(self):
+    def getCreateDataPlug(self):
         return self._create_DataPlug
     
-    def setDataPlugArrayForCreate(self,variable):
+    def setCreateDataPlugArray(self,variable):
         self._create_DataPlugArray=variable
         return self._create_DataPlugArray
-    def getDataPlugArrayForCreate(self):
+    def getCreateDataPlugArray(self):
         return self._create_DataPlugArray
 
-    def setDataPlugForEdit(self,variable):
+    def setEditDataPlug(self,variable):
         self._edit_DataPlug=variable
         return self._edit_DataPlug
-    def getDataPlugForEdit(self):
+    def getEditDataPlug(self):
         return self._edit_DataPlug
     
-    def setDataPlugArrayForEdit(self,variable):
+    def setEditDataPlugArray(self,variable):
         self._edit_DataPlugArray=variable
         return self._edit_DataPlugArray
-    def getDataPlugArrayForEdit(self):
+    def getEditDataPlugArray(self):
         return self._edit_DataPlugArray
 
-    def setDataPlugConnect(self,variable):
-        self._connect_DataPlugConnect=variable
-        return self._connect_DataPlugConnect
-    def getDataPlugConnect(self):
-        return self._connect_DataPlugConnect
+    def setDataConnectPlug(self,variable):
+        self._connect_DataConnectPlug=variable
+        return self._connect_DataConnectPlug
+    def getDataConnectPlug(self):
+        return self._connect_DataConnectPlug
     
-    def setDataPlugConnectArray(self,variable):
-        self._connect_DataPlugConnectArray=variable
-        return self._connect_DataPlugConnectArray
-    def getDataPlugConnectArray(self):
-        return self._connect_DataPlugConnectArray
+    def setDataConnectPlugArray(self,variable):
+        self._connect_DataConnectPlugArray=variable
+        return self._connect_DataConnectPlugArray
+    def getDataConnectPlugArray(self):
+        return self._connect_DataConnectPlugArray
     
-    def setDataKeyable(self,variable):
-        self._keyable_DataKeyable=variable
-        return self._keyable_DataKeyable
-    def getDataKeyable(self):
-        return self._keyable_DataKeyable
+    def setAnimDataKeyable(self,variable):
+        self._anim_DataKeyable=variable
+        return self._anim_DataKeyable
+    def getAnimDataKeyable(self):
+        return self._anim_DataKeyable
         
-    def setDataDrivenKey(self,variable):
-        self._drivenkey_DataDrivenKey=variable
-        return self._drivenkey_DataDrivenKey
-    def getDataDrivenKey(self):
-        return self._drivenkey_DataDrivenKey
+    def setDrivenDataKeyable(self,variable):
+        self._driven_DataDrivenKey=variable
+        return self._driven_DataDrivenKey
+    def getDrivenDataKeyable(self):
+        return self._driven_DataDrivenKey
 
     #Public Function
     def createNode(self,dataNode=None,dataName=None):
         _create_DataNode=dataNode or self._create_DataNode
         _name_DataName=dataName or self._name_DataName
 
-        name_AppName=naLB.AppName()
+        name_AppName=naLB.AppNodeName()
         name_AppName.setDataName(_name_DataName)
         name_str=name_AppName.create()
         _create_DataNode.setName(name_str)
@@ -247,9 +215,9 @@ class SelfDGNode(bLB.SelfOrigin):
         pass
 
 class SelfDAGNode(SelfDGNode):
-    def __init__(self,selfDAGNode=None):
-        super(SelfDAGNode,self).__init__(selfDAGNode)
-        if selfDAGNode is None:
+    def __init__(self,selfObject=None):
+        super(SelfDAGNode,self).__init__(selfObject)
+        if selfObject is None:
             self._parent_DataNode=None
             self._child_DataNodeArray=None
             self._shape_DataNodeArray=None
@@ -260,83 +228,17 @@ class SelfDAGNode(SelfDGNode):
             self._scale_DataScale=None
             self._match_DataMatch=None
             self._mirror_DataMirror=None
-        elif type(selfDAGNode) is SelfDAGNode:
-            self._parent_DataNode=selfDAGNode.getDataNodeForParent()
-            self._child_DataNodeArray=selfDAGNode.getDataNodeArrayForChild()
-            self._shape_DataNodeArray=selfDAGNode.getDataNodeArrayForShape()
-            self._edit_DataMatrix=selfDAGNode.getDataMatrix()
-            self._translate_DataTranslate=selfDAGNode.getDataTranslate()
-            self._rotate_DataRotation=selfDAGNode.getDataRotation()
-            self._quaternion_DataQuaternion=selfDAGNode.getDataQuaternion()
-            self._scale_DataScale=selfDAGNode.getDataScale()
-            self._match_DataMatch=selfDAGNode.getDataMatch()
-            self._mirror_DataMirror=selfDAGNode.getDataMirror()
-
-        self._dataChoice_strs+=[
-            "DataNodeForParent",
-            "DataNodeArrayForChild",
-            "DataNodeArrayForShape",
-            "DataMatrix",
-            "DataTranslate",
-            "DataRotation",
-            "DataQuaternion",
-            "DataScale",
-            "DataMatch",
-            "DataMirror"
-        ]
-        self._doIt_strs+=[
-            "editParent",
-            "editChilds",
-            "editShapes",
-            "editTransform",
-            "editTransformByMatrix",
-            "editTranslate",
-            "editTranslateByMatrix",
-            "editRotation",
-            "editRotationByMatrix",
-            "editQuaternion",
-            "editAimVector",
-            "editScale",
-            "editScaleByMatrix",
-            "editShear",
-            "matchTransform",
-            "matchTransformByMatrix",
-            "matchTranslate",
-            "matchTranslateByMatrix",
-            "matchRotation",
-            "matchRotationByMatrix",
-            "matchQuaternion",
-            "matchAimVector",
-            "matchScale",
-            "matchScaleByMatrix",
-            "matchShear",
-            "mirrorTransform",
-            "mirrorTranslate",
-            "mirrorRotation",
-            "mirrorQuaternion",
-            "mirrorScale",
-            "queryFullPathName",
-            "queryParent",
-            "queryParentOfDataNode",
-            "queryChilds",
-            "queryChildOfDataNodes",
-            "queryShapes",
-            "queryShapeOfDataNodes",
-            "queryTranslate",
-            "queryDataTranslate",
-            "queryRotation",
-            "queryDataRotation",
-            "queryQuaternion",
-            "queryDataQuaternion",
-            "queryScale",
-            "queryDataScale",
-            "queryNormalDataMatrix",
-            "queryWorldDataMatrix",
-            "queryParentDataMatrix",
-            "queryInverseNormalDataMatrix",
-            "queryInverseWorldDataMatrix",
-            "queryInverseParentDataMatrix"
-        ]
+        elif isinstance(selfObject,SelfDAGNode):
+            self._parent_DataNode=selfObject.getDataNodeForParent()
+            self._child_DataNodeArray=selfObject.getDataNodeArrayForChild()
+            self._shape_DataNodeArray=selfObject.getDataNodeArrayForShape()
+            self._edit_DataMatrix=selfObject.getDataMatrix()
+            self._translate_DataTranslate=selfObject.getDataTranslate()
+            self._rotate_DataRotation=selfObject.getDataRotation()
+            self._quaternion_DataQuaternion=selfObject.getDataQuaternion()
+            self._scale_DataScale=selfObject.getDataScale()
+            self._match_DataMatch=selfObject.getDataMatch()
+            self._mirror_DataMirror=selfObject.getDataMirror()
     
     #Setting Function
     def setDataNodeForParent(self,variable):
@@ -572,56 +474,66 @@ class SelfDAGNode(SelfDGNode):
         return node_DataMatrix
 
 class SelfJoint(SelfDAGNode):
-    def __init__(self,objectJoint=None):
-        super(SelfJoint,self).__init__(objectJoint)
-        if objectJoint is None:
+    def __init__(self,selfObject=None):
+        super(SelfJoint,self).__init__(selfObject)
+        if selfObject is None:
             pass
-
-        self._dataChoice_strs+=[
-        ]
-        self._doIt_strs+=[
-        ]
+        elif isinstance(selfObject,SelfJoint):
+            pass
     
     #Public Function
     def createJoint(self,):
         pass
 
 class SelfLight(SelfDAGNode):
-    def __init__(self):
-        super(SelfLight,self).__init__()
+    def __init__(self,selfObject=None):
+        super(SelfLight,self).__init__(selfObject)
+        if selfObject is None:
+            pass
+        elif isinstance(selfObject,SelfLight):
+            pass
 
     #Public Function
-    def createLight(self,):
+    def createLight(self):
         pass
 
 class SelfCamera(SelfDAGNode):
-    def __init__(self):
-        super(SelfCamera,self).__init__()
+    def __init__(self,selfObject=None):
+        super(SelfCamera,self).__init__(selfObject)
+        if selfObject is None:
+            pass
+        elif isinstance(selfObject,SelfCamera):
+            pass
 
     #Public Function
-    def createCamera(self,):
+    def createCamera(self):
         pass
 
 class SelfGeometry(SelfDAGNode):
-    def __init__(self):
-        super(SelfGeometry,self).__init__()
-        self._create_DataMesh=None
-        self._edit_DataMesh=None
-        self._material_DataMaterial=None
-        self._skin_DataBind=None
-        self._skin_DataWeight=None
+    def __init__(self,selfObject=None):
+        super(SelfGeometry,self).__init__(selfObject)
+        if selfObject is None:
+            self._create_DataMesh=None
+            self._edit_DataMesh=None
+            self._material_DataMaterial=None
+            self._skin_DataBind=None
+        elif isinstance(selfObject,SelfGeometry):
+            self._create_DataMesh=selfObject.getCreateDataMesh()
+            self._edit_DataMesh=selfObject.getEditDataMesh()
+            self._material_DataMaterial=selfObject.getDataMaterial()
+            self._skin_DataBind=selfObject.getDataBind()
 
     #Setting Function
-    def setDataMeshForCreate(self,variable):
+    def setCreateDataMesh(self,variable):
         self._create_DataMesh=variable
         return self._create_DataMesh
-    def getDataMeshForCreate(self):
+    def getCreateDataMesh(self):
         return self._create_DataMesh
     
-    def setDataMeshForEdit(self,variable):
+    def setEditDataMesh(self,variable):
         self._edit_DataMesh=variable
         return self._edit_DataMesh
-    def getDataMeshForEdit(self):
+    def getEditDataMesh(self):
         return self._edit_DataMesh
 
     def setDataMaterial(self,variable):
@@ -636,12 +548,6 @@ class SelfGeometry(SelfDAGNode):
     def getDataBind(self):
         return self._skin_DataBind
 
-    def setDataWeightForSkin(self,variables):
-        self._skin_DataWeight=variables
-        return self._skin_DataWeight
-    def getDataWeightForSkin(self):
-        return self._skin_DataWeight
-    
     #Public Function
     def createGeometry(self):
         pass
@@ -656,24 +562,28 @@ class SelfGeometry(SelfDAGNode):
         pass
 
 class SelfSurface(SelfDAGNode):
-    def __init__(self):
-        super(SelfSurface,self).__init__()
-        self._create_DataSurface=None
-        self._edit_DataSurface=None
-        self._skin_DataBind=None
-        self._skin_DataWeight=None
+    def __init__(self,selfObject=None):
+        super(SelfSurface,self).__init__(selfObject)
+        if selfObject is None:
+            self._create_DataSurface=None
+            self._edit_DataSurface=None
+            self._skin_DataBind=None
+        elif isinstance(selfObject,SelfSurface):
+            self._create_DataSurface=selfObject.getCreateDataSurface()
+            self._edit_DataSurface=selfObject.getEditDataSurface()
+            self._skin_DataBind=selfObject.getDataBind()
 
     #Setting Function
-    def setDataSurfaceForCreate(self,variable):
+    def setCreateDataSurface(self,variable):
         self._create_DataSurface=variable
         return self._create_DataSurface
-    def getDataSurfaceForCreate(self):
+    def getCreateDataSurface(self):
         return self._create_DataSurface
     
-    def setDataSurfaceForEdit(self,variable):
+    def setEditDataSurface(self,variable):
         self._edit_DataSurface=variable
         return self._edit_DataSurface
-    def getDataSurfaceForEdit(self):
+    def getEditDataSurface(self):
         return self._edit_DataSurface
     
     def setDataBind(self,variable):
@@ -681,13 +591,6 @@ class SelfSurface(SelfDAGNode):
         return self._skin_DataBind
     def getDataBind(self):
         return self._skin_DataBind
-
-    def setDataWeightForSkin(self,variables):
-        self._skin_DataWeight=variables
-        return self._skin_DataWeight
-    def getDataWeightForSkin(self):
-        return self._skin_DataWeight
-    
 
     #Public Function
     def createSurface(self):
@@ -703,24 +606,29 @@ class SelfSurface(SelfDAGNode):
         pass
 
 class SelfCurve(SelfDAGNode):
-    def __init__(self):
-        super(SelfCurve,self).__init__()
-        self._create_DataCurve=None
-        self._edit_DataCurve=None
-        self._skin_DataBind=None
-        self._skin_DataWeight=None
+    def __init__(self,selfObject=None):
+        super(SelfCurve,self).__init__(selfObject)
+        if selfObject is None:
+            self._create_DataCurve=None
+            self._edit_DataCurve=None
+            self._skin_DataBind=None
+            self._skin_DataWeight=None
+        elif isinstance(selfObject,SelfCurve):
+            self._create_DataCurve=selfObject.getCreateDataCurve()
+            self._edit_DataCurve=selfObject.getEditDataCurve()
+            self._skin_DataBind=selfObject.getDataBind()
 
     #Setting Function
-    def setDataCurveForCreate(self,variable):
+    def setCreateDataCurve(self,variable):
         self._create_DataCurve=variable
         return self._create_DataCurve
-    def getDataCurveForCreate(self):
+    def getCreateDataCurve(self):
         return self._create_DataCurve
     
-    def setDataCurveForEdit(self,variable):
+    def setEditDataCurve(self,variable):
         self._edit_DataCurve=variable
         return self._edit_DataCurve
-    def getDataCurveForEdit(self):
+    def getEditDataCurve(self):
         return self._edit_DataCurve
 
     def setDataBind(self,variable):
@@ -729,13 +637,6 @@ class SelfCurve(SelfDAGNode):
     def getDataBind(self):
         return self._skin_DataBind
 
-    def setDataWeightForSkin(self,variables):
-        self._skin_DataWeight=variables
-        return self._skin_DataWeight
-    def getDataWeightForSkin(self):
-        return self._skin_DataWeight
-    
-    
     #Public Function
     def createCurve(self):
         pass
@@ -750,19 +651,22 @@ class SelfCurve(SelfDAGNode):
         pass
 
 class SelfProject(bLB.SelfOrigin):
-    def __init__(self):
-        super(SelfProject,self).__init__()
-        self._project_DataPath=None
+    def __init__(self,selfObject=None):
+        super(SelfProject,self).__init__(selfObject)
+        if selfObject is None:
+            self._project_DataPath=None
+        elif isinstance(selfObject,SelfProject):
+            self._project_DataPath=selfObject.getProjectDataPath()
 
     #Setting Function
-    def setDataPath(self,variable):
+    def setProjectDataPath(self,variable):
         self._project_DataPath=variable
         return self._project_DataPath
-    def currentDataPath(self):
+    def currentProjectDataPath(self):
         current_AppProject=pjLB.AppProject()
         self._project_DataPath=current_AppProject.currentDataPath()
         return self._project_DataPath
-    def getDataPath(self):
+    def getProjectDataPath(self):
         return self._project_DataPath
 
     #Public Function

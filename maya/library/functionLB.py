@@ -5,8 +5,11 @@ import maya.api.OpenMayaAnim as oma2
 import sys,math
 
 import cgInTools as cit
-from ...library import jsonLB as jLB
-cit.reloads([jLB])
+from ...library import jsonLB as jsLB
+from ...library import serializeLB as seLB
+from ...library import dataLB as dLB
+cit.reloads([jsLB,seLB,dLB])
+
 
 def childTypes_query_strs(obj,nodeType):
     childs=cmds.ls(obj,sl=True,dag=True,type=nodeType)

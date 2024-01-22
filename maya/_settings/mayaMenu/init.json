@@ -112,7 +112,6 @@
             "DataMenuParamArray":[]
         },
         {
-
             "Name":"Curve",
             "Type":"multi",
             "DataMenuParamArray":[
@@ -234,13 +233,11 @@
             ]
         },
         {
-
             "Name":"Face",
             "Type":"multi",
             "DataMenuParamArray":[]
         },
         {
-
             "Name":"Cv",
             "Type":"multi",
             "DataMenuParamArray":[
@@ -358,7 +355,6 @@
             "DataMenuParamArray":[]
         },
         {
-
             "Name":"Animation",
             "Type":"multi",
             "DataMenuParamArray":[

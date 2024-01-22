@@ -1,15 +1,13 @@
 # -*- coding: iso-8859-15 -*-
 import pickle
 import cgInTools as cit
-from . import dataLB as dLB
 from . import pathLB as pLB
 cit.reloads([pLB])
 
 class AppSerialize(object):
     def __init__(self):
-        self._selfpy_AppPath=pLB.AppPath()
+        self._path_DataPath=None
         self._write_SelfObject=None
-        self._write_SelfObjects=[]
 
     #Single Function
     def serialize_query_SelfObject(self,path):
@@ -23,10 +21,10 @@ class AppSerialize(object):
 
     #Setting Function
     def setDataPath(self,variable):
-        self._selfpy_AppPath.setDataPath(variable)
-        return self._selfpy_AppPath.getDataPath()
+        self._path_DataPath=variable
+        return self._path_DataPath
     def getDataPath(self):
-        return self._selfpy_AppPath.getDataPath()
+        return self._path_DataPath
     
     def setWriteSelfObject(self,variable):
         self._write_SelfObject=variable
@@ -34,63 +32,19 @@ class AppSerialize(object):
     def getWriteSelfObject(self):
         return self._write_SelfObject
 
-    def setWriteSelfObjects(self,variables):
-        self._write_SelfObjects=variables
-        return self._write_SelfObjects
-    def addWriteSelfObjects(self,variables):
-        self._write_SelfObjects+=variables
-        return self._write_SelfObjects
-    def getWriteSelfObjects(self):
-        return self._write_SelfObjects
-
     #Public Function
     def read(self,dataPath=None):
-        absolute_path=self._selfpy_AppPath.queryAbsolutePath(dataPath)
+        _path_DataPath=dataPath or self._path_DataPath
+
+        path_AppPath=pLB.AppPath()
+        absolute_path=path_AppPath.queryAbsolutePath(_path_DataPath)
         read_SelfObject=self.serialize_query_SelfObject(absolute_path)
         return read_SelfObject
 
     def write(self,dataPath=None,selfObject=None):
+        _path_DataPath=dataPath or self._path_DataPath
         _write_SelfObject=selfObject or self._write_SelfObject
 
-        absolute_path=self._selfpy_AppPath.queryAbsolutePath(dataPath)
+        path_AppPath=pLB.AppPath()
+        absolute_path=path_AppPath.queryAbsolutePath(_path_DataPath)
         self.serialize_create_func(absolute_path,_write_SelfObject)
-
-    def writes(self,dataPath=None,selfObjects=None):
-        _write_SelfObjects=selfObjects or self._write_SelfObjects
-
-        absolute_path=self._selfpy_AppPath.queryAbsolutePath(dataPath)
-        self.serialize_create_func(absolute_path,_write_SelfObjects)
-
-
-def readSelfObject(directory,file,extension="selfpy"):
-    data_DataPath=dLB.DataPath()
-    data_DataPath.setAbsoluteDirectory(directory)
-    data_DataPath.setFile(file)
-    data_DataPath.setExtension(extension)
-
-    data_SelfObject=AppSerialize()
-    data_SelfObject.setDataPath(data_DataPath)
-    selfpy_SelfObject=data_SelfObject.read()
-    return selfpy_SelfObject
-
-def writeSelfObject(directory,file,extension="selfpy",write=None):
-    data_DataPath=dLB.DataPath()
-    data_DataPath.setAbsoluteDirectory(directory)
-    data_DataPath.setFile(file)
-    data_DataPath.setExtension(extension)
-    
-    data_SelfObject=AppSerialize()
-    data_SelfObject.setDataPath(data_DataPath)
-    data_SelfObject.setWriteSelfObject(write)
-    data_SelfObject.write()
-
-def writeSelfObjects(directory,file,extension="selfpyPack",writes=[]):
-    data_DataPath=dLB.DataPath()
-    data_DataPath.setAbsoluteDirectory(directory)
-    data_DataPath.setFile(file)
-    data_DataPath.setExtension(extension)
-    
-    data_SelfObject=AppSerialize()
-    data_SelfObject.setDataPath(data_DataPath)
-    data_SelfObject.setWriteSelfObjects(writes)
-    data_SelfObject.writes()

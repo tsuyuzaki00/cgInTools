@@ -3,40 +3,53 @@ import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 
 import cgInTools as cit
-#from cgInTools.maya.library import _testPath as TP
-from ...library import pathLB as pLB
-from ...library import serializeLB as sLB
-from ...library import _testLB as tLB
-from ..library import dataLB as dLB
-from ..library import nameLB as nLB
-from ..library import matrixLB as mLB
-#from cgInTools.maya.manager import equipmentSettingsMN as MN
-#from cgInTools.maya.option import autoRenameOP as OP
-#from cgInTools.maya.execute import exportAnimPackEX as EX
-cit.reloads([pLB,sLB,tLB,dLB,nLB,mLB])
+from ...library import dataLB as dLB
+from ...library import baseLB as bLB
+cit.reloads([bLB])
+
+class DataTest(object):
+    def __init__(self):
+        self._test_int=None
+
+    def setTest(self,variable):
+        self._test_int=variable
+        return self._test_int
+    def getTest(self):
+        return self._test_int
+        
+
+class SelfTest(bLB.SelfOrigin):
+    def __init__(self,selfTest=None):
+        super(SelfTest,self).__init__()
+        if selfTest is None:
+            self._test_DataTest=None
+        elif type(selfTest) is SelfTest:
+            self._test_DataTest=selfTest.getDataTest()
+
+    def setDataTest(self,variable):
+        self._test_DataTest=variable
+        return self._test_DataTest
+    def getDataTest(self):
+        return self._test_DataTest
+    
+    def test(self):
+        test1=eval('self.getDataTest()')
+        print(test1)
 
 def main():
-    #TP.main()
-    #MN.main()
-    #OP.main()
-    #EX.main()
-    test_DataName=dLB.DataName()
-    #test_DataName.setTitle("spine")
-    #test_DataName.setNodeType("jnt")
-    #test_DataName.setSide("C")
-    test_DataName.setNumbers([0])
-    test_DataName.setHierarchys(["A"])
-    test_DataName.setOrders(["Title","NodeType","Side"])
-    test_DataName.setIncrease("Numbers_0")
+    test_DataPath=dLB.DataPath()
+    test_DataPath.setAbsoluteDirectory("D:/3DCG/Maya/_test/scripts/cgInToolsData")
+    test_DataPath.setFile("test")
+    test_DataPath.setExtension("selfpy")
 
-    test_DataNode=dLB.DataNode()
-    test_DataNode.setName("joint1")
+    #test_DataTest=DataTest()
+    #test_DataTest.setTest(0)
 
-    test_AppName=nLB.AppNodeName()
-    test_AppName.setDataName(test_DataName)
-    test_AppName.setDataNode(test_DataNode)
-    test=test_AppName.editRename()
-    #print(test)
-
+    test_SelfTest=SelfTest()
+    test_SelfTest.setDataPath(test_DataPath)
+    #test_SelfTest.setDataTest(test_DataTest)
+    test_SelfTest.readData()
+    print(test_SelfTest.getDataTest().getTest())
+    
 
 main()

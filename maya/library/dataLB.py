@@ -8,14 +8,30 @@ from ...library import baseLB as bLB
 cit.reloads([bLB])
 
 #Definition Data
-class DataMenuParam(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataMenuParam,self).__init__()
-        self._label_str=None
-        self._fromFolder_str=None
-        self._importFile_str=None
-        self._function_str=None
-        self._iconFileExt_str=None
+class DataMenuParam(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMenuParam,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._label_str=None
+            self._fromFolder_str=None
+            self._importFile_str=None
+            self._function_str=None
+            self._iconFileExt_str=None
+            self._dataChoice_strs=[
+                "Label",
+                "FromFolder",
+                "ImportFile",
+                "Function",
+                "Icon"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMenuParam):
+                self._label_str=dataTuple[0].getLabel()
+                self._fromFolder_str=dataTuple[0].getFromFolder()
+                self._importFile_str=dataTuple[0].getImportFile()
+                self._function_str=dataTuple[0].getFunction()
+                self._iconFileExt_str=dataTuple[0].getIcon()
 
     #Setting Function
     def setLabel(self,variable):
@@ -48,20 +64,29 @@ class DataMenuParam(bLB.SelfOrigin):
     def getIcon(self):
         return self._iconFileExt_str
 
-class DataAttribute(bLB.SelfOrigin):
-    def __init__(self,dataAttribute=None):
-        super(DataAttribute,self).__init__()
-        if dataAttribute is None:
+class DataAttribute(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataAttribute,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
             self._longName_str=None
             self._shortName_str=None
-        elif type(dataAttribute) is DataAttribute:
-            self._longName_str=dataAttribute.getName()
-            self._shortName_str=dataAttribute.getShortName()
-        elif type(dataAttribute) is om2.MObject:
-            attr_MFnAttribute=om2.MFnAttribute(dataAttribute)
-
-            self._longName_str=attr_MFnAttribute.name
-            self._shortName_str=attr_MFnAttribute.shortName
+            self._dataChoice_strs=[
+                "Name",
+                "ShortName"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataAttribute):
+                self._longName_str=dataTuple[0].getName()
+                self._shortName_str=dataTuple[0].getShortName()
+            elif isinstance(dataTuple[0],om2.MObject):
+                attr_MFnAttribute=om2.MFnAttribute(dataTuple[0])
+                self._longName_str=attr_MFnAttribute.name
+                self._shortName_str=attr_MFnAttribute.shortName
+                self._dataChoice_strs=[
+                    "Name",
+                    "ShortName"
+                ]
     
     def __str__(self):
         return str(self._longName_str)
@@ -80,41 +105,55 @@ class DataAttribute(bLB.SelfOrigin):
         return self._shortName_str
 
 class DataAttributeBoolean(DataAttribute):
-    def __init__(self,dataAttributeBoolean=None):
-        super(DataAttributeBoolean,self).__init__(dataAttributeBoolean)
+    def __init__(self,*dataTuple):
+        super(DataAttributeBoolean,self).__init__(*dataTuple)
         self.__valueType_int=om2.MFnNumericData().kBoolean #1
-        if dataAttributeBoolean is None:
-            self._valueBoolean_bool=None
-        elif type(dataAttributeBoolean) is DataAttributeBoolean:
-            self._valueBoolean_bool=dataAttributeBoolean.getValue()
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._value_bool=None
+            self._dataChoice_strs=[
+                "Value"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataAttributeBoolean):
+                self._value_bool=dataTuple[0].getValue()
 
+    #Setting Function
     def setValue(self,variable):
-        self._valueBoolean_bool=variable
-        return self._valueBoolean_bool
+        self._value_bool=variable
+        return self._value_bool
     def getValue(self):
-        return self._valueBoolean_bool
+        return self._value_bool
 
     def getValueType(self):
         return self.__valueType_int
 
 class DataAttributeInt(DataAttribute):
-    def __init__(self,dataAttributeInt=None):
-        super(DataAttributeInt,self).__init__(dataAttributeInt)
+    def __init__(self,*dataTuple):
+        super(DataAttributeInt,self).__init__(*dataTuple)
         self.__valueType_int=om2.MFnNumericData().kInt #7
-        if dataAttributeInt is None:
-            self._valueInt_int=None
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._value_int=None
             self._limitMax_int=None
             self._limitMin_int=None
-        elif type(dataAttributeInt) is DataAttributeInt:
-            self._valueInt_int=dataAttributeInt.getValue()
-            self._limitMax_int=dataAttributeInt.getMax()
-            self._limitMin_int=dataAttributeInt.getMin()
+            self._dataChoice_strs=[
+                "Value",
+                "Max",
+                "Min"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataAttributeInt):
+                self._value_int=dataTuple[0].getValue()
+                self._limitMax_int=dataTuple[0].getMax()
+                self._limitMin_int=dataTuple[0].getMin()
 
+    #Setting Function
     def setValue(self,variable):
-        self._valueInt_int=variable
-        return self._valueInt_int
+        self._value_int=variable
+        return self._value_int
     def getValue(self):
-        return self._valueInt_int
+        return self._value_int
     
     def setMax(self,variable):
         self._limitMax_int=variable
@@ -128,28 +167,35 @@ class DataAttributeInt(DataAttribute):
     def getMin(self):
         return self._limitMin_int
     
-
     def getValueType(self):
         return self.__valueType_int
 
 class DataAttributeFloat(DataAttribute):
-    def __init__(self,dataAttributeFloat=None):
-        super(DataAttributeFloat,self).__init__(dataAttributeFloat)
+    def __init__(self,*dataTuple):
+        super(DataAttributeFloat,self).__init__(*dataTuple)
         self.__valueType_int=om2.MFnNumericData().kFloat #11
-        if dataAttributeFloat is None:
-            self._valueFloat_float=None
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._value_float=None
             self._limitMax_float=None
             self._limitMin_float=None
-        elif type(dataAttributeFloat) is DataAttributeFloat:
-            self._valueFloat_float=dataAttributeFloat.getValue()
-            self._limitMax_float=dataAttributeFloat.getMax()
-            self._limitMin_float=dataAttributeFloat.getMin()
+            self._dataChoice_strs=[
+                "Value",
+                "Max",
+                "Min"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataAttributeFloat):
+                self._value_float=dataTuple[0].getValue()
+                self._limitMax_float=dataTuple[0].getMax()
+                self._limitMin_float=dataTuple[0].getMin()
 
+    #Setting Function
     def setValue(self,variable):
-        self._valueFloat_float=variable
-        return self._valueFloat_float
+        self._value_float=variable
+        return self._value_float
     def getValue(self):
-        return self._valueFloat_float
+        return self._value_float
 
     def setMax(self,variable):
         self._limitMax_float=variable
@@ -167,38 +213,50 @@ class DataAttributeFloat(DataAttribute):
         return self.__valueType_int
 
 class DataAttributeVector(DataAttribute):
-    def __init__(self,dataAttributeVector=None):
-        super(DataAttributeVector,self).__init__()
+    def __init__(self,*dataTuple):
+        super(DataAttributeVector,self).__init__(*dataTuple)
         self.__valueType_int=om2.MFnNumericData().k3Float  #13
-        if dataAttributeVector is None:
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
             self._valueVector_tuple3=[0.0,0.0,0.0]
             self._limitMax_floats=[]
             self._limitMin_floats=[]
-        elif type(dataAttributeVector) is DataAttributeVector:
-            self._valueVector_tuple3=dataAttributeVector.getValue()
-            self._limitMax_float=dataAttributeVector.getMax()
-            self._limitMin_float=dataAttributeVector.getMin()
+            self._dataChoice_strs=[
+                "ValueX",
+                "ValueY",
+                "ValueZ",
+                "Maxs",
+                "Mins"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataAttributeVector):
+                self._valueVector_tuple3=dataTuple[0].getValues()
+                self._limitMax_float=dataTuple[0].getMaxs()
+                self._limitMin_float=dataTuple[0].getMins()
+
+    @property
+    def vector(self):
+        pass
 
     #Setting Function
-    def setValue(self,variables):
+    def setValues(self,variables):
         self._valueVector_tuple3=variables
         return self._valueVector_tuple3
-    def getValue(self):
+    def getValues(self):
         return self._valueVector_tuple3
     
-    def setMax(self,variables):
+    def setMaxs(self,variables):
         self._limitMax_floats=variables
         return self._limitMax_floats
-    def getMax(self):
+    def getMaxs(self):
         return self._limitMax_floats
     
-    def setMin(self,variables):
+    def setMins(self,variables):
         self._limitMin_floats=variables
         return self._limitMin_floats
-    def getMin(self):
+    def getMins(self):
         return self._limitMin_floats
     
-
     def setVectorX(self,variable):
         self._valueVector_tuple3[0]=variable
         return self._valueVector_tuple3[0]
@@ -221,13 +279,18 @@ class DataAttributeVector(DataAttribute):
         return self.__valueType_int
 
 class DataAttributeString(DataAttribute):
-    def __init__(self,dataAttributeString=None):
-        super(DataAttributeString,self).__init__(dataAttributeString)
+    def __init__(self,*dataTuple):
+        super(DataAttributeString,self).__init__(*dataTuple)
         self.__valueType_int=om2.MFnData().kString #4
-        if dataAttributeString is None:
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
             self._valueString_str=None
-        elif type(dataAttributeString) is DataAttributeString:
-            self._valueString_str=dataAttributeString.getValue()
+            self._dataChoice_strs=[
+                "Value"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple,DataAttributeString):
+                self._valueString_str=dataTuple.getValue()
     
     def setValue(self,variable):
         self._valueString_str=variable
@@ -239,23 +302,29 @@ class DataAttributeString(DataAttribute):
         return self.__valueType_int
 
 class DataAttributeEnum(DataAttribute):
-    def __init__(self,dataAttributeEnum=None):
-        super(DataAttributeEnum,self).__init__()
-        if dataAttributeEnum is None:
+    def __init__(self,*dataTuple):
+        super(DataAttributeEnum,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
             self._fieldEnum_strs=[]
             self._valueEnum_str=None
-        elif type(dataAttributeEnum) is DataAttributeEnum:
-            self._fieldEnum_strs=dataAttributeEnum.getField()
-            self._valueEnum_str=dataAttributeEnum.getEnum()
+            self._dataChoice_strs=[
+                "FieldStrs",
+                "Enum"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple,DataAttributeEnum):
+                self._fieldEnum_strs=dataTuple.getFieldStrs()
+                self._valueEnum_str=dataTuple.getEnum()
 
     #Setting Function
-    def setField(self,variables):
+    def setFieldStrs(self,variables):
         self._fieldEnum_strs=variables
         return self._fieldEnum_strs
-    def addField(self,variables):
+    def addFieldStrs(self,variables):
         self._fieldEnum_strs+=variables
         return self._fieldEnum_strs
-    def getField(self):
+    def getFieldStrs(self):
         return self._fieldEnum_strs
 
     def setEnum(self,variable):
@@ -265,10 +334,20 @@ class DataAttributeEnum(DataAttribute):
         return self._valueEnum_str
 
 class DataAttributeWeight(DataAttribute):
-    def __init__(self):
-        super(DataAttributeWeight,self).__init__()
-        self._valueWeight_float=None
-        self._indexWeight_int=None
+    def __init__(self,*dataTuple):
+        super(DataAttributeWeight,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._valueWeight_float=None
+            self._indexWeight_int=None
+            self._dataChoice_strs=[
+                "ValueWeight",
+                "IndexWeight"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple,DataAttributeWeight):
+                self._valueWeight_float=dataTuple.getValueWeight()
+                self._indexWeight_int=dataTuple.getIndexWeight()
 
     #Setting Function
     def setValueWeight(self,variable):
@@ -283,18 +362,41 @@ class DataAttributeWeight(DataAttribute):
     def getIndexWeight(self):
         return self._indexWeight_int
 
-class DataName(bLB.SelfOrigin):
-    def __init__(self):
-        self._titleName_str=None
-        self._nodeTypeName_str=None
-        self._sideName_str=None
-        self._numberName_ints=[0]
-        self._hierarchyName_strs=["A"]
-        self._customName_strs=[]
-        #["Title","NodeType","Side","Numbers_0","Hierarchys_1","Customs_10","Title_Numbers_0","Title_Hierarchys_2","Side_Numbers_0","Side_Hierarchys_2"]
-        self._orderName_enums=["Title","NodeType"]
-        #"Number_0","Hierarchy_10"
-        self._increaseName_enum="Numbers_0"
+class DataName(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataName,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._titleName_str=None
+            self._tagTypeName_str=None
+            self._sideName_str=None
+            self._numberName_ints=[0]
+            self._hierarchyName_strs=["A"]
+            self._customName_strs=[]
+            #["Title","TagType","Side","Numbers_0","Hierarchys_1","Customs_10","Title_Numbers_0","Title_Hierarchys_2","Side_Numbers_0","Side_Hierarchys_2"]
+            self._orderName_strs=["Title","TagType"]
+            #None,"Numbers_0","Hierarchys_10"
+            self._increaseName_str=None
+            self._dataChoice_strs=[
+                "Title",
+                "TagType",
+                "Side",
+                "Numbers",
+                "Hierarchys",
+                "Customs",
+                "Orders",
+                "Increase"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataName):
+                self._titleName_str=dataTuple[0].getTitle()
+                self._tagTypeName_str=dataTuple[0].getTagType()
+                self._sideName_str=dataTuple[0].getSide()
+                self._numberName_ints=dataTuple[0].getNumbers()
+                self._hierarchyName_strs=dataTuple[0].getHierarchys()
+                self._customName_strs=dataTuple[0].getCustoms()
+                self._orderName_strs=dataTuple[0].getOrders()
+                self._increaseName_str=dataTuple[0].getIncrease()
 
     #Setting Function
     def setTitle(self,variable):
@@ -303,11 +405,11 @@ class DataName(bLB.SelfOrigin):
     def getTitle(self):
         return self._titleName_str
     
-    def setNodeType(self,variable):
-        self._nodeTypeName_str=variable
-        return self._nodeTypeName_str
-    def getNodeType(self):
-        return self._nodeTypeName_str
+    def setTagType(self,variable):
+        self._tagTypeName_str=variable
+        return self._tagTypeName_str
+    def getTagType(self):
+        return self._tagTypeName_str
     
     def setSide(self,variable):
         self._sideName_str=variable
@@ -343,35 +445,46 @@ class DataName(bLB.SelfOrigin):
         return self._customName_strs
     
     def setOrders(self,variables):
-        self._orderName_enums=variables
-        return self._orderName_enums
+        self._orderName_strs=variables
+        return self._orderName_strs
     def addOrders(self,variables):
-        self._orderName_enums+=variables
-        return self._orderName_enums
+        self._orderName_strs+=variables
+        return self._orderName_strs
     def getOrders(self):
-        return self._orderName_enums
+        return self._orderName_strs
 
     def setIncrease(self,variable):
-        self._increaseName_enum=variable
-        return self._increaseName_enum
+        self._increaseName_str=variable
+        return self._increaseName_str
     def getIncrease(self):
-        return self._increaseName_enum
+        return self._increaseName_str
 
-class DataMatrix(om2.MMatrix):
-    def __init__(self,*args):
-        super(DataMatrix,self).__init__(*args)
-        #self.kIdentity=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-        self._MSpace=om2.MSpace.kTransform #1
-        self._rotateOrder=om2.MEulerRotation.kXYZ #0
+class DataMatrix(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMatrix,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._matrix_MMatrix=om2.MMatrix()
+            self._MSpace=om2.MSpace.kTransform #1
+            self._rotateOrder=om2.MEulerRotation.kXYZ #0
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMatrix):
+                self._matrix_MMatrix=dataTuple[0].getMatrix()
+                self._MSpace=dataTuple[0].getMSpace()
+                self._rotateOrder=dataTuple[0].getRotateOrder()
+            elif isinstance(dataTuple[0],om2.MMatrix):
+                self._matrix_MMatrix=dataTuple[0]
+                self._MSpace=om2.MSpace.kTransform #1
+                self._rotateOrder=om2.MEulerRotation.kXYZ #0
 
     def setMatrix(self,variable):
-        self.kIdentity=om2.MMatrix(variable)
-        return self.kIdentity
+        self._matrix_MMatrix=om2.MMatrix(variable)
+        return self._matrix_MMatrix
     def getMatrix(self):
-        matrix=list(self.kIdentity)
+        matrix=list(self._matrix_MMatrix)
         return matrix
     def getMMatrix(self):
-        return self.self.kIdentity
+        return self._matrix_MMatrix
     
     def setMSpace(self,variable):
         self._MSpace=variable
@@ -383,12 +496,24 @@ class DataMatrix(om2.MMatrix):
     def getRotateOrder(self):
         return self._rotateOrder
 
-class DataMatrixMix(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataMatrixMix,self).__init__()
-        self._world_DataMatrix=None
-        self._local_DataMatrix=None
-        self._parent_DataMatrix=None
+class DataMatrixMix(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMatrixMix,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._world_DataMatrix=None
+            self._local_DataMatrix=None
+            self._parent_DataMatrix=None
+            self._dataChoice_strs=[
+                "WorldDataMatrix",
+                "LocalDataMatrix",
+                "ParentDataMatrix"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMatrixMix):
+                self._world_DataMatrix=dataTuple[0].getWorldDataMatrix()
+                self._local_DataMatrix=dataTuple[0].getLocalDataMatrix()
+                self._parent_DataMatrix=dataTuple[0].getParentDataMatrix()
 
     #Setting Function
     def setWorldDataMatrix(self,variable):
@@ -409,76 +534,144 @@ class DataMatrixMix(bLB.SelfOrigin):
     def getParentDataMatrix(self):
         return self._parent_DataMatrix
 
-class DataTime(om2.MTime):
-    def __init__(self,*args):
-        super(DataTime,self).__init__(*args)
-        # self.unit=int(Unit Type constant)
-        # self.value=float
+class DataTime(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataTime,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._unit_int=None
+            self._time_float=None
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataTime):
+                self._unit_int=dataTuple[0].getUnitType()
+                self._time_float=dataTuple[0].getTime()
         
     def setUnitType(self,variable):
-        self.unit=variable
-        return self.unit
+        self._unit_int=variable
+        return self._unit_int
     def currentUnitType(self):
-        self.unit=self.uiUnit
-        return self.unit
+        self._unit_int=om2.MTime.uiUnit
+        return self._unit_int
     def getUnitType(self):
-        return self.unit
+        return self._unit_int
     
     def setTime(self,variable):
-        self.value=variable
-        return self.value
+        self._time_float=variable
+        return self._time_float
     def currentTime(self):
         current_MTime=oma2.MAnimControl.currentTime()
-        self.value=current_MTime.value
-        return self.value
+        self._time_float=current_MTime.value
+        return self._time_float
     def getTime(self):
-        return self.value
+        return self._time_float
 
-class DataVector(om2.MVector):
-    def __init__(self,*args):
-        super(DataVector,self).__init__(*args)
-        #self.kOneVector=(1,1,1)
-        #self.x=None
-        #self.y=None
-        #self.z=None
+class DataVector(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataVector,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 == len(dataTuple) or 
+            4 <= len(dataTuple)):
+            self._x_float=None
+            self._y_float=None
+            self._z_float=None
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataVector):
+                self._x_float=dataTuple[0].getVectorX()
+                self._y_float=dataTuple[0].getVectorY()
+                self._z_float=dataTuple[0].getVectorZ()
+            elif isinstance(dataTuple[0],
+                (om2.MVector,
+                 om2.MFloatVector,
+                 om2.MPoint,
+                 om2.MFloatPoint)):
+                self._x_float=dataTuple[0].x
+                self._y_float=dataTuple[0].y
+                self._z_float=dataTuple[0].z
+        elif 3 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
 
+    @property
+    def vector(self):
+        vector_tuple3=(self._x_float,self._y_float,self._z_float)
+        return vector_tuple3
+
+    #Setting Function
     def setVector(self,variables):
-        self.kOneVector=om2.MVector(variables)
-        return self.kOneVector
+        vector_MVector=om2.MVector(variables)
+        self._x_float=vector_MVector.x
+        self._y_float=vector_MVector.y
+        self._z_float=vector_MVector.z
+        return self.vector
     def getVector(self):
-        return self.kOneVector
+        return self.vector
+    def getMVector(self):
+        vector_MVector=om2.MVector(self._x_float,self._y_float,self._z_float)
+        return vector_MVector
     
     def setVectorX(self,variable):
-        self.x=variable
-        return self.x
+        self._x_float=variable
+        return self._x_float
     def getVectorX(self):
-        return self.x
+        return self._x_float
     
     def setVectorY(self,variable):
-        self.y=variable
-        return self.y
+        self._y_float=variable
+        return self._y_float
     def getVectorY(self):
-        return self.y
+        return self._y_float
     
     def setVectorZ(self,variable):
-        self.z=variable
-        return self.z
+        self._z_float=variable
+        return self._z_float
     def getVectorZ(self):
-        return self.z
+        return self._z_float
 
-class DataTranslate(om2.MVector):
-    def __init__(self,*args):
-        super(DataTranslate,self).__init__(*args)
-        #self.kOneVector=(1,1,1)
-        #self.x=None
-        #self.y=None
-        #self.z=None
+class DataTranslate(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataTranslate,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 == len(dataTuple) or 
+            4 <= len(dataTuple)):
+            self._x_float=None
+            self._y_float=None
+            self._z_float=None
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataVector):
+                self._x_float=dataTuple[0].getVectorX()
+                self._y_float=dataTuple[0].getVectorY()
+                self._z_float=dataTuple[0].getVectorZ()
+            elif isinstance(dataTuple[0],
+                (om2.MVector,
+                 om2.MFloatVector,
+                 om2.MPoint,
+                 om2.MFloatPoint)):
+                self._x_float=dataTuple[0].x
+                self._y_float=dataTuple[0].y
+                self._z_float=dataTuple[0].z
+        elif 3 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
 
+    #Setting Function
+    @property
+    def vector(self):
+        vector_tuple3=(self._x_float,self._y_float,self._z_float)
+        return vector_tuple3
+    
     def setTranslate(self,variables):
-        self.kOneVector=om2.MVector(variables)
-        return self.kOneVector
+        translate_MVector=om2.MVector(variables)
+        self._x_float=translate_MVector.x
+        self._y_float=translate_MVector.y
+        self._z_float=translate_MVector.z
+        return self.vector
     def getTranslate(self):
-        return self.kOneVector
+        return self.vector
+    def getMVector(self):
+        vector_MVector=om2.MVector(self._x_float,self._y_float,self._z_float)
+        return vector_MVector
     
     def setTranslateX(self,variable):
         self.x=variable
@@ -498,38 +691,286 @@ class DataTranslate(om2.MVector):
     def getTranslateZ(self):
         return self.z
 
-class DataRotation(om2.MEulerRotation):
-    def __init__(self,*args):
-        super(DataRotation,self).__init__(*args)
+class DataRotation(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataRotation,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or  
+            5 <= len(dataTuple)):
+            self._x_float=None
+            self._y_float=None
+            self._z_float=None
+            self._order_int=None
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataRotation):
+                self._x_float=dataTuple[0].getRotateX()
+                self._y_float=dataTuple[0].getRotateY()
+                self._z_float=dataTuple[0].getRotateZ()
+                self._order_int=dataTuple[0].getRotateOrder()
+            elif isinstance(dataTuple[0],om2.MEulerRotation):
+                self._x_float=dataTuple[0].x
+                self._y_float=dataTuple[0].y
+                self._z_float=dataTuple[0].z
+                self._order_int=dataTuple[0].order
+            elif isinstance(dataTuple[0],om2.MVector):
+                self._x_float=dataTuple[0].x
+                self._y_float=dataTuple[0].y
+                self._z_float=dataTuple[0].z
+                self._order_int=om2.MEulerRotation.kXYZ #0
+            elif isinstance(dataTuple[0],(list,tuple)):
+                self._x_float=dataTuple[0][0]
+                self._y_float=dataTuple[0][1]
+                self._z_float=dataTuple[0][2]
+                self._order_int=om2.MEulerRotation.kXYZ #0
+        elif 2 == len(dataTuple):
+            if (isinstance(dataTuple[0],(list,tuple)) and 
+                isinstance(dataTuple[1],int)):
+                self._x_float=dataTuple[0][0]
+                self._y_float=dataTuple[0][1]
+                self._z_float=dataTuple[0][2]
+                self._order_int=dataTuple[1]
+        elif 3 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
+            self._order_int=om2.MEulerRotation.kXYZ #0
+        elif 4 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
+            self._order_int=dataTuple[3]
 
-class DataQuaternion(om2.MQuaternion):
-    def __init__(self,*args):
-        super(DataQuaternion,self).__init__(*args)
+    @property
+    def euler(self):
+        euler_tuple3=(self._x_float,self._y_float,self._z_float)
+        return euler_tuple3
 
-class DataScale(object):
-    def __init__(self):
-        super(DataScale,self).__init__()
+    #Setting Function
+    def setRotate(self,variables):
+        rotate_MEulerRotation=om2.MEulerRotation(variables)
+        self._x_float=rotate_MEulerRotation.x
+        self._y_float=rotate_MEulerRotation.y
+        self._z_float=rotate_MEulerRotation.z
+        self._order_int=rotate_MEulerRotation.order
+        return self.euler
+    def getRotate(self):
+        return self.euler
+    
+    def setRotateX(self,variable):
+        self._x_float=variable
+        return self._x_float
+    def getRotateX(self):
+        return self._x_float
+    
+    def setRotateY(self,variable):
+        self._y_float=variable
+        return self._y_float
+    def getRotateY(self):
+        return self._y_float
+    
+    def setRotateZ(self,variable):
+        self._z_float=variable
+        return self._z_float
+    def getRotateZ(self):
+        return self._z_float
 
-class DataKey(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataKey,self).__init__()
-        self._inputValue_value=None
-        self._outputValue_value=None
-        self._inTanType_str=None
-        self._outTanType_str=None
+    def setRotateOrder(self,variable):
+        self._order_int=variable
+        return self._order_int
+    def getRotateOrder(self):
+        return self._order_int
+
+class DataQuaternion(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataQuaternion,self).__init__(*dataTuple)
+        #self.x=float
+        #self.y=float
+        #self.z=float
+        #self.w=float
+        if (0 == len(dataTuple) or  
+            5 <= len(dataTuple)):
+            self._x_float=None
+            self._y_float=None
+            self._z_float=None
+            self._order_int=None
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataQuaternion):
+                self._x_float=dataTuple[0].getQuaternionX()
+                self._y_float=dataTuple[0].getQuaternionY()
+                self._z_float=dataTuple[0].getQuaternionZ()
+                self._w_float=dataTuple[0].getQuaternionW()
+            elif isinstance(dataTuple[0],om2.MQuaternion):
+                self._x_float=dataTuple[0].x
+                self._y_float=dataTuple[0].y
+                self._z_float=dataTuple[0].z
+                self._order_int=dataTuple[0].w
+            elif isinstance(dataTuple[0],(list,tuple)):
+                self._x_float=dataTuple[0][0]
+                self._y_float=dataTuple[0][1]
+                self._z_float=dataTuple[0][2]
+                self._w_float=dataTuple[0][3]
+        elif 2 == len(dataTuple):
+            if (isinstance(dataTuple[0],om2.MVector) and 
+                isinstance(dataTuple[1],float) or 
+                isinstance(dataTuple[0],float) and 
+                isinstance(dataTuple[1],om2.MVector)):
+                pass
+        elif 3 == len(dataTuple):
+            if (isinstance(dataTuple[0],om2.MVector) and 
+                isinstance(dataTuple[1],om2.MVector) and 
+                isinstance(dataTuple[2],float)):
+                pass
+        elif 4 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
+            self._w_float=dataTuple[3]
+
+    @property
+    def quaternion(self):
+        quaternion_tuple4=(self._x_float,self._y_float,self._z_float,self._w_float)
+        return quaternion_tuple4
+
+    #Setting Function
+    def setQuaternion(self,variables):
+        quat_MQuaternion=om2.MQuaternion(variables)
+        self.x=quat_MQuaternion.x
+        self.y=quat_MQuaternion.y
+        self.z=quat_MQuaternion.z
+        self.w=quat_MQuaternion.w
+        return self.quaternion
+    def getQuaternion(self):
+        return self.quaternion
+
+    def setQuaternionX(self,variable):
+        self._x_float=variable
+        return self._x_float
+    def getQuaternionX(self):
+        return self._x_float
+    
+    def setQuaternionY(self,variable):
+        self._y_float=variable
+        return self._y_float
+    def getQuaternionY(self):
+        return self._y_float
+    
+    def setQuaternionZ(self,variable):
+        self._z_float=variable
+        return self._z_float
+    def getQuaternionZ(self):
+        return self._z_float
+    
+    def setQuaternionW(self,variable):
+        self._w_float=variable
+        return self._w_float
+    def getQuaternionW(self):
+        return self._w_float
+
+class DataScale(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataScale,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 == len(dataTuple) or 
+            4 <= len(dataTuple)):
+            self._x_float=None
+            self._y_float=None
+            self._z_float=None
+            self._dataChoice_strs=[
+                "Scale"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataScale):
+                self._x_float=dataTuple[0].getScaleX()
+                self._y_float=dataTuple[0].getScaleY()
+                self._z_float=dataTuple[0].getScaleZ()
+            elif isinstance(dataTuple[0],om2.MVector):
+                self._x_float=dataTuple[0].x
+                self._y_float=dataTuple[0].y
+                self._z_float=dataTuple[0].z
+                self._dataChoice_strs=[
+                    "Scale"
+                ]
+            elif isinstance(dataTuple[0],(list,tuple)):
+                self._x_float=dataTuple[0][0]
+                self._y_float=dataTuple[0][1]
+                self._z_float=dataTuple[0][2]
+                self._dataChoice_strs=[
+                    "Scale"
+                ]
+        elif 3 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
+            self._dataChoice_strs=[
+                "Scale"
+            ]
+
+    @property
+    def vector(self):
+        scale_tuple3=(self._x_float,self._y_float,self._z_float)
+        return scale_tuple3
+
+    #Setting Function
+    def setScale(self,variables):
+        scale_DataScale=DataScale(variables)
+        self._x_float=scale_DataScale.getScaleX()
+        self._y_float=scale_DataScale.getScaleY()
+        self._z_float=scale_DataScale.getScaleZ()
+        return self.vector
+    def getScale(self):
+        return self.vector
+    
+    def setScaleX(self,variable):
+        self._x_float=variable
+        return self._x_float
+    def getScaleX(self):
+        return self._x_float
+    
+    def setScaleY(self,variable):
+        self._y_float=variable
+        return self._y_float
+    def getScaleY(self):
+        return self._y_float
+    
+    def setScaleZ(self,variable):
+        self._z_float=variable
+        return self._z_float
+    def getScaleZ(self):
+        return self._z_float
+
+class DataKey(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataKey,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or
+            2 <= len(dataTuple)):
+            self._input_value=None
+            self._output_value=None
+            self._inTanType_str=None
+            self._outTanType_str=None
+            self._dataChoice_strs=[
+                "InputValue",
+                "OutputValue",
+                "InputTanType",
+                "OutputTanType"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataKey):
+                self._input_value=dataTuple[0].getInputValue()
+                self._output_value=dataTuple[0].getOutputValue()
+                self._inTanType_str=dataTuple[0].getInputTanType()
+                self._outTanType_str=dataTuple[0].getOutputTanType()
 
     #Setting Function
     def setInputValue(self,variable):
-        self._inputValue_value=variable
-        return self._inputValue_value
+        self._input_value=variable
+        return self._input_value
     def getInputValue(self):
-        return self._inputValue_value
+        return self._input_value
     
     def setOutputValue(self,variable):
-        self._outputValue_value=variable
-        return self._outputValue_value
+        self._output_value=variable
+        return self._output_value
     def getOutputValue(self):
-        return self._outputValue_value
+        return self._output_value
     
     def setInputTanType(self,variable):
         self._inputTanType_str=variable
@@ -543,46 +984,107 @@ class DataKey(bLB.SelfOrigin):
     def getOutputTanType(self):
         return self._outputTanType_str
 
-class DataPoint(om2.MPoint):
-    def __init__(self,*args):
-        super(DataPoint,self).__init__(*args)
-        #self.kOrigin=maya.api.OpenMaya.MPoint(0, 0, 0, 1)
-        #self.kTolerance=1
-        #self.w=None
-        #self.x=None
-        #self.y=None
-        #self.z=None
-        self._index_int=None
+class DataPoint(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataPoint,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 == len(dataTuple) or 
+            3 == len(dataTuple) or 
+            6 <= len(dataTuple)):
+            self._x_float=None
+            self._y_float=None
+            self._z_float=None
+            self._index_int=None
+            self._dataChoice_strs=[
+                "PointX",
+                "PointY",
+                "PointZ",
+                "PointW",
+                "ID"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataPoint):
+                self._x_float=dataTuple[0].getPointX()
+                self._y_float=dataTuple[0].getPointY()
+                self._z_float=dataTuple[0].getPointZ()
+                self._w_float=dataTuple[0].getPointW()
+                self._index_int=dataTuple[0].getID()
+            elif isinstance(dataTuple[0],om2.MPoint):
+                self._x_float=dataTuple[0].x
+                self._y_float=dataTuple[0].y
+                self._z_float=dataTuple[0].z
+                self._w_float=dataTuple[0].w
+                self._index_int=None
+                self._dataChoice_strs=[
+                    "PointX",
+                    "PointY",
+                    "PointZ",
+                    "PointW",
+                    "ID"
+                ]
+        elif 4 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
+            self._index_int=dataTuple[3]
+            self._dataChoice_strs=[
+                "PointX",
+                "PointY",
+                "PointZ",
+                "PointW",
+                "ID"
+            ]
+        elif 5 == len(dataTuple):
+            self._x_float=dataTuple[0]
+            self._y_float=dataTuple[1]
+            self._z_float=dataTuple[2]
+            self._w_float=dataTuple[3]
+            self._index_int=[4]
+            self._dataChoice_strs=[
+                "PointX",
+                "PointY",
+                "PointZ",
+                "PointW",
+                "ID"
+            ]
+                
+    @property
+    def point(self):
+        point_tuple4=(self._x_float,self._y_float,self._z_float,self._w_float)
+        return point_tuple4
 
     def setPoint(self,variables):
-        self.kOrigin=om2.MPoint(variables)
-        return self.kOrigin
+        self.point=DataPoint(variables)
+        return self.point
     def getPoint(self):
-        return self.kOrigin
+        return self.point
+    def getMPoint(self):
+        point_MPoint=om2.MPoint(self._x_float,self._y_float,self._z_float,self._w_float)
+        return point_MPoint
     
     def setPointX(self,variable):
-        self.x=variable
-        return self.x
+        self._x_float=variable
+        return self._x_float
     def getPointX(self):
-        return self.x
+        return self._x_float
     
     def setPointY(self,variable):
-        self.y=variable
-        return self.y
+        self._y_float=variable
+        return self._y_float
     def getPointY(self):
-        return self.y
+        return self._y_float
     
     def setPointZ(self,variable):
-        self.z=variable
-        return self.z
+        self._z_float=variable
+        return self._z_float
     def getPointZ(self):
-        return self.z
+        return self._z_float
     
     def setPointW(self,variable):
-        self.w=variable
-        return self.w
+        self._w_float=variable
+        return self._w_float
     def getPointW(self):
-        return self.w
+        return self._w_float
 
     def setID(self,variable):
         self._index_int=variable
@@ -590,12 +1092,24 @@ class DataPoint(om2.MPoint):
     def getID(self):
         return self._index_int
 
-class DataVertex(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataVertex,self).__init__()
-        self._vertex_DataPoint=None
-        self._vector_DataVector=None
-        self._index_int=None
+class DataVertex(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataVertex,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._vertex_DataPoint=None
+            self._vector_DataVector=None
+            self._index_int=None
+            self._dataChoice_strs=[
+                "DataPoint",
+                "DataVector",
+                "ID"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataVertex):
+                self._vertex_DataPoint=dataTuple[0].getDataPoint()
+                self._vector_DataVector=dataTuple[0].getDataVector()
+                self._index_int=dataTuple[0].getID()
 
     def setDataPoint(self,variable):
         self._vertex_DataPoint=variable
@@ -615,11 +1129,21 @@ class DataVertex(bLB.SelfOrigin):
     def getID(self):
         return self._index_int
 
-class DataEdge(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataEdge,self).__init__()
-        self._edge_DataVertex2=[]
-        self._index_int=None
+class DataEdge(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataEdge,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._edge_DataVertex2=[]
+            self._index_int=None
+            self._dataChoice_strs=[
+                "DataVertex2",
+                "ID"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataEdge):
+                self._edge_DataVertex2=dataTuple[0].getDataVertex2()
+                self._index_int=dataTuple[0].getID()
 
     def setDataVertex2(self,variable2):
         self._edge_DataVertex2=variable2
@@ -633,12 +1157,24 @@ class DataEdge(bLB.SelfOrigin):
     def getID(self):
         return self._index_int
 
-class DataFace(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataFace,self).__init__()
-        self._vertexFace_DataVertexs=[]
-        self._edgeFace_DataEdges=[]
-        self._index_int=None
+class DataFace(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataFace,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._vertexFace_DataVertexs=[]
+            self._edgeFace_DataEdges=[]
+            self._index_int=None
+            self._dataChoice_strs=[
+                "DataVertexs",
+                "DataEdges",
+                "ID"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataFace):
+                self._vertexFace_DataVertexs=dataTuple[0].getDataVertexs()
+                self._edgeFace_DataEdges=dataTuple[0].getDataEdges()
+                self._index_int=dataTuple[0].getID()
 
     def setDataVertexs(self,variables):
         self._vertexFace_DataVertexs=variables
@@ -659,12 +1195,24 @@ class DataFace(bLB.SelfOrigin):
         return self._index_int
 
 #DefinitionArray Data
-class DataMenuParamArray(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataMenuParamArray,self).__init__()
-        self._menuName_str=None
-        self._menuType_str=None #"single" or "multi"
-        self._menu_DataMenuParams=[]
+class DataMenuParamArray(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMenuParamArray,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._menuName_str=None
+            self._menuType_str=None #"single" or "multi"
+            self._menu_DataMenuParams=[]
+            self._dataChoice_strs=[
+                "Name",
+                "Type",
+                "DataMenuParams"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMenuParamArray):
+                self._menuName_str=dataTuple[0].getName()
+                self._menuType_str=dataTuple[0].getType()
+                self._menu_DataMenuParams=dataTuple[0].getDataMenuParams()
 
     def __len__(self):
         return len(self._menu_DataMenuParams)
@@ -703,11 +1251,21 @@ class DataMenuParamArray(bLB.SelfOrigin):
     def getDataMenuParams(self):
         return self._menu_DataMenuParams
     
-class DataAttributeWeightArray(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataAttributeWeightArray,self).__init__()
-        self._indexWeightArray_int=None
-        self._attrWeight_DataAttributeWeights=[]
+class DataAttributeWeightArray(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataAttributeWeightArray,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._attrWeight_DataAttributeWeights=[]
+            self._indexWeightArray_int=None
+            self._dataChoice_strs=[
+                "IndexWeidghts",
+                "DataAttributeWeights"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataAttributeWeightArray):
+                self._attrWeight_DataAttributeWeights=dataTuple[0].getDataAttributeWeights()
+                self._indexWeightArray_int=dataTuple[0].getIndexWeightArray()
 
     def __len__(self):
         return len(self._attrWeight_DataAttributeWeights)
@@ -740,41 +1298,18 @@ class DataAttributeWeightArray(bLB.SelfOrigin):
     def getDataAttributeWeights(self):
         return self._attrWeight_DataAttributeWeights
 
-class DataKeyArray(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataKeyArray,self).__init__()
-        self._input_DataAttribute=None
-        self._output_DataAttribute=None
-        self._key_DataKeys=[]
-    
-    def __len__(self):
-        return len(self._key_DataKeys)
-
-    def __getitem__(self,index):
-        return self._key_DataKeys[index]
-
-    def __setitem__(self,index,value):
-        self._key_DataKeys[index]=value
-
-    def __delitem__(self,index):
-        del self._key_DataKeys[index]
-
-    def __iter__(self):
-        return iter(self._key_DataKeys)
-
-    def setDataKeys(self,variables):
-        self._key_DataKeys=variables
-        return self._key_DataKeys
-    def addDataKeys(self,variables):
-        self._key_DataKeys+=variables
-        return self._key_DataKeys
-    def getDataKeys(self):
-        return self._key_DataKeys
-
-class DataPointArray(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataPointArray,self).__init__()
-        self._point_DataPoints=[]
+class DataPointArray(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataPointArray,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._point_DataPoints=[]
+            self._dataChoice_strs=[
+                "DataPoints"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataPointArray):
+                self._point_DataPoints=dataTuple[0].getDataPoints()
     
     def __len__(self):
         return len(self._point_DataPoints)
@@ -801,15 +1336,21 @@ class DataPointArray(bLB.SelfOrigin):
         return self._point_DataPoints
 
 #Object Data
-class DataMenu(bLB.SelfOrigin):
-    def __init__(self,dataMenu=None):
-        super(DataMenu,self).__init__()
-        if dataMenu is None:
+class DataMenu(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMenu,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
             self._menuName_str=None
             self._menu_DataMenuParamArrays=[]
-        elif type(dataMenu) is DataMenu:
-            self._menuName_str=dataMenu.getName()
-            self._menu_DataMenuParamArrays=dataMenu.getDataMeunParamArrays()
+            self._dataChoice_strs=[
+                "Name",
+                "DataMenuParamArrays"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMenu):
+                self._menuName_str=dataTuple[0].getName()
+                self._menu_DataMenuParamArrays=dataTuple[0].getDataMenuParamArrays()
 
     def setName(self,variable):
         self._menuName_str=variable
@@ -817,45 +1358,43 @@ class DataMenu(bLB.SelfOrigin):
     def getName(self):
         return self._menuName_str
     
-    def setDataMeunParamArrays(self,variables):
+    def setDataMenuParamArrays(self,variables):
         self._menu_DataMenuParamArrays=variables
         return self._menu_DataMenuParamArrays
-    def addDataMeunParamArrays(self,variables):
+    def addDataMenuParamArrays(self,variables):
         self._menu_DataMenuParamArrays+=variables
         return self._menu_DataMenuParamArrays
-    def getDataMeunParamArrays(self):
+    def getDataMenuParamArrays(self):
         return self._menu_DataMenuParamArrays
 
-class DataNode(bLB.SelfOrigin):
-    def __init__(self,dataNode=None):
-        super(DataNode,self).__init__()
-        if dataNode is None:
+class DataNode(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataNode,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
             self._nodeName_str=None
             self._nodeType_str=None
-            self._nodeUUID_str=None
-        elif type(dataNode) is DataNode:
-            self._nodeName_str=dataNode.getName()
-            self._nodeType_str=dataNode.getType()
-            self._nodeUUID_str=dataNode.getUUID()
-        elif type(dataNode) is om2.MObject:
-            node_MFnDependencyNode=om2.MFnDependencyNode(dataNode)
-            self._nodeName_str=node_MFnDependencyNode.name()
-            self._nodeType_str=node_MFnDependencyNode.typeName
-            self._nodeUUID_str=node_MFnDependencyNode.uuid()
-    
+            self._dataChoice_strs=[
+                "Name",
+                "Type"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataNode):
+                self._nodeName_str=dataTuple[0].getName()
+                self._nodeType_str=dataTuple[0].getType()
+            elif isinstance(dataTuple[0],om2.MObject):
+                node_MFnDependencyNode=om2.MFnDependencyNode(dataTuple[0])
+                self._nodeName_str=node_MFnDependencyNode.name()
+                self._nodeType_str=node_MFnDependencyNode.typeName
+                self._dataChoice_strs=[
+                    "Name",
+                    "Type"
+                ]
+
     def __str__(self):
         return str(self._nodeName_str)
     
     #Setting Function
-    def findNode(self,variable):
-        node_MSelectionList=om2.MGlobal.getSelectionListByName(variable)
-        node_MObject=node_MSelectionList.getDependNode(0)
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-
-        self._nodeName_str=node_MFnDependencyNode.name()
-        self._nodeType_str=node_MFnDependencyNode.typeName
-        self._nodeUUID_str=node_MFnDependencyNode.uuid()
-
     def setName(self,variable):
         self._nodeName_str=variable
         return self._nodeName_str
@@ -867,34 +1406,44 @@ class DataNode(bLB.SelfOrigin):
         return self._nodeType_str
     def getType(self):
         return self._nodeType_str
-    
-    def setUUID(self,variable):
-        self._nodeUUID_str=variable
-        return self._nodeUUID_str
-    def getUUID(self):
-        return self._nodeUUID_str
 
-class DataPlug(bLB.SelfOrigin):
-    def __init__(self,dataPlug=None):
-        super(DataPlug,self).__init__()
-        if dataPlug is None:
+class DataPlug(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataPlug,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
             self._node_DataNode=None
             self._attr_DataAttribute=None
             self._keyLock_bool=False
             self._valueLock_bool=False
             self._channelHide_bool=False
-        elif type(dataPlug) is DataPlug:
-            self._node_DataNode=dataPlug.getDataNode()
-            self._attr_DataAttribute=dataPlug.getDataAttribute()
-            self._keyLock_bool=dataPlug.getKeyLockState()
-            self._valueLock_bool=dataPlug.getValueLockState()
-            self._channelHide_bool=dataPlug.getHideState()
-        elif type(dataPlug) is om2.MPlug:
-            self._node_DataNode=DataNode(dataPlug.node())# MObject
-            self._attr_DataAttribute=DataAttribute(dataPlug.attribute())# MObject
-            self._keyLock_bool=not dataPlug.isKeyable
-            self._valueLock_bool=dataPlug.isLocked
-            self._channelHide_bool=not dataPlug.isChannelBox
+            self._dataChoice_strs=[
+                "DataNode",
+                "DataAttribute",
+                "KeyLockState",
+                "ValueLockState",
+                "HideState"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataPlug):
+                self._node_DataNode=dataTuple[0].getDataNode()
+                self._attr_DataAttribute=dataTuple[0].getDataAttribute()
+                self._keyLock_bool=dataTuple[0].getKeyLockState()
+                self._valueLock_bool=dataTuple[0].getValueLockState()
+                self._channelHide_bool=dataTuple[0].getHideState()
+            elif isinstance(dataTuple[0],om2.MPlug):
+                self._node_DataNode=DataNode(dataTuple[0].node())
+                self._attr_DataAttribute=DataAttribute(dataTuple[0].attribute())
+                self._keyLock_bool=not dataTuple[0].isKeyable
+                self._valueLock_bool=dataTuple[0].isLocked
+                self._channelHide_bool=not dataTuple[0].isChannelBox
+                self._dataChoice_strs=[
+                    "DataNode",
+                    "DataAttribute",
+                    "KeyLockState",
+                    "ValueLockState",
+                    "HideState"
+                ]
 
     #Setting Function
     def setDataNode(self,variable):
@@ -927,20 +1476,23 @@ class DataPlug(bLB.SelfOrigin):
     def getHideState(self):
         return self._channelHide_bool
 
-class DataPlugConnect(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataPlugConnect,self).__init__()
-        self._plug_DataPlug=None
-        self._source_DataPlug=None
-        self._target_DataPlugs=[]
+class DataConnectPlug(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataConnectPlug,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._source_DataPlug=None
+            self._target_DataPlugs=[]
+            self._dataChoice_strs=[
+                "SourceDataPlug",
+                "TargetDataPlugs"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataConnectPlug):
+                self._source_DataPlug=dataTuple[0].getSourceDataPlug()
+                self._target_DataPlugs=dataTuple[0].getTargetDataPlugs()
 
     #Setting Function
-    def setDataPlug(self,variable):
-        self._plug_DataPlug=variable
-        return self._plug_DataPlug
-    def getDataPlug(self):
-        return self._plug_DataPlug
-    
     def setSourceDataPlug(self,variable):
         self._source_DataPlug=variable
         return self._source_DataPlug
@@ -956,21 +1508,18 @@ class DataPlugConnect(bLB.SelfOrigin):
     def getTargetDataPlugs(self):
         return self._target_DataPlugs
 
-class DataWeight(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataWeight,self).__init__()
-        self._weight_DataAttributeWeightArrays=[]
-
-    def setDataAttributeWeightArrays(self,variable):
-        self._weight_DataAttributeWeightArrays=variable
-        return self._weight_DataAttributeWeightArrays
-    def getDataAttributeWeightArrays(self):
-        return self._weight_DataAttributeWeightArrays
-
-class DataMesh(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataMesh,self).__init__()
-        self._polygon_DataFaces=[]
+class DataMesh(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMesh,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._polygon_DataFaces=[]
+            self._dataChoice_strs=[
+                "DataFaces"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMesh):
+                self._polygon_DataFaces=dataTuple[0].getDataFaces()
 
     def setDataFaces(self,variables):
         self._polygon_DataFaces=variables
@@ -978,127 +1527,101 @@ class DataMesh(bLB.SelfOrigin):
     def getDataFaces(self):
         return self._polygon_DataFaces
 
-class DataSurface(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataSurface,self).__init__()
+class DataNurbsSurface(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataNurbsSurface,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            pass
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataNurbsSurface):
+                pass
 
-class DataCurve(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataCurve,self).__init__()
+class DataNurbsCurve(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataNurbsCurve,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            pass
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple,DataNurbsCurve):
+                pass
 
-#ObjectArray Data
-class DataNodeArray():
-    def __init__(self):
-        super(DataNodeArray,self).__init__()
-        self._node_DataNodes=[]
-
-    def __len__(self):
-        return len(self._node_DataNodes)
-
-    def __getitem__(self,index):
-        return self._node_DataNodes[index]
-
-    def __setitem__(self,index,value):
-        self._node_DataNodes[index]=value
-
-    def __delitem__(self,index):
-        del self._node_DataNodes[index]
-
-    def __iter__(self):
-        return iter(self._node_DataNodes)
-
-    #Setting Function
-    def setDataNodes(self,variables):
-        self._node_DataNodes=variables
-        return self._node_DataNodes
-    def addDataNodes(self,variables):
-        self._node_DataNodes+=variables
-        return self._node_DataNodes
-    def getDataNodes(self):
-        return self._node_DataNodes
-
-class DataPlugArray(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataPlugArray,self).__init__()
-        self._plug_DataPlugs=[]
-
-    def __len__(self):
-        return len(self._plug_DataPlugs)
-
-    def __getitem__(self,index):
-        return self._plug_DataPlugs[index]
-
-    def __setitem__(self,index,value):
-        self._plug_DataPlugs[index]=value
-
-    def __delitem__(self,index):
-        del self._plug_DataPlugs[index]
-
-    def __iter__(self):
-        return iter(self._plug_DataPlugs)
+class DataAnimCurve(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataAnimCurve,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._key_DataKeys=[]
+            self._input_DataPlug=None
+            self._output_DataPlug=None
+            self._dataChoice_strs=[
+                "DataKeys",
+                "InputDataPlug",
+                "OutputDataPlug"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataAnimCurve):
+                self._key_DataKeys=dataTuple[0].getDataKeys()
+                self._input_DataPlug=dataTuple[0].getInputDataPlug()
+                self._output_DataPlug=dataTuple[0].getOutputDataPlug()
 
     #Setting Function
-    def setDataPlugs(self,variables):
-        self._plug_DataPlugs=variables
-        return self._plug_DataPlugs
-    def addDataPlugs(self,variables):
-        self._plug_DataPlugs+=variables
-        return self._plug_DataPlugs
-    def getDataPlugs(self):
-        return self._plug_DataPlugs
-
-class DataPlugConnectArray(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataPlugConnectArray,self).__init__()
-        self._connection_DataPlugConnects=[]
-
-    def __len__(self):
-        return len(self._connection_DataPlugConnects)
-
-    def __getitem__(self,index):
-        return self._connection_DataPlugConnects[index]
-
-    def __setitem__(self,index,value):
-        self._connection_DataPlugConnects[index]=value
-
-    def __delitem__(self,index):
-        del self._connection_DataPlugConnects[index]
-
-    def __iter__(self):
-        return iter(self._connection_DataPlugConnects)
-
-    #Setting Function
-    def setDataPlugConnects(self,variables):
-        self._connection_DataPlugConnects=variables
-        return self._connection_DataPlugConnects
-    def addDataPlugConnects(self,variables):
-        self._connection_DataPlugConnects+=variables
-        return self._connection_DataPlugConnects
-    def getDataPlugConnects(self):
-        return self._connection_DataPlugConnects
+    def setDataKeys(self,variables):
+        self._key_DataKeys=variables
+        return self._key_DataKeys
+    def addDataKeys(self,variables):
+        self._key_DataKeys+=variables
+        return self._key_DataKeys
+    def getDataKeys(self):
+        return self._key_DataKeys
+    
+    def setInputDataPlug(self,variable):
+        self._input_DataPlug=variable
+        return self._input_DataPlug
+    def getInputDataPlug(self):
+        return self._input_DataPlug
+    
+    def setOutputDataPlug(self,variable):
+        self._output_DataPlug=variable
+        return self._output_DataPlug
+    def getOutputDataPlug(self):
+        return self._output_DataPlug
 
 #Action Data
-class DataBind(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataBind,self).__init__()
-        self._mesh_DataNode=None
-        self._joint_DataNodes=[]
-        self._skicWeight_DataAttributeWeightArrays=[]
+class DataBind(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataBind,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._shape_DataNode=None
+            self._joint_DataNodes=[]
+            self._skicWeight_DataAttributeWeightArrays=[]
+            self._dataChoice_strs=[
+                "ShapeDataNode",
+                "JointDataNodes",
+                "DataAttributeWeightArrays"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataBind):
+                self._shape_DataNode=dataTuple[0].getShapeDataNode()
+                self._joint_DataNodes=dataTuple[0].getJointDataNodes()
+                self._skicWeight_DataAttributeWeightArrays=dataTuple[0].getDataAttributeWeightArrays()
     
     #Setting Function
-    def setMeshDataNode(self,variable):
-        self._mesh_DataNode=variable
-        return self._mesh_DataNode
-    def getMeshDataNode(self):
-        return self._mesh_DataNode
+    def setShapeDataNode(self,variable):
+        self._shape_DataNode=variable
+        return self._shape_DataNode
+    def getShapeDataNode(self):
+        return self._shape_DataNode
 
-    def setJointDataNode(self,variables):
+    def setJointDataNodes(self,variables):
         self._joint_DataNodes=variables
         return self._joint_DataNodes
-    def addJointDataNode(self,variables):
+    def addJointDataNodes(self,variables):
         self._joint_DataNodes+=variables
         return self._joint_DataNodes
-    def getJointDataNode(self):
+    def getJointDataNodes(self):
         return self._joint_DataNodes
     
     def setDataAttributeWeightArrays(self,variables):
@@ -1110,11 +1633,21 @@ class DataBind(bLB.SelfOrigin):
     def getDataAttributeWeightArrays(self):
         return self._skicWeight_DataAttributeWeightArrays
 
-class DataKeyable(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataKeyable,self).__init__()
-        self._node_DataNode=None
-        self._keyable_DataKeyArrays=[]
+class DataKeyable(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataKeyable,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._node_DataNode=None
+            self._keyable_DataAnimCurves=[]
+            self._dataChoice_strs=[
+                "DataNode",
+                "DataAnimCurves"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataKeyable):
+                self._node_DataNode=dataTuple[0].getDataNode()
+                self._keyable_DataAnimCurves=dataTuple[0].getDataAnimCurves()
 
     #Setting Function
     def setDataNode(self,variable):
@@ -1123,35 +1656,33 @@ class DataKeyable(bLB.SelfOrigin):
     def getDataNode(self):
         return self._node_DataNode
 
-    def setDataKeyArrays(self,variables):
-        self._keyable_DataKeyArrays=variables
-        return self._keyable_DataKeyArrays
-    def addDataKeyArrays(self,variables):
-        self._keyable_DataKeyArrays+=variables
-        return self._keyable_DataKeyArrays
-    def getDataKeyArrays(self):
-        return self._keyable_DataKeyArrays
+    def setDataAnimCurves(self,variables):
+        self._keyable_DataAnimCurves=variables
+        return self._keyable_DataAnimCurves
+    def addDataAnimCurves(self,variables):
+        self._keyable_DataAnimCurves+=variables
+        return self._keyable_DataAnimCurves
+    def getDataAnimCurves(self):
+        return self._keyable_DataAnimCurves
 
-class DataKeyableWithMatrix(DataKeyable):
-    def __init__(self):
-        super(DataKeyable,self).__init__()
-        #self._node_DataNode=None
-        #self._keyable_DataKeyArrays=[]
-        self._matrix_DataMatrixs=[]
-
-    #Setting Function
-    def setDataMatrix(self,variable):
-        self._matrix_DataMatrix=variable
-        return self._matrix_DataMatrix
-    def getDataMatrix(self):
-        return self._matrix_DataMatrix
-
-class DataMatch(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataMatch,self).__init__()
-        self._node_DataNode=None
-        self._match_DataNode=None
-        self._match_DataMatrix=None
+class DataMatch(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMatch,self).__init__(*dataTuple)
+        if (0 == len(dataTuple) or 
+            2 <= len(dataTuple)):
+            self._node_DataNode=None
+            self._match_DataNode=None
+            self._match_DataMatrix=None
+            self._dataChoice_strs=[
+                "DataNode",
+                "MatchDataNode",
+                "MatchDataMatrix"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMatch):
+                self._node_DataNode=dataTuple[0].getDataNode()
+                self._match_DataNode=dataTuple[0].getMatchDataNode()
+                self._match_DataMatrix=dataTuple[0].getMatchDataMatrix()
 
     #Setting Function
     def setDataNode(self,variable):
@@ -1172,14 +1703,29 @@ class DataMatch(bLB.SelfOrigin):
     def getMatchDataMatrix(self):
         return self._match_DataMatrix
 
-class DataMirror(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataMirror,self).__init__()
-        self._node_DataNode=None
-        self._pivot_DataNode=None
-        self._pivot_DataMatrix=None
-        self._mirrorAxis_str="x"
-        self._mirrorOrientVector_str="z"
+class DataMirror(bLB.DataOrigin):
+    def __init__(self,*dataTuple):
+        super(DataMirror,self).__init__(*dataTuple)
+        if dataTuple is None:
+            self._node_DataNode=None
+            self._pivot_DataNode=None
+            self._pivot_DataMatrix=None
+            self._mirrorAxis_str="x"
+            self._mirrorOrientVector_str="z"
+            self._dataChoice_strs=[
+                "DataNode",
+                "PivotDataNode",
+                "PivotDataMatrix",
+                "MirrorAxis",
+                "MirrorOrientVector"
+            ]
+        elif 1 == len(dataTuple):
+            if isinstance(dataTuple[0],DataMirror):
+                self._node_DataNode=dataTuple[0].getDataNode()
+                self._pivot_DataNode=dataTuple[0].getPivotDataNode()
+                self._pivot_DataMatrix=dataTuple[0].getPivotDataMatrix()
+                self._mirrorAxis_str=dataTuple[0].getMirrorAxis()
+                self._mirrorOrientVector_str=dataTuple[0].getMirrorOrientVector()
 
     #Setting Function
     def setDataNode(self,variable):
@@ -1211,35 +1757,3 @@ class DataMirror(bLB.SelfOrigin):
         return self._mirrorOrientVector_str
     def getMirrorOrientVector(self):
         return self._mirrorOrientVector_str
-
-class DataDrivenKey(bLB.SelfOrigin):
-    def __init__(self):
-        super(DataDrivenKey,self).__init__()
-        self._node_DataNode=None
-        self._source_DataPlugs=[]
-        self._drivenKey_DataKeyArrays=[]
-
-    #Setting Function
-    def setDataNode(self,variable):
-        self._node_DataNode=variable
-        return self._node_DataNode
-    def getDataNode(self):
-        return self._node_DataNode
-
-    def setDataPlugs(self,variables):
-        self._source_DataPlugs=variables
-        return self._source_DataPlugs
-    def addDataPlugs(self,variables):
-        self._source_DataPlugs+=variables
-        return self._source_DataPlugs
-    def getDataPlugs(self):
-        return self._source_DataPlugs
-
-    def setDataKeyArrays(self,variables):
-        self._drivenKey_DataKeyArrays=variables
-        return self._drivenKey_DataKeyArrays
-    def addDataKeyArrays(self,variables):
-        self._drivenKey_DataKeyArrays+=variables
-        return self._drivenKey_DataKeyArrays
-    def getDataKeyArrays(self):
-        return self._drivenKey_DataKeyArrays

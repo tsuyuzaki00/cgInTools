@@ -36,16 +36,16 @@ class AppNode(aLB.AppOpenMayaBase):
     def getDataNode(self):
         return self._node_DataNode
     
-    def setParentDataNode(self,variables):
-        self._parent_DataNode=variables
+    def setDataNodeForParent(self,variable):
+        self._parent_DataNode=variable
         return self._parent_DataNode
-    def getParentDataNode(self):
+    def getDataNodeForParent(self):
         return self._parent_DataNode
     
-    def setChildDataNodes(self,variables):
+    def setDataNodeForChilds(self,variables):
         self._child_DataNodes=variables
         return self._child_DataNodes
-    def getChildDataNodes(self):
+    def getDataNodeForChilds(self):
         return self._child_DataNodes
     
     #Public Function
@@ -70,10 +70,10 @@ class AppNode(aLB.AppOpenMayaBase):
     def queryFullPathParent(self):
         pass
 
-    def queryChildren(self):
+    def queryChilds(self):
         pass
 
-    def queryFullPathChildren(self):
+    def queryFullPathChilds(self):
         pass
 
 class AppDGNode(aLB.AppOpenMayaBase):
@@ -97,25 +97,6 @@ class AppDGNode(aLB.AppOpenMayaBase):
         node_DataNode=dLB.DataNode(node_MObject)
         return node_DataNode
     
-    def nameChoice_query_strs(self,name_dataName):
-        orderName_strs=[]
-        for orderName_str in name_dataName.getOrders():
-            if orderName_str is "Title":
-                orderName_strs.append(name_dataName.getTitle())
-            elif orderName_str is "NodeType":
-                orderName_strs.append(name_dataName.getNodeType())
-            elif orderName_str is "Side":
-                orderName_strs.append(name_dataName.getSide())
-            elif orderName_str is "Number":
-                orderName_strs.append(name_dataName.getNumbers()[0])
-            elif orderName_str is "Hierarchy":
-                orderName_strs.append(name_dataName.getHierarchys()[0])
-            elif orderName_str is "Custom":
-                orderName_strs.append(name_dataName.getCustoms()[0])
-            else:
-                continue
-        orderName_strs=[orderName_str for orderName_str in orderName_strs if not orderName_str is None]
-        return orderName_strs
         
     def findAttr_create_DataAttribute(self,node_MObject,attrName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
@@ -191,13 +172,7 @@ class AppDGNode(aLB.AppOpenMayaBase):
             attr_DataAttributeVector.getShortName()
         )
         return attr_MObject
-
-    #Private Function
-    def __orderName_create_str(self,name_dataName):
-        orderName_strs=self.nameChoice_query_strs(name_dataName)
-        orderName_str="_".join(orderName_strs)
-        return orderName_str
-
+    
     #Test Function
     def _queryMObject(self,dataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
@@ -212,12 +187,6 @@ class AppDGNode(aLB.AppOpenMayaBase):
     def getDataNode(self):
         return self._node_DataNode
 
-    def setDataName(self,variable):
-        self._node_DataName=variable
-        return self._node_DataName
-    def getDataName(self):
-        return self._node_DataName
-    
     def setDataPlugs(self,variables):
         self._plug_DataPlugs=variables
         return self._plug_DataPlugs
@@ -234,13 +203,12 @@ class AppDGNode(aLB.AppOpenMayaBase):
         return self._attrName_str
     
     #Public Function
-    def createNode(self,dataNode=None,dataName=None):
+    def createNode(self,dataNode=None):
         _node_DataNode=dataNode or self._node_DataNode
-        _node_DataName=dataName or self._node_DataName
 
-        orderName_str=self.__orderName_create_str(_node_DataName)
-        node_MObject=self.node_create_DataNode(_node_DataNode.getType(),orderName_str)
-        return dLB.DataNode(node_MObject)
+        node_MObject=self.node_create_MObject(_node_DataNode.getType(),_node_DataNode.getName())
+        node_DataNode=dLB.DataNode(node_MObject)
+        return node_DataNode
 
     def createAttr(self,dataPlugs=[]):
         _plug_DataPlugs=dataPlugs or self._plug_DataPlugs
@@ -293,19 +261,7 @@ class AppDGNode(aLB.AppOpenMayaBase):
                 node_MPlug.setString(attr_DataAttribute.getValue())
             elif type(attr_DataAttribute) is dLB.DataAttributeVector:
                 array_MPlug=node_MPlug.array()
-            
     
-    def rename(self,dataNode=None,dataName=None):
-        _node_DataNode=dataNode or self._node_DataNode
-        _node_DataName=dataName or self._node_DataName
-        
-        node_MObject=self.node_query_MObject(str(_node_DataNode))
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        orderName_str=self.__orderName_create_str(_node_DataName)
-        node_MFnDependencyNode.setName(orderName_str)
-        rename_MObject=node_MFnDependencyNode.object()
-        return dLB.DataNode(rename_MObject)
-
     def searchDataAttribute(self,dataNode=None,attrName=None):
         _node_DataNode=dataNode or self._node_DataNode
         _attrName_str=attrName or self._attrName_str
@@ -328,14 +284,6 @@ class AppDGNode(aLB.AppOpenMayaBase):
         nodeName_str=_node_DataNode.getName()
         return nodeName_str
 
-    def queryUUID(self,dataNode=None):
-        _node_DataNode=dataNode or self._node_DataNode
-
-        nodeName_str=_node_DataNode.getName()
-        node_MObject=self.node_query_MObject(nodeName_str)
-        node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
-        uuid_MUuid=node_MFnDependencyNode.uuid()
-        return uuid_MUuid
 
 class AppDAGNode(AppDGNode):
     def __init__(self):
@@ -430,6 +378,18 @@ class AppDAGNode(AppDGNode):
         node_DataMatrix=mLB.DataMatrix(node_MMatrix)
         return node_DataMatrix
     
+    #Inheritance Function
+    def _parent_edit_func(self,node_str,parent_str):
+        node_MObject=self.node_query_MObject(node_str)
+        node_MDagPath=self.convertMObject_query_MDagPath(node_MObject)
+        
+        parent_MObject=self.node_query_MObject(parent_str)
+        parent_MDagPath=self.convertMObject_query_MDagPath(parent_MObject)
+
+        parent_MDagModifier=om2.MDagModifier()
+        parent_MDagModifier.reparentNode(node_MDagPath,parent_MDagPath)
+        parent_MDagModifier.doIt()
+    
     #Private Function
     def __dataNodeToNormalMatrix_query_DataMatrix(self,node_DataNode):
         node_MObject=self.node_query_MObject(str(node_DataNode))
@@ -468,24 +428,16 @@ class AppDAGNode(AppDGNode):
         return node_DataMatrix
 
     #Setting Function
-    def setTranslate(self,variable3):
-        self._translate_MVector=om2.MVector(variable3)
-        return self._translate_MVector
+    def setDataTranslate(self,variable):
+        self._translate_DataTranslate=dLB.DataTranslate(variable)
+        return self._translate_DataTranslate
     def addTranslate(self,variable):
-        MVector=om2.MVector(variable)
-        add_MMatrix=om2.MMatrix()
-        add_MMatrix.setElement(3,0,MVector.x)
-        add_MMatrix.setElement(3,1,MVector.y)
-        add_MMatrix.setElement(3,2,MVector.z)
-        have_MMatrix=self.initialNoneMMatrix_check_MMatrix(self._MMatrix)  or self._MMatrix
-        self._MMatrix=have_MMatrix*add_MMatrix
-        return self._MMatrix
+        self._translate_DataTranslate+=dLB.DataTranslate(variable)
+        return self._translate_DataTranslate
     def getTranslate(self):
-        MTransformationMatrix=om2.MTransformationMatrix(self._MMatrix)
-        MVector=MTransformationMatrix.translation(self._MSpace)
-        return MVector
+        return self._translate_DataTranslate
 
-    def setRotate(self,variable):
+    def setDataRotation(self,variable):
         radian=[math.radians(variable[0]),math.radians(variable[1]),math.radians(variable[2])]
         MEulerRotation=om2.MEulerRotation(radian,self._rotateOrder)
         self._MMatrix=MEulerRotation.asMatrix()
