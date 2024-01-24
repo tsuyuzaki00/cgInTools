@@ -7,6 +7,8 @@ import cgInTools as cit
 from ...library import baseLB as bLB
 cit.reloads([bLB])
 
+from ...library.dataLB import *
+
 #Definition Data
 class DataMenuParam(bLB.DataOrigin):
     def __init__(self,*dataTuple):

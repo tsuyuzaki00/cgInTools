@@ -5,10 +5,8 @@ import maya.cmds as cmds
 import maya.mel as mel
 
 import cgInTools as cit
-from . import setBaseLB as sbLB
-cit.reloads([sbLB])
 
-class CheckBoolean(sbLB.BaseCheck):
+class CheckBoolean():
     def __init__(self):
         super(CheckBoolean,self).__init__()
         self._evaluation_dict={"bool":False}
@@ -651,105 +649,3 @@ class CheckBoolean(sbLB.BaseCheck):
         else:
             evaluation_dict["bool"]=False
             return evaluation_dict
-    
-class TypeCheck(sbLB.TypeCheck):
-    def __init__(self):
-        super(TypeCheck.self).__init__()
-    
-    #Single Function
-    def int_check_bool(self,variable):
-        if type(variable) is int:
-            return True
-        else:
-            return False
-    
-    def float_check_bool(self,variable):
-        if type(variable) is float:
-            return True
-        else:
-            return False
-    
-    def string_check_bool(self,variable):
-        if type(variable) is str:
-            return True
-        else:
-            return False
-    
-    def boolean_check_bool(self,variable):
-        if type(variable) is bool:
-            return True
-        else:
-            return False
-    
-    def list_check_bool(self,variable):
-        if type(variable) is list:
-            return True
-        else:
-            return False
-    
-    def tuple_check_bool(self,variable):
-        if type(variable) is tuple:
-            return True
-        else:
-            return False
-    
-    def dict_check_bool(self,variable):
-        if type(variable) is dict:
-            return True
-        else:
-            return False
-    
-    def set_check_bool(self,variable):
-        if type(variable) is set:
-            return True
-        else:
-            return False
-
-    def instance_check_bool(self,variable,instance):
-        if isinstance(variable,instance):
-            return True
-        else:
-            return False
-
-    #Public Function
-    def check(self):
-        if str(self._relation) == "int" or self._relation == int:
-            boolean=self.int_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "float" or self._relation == float:
-            boolean=self.float_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "str" or tr(self._relation) == "string" or self._relation == str:
-            boolean=self.string_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "bool" or tr(self._relation) == "boolean" or self._relation == bool:
-            boolean=self.boolean_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "list" or self._relation == list:
-            boolean=self.list_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "tuple" or self._relation == tuple:
-            boolean=self.tuple_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "dict" or self._relation == dict:
-            boolean=self.dict_check_bool(self._variable)
-            return boolean
-        elif str(self._relation) == "set" or self._relation == set:
-            boolean=self.set_check_bool(self._variable)
-            return boolean
-        elif not self._instance == None:
-            boolean=self.instance_check_bool(self._variable,self._instance)
-            return boolean
-        else:
-            cmds.error("There is no data type "+self._relation)
-
-def typeCheck(variable,relation,instance=None):
-    check=TypeCheck()
-    check.setVariable(variable)
-    check.setRelation(relation)
-    check.setInstance(instance)
-    boolean=check.check()
-    if boolean:
-        return boolean
-    else:
-        cmds.error("The "+variable+" variable is incorrect.")

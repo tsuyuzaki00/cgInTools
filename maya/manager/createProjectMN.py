@@ -16,5 +16,5 @@ def main():
     project_DataPath.setRelativeDirectory(project_dict["folder"])
 
     project_SelfProject=sLB.SelfProject()
-    project_SelfProject.setDataPath(project_DataPath)
+    project_SelfProject.setProjectDataPath(project_DataPath)
     project_SelfProject.createProject()

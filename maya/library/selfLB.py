@@ -41,24 +41,18 @@ class SelfDGNode(bLB.SelfOrigin):
             self._node_DataNode=None
             self._name_DataName=None
             self._create_DataNode=None
-            self._create_DataPlug=None
-            self._create_DataPlugArray=None
-            self._edit_DataPlug=None
-            self._edit_DataPlugArray=None
-            self._connect_DataConnectPlug=None
-            self._connect_DataConnectPlugArray=None
+            self._create_DataPlugs=None
+            self._edit_DataPlugs=None
+            self._connect_DataConnectPlugs=None
             self._anim_DataKeyable=None
             self._driven_DataKeyable=None
         elif isinstance(selfObject,SelfDGNode):
             self._node_DataNode=selfObject.getDataNode()
             self._name_DataName=selfObject.getDataName()
             self._create_DataNode=selfObject.getCreateDataNode()
-            self._create_DataPlug=selfObject.getCreateDataPlug()
-            self._create_DataPlugArray=selfObject.getCreateDataPlugArray()
-            self._edit_DataPlug=selfObject.getEditDataPlug()
-            self._edit_DataPlugArray=selfObject.getEditDataPlugArray()
-            self._connect_DataPlugConnect=selfObject.getDataConnectPlug()
-            self._connect_DataPlugConnectArray=selfObject.getDataConnectPlugArray()
+            self._create_DataPlugs=selfObject.getCreateDataPlugs()
+            self._edit_DataPlugs=selfObject.getEditDataPlugs()
+            self._connect_DataPlugConnects=selfObject.getDataConnectPlugs()
             self._anim_DataKeyable=selfObject.getAnimDataKeyable()
             self._driven_DataKeyable=selfObject.getDrivenDataKeyable()
 
@@ -81,41 +75,23 @@ class SelfDGNode(bLB.SelfOrigin):
     def getCreateDataNode(self):
         return self._create_DataNode
     
-    def setCreateDataPlug(self,variable):
-        self._create_DataPlug=variable
-        return self._create_DataPlug
-    def getCreateDataPlug(self):
-        return self._create_DataPlug
-    
-    def setCreateDataPlugArray(self,variable):
-        self._create_DataPlugArray=variable
-        return self._create_DataPlugArray
-    def getCreateDataPlugArray(self):
-        return self._create_DataPlugArray
+    def setCreateDataPlugs(self,variable):
+        self._create_DataPlugs=variable
+        return self._create_DataPlugs
+    def getCreateDataPlugs(self):
+        return self._create_DataPlugs
 
-    def setEditDataPlug(self,variable):
-        self._edit_DataPlug=variable
-        return self._edit_DataPlug
-    def getEditDataPlug(self):
-        return self._edit_DataPlug
-    
-    def setEditDataPlugArray(self,variable):
-        self._edit_DataPlugArray=variable
-        return self._edit_DataPlugArray
-    def getEditDataPlugArray(self):
-        return self._edit_DataPlugArray
+    def setEditDataPlugs(self,variable):
+        self._edit_DataPlugs=variable
+        return self._edit_DataPlugs
+    def getEditDataPlugs(self):
+        return self._edit_DataPlugs
 
-    def setDataConnectPlug(self,variable):
-        self._connect_DataConnectPlug=variable
-        return self._connect_DataConnectPlug
-    def getDataConnectPlug(self):
-        return self._connect_DataConnectPlug
-    
-    def setDataConnectPlugArray(self,variable):
-        self._connect_DataConnectPlugArray=variable
-        return self._connect_DataConnectPlugArray
-    def getDataConnectPlugArray(self):
-        return self._connect_DataConnectPlugArray
+    def setDataConnectPlugs(self,variable):
+        self._connect_DataConnectPlugs=variable
+        return self._connect_DataConnectPlugs
+    def getDataConnectPlugs(self):
+        return self._connect_DataConnectPlugs
     
     def setAnimDataKeyable(self,variable):
         self._anim_DataKeyable=variable
@@ -152,6 +128,9 @@ class SelfDGNode(bLB.SelfOrigin):
         self._node_DataNode=node_AppNode.create()
         return self._node_DataNode
 
+    def createAttrs(self,dataPlugs=None):
+        pass
+
     def rename(self,dataNode=None,dataName=None):
         _node_DataNode=dataNode or self._node_DataNode
         _name_DataName=dataName or self._name_DataName
@@ -172,22 +151,10 @@ class SelfDGNode(bLB.SelfOrigin):
         rename_str=rename_AppNodeName.editRename()
         return rename_str
 
-    def createAttr(self,dataPlug=None):
-        pass
-
-    def createAttrArray(self,dataPlugArray=None):
-        pass
-
-    def editAttr(self,dataPlug=None):
-        pass
-
-    def editAttrArray(self,dataPlugArray=None):
+    def editAttrs(self,dataPlugs=None):
         pass
     
-    def editConnect(self,dataPlugPair=None):
-        pass
-
-    def editConnectArray(self,dataPlugPairArray=None):
+    def editConnects(self,dataPlugPairs=None):
         pass
     
     def editKeyable(self,dataKeyable=None):
@@ -196,16 +163,19 @@ class SelfDGNode(bLB.SelfOrigin):
     def editDrivenKey(self,dataDrivenKey=None):
         pass
 
-    def queryAttr(self):
-        pass
+    def queryName(self):
+        nodeName_str=self._node_DataNode.getName()
+        return nodeName_str
+        
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        nodeName_str=node_AppNode.queryName()
+        return nodeName_str
     
-    def queryAttributeArray(self):
+    def queryAttributes(self):
         pass
 
-    def queryConnect(self):
-        pass
-
-    def queryConnectArray(self):
+    def queryConnects(self):
         pass
 
     def queryKeyable(self):
@@ -219,8 +189,8 @@ class SelfDAGNode(SelfDGNode):
         super(SelfDAGNode,self).__init__(selfObject)
         if selfObject is None:
             self._parent_DataNode=None
-            self._child_DataNodeArray=None
-            self._shape_DataNodeArray=None
+            self._child_DataNodes=None
+            self._shape_DataNodes=None
             self._edit_DataMatrix=None
             self._translate_DataTranslate=None
             self._rotate_DataRotation=None
@@ -229,9 +199,9 @@ class SelfDAGNode(SelfDGNode):
             self._match_DataMatch=None
             self._mirror_DataMirror=None
         elif isinstance(selfObject,SelfDAGNode):
-            self._parent_DataNode=selfObject.getDataNodeForParent()
-            self._child_DataNodeArray=selfObject.getDataNodeArrayForChild()
-            self._shape_DataNodeArray=selfObject.getDataNodeArrayForShape()
+            self._parent_DataNode=selfObject.getParentDataNode()
+            self._child_DataNodes=selfObject.getChildDataNodes()
+            self._shape_DataNodes=selfObject.getShapeDataNodes()
             self._edit_DataMatrix=selfObject.getDataMatrix()
             self._translate_DataTranslate=selfObject.getDataTranslate()
             self._rotate_DataRotation=selfObject.getDataRotation()
@@ -241,23 +211,33 @@ class SelfDAGNode(SelfDGNode):
             self._mirror_DataMirror=selfObject.getDataMirror()
     
     #Setting Function
-    def setDataNodeForParent(self,variable):
+    def setParentDataNode(self,variable):
         self._parent_DataNode=variable
         return self._parent_DataNode
-    def getDataNodeForParent(self):
+    def currentParentDataNode(self):
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        self._parent_DataNode=node_AppNode.currentParentDataNode()
+        return self._parent_DataNode
+    def getParentDataNode(self):
         return self._parent_DataNode
     
-    def setDataNodeArrayForChild(self,variable):
-        self._child_DataNodeArray=variable
-        return self._child_DataNodeArray
-    def getDataNodeArrayForChild(self):
-        return self._child_DataNodeArray
+    def setChildDataNodes(self,variable):
+        self._child_DataNodes=variable
+        return self._child_DataNodes
+    def currentChildDataNodes(self):
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        self._child_DataNodes=node_AppNode.currentChildDataNodes()
+        return self._child_DataNodes
+    def getChildDataNodes(self):
+        return self._child_DataNodes
     
-    def setDataNodeArrayForShape(self,variable):
-        self._shape_DataNodeArray=variable
-        return self._shape_DataNodeArray
-    def getDataNodeArrayForShape(self):
-        return self._shape_DataNodeArray
+    def setShapeDataNodes(self,variable):
+        self._shape_DataNodes=variable
+        return self._shape_DataNodes
+    def getShapeDataNodes(self):
+        return self._shape_DataNodes
 
     def setDataMatrix(self,variable):
         self._edit_DataMatrix=variable
@@ -302,14 +282,37 @@ class SelfDAGNode(SelfDGNode):
         return self._mirror_DataMirror
     
     #Public Function
-    def editParent(self):
-        pass
+    def moveParent(self,dataNode=None,parentDataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+        _parent_DataNode=parentDataNode or self._parent_DataNode
 
-    def editChilds(self):
-        pass
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(_node_DataNode)
+        node_AppNode.setParentDataNode(_parent_DataNode)
+        node_AppNode.moveParent()
 
-    def editShapes(self):
-        pass
+    def worldParent(self,dataNode=None):
+        _node_DataNode=dataNode or self._node_DataNode
+
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(_node_DataNode)
+        node_AppNode.worldParent()
+
+    def addChilds(self,dataNode=None,childDataNodes=None):
+        _node_DataNode=dataNode or self._node_DataNode
+        _child_DataNodes=childDataNodes or self._child_DataNodes
+
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(_node_DataNode)
+        node_AppNode.setChildDataNodes(_child_DataNodes)
+        node_AppNode.addChilds()
+
+    def removeChilds(self,childDataNodes=None):
+        _child_DataNodes=childDataNodes or self._child_DataNodes
+
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setChildDataNodes(_child_DataNodes)
+        node_AppNode.removeChilds()
 
     def editTransform(self):
         pass
@@ -399,25 +402,46 @@ class SelfDAGNode(SelfDGNode):
         pass
 
     def queryFullPathName(self):
-        pass
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        fullPathName_str=node_AppNode.queryFullPathName()
+        return fullPathName_str
     
-    def queryParent(self):
-        pass
+    def queryParentName(self):
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        parentName_str=node_AppNode.queryParentName()
+        return parentName_str
+    
+    def queryFullPathParentName(self):
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        fullPathParentName_str=node_AppNode.queryFullPathParentName()
+        return fullPathParentName_str
     
     def queryParentOfDataNode(self):
         pass
 
-    def queryChilds(self):
-        pass
+    def queryChildNames(self):
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        childName_strs=node_AppNode.queryChildNames()
+        return childName_strs
+    
+    def queryFullPathChildNames(self):
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        fullPathChildName_strs=node_AppNode.queryFullPathChildNames()
+        return fullPathChildName_strs
     
     def queryChildOfDataNodes(self):
         pass
 
-    def queryShapes(self):
-        pass
-    
-    def queryShapeOfDataNodes(self):
-        pass
+    def queryShapeNames(self):
+        node_AppNode=nLB.AppNode()
+        node_AppNode.setDataNode(self._node_DataNode)
+        shapeName_strs=node_AppNode.queryShapeNames()
+        return shapeName_strs
 
     def queryTranslate(self):
         pass
