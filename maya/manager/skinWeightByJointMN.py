@@ -214,5 +214,5 @@ class SkinWeightByJointWindow(UI.SkinWeightByJointWindowBase):
             self.createTableItem()
 
 def main():
-    viewWindow=SkinWeightByJointWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=SkinWeightByJointWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.show()

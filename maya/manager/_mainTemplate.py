@@ -8,7 +8,7 @@ import os
 from maya import cmds
 
 import cgInTools as cit
-from ...ui import scriptsRunUI as UI
+from ...ui import baseUI as UI
 from ..library import windowLB as wLB
 from ..library import jsonLB as jLB
 cit.reloads([UI,wLB,jLB])
@@ -16,11 +16,11 @@ cit.reloads([UI,wLB,jLB])
 class MainWindow(UI.MainWindowBase):
     def __init__(self, parent):
         super(MainWindow, self).__init__(parent)
-        self.setWindowTitle("windowTitle")
-        
-        self.custom_QGridLayout.addWidget()
+        windowTitle_str="windowTitle"
+        self.setWindowTitle(windowTitle_str)
+        self.custom_QScrollArea.setWidget()
         
 
 def main():
-    viewWindow=MainWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=MainWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.show()

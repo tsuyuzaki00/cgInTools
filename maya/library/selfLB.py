@@ -34,6 +34,40 @@ class SelfMenu(bLB.SelfOrigin):
     def updata(self,dataMenu=None):
         pass
 
+class SelfObjectArray(bLB.SelfOrigin):
+    def __init__(self):
+        self._objects=[]
+
+    def __len__(self):
+        return len(self._objects)
+
+    def __getitem__(self,index):
+        return self._objects[index]
+
+    def __setitem__(self,index,value):
+        self._objects[index]=value
+
+    def __delitem__(self,index):
+        del self._objects[index]
+
+    def __iter__(self):
+        return iter(self._objects)
+
+    #Setting Function
+    def setObjects(self,variables):
+        self._objects=variables
+        return self._objects
+    def addObjects(self,variables):
+        self._objects+=variables
+        return self._objects
+    def setObjects(self):
+        return self._objects
+    
+    #Public Function
+    def doIts(self):
+        for object in self._objects:
+            object.doIt()
+
 class SelfDGNode(bLB.SelfOrigin):
     def __init__(self,selfObject=None):
         super(SelfDGNode,self).__init__(selfObject)

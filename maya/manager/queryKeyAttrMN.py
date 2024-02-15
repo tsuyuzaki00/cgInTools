@@ -61,6 +61,6 @@ class LookKeyWindow(UI.TableWindowBase):
         self.__tableList_create_func(objs,add=True)
 
 def main():
-    viewWindow=LookKeyWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=LookKeyWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.buttonCenterOnClicked()
     viewWindow.show()

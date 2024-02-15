@@ -69,6 +69,6 @@ class LookShapeColorWindow(UI.TableWindowBase):
         self.__tableList_create_func(objs,add=True)
 
 def main():
-    viewWindow=LookShapeColorWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=LookShapeColorWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.buttonCenterOnClicked()
     viewWindow.show()

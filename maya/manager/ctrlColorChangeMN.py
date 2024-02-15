@@ -155,5 +155,5 @@ class ColorChangeWindow(UI.ColorChengeWindouBase):
         self.changeColor_edit_func(None,1)#WireFrameNeutral
 
 def main():
-    mayaWindow=ColorChangeWindow(parent=wLB.mayaMainWindow_query_widget())
+    mayaWindow=ColorChangeWindow(parent=wLB.mayaMainWindow_query_QWidget())
     mayaWindow.show()

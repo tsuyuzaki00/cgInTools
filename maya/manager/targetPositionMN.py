@@ -63,5 +63,5 @@ class TargetPosWindow(UI.TargetPosWindowBase):
         self.target_QLineEdit.setText(str(objs))
 
 def main():
-    mayaWindow=TargetPosWindow(parent=wLB.mayaMainWindow_query_widget())
+    mayaWindow=TargetPosWindow(parent=wLB.mayaMainWindow_query_QWidget())
     mayaWindow.show()

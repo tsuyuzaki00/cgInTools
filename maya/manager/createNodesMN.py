@@ -7,17 +7,18 @@ import maya.cmds as cmds
 import cgInTools as cit
 from ...ui import createNodesUI as UI
 from ...library import jsonLB as jLB
+from ...library import functionLB as fLB
 from ..library import windowLB as wLB
 from ..library import dataLB as dLB
 from ..library import selfLB as sLB
-cit.reloads([UI,jLB,wLB,dLB,sLB])
+cit.reloads([UI,fLB,jLB,wLB,dLB,sLB])
 
 DATAFOLDER="createNodes"
 RESETDIR,DATADIR=cit.checkScriptsData(DATAFOLDER,cit.mayaSettings_dir,cit.mayaData_dir)
 
-class SelectionTextWindow(UI.CreateNodesWindow):
+class CreateNodesWindow(UI.CreateNodesWindow):
     def __init__(self,parent):
-        super(SelectionTextWindow, self).__init__(parent)
+        super(CreateNodesWindow, self).__init__(parent)
         self._dataFolder_str=DATAFOLDER
         self._reset_dir=RESETDIR
         self._data_dir=DATADIR
@@ -48,22 +49,22 @@ class SelectionTextWindow(UI.CreateNodesWindow):
 
     #Public Function
     def refreshClicked(self):
-        settings_dict=jLB.readJson(cit.mayaSettings_dir,self._dataFolder_str)
-        self._setText_query_dict(settings_dict)
+        settings_dict=fLB.readJson(cit.mayaSettings_dir,self._dataFolder_str)
+        #self._setText_query_dict(settings_dict)
 
     def restoreClicked(self):
-        data_dict=jLB.readJson(cit.mayaData_dir,self._dataFolder_str)
-        self._setText_query_dict(data_dict)
+        data_dict=fLB.readJson(cit.mayaData_dir,self._dataFolder_str)
+        #self._setText_query_dict(data_dict)
 
     def saveClicked(self):
         write_dict=self._getText_query_dict()
-        jLB.writeJson(absolute=cit.mayaData_dir,relative=self._dataFolder_str,write=write_dict)
+        fLB.writeJson(absolute=cit.mayaData_dir,relative=self._dataFolder_str,write=write_dict)
 
     def importClicked(self):
         import_dict=wLB.mayaPathDialog_query_dict(text="import setting",fileMode=1,directory=self._data_dir)
         if import_dict is None:
             return
-        data_dict=jLB.readJson(absolute=import_dict["directory"],file=import_dict["file"])
+        data_dict=fLB.readJson(absolute=import_dict["directory"],file=import_dict["file"])
         self._setText_query_dict(data_dict)
 
     def exportClicked(self):
@@ -71,7 +72,7 @@ class SelectionTextWindow(UI.CreateNodesWindow):
         if export_dict is None:
             return
         write_dict=self._getText_query_dict()
-        jLB.writeJson(absolute=export_dict["directory"],file=export_dict["file"],write=write_dict)
+        fLB.writeJson(absolute=export_dict["directory"],file=export_dict["file"],write=write_dict)
     
     def buttonLeftClicked(self):
         write_dict=self._getText_query_dict()
@@ -89,6 +90,6 @@ class SelectionTextWindow(UI.CreateNodesWindow):
             self.__selectText_create_func(objs)
 
 def main():
-    viewWindow=SelectionTextWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=CreateNodesWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.restoreClicked()
     viewWindow.show()

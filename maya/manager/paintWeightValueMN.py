@@ -89,5 +89,5 @@ class PaintWeightWindow(UI.PaintWeightWindowBase):
         self.paintEdit.soomth()
 
 def main():
-    viewWindow=PaintWeightWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=PaintWeightWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.show()

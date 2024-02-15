@@ -9,192 +9,14 @@ import cgInTools as cit
 class CheckBoolean():
     def __init__(self):
         super(CheckBoolean,self).__init__()
+        self._node=None
+        self._relation=None
+        self._maxLimit=None
+        self._minLimit=None
+        self._lowLimit=None
+        self._highLimit=None
+        self._same_list=[]
         self._evaluation_dict={"bool":False}
-    
-    #Public Function
-    #same relation check
-    def attrSame(self):
-        judge_dict=self.attrSame_check_dict(self._node,self._attr,self._same,self._edit)
-        return judge_dict
-
-    def sameRelation(self):
-        judge_dict=self.sameRelation_check_dict(self._relation,self._same)
-        return judge_dict
-
-    def relationIsSame(self):
-        judge_dict=self.relationIsSame_check_dict(self._relation,self._same)
-        return judge_dict
-
-    def includedString(self):
-        judge_dict=self.includedString_check_dict(self._relation,self._same)
-        return judge_dict
-
-    def minRelation(self):
-        judge_dict=self.minRelation_check_dict(self._relation,self._minLimit)
-        return judge_dict
-
-    def maxRelation(self):
-        judge_dict=self.maxRelation_check_dict(self._relation,self._maxLimit)
-        return judge_dict
-
-    def minMaxRelation(self):
-        judge_dict=self.minMaxRelation_check_dict(self._relation,self._minLimit,self._maxLimit)
-        return judge_dict
-
-    def lowRelation(self):
-        judge_dict=self.minRelation_check_dict(self._relation,self._lowLimit)
-        return judge_dict
-
-    def highRelation(self):
-        judge_dict=self.maxRelation_check_dict(self._relation,self._highLimit)
-        return judge_dict
-
-    #path check
-    def thePath(self):
-        judge_dict=self.thePath_check_dict(self._relation)
-        return judge_dict
-
-    def pathUnderCount(self):
-        judge_dict=self.pathUnderCount_check_dict(self._maxLimit)
-        return judge_dict
-
-    def fileUnderCount(self):
-        judge_dict=self.fileUnderCount_check_dict(self._maxLimit)
-        return judge_dict
-
-    #node check
-    def nodeUnLocked(self):
-        judge_dict=self.nodeUnLocked_check_dict(self._node)
-        return judge_dict
-
-    def sameObjName(self):
-        judge_dict=self.sameObjName_check_dict(self._node)
-        return judge_dict
-
-    def trashReferences(self):
-        judge_dict=self.trashReferences_check_dict(self._node)
-        return judge_dict
-
-    def nonChild(self):
-        judge_dict=self.nonChild_check_dict(self._node)
-        return judge_dict
-    
-    def nonExpression(self):
-        judge_dict=self.nonExpression_check_dict(self._node)
-        return judge_dict
-
-    def nonConstrained(self):
-        judge_dict=self.nonConstrained_check_dict(self._node)
-        return judge_dict
-    
-    def nonDefaultMatrial(self):
-        judge_dict=self.nonDefaultMatrial_check_dict(self._node)
-        return judge_dict
-    
-    def nonDefaultName(self):
-        judge_dict=self.nonDefaultName_check_dict(self._node)
-        return judge_dict
-    
-    def nonNameSpace(self):
-        judge_dict=self.nonNameSpace_check_dict(self._node)
-        return judge_dict
-    
-    def nonDisplayLayer(self):
-        judge_dict=self.nonDisplayLayer_check_dict(self._node)
-        return judge_dict
-    
-    # mel.eval('polyCleanupArgList 4 ...) konoyarou!
-    #def nonConcave(self):
-        #judge_dict=self.nonConcave_check_dict(self._node)
-        #return judge_dict
-    
-    def pivotIsWorldTransform(self):
-        judge_dict=self.pivotIsWorldTransform_check_dict(self._node)
-        return judge_dict
-    
-    def frozenTransform(self):
-        judge_dict=self.frozenTransform_check_dict(self._node)
-        return judge_dict
-    
-    def showObject(self):
-        judge_dict=self.showObject_check_dict(self._node)
-        return judge_dict
-    
-    def cleanHistory(self):
-        judge_dict=self.cleanHistory_check_dict(self._node)
-        return judge_dict
-
-    def nonKeyedObject(self):
-        judge_dict=self.nonKeyedObject_check_dict(self._node)
-        return judge_dict
-    
-    def limina(self):
-        judge_dict=self.limina_check_dict(self._node)
-        return judge_dict
-
-    def ngon(self):
-        judge_dict=self.ngon_check_dict(self._node)
-        return judge_dict
-    
-    def unlockedNormal(self):
-        judge_dict=self.unlockedNormal_check_dict(self._node)
-        return judge_dict
-    
-    def noShapeInTheParents(self):
-        judge_dict=self.noShapeInTheParents_check_dict(self._node)
-        return judge_dict
-
-    def overlappingUV(self):
-        judge_dict=self.overlappingUV_check_dict(self._node)
-        return judge_dict
-
-    def noUV(self):
-        judge_dict=self.noUV_check_dict(self._node)
-        return judge_dict
-    
-    #same multiple check    
-    def andSameRelation(self):
-        judge_dict=self.andSameRelation_check_dict(self._relation,self._sames)
-        return judge_dict
-    
-    def andMatchRelation(self):
-        judge_dict=self.andMatchRelation_check_dict(self._relation,self._sames)
-        return judge_dict
-
-    #Private Function
-
-    #Mulch Function
-    def pathUnderCount_check_dict(self,maxLimit):
-        file_path=cmds.file(q=True,sn=True)
-        pathParts_list=file_path.lower().split('/')
-        evaluation_dict=self.nameUnderCount_check_dict(pathParts_list,maxLimit)
-        return evaluation_dict
-
-    def fileUnderCount_check_dict(self,maxLimit):
-        file_path=cmds.file(q=True,sn=True)
-        ma_file=os.path.basename(file_path)
-        nameParts_list=ma_file.replace('.ma','').lower().split('_')
-        evaluation_dict=self.nameUnderCount_check_dict(nameParts_list,maxLimit)
-        return evaluation_dict
-
-    def attrSame_check_dict(self,node,attr,same,edit=False):
-        relation=cmds.getAttr(node+"."+attr)
-        evaluation_dict=self.sameRelation_check_dict(relation,same)
-        evaluation_dict["node"]=node
-        evaluation_dict["attr"]=attr
-        if edit:
-            if evaluation_dict["bool"]:
-                return evaluation_dict
-            else:
-                cmds.setAttr(node+"."+attr,same)
-                return evaluation_dict
-        else:
-            return evaluation_dict
-
-    def nameUnderCount_check_dict(self,relations,maxLimit):
-        numRelation=len(relations)
-        evaluation_dict=self.maxRelation_check_dict(numRelation,maxLimit)
-        return evaluation_dict        
 
     #Single Function
     #same relation check
@@ -649,3 +471,235 @@ class CheckBoolean():
         else:
             evaluation_dict["bool"]=False
             return evaluation_dict
+        
+    #Multi Function
+    def pathUnderCount_check_dict(self,maxLimit):
+        file_path=cmds.file(q=True,sn=True)
+        pathParts_list=file_path.lower().split('/')
+        evaluation_dict=self.nameUnderCount_check_dict(pathParts_list,maxLimit)
+        return evaluation_dict
+
+    def fileUnderCount_check_dict(self,maxLimit):
+        file_path=cmds.file(q=True,sn=True)
+        ma_file=os.path.basename(file_path)
+        nameParts_list=ma_file.replace('.ma','').lower().split('_')
+        evaluation_dict=self.nameUnderCount_check_dict(nameParts_list,maxLimit)
+        return evaluation_dict
+
+    def attrSame_check_dict(self,node,attr,same,edit=False):
+        relation=cmds.getAttr(node+"."+attr)
+        evaluation_dict=self.sameRelation_check_dict(relation,same)
+        evaluation_dict["node"]=node
+        evaluation_dict["attr"]=attr
+        if edit:
+            if evaluation_dict["bool"]:
+                return evaluation_dict
+            else:
+                cmds.setAttr(node+"."+attr,same)
+                return evaluation_dict
+        else:
+            return evaluation_dict
+
+    def nameUnderCount_check_dict(self,relations,maxLimit):
+        numRelation=len(relations)
+        evaluation_dict=self.maxRelation_check_dict(numRelation,maxLimit)
+        return evaluation_dict        
+
+    #Private Function
+
+    #Setting Function
+    def setNode(self,variable):
+        self._node=variable
+        return self._node
+    def getNode(self):
+        return self._node
+    
+    def setRelation(self,variable):
+        self._relation=variable
+        return self._relation
+    def getRelation(self):
+        return self._relation
+    
+    def setMaxLimit(self,variable):
+        self._maxLimit=variable
+        return self._maxLimit
+    def getMaxLimit(self):
+        return self._maxLimit
+    
+    def setMinLimit(self,variable):
+        self._minLimit=variable
+        return self._minLimit
+    def getMinLimit(self):
+        return self._minLimit
+    
+    def setHighLimit(self,variable):
+        self._highLimit=variable
+        return self._highLimit
+    def getHighLimit(self):
+        return self._highLimit
+    
+    def setLowLimit(self,variable):
+        self._lowLimit=variable
+        return self._lowLimit
+    def getLowLimit(self):
+        return self._lowLimit
+    
+    def setSames(self,variables):
+        self._same_list=variables
+        return self._same_list
+    def addSames(self,variables):
+        self._same_list+=variables
+        return self._same_list
+    def getSames(self):
+        return self._same_list
+    
+    #Public Function
+    #same relation check
+    def attrSame(self):
+        judge_dict=self.attrSame_check_dict(self._node,self._attr,self._same,self._edit)
+        return judge_dict
+
+    def sameRelation(self):
+        judge_dict=self.sameRelation_check_dict(self._relation,self._same)
+        return judge_dict
+
+    def relationIsSame(self):
+        judge_dict=self.relationIsSame_check_dict(self._relation,self._same)
+        return judge_dict
+
+    def includedString(self):
+        judge_dict=self.includedString_check_dict(self._relation,self._same)
+        return judge_dict
+
+    def minRelation(self):
+        judge_dict=self.minRelation_check_dict(self._relation,self._minLimit)
+        return judge_dict
+
+    def maxRelation(self):
+        judge_dict=self.maxRelation_check_dict(self._relation,self._maxLimit)
+        return judge_dict
+
+    def minMaxRelation(self):
+        judge_dict=self.minMaxRelation_check_dict(self._relation,self._minLimit,self._maxLimit)
+        return judge_dict
+
+    def lowRelation(self):
+        judge_dict=self.minRelation_check_dict(self._relation,self._lowLimit)
+        return judge_dict
+
+    def highRelation(self):
+        judge_dict=self.maxRelation_check_dict(self._relation,self._highLimit)
+        return judge_dict
+
+    #path check
+    def thePath(self):
+        judge_dict=self.thePath_check_dict(self._relation)
+        return judge_dict
+
+    def pathUnderCount(self):
+        judge_dict=self.pathUnderCount_check_dict(self._maxLimit)
+        return judge_dict
+
+    def fileUnderCount(self):
+        judge_dict=self.fileUnderCount_check_dict(self._maxLimit)
+        return judge_dict
+
+    #node check
+    def nodeUnLocked(self):
+        judge_dict=self.nodeUnLocked_check_dict(self._node)
+        return judge_dict
+
+    def sameObjName(self):
+        judge_dict=self.sameObjName_check_dict(self._node)
+        return judge_dict
+
+    def trashReferences(self):
+        judge_dict=self.trashReferences_check_dict(self._node)
+        return judge_dict
+
+    def nonChild(self):
+        judge_dict=self.nonChild_check_dict(self._node)
+        return judge_dict
+    
+    def nonExpression(self):
+        judge_dict=self.nonExpression_check_dict(self._node)
+        return judge_dict
+
+    def nonConstrained(self):
+        judge_dict=self.nonConstrained_check_dict(self._node)
+        return judge_dict
+    
+    def nonDefaultMatrial(self):
+        judge_dict=self.nonDefaultMatrial_check_dict(self._node)
+        return judge_dict
+    
+    def nonDefaultName(self):
+        judge_dict=self.nonDefaultName_check_dict(self._node)
+        return judge_dict
+    
+    def nonNameSpace(self):
+        judge_dict=self.nonNameSpace_check_dict(self._node)
+        return judge_dict
+    
+    def nonDisplayLayer(self):
+        judge_dict=self.nonDisplayLayer_check_dict(self._node)
+        return judge_dict
+    
+    # mel.eval('polyCleanupArgList 4 ...) konoyarou!
+    #def nonConcave(self):
+        #judge_dict=self.nonConcave_check_dict(self._node)
+        #return judge_dict
+    
+    def pivotIsWorldTransform(self):
+        judge_dict=self.pivotIsWorldTransform_check_dict(self._node)
+        return judge_dict
+    
+    def frozenTransform(self):
+        judge_dict=self.frozenTransform_check_dict(self._node)
+        return judge_dict
+    
+    def showObject(self):
+        judge_dict=self.showObject_check_dict(self._node)
+        return judge_dict
+    
+    def cleanHistory(self):
+        judge_dict=self.cleanHistory_check_dict(self._node)
+        return judge_dict
+
+    def nonKeyedObject(self):
+        judge_dict=self.nonKeyedObject_check_dict(self._node)
+        return judge_dict
+    
+    def limina(self):
+        judge_dict=self.limina_check_dict(self._node)
+        return judge_dict
+
+    def ngon(self):
+        judge_dict=self.ngon_check_dict(self._node)
+        return judge_dict
+    
+    def unlockedNormal(self):
+        judge_dict=self.unlockedNormal_check_dict(self._node)
+        return judge_dict
+    
+    def noShapeInTheParents(self):
+        judge_dict=self.noShapeInTheParents_check_dict(self._node)
+        return judge_dict
+
+    def overlappingUV(self):
+        judge_dict=self.overlappingUV_check_dict(self._node)
+        return judge_dict
+
+    def noUV(self):
+        judge_dict=self.noUV_check_dict(self._node)
+        return judge_dict
+    
+    #same multiple check    
+    def andSameRelation(self):
+        judge_dict=self.andSameRelation_check_dict(self._relation,self._sames)
+        return judge_dict
+    
+    def andMatchRelation(self):
+        judge_dict=self.andMatchRelation_check_dict(self._relation,self._sames)
+        return judge_dict
+

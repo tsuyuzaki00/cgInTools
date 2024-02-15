@@ -18,15 +18,15 @@ def readJson(absolute,relative=None,file="init",extension="json"):
     return json_dict
 
 def writeJson(absolute,relative=None,file="init",extension="json",write={}):
-    json_DataPath=dLB.DataJson()
+    json_DataPath=dLB.DataPath()
     json_DataPath.setAbsoluteDirectory(absolute)
     json_DataPath.setRelativeDirectory(relative)
     json_DataPath.setFile(file)
     json_DataPath.setExtension(extension)
-    json_DataPath.setJsonDict(write)
 
     json_AppJson=jLB.AppJson()
     json_AppJson.setDataPath(json_DataPath)
+    json_AppJson.setJsonDict(write)
     json_AppJson.write()
 
 def readSelfObject(absolute,relative=None,file="init",extension="selfpy"):

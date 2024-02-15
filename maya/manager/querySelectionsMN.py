@@ -3,25 +3,29 @@ from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 import maya.cmds as cmds
+import random
 
 import cgInTools as cit
 from ...ui import plainTextUI as UI
 from ..library import windowLB as wLB
-from ...library import jsonLB as jLB
-cit.reloads([UI,wLB,jLB])
+from ...library import functionLB as fLB
+from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
+cit.reloads([UI,wLB,fLB])
 
 DATAFOLDER="querySelections"
 RESETDIR,DATADIR=cit.checkScriptsData(DATAFOLDER,cit.mayaSettings_dir,cit.mayaData_dir)
 
-class SelectionTextWindow(UI.PlainTextWindowBase):
+class QuerySelectionsWindow(MayaQWidgetDockableMixin,UI.PlainTextWindowBase):
     def __init__(self,parent):
-        super(SelectionTextWindow, self).__init__(parent)
+        super(QuerySelectionsWindow, self).__init__(parent)
         self._dataFolder_str=DATAFOLDER
         self._reset_dir=RESETDIR
         self._data_dir=DATADIR
 
-        self.setObjectName("SelectionsQuery")
-        self.setWindowTitle("SelectionsQuery")
+        windowTitle="querySelections"
+        random_int=random.randint(0,9999)
+        self.setObjectName(windowTitle+str(random_int))
+        self.setWindowTitle(windowTitle)
         self.buttonLeft_QPushButton.setText("Selection")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
@@ -63,7 +67,7 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
         text_str=self.convertListToString_edit_str(organizeTexts)
         self.textPlain_QPlainTextEdit.setPlainText(text_str)
 
-    def __getSelectText_query_dict(self):
+    def __getPlainText_query_dict(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()
         text_strs=self.convertStringToList_edit_list(getText_str)
         write_dict={"selections":text_strs}
@@ -71,30 +75,30 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
 
     #Public Function
     def refreshClicked(self):
-        settings_dict=jLB.readJson(cit.mayaSettings_dir,self._dataFolder_str)
+        settings_dict=fLB.readJson(cit.mayaSettings_dir,self._dataFolder_str)
         self.__setPlainText_create_func(settings_dict.get("selections"))
 
     def restoreClicked(self):
-        data_dict=jLB.readJson(cit.mayaData_dir,self._dataFolder_str)
+        data_dict=fLB.readJson(cit.mayaData_dir,self._dataFolder_str)
         self.__setPlainText_create_func(data_dict.get("selections"))
 
     def saveClicked(self):
-        write_dict=self.__getSelectText_query_dict()
-        jLB.writeJson(absolute=cit.mayaData_dir,relative=self._dataFolder_str,write=write_dict)
+        write_dict=self.__getPlainText_query_dict()
+        fLB.writeJson(absolute=cit.mayaData_dir,relative=self._dataFolder_str,write=write_dict)
 
     def importClicked(self):
         import_dict=wLB.mayaPathDialog_query_dict(text="import setting",fileMode=1,directory=self._data_dir)
         if import_dict is None:
             return
-        data_dict=jLB.readJson(absolute=import_dict["directory"],file=import_dict["file"])
+        data_dict=fLB.readJson(absolute=import_dict["directory"],file=import_dict["file"])
         self.__setPlainText_create_func(data_dict.get("selections"))
 
     def exportClicked(self):
         export_dict=wLB.mayaPathDialog_query_dict(text="export setting",fileMode=0,directory=self._data_dir)
         if export_dict is None:
             return
-        write_dict=self.__getSelectText_query_dict()
-        jLB.writeJson(absolute=export_dict["directory"],file=export_dict["file"],write=write_dict)
+        write_dict=self.__getPlainText_query_dict()
+        fLB.writeJson(absolute=export_dict["directory"],file=export_dict["file"],write=write_dict)
 
     def buttonLeftClicked(self):
         getText_str=self.textPlain_QPlainTextEdit.toPlainText()
@@ -115,8 +119,8 @@ class SelectionTextWindow(UI.PlainTextWindowBase):
             self.__setPlainText_create_func(objs,add=True)
 
 def main():
-    viewWindow=SelectionTextWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=QuerySelectionsWindow(parent=wLB.mayaMainWindow_query_QWidget())
     objs=cmds.ls(sl=True)
     if not objs == []:
         viewWindow.__setPlainText_create_func(objs)
-    viewWindow.show()
+    viewWindow.show(dockable=True,floating=True)

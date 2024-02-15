@@ -181,5 +181,5 @@ class SelectSetCtrlWindow(UI.SelectSetCtrlWindowBase):
             cmds.delete(obj)
 
 def main():
-    viewWindow=SelectSetCtrlWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=SelectSetCtrlWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.show()

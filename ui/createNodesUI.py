@@ -17,13 +17,14 @@ class CreateNodesWindow(UI.MainWindowBase):
         self.buttonRight_QPushButton.setText("Select Add")
         
         widget_CreateNodeWidget=CreateNodeWidget(self)
-        widget_CreateNodeWidget.setParentWidget(self.custom_QGridLayout)
-        self.custom_QGridLayout.addWidget(widget_CreateNodeWidget,0,0)
+        widget_CreateNodeWidget.setParentWidget(self.custom_QScrollArea)
+
+        self.custom_QScrollArea.setWidget(widget_CreateNodeWidget)
 
     def buttonCenterClicked(self):
         widget_CreateNodeWidget=CreateNodeWidget(self)
-        widget_CreateNodeWidget.setParentWidget(self.custom_QGridLayout)
-        self.custom_QGridLayout.addWidget(widget_CreateNodeWidget,self.custom_QGridLayout.rowCount(),0)
+        widget_CreateNodeWidget.setParentWidget(self.custom_QScrollArea)
+        self.custom_QScrollArea.setWidget(widget_CreateNodeWidget)
 
 class CreateNodeWidget(QWidget):
     def __init__(self,*args,**kwargs):
@@ -44,8 +45,14 @@ class CreateNodeWidget(QWidget):
         type_QLabel=QLabel("NodeType",self)
         widget_QHBoxLayout.addWidget(type_QLabel)
         
-        self.type_QLineEdit=QLineEdit(self)
-        widget_QHBoxLayout.addWidget(self.type_QLineEdit)
+        #self.type_QLineEdit=QLineEdit(self)
+        #widget_QHBoxLayout.addWidget(self.type_QLineEdit)
+        self.type_QComboBox=QComboBox(self)
+        self.type_QComboBox.addItems([
+            "transform",
+            "joint"
+        ])
+        widget_QHBoxLayout.addWidget(self.type_QComboBox)
 
         Add_QPuthButton=QPushButton("Add",self)
         widget_QHBoxLayout.addWidget(Add_QPuthButton)

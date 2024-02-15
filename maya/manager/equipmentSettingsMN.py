@@ -175,5 +175,5 @@ class EquipmentWindow(UI.TreeWindowBase):
         self.equipment_CTreeWidget.clear()
 
 def main():
-    viewWindow=EquipmentWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=EquipmentWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.show()

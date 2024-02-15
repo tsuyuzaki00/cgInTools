@@ -12,9 +12,10 @@ cit.reloads([bLB,dLB,sLB,nLB])
 def main():
     node_DataNode=dLB.DataNode()
     node_DataNode.setName("pCube1")
+    node_DataNode.setType("cube")
     
     node_SelfDAGNode=sLB.SelfDAGNode()
-    node_SelfDAGNode.setDataNode(node_DataNode)
-    print(node_SelfDAGNode.queryFullPathChildNames())
+    node_SelfDAGNode.setCreateDataNode(node_DataNode)
+    node_SelfDAGNode.createNodeNormal()
 
 main()

@@ -95,5 +95,5 @@ class CheckRunWindow(UI.MainWindowBase):
             _widget.runCheck_QCheckBox.setChecked(False)
 
 def main():
-    viewWindow=CheckRunWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=CheckRunWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.show()

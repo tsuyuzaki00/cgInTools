@@ -143,5 +143,5 @@ class CListWidgetItem(QListWidgetItem):
 """
 
 def main():
-    mayaWindow=MainMenu(parent=wLB.mayaMainWindow_query_widget())
+    mayaWindow=MainMenu(parent=wLB.mayaMainWindow_query_QWidget())
     mayaWindow.show()

@@ -322,7 +322,7 @@
                 {
                     "Label":"NodeType Query",
                     "FromFolder":"cgInTools.maya.manager",
-                    "ImportFile":"queryNodeTypeMN",
+                    "ImportFile":"queryNodeTypesMN",
                     "Function":"main()",
                     "Icon":""
                 },

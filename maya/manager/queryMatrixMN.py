@@ -79,6 +79,6 @@ class LookMatrixWindow(UI.TableWindowBase):
         self.__tableList_create_func(objs,add=True)
 
 def main():
-    viewWindow=LookMatrixWindow(parent=wLB.mayaMainWindow_query_widget())
+    viewWindow=LookMatrixWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.buttonCenterOnClicked()
     viewWindow.show()
