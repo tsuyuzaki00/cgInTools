@@ -23,8 +23,6 @@ class CreateNodesWindow(UI.CreateNodesWindow):
         self._reset_dir=RESETDIR
         self._data_dir=DATADIR
 
-    #Single Function
-
     #Inheritance Function
     def _widget_query_CreateNodeWidgets(self):
         widget_CreateNodeWidgets=[]

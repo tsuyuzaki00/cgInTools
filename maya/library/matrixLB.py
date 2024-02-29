@@ -5,92 +5,32 @@ import sys,math
 
 import cgInTools as cit
 from ...library import baseLB as bLB
-cit.reloads([bLB])
-
-class DataMatrix(om2.MMatrix):
-    def __init__(self,*matrix):
-        super(DataMatrix,self).__init__(*matrix)
-        #self.kIdentity=om2.MMatrix([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-        self._MSpace=om2.MSpace.kTransform #1
-        self._rotateOrder=om2.MEulerRotation.kXYZ #0
-
-    def setMatrix(self,variable):
-        self.kIdentity=om2.MMatrix(variable)
-        return self.kIdentity
-    def getMatrix(self):
-        matrix=list(self.kIdentity)
-        return matrix
-    def getMMatrix(self):
-        return self.self.kIdentity
-    
-    def setMSpace(self,variable):
-        self._MSpace=variable
-    def getMSpace(self):
-        return self._MSpace
-
-    def setRotateOrder(self,variable):
-        self._rotateOrder=variable
-    def getRotateOrder(self):
-        return self._rotateOrder
+from ..library import dataLB as dLB
+cit.reloads([bLB,dLB])
 
 class AppMatrix(bLB.SelfOrigin):
     def __init__(self):
-        super(SelfMatrix,self).__init__()
-        self._matrix_DataMatrix=DataMatrix()
-        self._pivot_DataMatrix=DataMatrix()
-        self._subject_DataMatrix=DataMatrix()
+        super(AppMatrix,self).__init__()
+        self._matrix_DataMatrix=dLB.DataMatrix()
+        self._pivot_DataMatrix=dLB.DataMatrix()
+        self._subject_DataMatrix=dLB.DataMatrix()
 
         self._mirrorAxis_str="x"
         self._mirrorOrientVector_str="z"
-        self._mirrorData_dict={
-            "x":[
-                -1.0,0.0,0.0,0.0, 
-                0.0,1.0,0.0,0.0, 
-                0.0,0.0,1.0,0.0, 
-                0.0,0.0,0.0,1.0 
-            ],
-            "X":[
-                -1.0,0.0,0.0,0.0, 
-                0.0,1.0,0.0,0.0, 
-                0.0,0.0,1.0,0.0, 
-                0.0,0.0,0.0,1.0 
-            ],
-            "y":[
-                1.0,0.0,0.0,0.0, 
-                0.0,-1.0,0.0,0.0, 
-                0.0,0.0,1.0,0.0, 
-                0.0,0.0,0.0,1.0 
-            ],
-            "Y":[
-                1.0,0.0,0.0,0.0, 
-                0.0,-1.0,0.0,0.0, 
-                0.0,0.0,1.0,0.0, 
-                0.0,0.0,0.0,1.0 
-            ],
-            "z":[
-                1.0,0.0,0.0,0.0, 
-                0.0,1.0,0.0,0.0, 
-                0.0,0.0,-1.0,0.0, 
-                0.0,0.0,0.0,1.0 
-            ],
-            "Z":[
-                1.0,0.0,0.0,0.0, 
-                0.0,1.0,0.0,0.0, 
-                0.0,0.0,-1.0,0.0, 
-                0.0,0.0,0.0,1.0 
-            ],
-        }
 
     #Single Function
-    def mirrorAxis_create_DataMatrix(self,mirrorAxis_str):
-        mirrorAxis_MMatrix=om2.MMatrix(self._mirrorData_dict.get(mirrorAxis_str))
-        mirrorAxis_DataMatrix=DataMatrix(mirrorAxis_MMatrix)
-        return mirrorAxis_DataMatrix
-
-    def mirrorOrientVector_create_DataMatrix(self,mirrorOrientVector_str):
-        mirrorOrientVector_MMatrix=om2.MMatrix(self._mirrorData_dict.get(mirrorOrientVector_str))
-        mirrorOrientVector_DataMatrix=DataMatrix(mirrorOrientVector_MMatrix)
-        return mirrorOrientVector_DataMatrix
+    @staticmethod
+    def inverseAxis_create_DataMatrix(axis_str):
+        inverseAxis_DataMatrix=dLB.DataMatrix()
+        if "x" is axis_str or "X" is axis_str:
+            axis_DataMatrix=inverseAxis_DataMatrix.inverseX
+        elif "y" is axis_str or "Y" is axis_str:
+            axis_DataMatrix=inverseAxis_DataMatrix.inverseY
+        elif "z" is axis_str or "Z" is axis_str:
+            axis_DataMatrix=inverseAxis_DataMatrix.inverseZ
+        else:
+            axis_DataMatrix=dLB.DataMatrix()
+        return axis_DataMatrix
 
     #Setting Function
     def setDataMatrix(self,variable):
@@ -128,8 +68,7 @@ class AppMatrix(bLB.SelfOrigin):
         _matrix_DataMatrix=dataMatrix or self._matrix_DataMatrix#worldMatrix
         _subject_DataMatrix=subjectDataMatrix or self._subject_DataMatrix#inverseParentMatrix
 
-        matchMatrix_MMatrix=_matrix_DataMatrix*_subject_DataMatrix
-        matchMatrix_DataMatrix=DataMatrix(matchMatrix_MMatrix)
+        matchMatrix_DataMatrix=_matrix_DataMatrix*_subject_DataMatrix
         return matchMatrix_DataMatrix
 
     def mirror(self,dataMatrix=None,subjectDataMatrix=None,pivotDataMatrix=None,mirrorAxis=None,mirrorOrientVector=None):
@@ -139,8 +78,8 @@ class AppMatrix(bLB.SelfOrigin):
         _mirrorAxis_str=mirrorAxis or self._mirrorAxis_str
         _mirrorOrientVector_str=mirrorOrientVector or self._mirrorOrientVector_str
 
-        mirrorAxis_DataMatrix=self.mirrorAxis_create_DataMatrix(_mirrorAxis_str)
-        mirrorOrientVector_DataMatrix=self.mirrorOrientVector_create_DataMatrix(_mirrorOrientVector_str)
-        mirrorMatrix_MMatrix=mirrorOrientVector_DataMatrix*_matrix_DataMatrix*mirrorAxis_DataMatrix*_subject_DataMatrix
-        mirrorMatrix_DataMatrix=DataMatrix(mirrorMatrix_MMatrix)
+        mirrorAxis_DataMatrix=self.inverseAxis_create_DataMatrix(_mirrorAxis_str)
+        mirrorOrientVector_DataMatrix=self.inverseAxis_create_DataMatrix(_mirrorOrientVector_str)
+        
+        mirrorMatrix_DataMatrix=mirrorOrientVector_DataMatrix*_matrix_DataMatrix*mirrorAxis_DataMatrix*_subject_DataMatrix
         return mirrorMatrix_DataMatrix

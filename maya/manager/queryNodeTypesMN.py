@@ -37,7 +37,8 @@ class QueryNodeTypeWindow(UI.TableWindowBase):
         self.setGeometry(geometry)
 
     #Single Function
-    def sameObjName_check_func(self,objs):
+    @staticmethod
+    def sameObjName_check_func(objs):
         check=chLB.CheckBoolean()
         for obj in objs:
             check.setNode(obj)
@@ -48,7 +49,8 @@ class QueryNodeTypeWindow(UI.TableWindowBase):
             else:
                 cmds.error("NG:"+"sameObjName node:"+str(judge_dict["node"]))
 
-    def addChilds_query_list(self,objs):
+    @staticmethod
+    def addChilds_query_list(objs):
         nodes=[]
         for obj in objs:
             nodes.append(obj)
@@ -58,7 +60,8 @@ class QueryNodeTypeWindow(UI.TableWindowBase):
                     nodes.append(shape)
         return nodes
 
-    def MFuType_query_str_int(self,node):
+    @staticmethod
+    def MFuType_query_str_int(node):
         if node == None:
             return None
         node_MSelectionList=om2.MSelectionList()

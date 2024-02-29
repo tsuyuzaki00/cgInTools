@@ -17,6 +17,16 @@ class DataPath(bLB.DataOrigin):
             self._relative_dir=dataPath.getRelativeDirectory()
             self._file_str=dataPath.getFile()
             self._extension_ext=dataPath.getExtension()
+
+    @staticmethod
+    def mergeDirectory_create_dir(upperDirectory_dir,lowerDirectory_dir):
+        if upperDirectory_dir is None:
+            upperDirectory_dir=""
+        if lowerDirectory_dir is None:
+            lowerDirectory_dir=""
+        mergeDirectory_dir=os.path.join(upperDirectory_dir,lowerDirectory_dir)
+        mergeDirectory_dir=mergeDirectory_dir.replace(os.sep,'/')
+        return mergeDirectory_dir
     
     #Setting Function
     def setAbsoluteDirectory(self,variable):

@@ -31,7 +31,8 @@ class QuerySelectionsWindow(MayaQWidgetDockableMixin,UI.PlainTextWindowBase):
         self.buttonRight_QPushButton.setText("Select Add")
 
     #Single Function
-    def convertListToString_edit_str(self,text_strs=[]):
+    @staticmethod
+    def convertListToString_edit_str(text_strs=[]):
         text_str=""
         if not text_strs is []:
             for num,text in enumerate(text_strs):
@@ -43,13 +44,15 @@ class QuerySelectionsWindow(MayaQWidgetDockableMixin,UI.PlainTextWindowBase):
                     text_str+="\n]"
         return text_str
 
-    def convertStringToList_edit_list(self,listText_str=""):
+    @staticmethod
+    def convertStringToList_edit_list(listText_str=""):
         text_list=[]
         if not listText_str is "":
             text_list=eval(listText_str)
         return text_list
-
-    def organizeList_edit_list(self,text_list2s=[[],[]]):
+    
+    @staticmethod
+    def organizeList_edit_list(text_list2s=[[],[]]):
         texts=[]
         for text_list2 in text_list2s:
             texts.extend(text_list2)

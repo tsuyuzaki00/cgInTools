@@ -26,7 +26,8 @@ class AppPath(object):
         self.destinationDataPathCopy(dataPath=variable)
 
     #Single Function
-    def mergeDirectory_create_dir(self,upperDirectory_dir,lowerDirectory_dir):
+    @staticmethod
+    def mergeDirectory_create_dir(upperDirectory_dir,lowerDirectory_dir):
         if upperDirectory_dir is None:
             upperDirectory_dir=""
         if lowerDirectory_dir is None:
@@ -35,7 +36,8 @@ class AppPath(object):
         mergeDirectory_dir=mergeDirectory_dir.replace(os.sep,'/')
         return mergeDirectory_dir
 
-    def mergePath_create_path(self,directory_dir,file_str,extension_ext):
+    @staticmethod
+    def mergePath_create_path(directory_dir,file_str,extension_ext):
         if file_str is None or extension_ext is None:
             return directory_dir
         else:
@@ -43,7 +45,8 @@ class AppPath(object):
             mergePath_path=mergePath_path.replace(os.sep,'/')
         return mergePath_path
 
-    def folder_query_dicts(self,directory_dir):
+    @staticmethod
+    def folder_query_dicts(directory_dir):
         fileExt_strs=[f for f in os.listdir(directory_dir) if os.path.isfile(os.path.join(directory_dir,f)) and not f in "init.json"]
         fileExt_dicts=[{"file":fileExt_str.split(".")[0],"extension":fileExt_str.split(".")[-1]} for fileExt_str in fileExt_strs]
         return fileExt_dicts

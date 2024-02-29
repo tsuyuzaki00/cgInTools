@@ -16,7 +16,7 @@ PROJECTFOLDER=cit.mayaDefSetProject_dir
 
 class AppProject(object):
     def __init__(self):
-        self._defSetProjectFolder=PROJECTFOLDER
+        self._copyProject_dir=PROJECTFOLDER
         self._project_DataPath=None
         self._project_AppPath=pLB.AppPath()
     
@@ -26,15 +26,16 @@ class AppProject(object):
         return project_dir
 
     #Single Function
-    def setProject_edit_str(self,project_dir,create=False):
+    @staticmethod
+    def setProject_edit_str(copyProject_dir,project_dir,create=False):
         if create:
             if os.path.isdir(project_dir):
                 if not os.listdir(project_dir):
                     os.rmdir(project_dir)
-                    shutil.copytree(self._defSetProjectFolder,project_dir)
+                    shutil.copytree(copyProject_dir,project_dir)
                     #shutil.copytree(self._defSetProjectFolder,project_dir,dirs_exist_ok=True) Not in python 3.7
             else:
-                shutil.copytree(self._defSetProjectFolder,project_dir)
+                shutil.copytree(copyProject_dir,project_dir)
 
         cmds.workspace(project_dir,o=True)
         project_dir=cmds.workspace(q=True,rd=True)
@@ -70,7 +71,7 @@ class AppProject(object):
 
         self._project_AppPath.setDataPath(_project_DataPath)
         project_dir=self._project_AppPath.queryDirectory()
-        workSpace_dir=self.setProject_edit_str(project_dir,create=True)
+        workSpace_dir=self.setProject_edit_str(self._copyProject_dir,project_dir,create=True)
         return workSpace_dir
 
     def editProject(self,dataPath=None):
@@ -78,7 +79,7 @@ class AppProject(object):
         
         self._project_AppPath.setDataPath(_project_DataPath)
         project_dir=self._project_AppPath.queryDirectory()
-        workSpace_dir=self.setProject_edit_str(project_dir)
+        workSpace_dir=self.setProject_edit_str(self._copyProject_dir,project_dir)
         return workSpace_dir
 
     def queryProject(self):
@@ -88,13 +89,14 @@ class AppProject(object):
  
 class AppFile(object):
     def __init__(self):
-        self._file_DataPath=pLB.DataPath()
-        self._file_SelfPath=pLB.SelfPath()
+        self._file_DataPath=None
+        self._file_SelfPath=None
 
         self._fileType_dict=RULE_DICT["fileType_dict"]
         self._exType=None
 
     #Single Function
+    @staticmethod
     def fileSave_edit_func(self,directory,file,exType):
         if file is None:
             file="_spaceSave"
@@ -104,12 +106,14 @@ class AppFile(object):
         cmds.file(rename=path)
         cmds.file(save=True,op="v=0",type=exType)
 
+    @staticmethod
     def fileOpen_edit_func(self,directory,file,ex):
         if ex is None:
             ex="ma"
         path=os.path.join(directory,file)
         cmds.file(path+"."+ex,open=True,force=True)
 
+    @staticmethod
     def newDirectory_create_str(self,absoluteDirectory,relativeDirectory):
         if absoluteDirectory is None:
             absoluteDirectory="D:"
@@ -118,16 +122,19 @@ class AppFile(object):
         newDirectory=os.path.join(absoluteDirectory,relativeDirectory)
         return newDirectory
 
+    @staticmethod
     def exportMAMB_create_func(self,objs,path,file,ex="ma",exType="mayaAscii"):
         cmds.select(objs)
         fullPath=os.path.join(path,file+"."+ex)
         cmds.file(fullPath,f=True,options="v=0;",typ=exType,pr=True,es=True)
     
+    @staticmethod
     def exportOBJFBX_create_func(self,objs,path,file,ex="obj",exType="OBJexport"):
         cmds.select(objs)
         fullPath=os.path.join(path,file+"."+ex)
         cmds.file(fullPath,f=True,options="v=0;",groups=1,ptgroups=1,materials=1,smoothing=1,normals=1,typ=exType,pr=True,es=True)
     
+    @staticmethod
     def grpsDuplicate_create_list(self,grps):
         exportGrps=[]
         for grp in grps:
@@ -137,6 +144,7 @@ class AppFile(object):
             exportGrps.append(exportGrp)
             return exportGrps
 
+    @staticmethod
     def undoDuplicate_edit_func(self,grps,delGrps):
         cmds.delete(delGrps)
         for grp in grps:

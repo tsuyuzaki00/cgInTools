@@ -475,10 +475,152 @@ class DataMatrix(bLB.DataOrigin):
                 self._MSpace=dataTuple[0].getMSpace()
                 self._rotateOrder=dataTuple[0].getRotateOrder()
             elif isinstance(dataTuple[0],om2.MMatrix):
-                self._matrix_MMatrix=dataTuple[0]
+                self._matrix_MMatrix=om2.MMatrix(dataTuple[0])
+                self._MSpace=om2.MSpace.kTransform #1
+                self._rotateOrder=om2.MEulerRotation.kXYZ #0
+            elif isinstance(dataTuple[0],(list,tuple)):
+                self._matrix_MMatrix=om2.MMatrix(dataTuple[0])
                 self._MSpace=om2.MSpace.kTransform #1
                 self._rotateOrder=om2.MEulerRotation.kXYZ #0
 
+    def __repr__(self):
+        matrix=list(self._matrix_MMatrix)
+        return matrix
+
+    def __str__(self):
+        matrix=list(self._matrix_MMatrix)
+        return matrix
+    
+    def __eq__(self,variable):
+        return self._matrix_MMatrix == variable
+
+    def __ne__(self,variable):
+        return self._matrix_MMatrix != variable
+    
+    def __lt__(self,variable):
+        return self._matrix_MMatrix < variable
+
+    def __le__(self,variable):
+        return self._matrix_MMatrix <= variable
+    
+    def __gt__(self,variable):
+        return self._matrix_MMatrix > variable
+
+    def __ge__(self,variable):
+        return self._matrix_MMatrix >= variable
+
+    def __add__(self,variable):
+        if isinstance(variable,DataMatrix):
+            add_MMatrix=self._matrix_MMatrix+variable.getMMatrix()   
+            add_DataMatrix=DataMatrix(add_MMatrix)
+        elif isinstance(variable,om2.MMatrix):
+            add_MMatrix=self._matrix_MMatrix+variable   
+            add_DataMatrix=DataMatrix(add_MMatrix)
+        elif isinstance(variable,(list,tuple)):
+            add_MMatrix=self._matrix_MMatrix+om2.MMatrix(variable)
+            add_DataMatrix=DataMatrix(add_MMatrix)
+        return add_DataMatrix
+
+    def __radd__(self,variable):
+        if isinstance(variable,DataMatrix):
+            add_MMatrix=self._matrix_MMatrix+variable.getMMatrix()   
+            add_DataMatrix=DataMatrix(add_MMatrix)
+        elif isinstance(variable,om2.MMatrix):
+            add_MMatrix=self._matrix_MMatrix+variable   
+            add_DataMatrix=DataMatrix(add_MMatrix)
+        elif isinstance(variable,(list,tuple)):
+            add_MMatrix=self._matrix_MMatrix+om2.MMatrix(variable)
+            add_DataMatrix=DataMatrix(add_MMatrix)
+        return add_DataMatrix
+
+    def __iadd__(self,variable):
+        if isinstance(variable,DataMatrix):
+            self._matrix_MMatrix+=variable.getMMatrix()
+        elif isinstance(variable,om2.MMatrix):
+            self._matrix_MMatrix+=variable
+        elif isinstance(variable,(list,tuple)):
+            self._matrix_MMatrix+=om2.MMatrix(variable)
+        return self._matrix_MMatrix
+
+    def __sub__(self,variable):
+        if isinstance(variable,DataMatrix):
+            sub_MMatrix=self._matrix_MMatrix-variable.getMMatrix()   
+            sub_DataMatrix=DataMatrix(sub_MMatrix)
+        elif isinstance(variable,om2.MMatrix):
+            sub_MMatrix=self._matrix_MMatrix-variable   
+            sub_DataMatrix=DataMatrix(sub_MMatrix)
+        elif isinstance(variable,(list,tuple)):
+            sub_MMatrix=self._matrix_MMatrix-om2.MMatrix(variable)
+            sub_DataMatrix=DataMatrix(sub_MMatrix)
+        return sub_DataMatrix
+
+    def __rsub__(self,variable):
+        if isinstance(variable,DataMatrix):
+            sub_MMatrix=self._matrix_MMatrix-variable.getMMatrix()   
+            sub_DataMatrix=DataMatrix(sub_MMatrix)
+        elif isinstance(variable,om2.MMatrix):
+            sub_MMatrix=self._matrix_MMatrix-variable   
+            sub_DataMatrix=DataMatrix(sub_MMatrix)
+        elif isinstance(variable,(list,tuple)):
+            sub_MMatrix=self._matrix_MMatrix-om2.MMatrix(variable)
+            sub_DataMatrix=DataMatrix(sub_MMatrix)
+        return sub_DataMatrix
+
+    def __isub__(self,variable):
+        if isinstance(variable,DataMatrix):
+            self._matrix_MMatrix-=variable.getMMatrix()   
+        elif isinstance(variable,om2.MMatrix):
+            self._matrix_MMatrix-=variable   
+        elif isinstance(variable,(list,tuple)):
+            self._matrix_MMatrix-=om2.MMatrix(variable)
+        return self._matrix_MMatrix
+
+    def __mul__(self,variable):
+        if isinstance(variable,DataMatrix):
+            mul_MMatrix=self._matrix_MMatrix*variable.getMMatrix()   
+            mul_DataMatrix=DataMatrix(mul_MMatrix)
+        elif isinstance(variable,om2.MMatrix):
+            mul_MMatrix=self._matrix_MMatrix*variable   
+            mul_DataMatrix=DataMatrix(mul_MMatrix)
+        elif isinstance(variable,(list,tuple)):
+            mul_MMatrix=self._matrix_MMatrix*om2.MMatrix(variable)
+            mul_DataMatrix=DataMatrix(mul_MMatrix)
+        return mul_DataMatrix
+
+    def __rmul__(self,variable):
+        if isinstance(variable,DataMatrix):
+            mul_MMatrix=self._matrix_MMatrix*variable.getMMatrix()   
+            mul_DataMatrix=DataMatrix(mul_MMatrix)
+        elif isinstance(variable,om2.MMatrix):
+            mul_MMatrix=self._matrix_MMatrix*variable   
+            mul_DataMatrix=DataMatrix(mul_MMatrix)
+        elif isinstance(variable,(list,tuple)):
+            mul_MMatrix=self._matrix_MMatrix*om2.MMatrix(variable)
+            mul_DataMatrix=DataMatrix(mul_MMatrix)
+        return mul_DataMatrix
+    
+    def __imul__(self,variable):
+        if isinstance(variable,DataMatrix):
+            self._matrix_MMatrix*=variable.getMMatrix()
+        elif isinstance(variable,om2.MMatrix):
+            self._matrix_MMatrix*=variable
+        elif isinstance(variable,(list,tuple)):
+            self._matrix_MMatrix*=om2.MMatrix(variable)
+        return self._matrix_MMatrix
+
+    def __len__(self):
+        return len(self._matrix_MMatrix)
+
+    def __setitem__(self,key,variable):
+        self._matrix_MMatrix[key]=variable
+    
+    def __getitem__(self,variable):
+        return self._matrix_MMatrix[variable]
+    
+    def __delitem__(self,variable):
+        return self._matrix_MMatrix[variable]
+
+    #Setting Function
     def setMatrix(self,variable):
         self._matrix_MMatrix=om2.MMatrix(variable)
         return self._matrix_MMatrix
@@ -497,6 +639,37 @@ class DataMatrix(bLB.DataOrigin):
         self._rotateOrder=variable
     def getRotateOrder(self):
         return self._rotateOrder
+
+    @property
+    def inverseX(self):
+        inverse_DataMatrix=DataMatrix([
+            -1.0,0.0,0.0,0.0, 
+            0.0,1.0,0.0,0.0, 
+            0.0,0.0,1.0,0.0, 
+            0.0,0.0,0.0,1.0 
+        ])
+        return inverse_DataMatrix
+    
+    @property
+    def inverseY(self):
+        inverse_DataMatrix=DataMatrix([
+            1.0,0.0,0.0,0.0, 
+            0.0,-1.0,0.0,0.0, 
+            0.0,0.0,1.0,0.0, 
+            0.0,0.0,0.0,1.0 
+        ])
+        return inverse_DataMatrix
+    
+    @property
+    def inverseZ(self):
+        inverse_DataMatrix=DataMatrix([
+            1.0,0.0,0.0,0.0, 
+            0.0,1.0,0.0,0.0, 
+            0.0,0.0,-1.0,0.0, 
+            0.0,0.0,0.0,1.0 
+        ])
+        return inverse_DataMatrix
+
 
 class DataMatrixMix(bLB.DataOrigin):
     def __init__(self,*dataTuple):

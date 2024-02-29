@@ -8,7 +8,8 @@ class AppOpenMayaBase(object):
         pass
     
     #Single Function
-    def node_query_MObject(self,node):
+    @staticmethod
+    def node_query_MObject(node):
         if node == None:
             return None
         elif not type(node) is str and not type(node) is unicode:
@@ -18,31 +19,37 @@ class AppOpenMayaBase(object):
         node_MObject=node_MSelectionList.getDependNode(0)
         return node_MObject
     
-    def convertMObject_query_MDagPath(self,node_MObject):
+    @staticmethod
+    def convertMObject_query_MDagPath(node_MObject):
         node_MDagPath=om2.MDagPath().getAPathTo(node_MObject)
         return node_MDagPath
     
-    def nodeAttr_query_MPlug(self,node_MObject,attr_str):
+    @staticmethod
+    def nodeAttr_query_MPlug(node_MObject,attr_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         node_MPlug=node_MFnDependencyNode.findPlug(attr_str,False)
         return node_MPlug
 
-    def findAttr_query_MObject(self,node_MObject,attrName_str):
+    @staticmethod
+    def findAttr_query_MObject(node_MObject,attrName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode(node_MObject)
         attr_MObject=node_MFnDependencyNode.findAlias(attrName_str)
         return attr_MObject
     
-    def node_create_MObject(self,nodeType_str,nodeName_str):
+    @staticmethod
+    def node_create_MObject(nodeType_str,nodeName_str):
         node_MFnDependencyNode=om2.MFnDependencyNode()
         node_MObject=node_MFnDependencyNode.create(nodeType_str,nodeName_str)
         return node_MObject
     
-    def parent_query_MObject(self,node_MDagPath):
+    @staticmethod
+    def parent_query_MObject(node_MDagPath):
         node_MFnDagNode=om2.MFnDagNode(node_MDagPath)
         parent_MObject=node_MFnDagNode.parent(0)
         return parent_MObject
 
-    def child_query_MObjects(self,node_MDagPath,shapeOnly=False):
+    @staticmethod
+    def child_query_MObjects(node_MDagPath,shapeOnly=False):
         childs=[]
         for num in range(node_MDagPath.childCount()):
             child_MObject=node_MDagPath.child(num)
