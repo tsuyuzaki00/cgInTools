@@ -1,8 +1,5 @@
 # -*- coding: iso-8859-15 -*-
 import os,shutil
-import cgInTools as cit
-from . import dataLB as dLB
-cit.reloads([dLB])
 
 class AppPath(object):
     def __init__(self):
@@ -166,7 +163,11 @@ class AppPath(object):
         directory_dir=self.mergeDirectory_create_dir(absolute_dir,relative_dir)
         fileExt_dicts=self.folder_query_dicts(directory_dir)
 
-        folder_DataPathArray=dLB.DataPathArray
+        import cgInTools as cit
+        from . import dataLB as dLB
+        cit.reloads([dLB])
+        folder_DataPaths=[]
+
         for fileExt_dict in fileExt_dicts:
             folder_DataPath=dLB.DataPath()
             folder_DataPath.setAbsoluteDirectory(absolute_dir)
@@ -174,5 +175,5 @@ class AppPath(object):
             folder_DataPath.setFile(fileExt_dict.get("file"))
             folder_DataPath.setExtension(fileExt_dict.get("extension"))
         
-            folder_DataPathArray.addDataPaths(folder_DataPath)
-        return folder_DataPathArray
+            folder_DataPaths.append(folder_DataPath)
+        return folder_DataPaths

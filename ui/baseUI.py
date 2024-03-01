@@ -6,17 +6,19 @@ class MainWindowBase(QMainWindow):
     def __init__(self,*args,**kwargs):
         super(MainWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
-        self.menuUI_create_func()
-        self.mainUI_create_func()
+        self._menuUI_create_func()
+        self._mainUI_create_func() # self.custom_QScrollArea.setWidget()
     
     #Single Function
-    def convertString_query_dict(self,dictText_str):
+    @staticmethod
+    def convertString_query_dict(dictText_str):
         text_dict={}
         if not dictText_str is "" and not dictText_str is None:
             text_dict=eval(dictText_str)
         return text_dict
 
-    def menuUI_create_func(self):
+    #Multi Function
+    def _menuUI_create_func(self):
         mainWindow_QMenuBar=self.menuBar()
         fileMenu_QAction=mainWindow_QMenuBar.addMenu("File")
 
@@ -42,8 +44,7 @@ class MainWindowBase(QMainWindow):
         fileMenu_QAction.addAction(self.export_QAction)
         self.export_QAction.triggered.connect(self.exportClicked)
 
-    #self.custom_QScrollArea
-    def mainUI_create_func(self):
+    def _mainUI_create_func(self):
         main_QBoxLayout=QBoxLayout(QBoxLayout.TopToBottom,self)
 
         self.custom_QScrollArea=QScrollArea(self)

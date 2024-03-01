@@ -4,12 +4,12 @@ from PySide2.QtWidgets import *
 from PySide2.QtGui import *
 import maya.cmds as cmds
 import random
+from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
 import cgInTools as cit
 from ...ui import plainTextUI as UI
 from ..library import windowLB as wLB
 from ...library import functionLB as fLB
-from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 cit.reloads([UI,wLB,fLB])
 
 DATAFOLDER="querySelections"
@@ -22,10 +22,11 @@ class QuerySelectionsWindow(MayaQWidgetDockableMixin,UI.PlainTextWindowBase):
         self._reset_dir=RESETDIR
         self._data_dir=DATADIR
 
-        windowTitle="querySelections"
+        windowTitle_str="querySelections"
         random_int=random.randint(0,9999)
-        self.setObjectName(windowTitle+str(random_int))
-        self.setWindowTitle(windowTitle)
+        self.setObjectName(windowTitle_str+str(random_int))
+        self.setWindowTitle(windowTitle_str)
+        
         self.buttonLeft_QPushButton.setText("Selection")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")

@@ -670,7 +670,6 @@ class DataMatrix(bLB.DataOrigin):
         ])
         return inverse_DataMatrix
 
-
 class DataMatrixMix(bLB.DataOrigin):
     def __init__(self,*dataTuple):
         super(DataMatrixMix,self).__init__(*dataTuple)

@@ -5,6 +5,7 @@ from PySide2.QtGui import *
 import maya.cmds as cmds
 import maya.api.OpenMaya as om2
 import random
+from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
 import cgInTools as cit
 from ...ui import tableUI as UI
@@ -16,17 +17,19 @@ cit.reloads([UI,wLB,fLB,chLB])
 DATAFOLDER="queryNodeTypes"
 RESETDIR,DATADIR=cit.checkScriptsData(DATAFOLDER,cit.mayaSettings_dir,cit.mayaData_dir)
 
-class QueryNodeTypeWindow(UI.TableWindowBase):
+class QueryNodeTypeWindow(MayaQWidgetDockableMixin,UI.TableWindowBase):
     def __init__(self, parent):
-        super(QueryNodeTypeWindow, self).__init__(parent)
+        super(QueryNodeTypeWindow,self).__init__(parent)
         self._dataFolder_str=DATAFOLDER
         self._reset_dir=RESETDIR
         self._data_dir=DATADIR
         
-        windowTitle="queryNodeTypes"
+        
+        windowTitle_str="queryNodeTypes"
         random_int=random.randint(0,9999)
-        self.setObjectName(windowTitle+str(random_int))
-        self.setWindowTitle(windowTitle)
+        self.setObjectName(windowTitle_str+str(random_int))
+        self.setWindowTitle(windowTitle_str)
+
         self.buttonLeft_QPushButton.setText("Print")
         self.buttonCenter_QPushButton.setText("Select Replace")
         self.buttonRight_QPushButton.setText("Select Add")
@@ -129,4 +132,4 @@ class QueryNodeTypeWindow(UI.TableWindowBase):
 def main():
     viewWindow=QueryNodeTypeWindow(parent=wLB.mayaMainWindow_query_QWidget())
     viewWindow.buttonCenterClicked()
-    viewWindow.show()
+    viewWindow.show(dockable=True,floating=True)

@@ -1,13 +1,12 @@
 from PySide2.QtCore import *
 from PySide2.QtWidgets import *
 from PySide2.QtGui import *
-from maya.app.general.mayaMixin import MayaQWidgetBaseMixin
 
 import cgInTools as cit
 from . import baseUI as UI
 cit.reloads([UI])
 
-class PlainTextWindowBase(MayaQWidgetBaseMixin,UI.MainWindowBase):
+class PlainTextWindowBase(UI.MainWindowBase):
     def __init__(self,*args,**kwargs):
         super(PlainTextWindowBase,self).__init__(*args,**kwargs)
         self.setWindowFlags(Qt.Window)
